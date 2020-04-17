@@ -16,13 +16,13 @@ repositories {
 }
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 28
     buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId 'jp.co.cybird.barcodekanojoForGAM'
         minSdkVersion 1
-        targetSdkVersion 21
+        targetSdkVersion 23
         versionCode 1
         versionName "2.4.3"
     }
@@ -33,5 +33,6 @@ android {
 }
 
 dependencies {
-    // some dependencies
+    implementation project(':facebook')
+    implementation files('libs/GoogleAdMobAdsSdk-6.4.1.jar')
 }
