@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="common_product_photo_dialog">
+        <item>打开相册</item>
+        <item>启动相机</item>
+    </array>
+    <array name="product_category">
+        <item>喝</item>
+        <item>食品</item>
+        <item>小吃</item>
+        <item>酒精</item>
+        <item>啤酒</item>
+        <item>烟草</item>
+        <item>杂志</item>
+        <item>文房具</item>
+        <item>工具</item>
+        <item>电子产品</item>
+        <item>厨具</item>
+        <item>衣服</item>
+        <item>附件</item>
+        <item>音乐</item>
+        <item>DVD</item>
+        <item>电视游戏</item>
+        <item>运动用品</item>
+        <item>保健及美容</item>
+        <item>医药产品</item>
+        <item>医疗用品</item>
+        <item>其他</item>
+    </array>
+    <array name="user_account_gender_list">
+        <item>男性</item>
+        <item>女性</item>
+        <item>未知</item>
+    </array>
+    <array name="request_gender_list">
+        <item>male</item>
+        <item>female</item>
+        <item>not sure</item>
+    </array>
+</resources>

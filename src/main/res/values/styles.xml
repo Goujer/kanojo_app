@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Launcher.Dialog">
+        <item name="android:windowBackground">@drawable/lib_launcher_transparent_background</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@style/Animation.SlideInDialog</item>
+    </style>
+    <style name="Animation.SlideInDialog">
+        <item name="android:windowEnterAnimation">@anim/lib_launcher_dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/lib_launcher_dialog_exit</item>
+    </style>
+    <style name="Launcher.Dialog.Handle">
+    </style>
+    <style name="Launcher.Dialog.Handle.Button">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:layout_gravity">left|center_horizontal|clip_horizontal</item>
+        <item name="android:background">@drawable/lib_launcher_handle_button</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+    <style name="com_facebook_loginview_default_style">
+        <item name="android:textSize">@dimen/com_facebook_loginview_text_size</item>
+        <item name="android:textColor">@color/com_facebook_loginview_text_color</item>
+        <item name="android:gravity">left|center_horizontal|clip_horizontal</item>
+        <item name="android:background">@drawable/com_facebook_loginbutton_blue</item>
+        <item name="android:paddingLeft">@dimen/com_facebook_loginview_padding_left</item>
+        <item name="android:height">@dimen/com_facebook_loginview_height</item>
+        <item name="android:width">@dimen/com_facebook_loginview_width</item>
+    </style>
+    <style name="com_facebook_loginview_silver_style">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#4b5164</item>
+        <item name="android:gravity">left|center_horizontal|clip_horizontal</item>
+        <item name="android:background">@drawable/com_facebook_loginbutton_silver</item>
+        <item name="android:height">44dp</item>
+        <item name="android:width">205dp</item>
+    </style>
+    <style name="Animation">
+    </style>
+    <style name="Animation.NoAnim">
+        <item name="android:activityOpenEnterAnimation">@anim/no_anim_activity_open_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/no_anim_activity_open_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/no_anim_activity_close_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/no_anim_activity_close_exit</item>
+    </style>
+    <style name="style_base">
+        <item name="android:typeface">sans</item>
+    </style>
+    <style name="style_wrap_content">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="bold_wrap_content">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="btn_default">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/btn_default_bg</item>
+        <item name="android:layout_width">275dp</item>
+        <item name="android:layout_height">35dp</item>
+    </style>
+    <style name="btn_navi">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/btn_title_bg</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/common_title_btn_height</item>
+        <item name="android:layout_marginLeft">@dimen/common_title_btn_margin</item>
+        <item name="android:layout_marginRight">@dimen/common_title_btn_margin</item>
+        <item name="android:minWidth">@dimen/common_title_btn_minwidth</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+    <style name="txt_edit_photo">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="txt_log_in">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+    </style>
+    <style name="txt_tab">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="txt_kanojo_room_name">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">left|center_horizontal|clip_horizontal</item>
+    </style>
+    <style name="txt_kanojo_room_status">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="txt_kanojo_info_name">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="txt_kanojo_info">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:layout_marginTop">2dp</item>
+    </style>
+    <style name="txt_scan_result_message">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+    </style>
+    <style name="txt_scan_result_name">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+    </style>
+    <style name="txt_scan_result_default">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+    </style>
+    <style name="txt_userprofile">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">clip_horizontal</item>
+    </style>
+    <style name="txt_userprofile_name">
+        <item name="android:textSize">14dp</item>
+    </style>
+    <style name="txt_userprofile_digit">
+        <item name="android:textSize">12dp</item>
+    </style>
+    <style name="txt_userprofile_title">
+        <item name="android:textSize">10dp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:gravity">clip_horizontal</item>
+    </style>
+    <style name="txt_enemyprofile">
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:gravity">clip_horizontal</item>
+    </style>
+    <style name="txt_enemyprofile_name">
+        <item name="android:textSize">14dp</item>
+    </style>
+    <style name="txt_enemyprofile_digit">
+        <item name="android:textSize">12dp</item>
+    </style>
+    <style name="txt_enemyprofile_title">
+        <item name="android:textSize">10dp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:gravity">clip_horizontal</item>
+    </style>
+    <style name="txt_activites">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+    </style>
+    <style name="txt_enemies">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="txt_kanojos_name">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="txt_kanojo_items_title">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+    </style>
+    <style name="txt_kanojo_items_description">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="txt_kanojo_item_detail_description">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="txt_kanojo_edit_key">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="txt_kanojo_edit_value">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="txt_more">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+    </style>
+    <style name="txt_section_title">
+        <item name="android:textSize">13dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">left</item>
+        <item name="android:paddingLeft">11dp</item>
+    </style>
+    <style name="txt_section_digit">
+        <item name="android:textSize">13dp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:gravity">right</item>
+        <item name="android:paddingRight">11dp</item>
+    </style>
+    <style name="txt_selection">
+        <item name="android:textSize">13dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">left</item>
+        <item name="android:background">@drawable/common_sectionheaderbg</item>
+        <item name="android:paddingLeft">11dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/row_selection_height</item>
+    </style>
+    <style name="txt_stats">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+    </style>
+    <style name="txt_stats_number">
+        <item name="android:textSize">42dp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="txt_notice_input">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+    </style>
+    <style name="social_setting_title">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="social_setting_note">
+        <item name="android:textSize">9sp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="social_setting_sukiya_note">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:gravity">right</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="NoAnimTheme">
+        <item name="android:windowAnimationStyle">@style/Animation.NoAnim</item>
+    </style>
+</resources>

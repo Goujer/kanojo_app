@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM">
+    <TextView android:text="@string/dashboard_stats" style="@style/txt_selection"/>
+    <jp.co.cybird.barcodekanojoForGAM.view.StatsView android:id="@+id/dashboard_header_stats" android:layout_width="match_parent" android:layout_height="@dimen/row_stats_height"/>
+    <TextView android:text="@string/dashboard_activities" style="@style/txt_selection"/>
+</merge>

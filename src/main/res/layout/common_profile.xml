@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jp.co.cybird.barcodekanojoForGAM.view.UserProfileView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:id="@+id/common_profile" android:background="@drawable/userprofile_bg" android:layout_width="match_parent" android:layout_height="@dimen/profile_height">
+    <FrameLayout android:id="@+id/common_profile_layout_img" android:padding="4dp" android:layout_width="wrap_content" android:layout_height="match_parent">
+        <ImageView android:id="@+id/common_profile_img" android:layout_width="wrap_content" android:layout_height="match_parent" android:src="@drawable/dummy_face_90" android:scaleType="fitXY" android:adjustViewBounds="true"/>
+        <ImageView android:id="@+id/common_profile_img_cover" android:layout_width="wrap_content" android:layout_height="match_parent" android:src="@drawable/userprofile_cover" android:scaleType="fitXY" android:adjustViewBounds="true"/>
+    </FrameLayout>
+    <TextView android:ellipsize="end" android:id="@+id/common_profile_name" android:layout_marginLeft="4dp" android:layout_marginTop="4dp" android:singleLine="true" android:maxLength="12" android:layout_toRightOf="@+id/common_profile_layout_img" android:layout_alignParentTop="true" style="@style/txt_userprofile_name"/>
+    <TextView android:id="@+id/common_profile_level" android:layout_marginTop="4dp" android:layout_toRightOf="@+id/common_profile_name" android:layout_alignParentTop="true" style="@style/txt_userprofile_name"/>
+    <LinearLayout android:orientation="horizontal" android:paddingRight="4dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_toRightOf="@+id/common_profile_layout_img" android:layout_below="@+id/common_profile_name">
+        <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1">
+            <TextView android:text="@string/userprofile_stamina" style="@style/txt_userprofile_title"/>
+            <TextView android:id="@+id/common_profile_stamina" style="@style/txt_userprofile_digit"/>
+        </LinearLayout>
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:layout_marginBottom="4dp" android:src="@drawable/userprofile_separator"/>
+        <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1">
+            <TextView android:text="@string/userprofile_kanojos" style="@style/txt_userprofile_title"/>
+            <TextView android:id="@+id/common_profile_kanojos" style="@style/txt_userprofile_digit"/>
+        </LinearLayout>
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:layout_marginBottom="4dp" android:src="@drawable/userprofile_separator"/>
+        <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1">
+            <TextView android:text="@string/userprofile_b_coin" style="@style/txt_userprofile_title"/>
+            <TextView android:id="@+id/common_profile_b_coin" style="@style/txt_userprofile_digit"/>
+        </LinearLayout>
+    </LinearLayout>
+</jp.co.cybird.barcodekanojoForGAM.view.UserProfileView>

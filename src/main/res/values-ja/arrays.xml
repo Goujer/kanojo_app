@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="common_product_photo_dialog">
+        <item>ギャラリー</item>
+        <item>カメラ起動</item>
+    </array>
+    <array name="product_category">
+        <item>ドリンク</item>
+        <item>食品</item>
+        <item>スナック</item>
+        <item>アルコール</item>
+        <item>ビール</item>
+        <item>タバコ</item>
+        <item>雑誌</item>
+        <item>文房具</item>
+        <item>工具</item>
+        <item>エレクトロニクス</item>
+        <item>台所用品</item>
+        <item>衣服</item>
+        <item>アクセサリー</item>
+        <item>音楽</item>
+        <item>DVD</item>
+        <item>テレビゲーム</item>
+        <item>スポーツ用品</item>
+        <item>ヘルス＆ビューティー</item>
+        <item>医薬品</item>
+        <item>医療用品</item>
+        <item>その他</item>
+    </array>
+    <array name="user_account_gender_list">
+        <item>男性</item>
+        <item>女性</item>
+        <item>わからない</item>
+    </array>
+    <array name="request_gender_list">
+        <item>male</item>
+        <item>female</item>
+        <item>not sure</item>
+    </array>
+</resources>

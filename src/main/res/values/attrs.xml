@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="show_pictures" format="boolean">
+    </attr>
+    <attr name="extra_fields" format="string">
+    </attr>
+    <attr name="show_title_bar" format="boolean">
+    </attr>
+    <attr name="title_text" format="string">
+    </attr>
+    <attr name="done_button_text" format="string">
+    </attr>
+    <attr name="title_bar_background" format="reference">
+    </attr>
+    <attr name="done_button_background" format="reference">
+    </attr>
+    <attr name="multi_select" format="boolean">
+    </attr>
+    <attr name="radius_in_meters" format="integer">
+    </attr>
+    <attr name="results_limit" format="integer">
+    </attr>
+    <attr name="search_text" format="string">
+    </attr>
+    <attr name="show_search_box" format="boolean">
+    </attr>
+    <attr name="confirm_logout" format="boolean">
+    </attr>
+    <attr name="fetch_user_info" format="boolean">
+    </attr>
+    <attr name="login_text" format="string">
+    </attr>
+    <attr name="logout_text" format="string">
+    </attr>
+    <attr name="preset_size">
+        <enum name="small" value="-2" />
+        <enum name="normal" value="-3" />
+        <enum name="large" value="-4" />
+    </attr>
+    <attr name="is_cropped" format="boolean">
+    </attr>
+    <attr name="key" format="string">
+    </attr>
+    <attr name="value" format="string">
+    </attr>
+    <attr name="textColor" format="color">
+    </attr>
+    <attr name="iconDrawable" format="integer">
+    </attr>
+    <attr name="arrowDrawable" format="integer">
+    </attr>
+    <attr name="addDrawable" format="integer">
+    </attr>
+    <attr name="hoverText" format="string">
+    </attr>
+    <attr name="tkey" format="string">
+    </attr>
+    <attr name="tvalue" format="string">
+    </attr>
+    <attr name="ttextColor" format="color">
+    </attr>
+</resources>

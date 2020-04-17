@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:gravity="center_horizontal" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:gravity="center_vertical" android:background="@drawable/common_title_bg" android:layout_width="match_parent" android:layout_height="@dimen/common_title_height">
+        <Button android:id="@+id/kanojo_payment_close" android:text="@string/common_edit_close" style="@style/btn_navi"/>
+        <TextView android:ellipsize="end" android:id="@+id/kanojo_payment_title" android:singleLine="true" android:layout_weight="1" style="@style/txt_kanojo_room_name"/>
+        <Button android:id="@+id/kanojo_payment_dummy" android:visibility="invisible" android:text="@string/common_edit_close" style="@style/btn_navi"/>
+    </LinearLayout>
+    <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/kanojo_item_detail_bg" android:padding="12dp" android:paddingBottom="13dp" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1">
+        <WebView android:id="@+id/kanojo_payment_view" android:layout_width="match_parent" android:layout_height="match_parent"/>
+    </LinearLayout>
+</LinearLayout>

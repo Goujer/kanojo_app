@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="common_product_photo_dialog">
+        <item>Gallery</item>
+        <item>Camera</item>
+    </array>
+    <array name="product_category">
+        <item>Drink</item>
+        <item>Food</item>
+        <item>Snack</item>
+        <item>Alcohol</item>
+        <item>Beer</item>
+        <item>Tabacco</item>
+        <item>Magazines</item>
+        <item>Stationary</item>
+        <item>Industrial tool</item>
+        <item>Electronics</item>
+        <item>Kitchenware</item>
+        <item>Accessory</item>
+        <item>Clothes</item>
+        <item>Music</item>
+        <item>DVD</item>
+        <item>TVgame</item>
+        <item>Sprts gear</item>
+        <item>Health &amp; beauty</item>
+        <item>Medicine</item>
+        <item>Medical supplies</item>
+        <item>others</item>
+    </array>
+    <array name="user_account_gender_list">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Not Sure</item>
+    </array>
+    <array name="request_gender_list">
+        <item>male</item>
+        <item>female</item>
+        <item>not sure</item>
+    </array>
+</resources>

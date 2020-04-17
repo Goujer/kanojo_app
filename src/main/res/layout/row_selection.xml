@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:orientation="horizontal" android:background="@drawable/common_sectionheaderbg" android:layout_width="match_parent" android:layout_height="@dimen/row_selection_height">
+        <TextView android:id="@+id/row_selection_title" android:layout_weight="1" style="@style/txt_section_title"/>
+        <TextView android:id="@+id/row_selection_number" android:layout_weight="1" style="@style/txt_section_digit"/>
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM">
+    <ImageView android:id="@+id/product_and_kanojo_ya" android:layout_width="@dimen/row_kanojo_edit_photo_ya_width" android:layout_height="@dimen/row_kanojo_edit_photo_ya_height" android:src="@drawable/row_kanojo_edit_photo_ya" android:layout_centerInParent="true"/>
+    <ImageView android:id="@+id/product_and_kanojo_left" android:layout_width="@dimen/kanojo_info_img_width" android:layout_height="@dimen/kanojo_info_img_width" android:layout_marginRight="24dp" android:src="@drawable/common_noimage_product" android:scaleType="fitXY" android:adjustViewBounds="true" android:layout_toLeftOf="@+id/product_and_kanojo_ya"/>
+    <ImageView android:layout_width="@dimen/kanojo_info_img_width" android:layout_height="@dimen/kanojo_info_img_width" android:layout_marginRight="24dp" android:src="@drawable/product_info_cover" android:scaleType="fitXY" android:adjustViewBounds="true" android:layout_toLeftOf="@+id/product_and_kanojo_ya"/>
+    <ImageView android:id="@+id/product_and_kanojo_right" android:layout_width="@dimen/kanojo_info_img_width" android:layout_height="@dimen/kanojo_info_img_width" android:layout_marginLeft="22dp" android:src="@drawable/dummy_face_90" android:scaleType="fitXY" android:adjustViewBounds="true" android:layout_toRightOf="@+id/product_and_kanojo_ya"/>
+</merge>

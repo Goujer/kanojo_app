@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:orientation="vertical" android:background="@color/edit_bg" android:layout_width="match_parent" android:layout_height="match_parent">
+    <RelativeLayout android:background="@drawable/common_title_bg" android:layout_width="match_parent" android:layout_height="@dimen/common_title_height">
+        <ImageView android:layout_width="wrap_content" android:layout_height="@dimen/common_title_logo_height" android:src="@drawable/common_logo" android:scaleType="fitCenter" android:adjustViewBounds="true" android:layout_centerInParent="true"/>
+        <Button android:id="@+id/kanojo_log_in_close" android:text="@string/common_edit_close" android:layout_alignParentLeft="true" style="@style/btn_navi"/>
+    </RelativeLayout>
+    <ScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">
+        <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/edit_bg" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="match_parent">
+            <TextView android:layout_marginTop="8dp" android:text="@string/log_in" style="@style/txt_notice_input"/>
+            <jp.co.cybird.barcodekanojoForGAM.view.EditTextView android:id="@+id/kanojo_log_in_email" android:background="@drawable/row_kanojo_edit_bg_top" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:tkey="@string/user_account_email" EditItemView:ttextColor="@color/editable_color"/>
+            <jp.co.cybird.barcodekanojoForGAM.view.EditTextView android:id="@+id/kanojo_log_in_password" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:tkey="@string/user_account_login_password" EditItemView:ttextColor="@color/editable_color"/>
+            <Button android:id="@+id/kanojo_log_in_btn" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" android:layout_marginBottom="@dimen/row_kanojo_edit_separator_height" android:text="@string/log_in_btn" style="@style/btn_default"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

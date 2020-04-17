@@ -1,0 +1,322 @@
+package jp.co.cybird.barcodekanojoForGAM.activity.top;
+
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+import java.io.File;
+import java.io.IOException;
+import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
+import jp.co.cybird.barcodekanojoForGAM.R;
+import jp.co.cybird.barcodekanojoForGAM.activity.DashboardActivity;
+import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
+import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
+import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
+import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
+import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
+import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
+import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
+import jp.co.cybird.barcodekanojoForGAM.core.model.User;
+
+public class TopActivity extends BaseActivity {
+    private static final boolean DEBUG = false;
+    private static final String TAG = "TopActivity";
+    /* access modifiers changed from: private */
+    public Button login_btn;
+    /* access modifiers changed from: private */
+    public ProgressBar mProgressBar;
+    private TopLogInTask mTopLogInTask;
+    private TopSignUpTask mTopSignUpTask;
+    /* access modifiers changed from: private */
+    public File modifiedPhoto;
+    /* access modifiers changed from: private */
+    public Button signup_btn;
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_top);
+        this.mProgressBar = (ProgressBar) findViewById(R.id.top_progressbar);
+        this.mProgressBar.setVisibility(4);
+        this.login_btn = (Button) findViewById(R.id.top_log_in);
+        this.login_btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                TopActivity.this.startLogin();
+            }
+        });
+        this.signup_btn = (Button) findViewById(R.id.top_sign_up);
+        this.signup_btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                TopActivity.this.startShowPrivacy();
+            }
+        });
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
+        this.login_btn.setOnClickListener((View.OnClickListener) null);
+        this.signup_btn.setOnClickListener((View.OnClickListener) null);
+        super.onDestroy();
+    }
+
+    public View getClientView() {
+        View leyout = getLayoutInflater().inflate(R.layout.activity_top, (ViewGroup) null);
+        RelativeLayout appLayoutRoot = new RelativeLayout(this);
+        appLayoutRoot.addView(leyout);
+        return appLayoutRoot;
+    }
+
+    public void onResume() {
+        super.onResume();
+        this.login_btn.setVisibility(0);
+        this.signup_btn.setVisibility(0);
+        BarcodeKanojoApp barcodeKanojoApp = (BarcodeKanojoApp) getApplication();
+        barcodeKanojoApp.requestLocationUpdates(false);
+        if (isSdCardWriteable()) {
+            barcodeKanojoApp.loadResourceManagers();
+        } else {
+            showNoticeDialog(getResources().getString(R.string.error_external_storage), new DialogInterface.OnDismissListener() {
+                public void onDismiss(DialogInterface dialog) {
+                    TopActivity.this.close();
+                }
+            });
+        }
+    }
+
+    public void onPause() {
+        ((BarcodeKanojoApp) getApplication()).removeLocationUpdates();
+        if (this.mTopLogInTask != null) {
+            this.mTopLogInTask.cancel(true);
+            this.mTopLogInTask = null;
+        }
+        if (this.mTopSignUpTask != null) {
+            this.mTopSignUpTask.cancel(true);
+            this.mTopSignUpTask = null;
+        }
+        super.onPause();
+    }
+
+    /* access modifiers changed from: protected */
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 805 && resultCode == 106) {
+            backupUser(((BarcodeKanojoApp) getApplication()).getUser());
+            executeTopLogInTask();
+        }
+        if (requestCode == 809 && resultCode == 110) {
+            startSignUp();
+        }
+        if (requestCode == 804 && resultCode == 105) {
+            backupUser(((BarcodeKanojoApp) getApplication()).getUser());
+            this.modifiedPhoto = (File) data.getExtras().get("photo");
+            executeTopSignUpTask();
+        }
+        if (requestCode == 900 && resultCode == 107) {
+            logout();
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void showAlertDialog(Alert alert) {
+        super.showAlertDialog(alert, new DialogInterface.OnDismissListener() {
+            public void onDismiss(DialogInterface dialog) {
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    public void startDashboard() {
+        checkAndCopyUser();
+        finish();
+        startActivityForResult(new Intent().setClass(this, DashboardActivity.class), BaseInterface.REQUEST_DASHBOARD);
+    }
+
+    /* access modifiers changed from: private */
+    public void startShowPrivacy() {
+        startActivityForResult(new Intent().setClass(this, PrivacyInfoActivity.class), BaseInterface.REQUEST_SHOW_PRIVACY);
+    }
+
+    /* access modifiers changed from: private */
+    public void startSignUp() {
+        startActivityForResult(new Intent().setClass(this, UserEntryActivity.class), BaseInterface.REQUEST_SIGN_UP);
+    }
+
+    /* access modifiers changed from: private */
+    public void startLogin() {
+        startActivityForResult(new Intent().setClass(this, LoginActivity.class), BaseInterface.REQUEST_LOG_IN);
+    }
+
+    private void executeTopLogInTask() {
+        if (this.mTopLogInTask == null || this.mTopLogInTask.getStatus() == AsyncTask.Status.FINISHED || this.mTopLogInTask.cancel(true) || this.mTopLogInTask.isCancelled()) {
+            this.mTopLogInTask = (TopLogInTask) new TopLogInTask().execute(new Void[0]);
+        } else {
+            Toast.makeText(this, "ttttttt", 0);
+        }
+    }
+
+    private void logout() {
+        this.login_btn.setVisibility(0);
+        this.signup_btn.setVisibility(0);
+    }
+
+    private void executeTopSignUpTask() {
+        if (this.mTopSignUpTask == null || this.mTopSignUpTask.getStatus() == AsyncTask.Status.FINISHED || this.mTopSignUpTask.cancel(true) || this.mTopSignUpTask.isCancelled()) {
+            this.mTopSignUpTask = (TopSignUpTask) new TopSignUpTask().execute(new Void[0]);
+        } else {
+            Toast.makeText(this, "ttttttt", 0);
+        }
+    }
+
+    class TopLogInTask extends AsyncTask<Void, Void, Response<?>> {
+        private Exception mReason = null;
+
+        TopLogInTask() {
+        }
+
+        public void onPreExecute() {
+            TopActivity.this.mProgressBar.setVisibility(0);
+            TopActivity.this.login_btn.setVisibility(4);
+            TopActivity.this.signup_btn.setVisibility(4);
+        }
+
+        public Response<?> doInBackground(Void... params) {
+            try {
+                return login();
+            } catch (Exception e) {
+                this.mReason = e;
+                return null;
+            }
+        }
+
+        public void onPostExecute(Response<?> response) {
+            if (response == null) {
+                try {
+                    throw new BarcodeKanojoException("response is null! \n" + this.mReason);
+                } catch (BarcodeKanojoException e) {
+                    if (this.mReason.getMessage().equals("user not found")) {
+                        TopActivity.this.showAlertDialog(new Alert(TopActivity.this.getResources().getString(R.string.error_login)));
+                    } else {
+                        TopActivity.this.showAlertDialog(new Alert(TopActivity.this.getResources().getString(R.string.error_internet)));
+                        TopActivity.this.close();
+                    }
+                    TopActivity.this.mProgressBar.setVisibility(4);
+                    TopActivity.this.login_btn.setVisibility(0);
+                    TopActivity.this.signup_btn.setVisibility(0);
+                } catch (Throwable th) {
+                    TopActivity.this.mProgressBar.setVisibility(4);
+                    TopActivity.this.login_btn.setVisibility(0);
+                    TopActivity.this.signup_btn.setVisibility(0);
+                    throw th;
+                }
+            } else {
+                switch (response.getCode()) {
+                    case 200:
+                        TopActivity.this.startDashboard();
+                        break;
+                    case 401:
+                    case 403:
+                    case 404:
+                        TopActivity.this.startSignUp();
+                        break;
+                    default:
+                        Alert alert = response.getAlert();
+                        if (alert != null) {
+                            TopActivity.this.showAlertDialog(alert);
+                            break;
+                        }
+                        break;
+                }
+                TopActivity.this.mProgressBar.setVisibility(4);
+                TopActivity.this.login_btn.setVisibility(0);
+                TopActivity.this.signup_btn.setVisibility(0);
+            }
+        }
+
+        /* access modifiers changed from: protected */
+        public void onCancelled() {
+            TopActivity.this.mProgressBar.setVisibility(4);
+            TopActivity.this.login_btn.setVisibility(0);
+            TopActivity.this.signup_btn.setVisibility(0);
+        }
+
+        /* access modifiers changed from: package-private */
+        public Response<?> login() throws BarcodeKanojoException, IllegalStateException, IOException {
+            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) TopActivity.this.getApplication()).getBarcodeKanojo();
+            User user = barcodeKanojo.getUser();
+            Response<BarcodeKanojoModel> iphone_verify = barcodeKanojo.iphone_verify(user.getEmail(), user.getPassword(), ((BarcodeKanojoApp) TopActivity.this.getApplication()).getUDID());
+            barcodeKanojo.init_product_category_list();
+            return iphone_verify;
+        }
+    }
+
+    class TopSignUpTask extends AsyncTask<Void, Void, Response<?>> {
+        private Exception mReason = null;
+
+        TopSignUpTask() {
+        }
+
+        public void onPreExecute() {
+            TopActivity.this.mProgressBar.setVisibility(0);
+            TopActivity.this.login_btn.setVisibility(4);
+            TopActivity.this.signup_btn.setVisibility(4);
+        }
+
+        public Response<?> doInBackground(Void... params) {
+            try {
+                return signup();
+            } catch (Exception e) {
+                this.mReason = e;
+                return null;
+            }
+        }
+
+        public void onPostExecute(Response<?> response) {
+            if (response == null) {
+                try {
+                    throw new BarcodeKanojoException("response is null! \n" + this.mReason);
+                } catch (BarcodeKanojoException e) {
+                    TopActivity.this.showAlertDialog(new Alert(TopActivity.this.getResources().getString(R.string.error_internet)));
+                    TopActivity.this.mProgressBar.setVisibility(4);
+                } catch (Throwable th) {
+                    TopActivity.this.mProgressBar.setVisibility(4);
+                    throw th;
+                }
+            } else {
+                switch (response.getCode()) {
+                    case 200:
+                        TopActivity.this.startDashboard();
+                        break;
+                    default:
+                        Alert alert = response.getAlert();
+                        if (alert != null) {
+                            TopActivity.this.showAlertDialog(alert);
+                            break;
+                        }
+                        break;
+                }
+                TopActivity.this.mProgressBar.setVisibility(4);
+            }
+        }
+
+        /* access modifiers changed from: protected */
+        public void onCancelled() {
+            TopActivity.this.mProgressBar.setVisibility(4);
+            TopActivity.this.login_btn.setVisibility(0);
+            TopActivity.this.signup_btn.setVisibility(0);
+        }
+
+        /* access modifiers changed from: package-private */
+        public Response<?> signup() throws BarcodeKanojoException, IllegalStateException, IOException {
+            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) TopActivity.this.getApplication()).getBarcodeKanojo();
+            User user = barcodeKanojo.getUser();
+            Response<BarcodeKanojoModel> iphone_signup = barcodeKanojo.iphone_signup(user.getName(), user.getPassword(), user.getEmail(), user.getBirth_month(), user.getBirth_day(), user.getSex(), user.getDescription(), TopActivity.this.modifiedPhoto, ((BarcodeKanojoApp) TopActivity.this.getApplication()).getUDID());
+            barcodeKanojo.init_product_category_list();
+            return iphone_signup;
+        }
+    }
+}

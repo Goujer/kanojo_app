@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="country_codes">
+        <item>-</item>
+        <item>AR</item>
+        <item>AU</item>
+        <item>BR</item>
+        <item>BG</item>
+        <item>CA</item>
+        <item>CH</item>
+        <item>CN</item>
+        <item>CZ</item>
+        <item>DE</item>
+        <item>DK</item>
+        <item>ES</item>
+        <item>FI</item>
+        <item>FR</item>
+        <item>GB</item>
+        <item>GR</item>
+        <item>HU</item>
+        <item>ID</item>
+        <item>IT</item>
+        <item>JP</item>
+        <item>KR</item>
+        <item>NL</item>
+        <item>PL</item>
+        <item>PT</item>
+        <item>RU</item>
+        <item>SE</item>
+        <item>SK</item>
+        <item>SI</item>
+        <item>TR</item>
+        <item>TW</item>
+        <item>US</item>
+    </array>
+    <array name="preferences_front_light_values">
+        <item>ON</item>
+        <item>AUTO</item>
+        <item>OFF</item>
+    </array>
+    <array name="preferences_front_light_options">
+        <item>@string/preferences_front_light_on</item>
+        <item>@string/preferences_front_light_auto</item>
+        <item>@string/preferences_front_light_off</item>
+    </array>
+    <array name="common_product_photo_dialog">
+        <item>Gallery</item>
+        <item>Camera</item>
+    </array>
+    <array name="product_category">
+        <item>Drink</item>
+        <item>Food</item>
+        <item>Snack</item>
+        <item>Alcohol</item>
+        <item>Beer</item>
+        <item>Tabacco</item>
+        <item>Magazines</item>
+        <item>Stationary</item>
+        <item>Industrial tool</item>
+        <item>Electronics</item>
+        <item>Kitchenware</item>
+        <item>Accessory</item>
+        <item>Clothes</item>
+        <item>Music</item>
+        <item>DVD</item>
+        <item>TVgame</item>
+        <item>Sprts gear</item>
+        <item>Health &amp; beauty</item>
+        <item>Medicine</item>
+        <item>Medical supplies</item>
+        <item>others</item>
+    </array>
+    <array name="user_account_gender_list">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Not Sure</item>
+    </array>
+    <array name="request_gender_list">
+        <item>male</item>
+        <item>female</item>
+        <item>not sure</item>
+    </array>
+</resources>

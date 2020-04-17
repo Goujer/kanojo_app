@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jp.co.cybird.barcodekanojoForGAM.view.StatsView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:id="@+id/row_stats" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:orientation="horizontal" android:background="@drawable/row_stats_bg" android:paddingLeft="4dp" android:paddingTop="8dp" android:paddingRight="4dp" android:paddingBottom="8dp" android:layout_width="match_parent" android:layout_height="@dimen/row_stats_height">
+        <LinearLayout android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_weight="1">
+            <TextView android:layout_gravity="left" android:paddingLeft="6dp" android:text="@string/row_stats_kanjos" style="@style/txt_stats"/>
+            <TextView android:layout_gravity="right" android:id="@+id/row_stats_kanjos" android:paddingRight="12dp" style="@style/txt_stats_number"/>
+        </LinearLayout>
+        <LinearLayout android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_weight="1">
+            <TextView android:layout_gravity="left" android:paddingLeft="20dp" android:text="@string/row_stats_scanned" style="@style/txt_stats"/>
+            <TextView android:layout_gravity="right" android:id="@+id/row_stats_scanned" android:paddingRight="8dp" style="@style/txt_stats_number"/>
+        </LinearLayout>
+    </LinearLayout>
+</jp.co.cybird.barcodekanojoForGAM.view.StatsView>

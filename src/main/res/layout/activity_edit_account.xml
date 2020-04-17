@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+    <RelativeLayout android:background="@drawable/common_title_bg" android:layout_width="match_parent" android:layout_height="@dimen/common_title_height">
+        <ImageView android:layout_width="wrap_content" android:layout_height="@dimen/common_title_logo_height" android:src="@drawable/common_logo" android:scaleType="fitCenter" android:adjustViewBounds="true" android:layout_centerInParent="true"/>
+        <Button android:id="@+id/edit_acount_close" android:text="@string/common_edit_close" android:layout_alignParentLeft="true" style="@style/btn_navi"/>
+    </RelativeLayout>
+    <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/edit_bg" android:padding="6dp" android:layout_width="match_parent" android:layout_height="match_parent">
+        <TextView android:textSize="14sp" android:layout_marginLeft="4dp" android:layout_marginTop="4dp" android:text="@string/edit_account_title" style="@style/txt_log_in"/>
+        <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@+id/edit_account_name" android:background="@drawable/row_kanojo_edit_bg_name" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="10dp">
+            <TextView android:id="@+id/edit_account_name_key" android:text="@string/edit_account_name" android:layout_weight="1" style="@style/txt_kanojo_edit_key"/>
+            <TextView android:ellipsize="end" android:gravity="right" android:id="@+id/edit_account_name_value" android:singleLine="true" android:layout_weight="1" style="@style/txt_kanojo_edit_value"/>
+        </LinearLayout>
+        <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@+id/edit_account_photo" android:background="@drawable/row_kanojo_edit_bg_name" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="10dp">
+            <TextView android:id="@+id/edit_account_photo_key" android:text="@string/edit_account_photo" android:layout_weight="1" style="@style/txt_kanojo_edit_key"/>
+            <TextView android:gravity="right" android:id="@+id/edit_account_photo_value" android:layout_weight="1" style="@style/txt_kanojo_edit_value"/>
+        </LinearLayout>
+        <TextView android:layout_marginTop="8dp" android:text="@string/notice_input" style="@style/txt_notice_input"/>
+        <Button android:id="@+id/edit_account_ok" android:layout_marginTop="20dp" android:text="@string/common_ok" style="@style/btn_default"/>
+    </LinearLayout>
+</LinearLayout>

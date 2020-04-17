@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+        <LinearLayout android:gravity="center_vertical" android:background="@drawable/common_title_bg" android:layout_width="match_parent" android:layout_height="@dimen/common_title_height">
+            <Button android:id="@+id/kanojo_item_detail_close" android:text="@string/common_edit_close" style="@style/btn_navi"/>
+            <TextView android:ellipsize="end" android:id="@+id/kanojo_item_detail_title" android:singleLine="true" android:layout_weight="1" style="@style/txt_kanojo_room_name"/>
+            <Button android:id="@+id/kanojo_item_detail_dummy" android:visibility="invisible" android:text="@string/common_edit_close" style="@style/btn_navi"/>
+        </LinearLayout>
+        <ScrollView android:id="@+id/scrollView1" android:background="@color/kanojo_item_detail_bg" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+            <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:padding="12dp" android:paddingBottom="13dp" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1">
+                <ImageView android:id="@+id/kanojo_item_detail_img" android:layout_width="match_parent" android:layout_height="wrap_content" android:src="@drawable/common_noimage_product" android:scaleType="center" android:adjustViewBounds="true" android:layout_weight="1"/>
+                <TextView android:id="@+id/kanojo_item_detail_description" android:background="@drawable/kanojo_item_detail_txt_bg" android:layout_marginTop="13dp" style="@style/txt_kanojo_item_detail_description"/>
+                <Button android:id="@+id/kanojo_item_detail_btn_01" android:layout_marginTop="13dp" android:text="" style="@style/btn_default"/>
+                <Button android:id="@+id/kanojo_item_detail_btn_02" android:layout_marginTop="13dp" android:text="@string/common_cancel" style="@style/btn_default"/>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+    <jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView android:id="@+id/loadingView" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent"/>
+</FrameLayout>

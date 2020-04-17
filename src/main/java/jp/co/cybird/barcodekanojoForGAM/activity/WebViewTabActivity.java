@@ -1,0 +1,167 @@
+package jp.co.cybird.barcodekanojoForGAM.activity;
+
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.net.http.SslError;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.RelativeLayout;
+import java.io.IOException;
+import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
+import jp.co.cybird.barcodekanojoForGAM.R;
+import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
+import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseKanojosActivity;
+import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
+import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
+import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
+import jp.co.cybird.barcodekanojoForGAM.core.model.WebViewData;
+import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
+
+public class WebViewTabActivity extends BaseKanojosActivity implements View.OnClickListener {
+    private final boolean DEBUG = false;
+    private String extraWebViewURL;
+    private RelativeLayout mProgressBar;
+    /* access modifiers changed from: private */
+    public WebView webview;
+
+    @SuppressLint({"SetJavaScriptEnabled"})
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(1);
+        setContentView(R.layout.activity_webview);
+        this.webview = (WebView) findViewById(R.id.webview);
+        this.webview.setWebViewClient(new MyWebViewClient(this, (MyWebViewClient) null));
+        this.webview.getSettings().setJavaScriptEnabled(true);
+        this.webview.setScrollBarStyle(0);
+        this.mProgressBar = (RelativeLayout) findViewById(R.id.progressbar);
+        this.mProgressBar.setOnClickListener(this);
+        showProgressDialog();
+    }
+
+    /* access modifiers changed from: protected */
+    public void onResume() {
+        super.onResume();
+        this.extraWebViewURL = getIntent().getStringExtra(BaseInterface.EXTRA_WEBVIEW_URL);
+        Log.d("NguyenTT", "WebViewTabActivity onResume " + this.extraWebViewURL);
+        if (this.extraWebViewURL == null) {
+            new GetURLWebView().execute(new Void[0]);
+        } else {
+            this.webview.loadUrl(this.extraWebViewURL);
+        }
+    }
+
+    class GetURLWebView extends AsyncTask<Void, Void, Response<?>> {
+        GetURLWebView() {
+        }
+
+        /* access modifiers changed from: protected */
+        public void onPreExecute() {
+            super.onPreExecute();
+            WebViewTabActivity.this.showProgressDialog();
+        }
+
+        /* access modifiers changed from: protected */
+        public Response<?> doInBackground(Void... params) {
+            try {
+                getURLWebView();
+                return null;
+            } catch (BarcodeKanojoException e) {
+                e.printStackTrace();
+                return null;
+            } catch (IOException e2) {
+                e2.printStackTrace();
+                return null;
+            }
+        }
+
+        /* access modifiers changed from: protected */
+        public void onPostExecute(Response<?> result) {
+            WebViewTabActivity.this.dismissProgressDialog();
+            super.onPostExecute(result);
+        }
+
+        private void getURLWebView() throws BarcodeKanojoException, IOException {
+            Response<BarcodeKanojoModel> uRLWebView = ((BarcodeKanojoApp) WebViewTabActivity.this.getApplication()).getBarcodeKanojo().getURLWebView(new ApplicationSetting(WebViewTabActivity.this).getUUID());
+            if (uRLWebView == null) {
+                throw new BarcodeKanojoException("Error: URL webview not found");
+            }
+            int code = uRLWebView.getCode();
+            switch (code) {
+                case 200:
+                    WebViewTabActivity.this.webview.loadUrl("https://" + ((WebViewData) uRLWebView.get(WebViewData.class)).getUrl());
+                    return;
+                case 400:
+                case 401:
+                case 403:
+                case 404:
+                case 500:
+                case 503:
+                    WebViewTabActivity.this.dismissProgressDialog();
+                    throw new BarcodeKanojoException("Error: Code: " + code + " WebView not initialized!");
+                default:
+                    return;
+            }
+        }
+    }
+
+    private class MyWebViewClient extends WebViewClient {
+        private MyWebViewClient() {
+        }
+
+        /* synthetic */ MyWebViewClient(WebViewTabActivity webViewTabActivity, MyWebViewClient myWebViewClient) {
+            this();
+        }
+
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            handler.proceed();
+        }
+
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+        }
+
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            view.clearCache(true);
+        }
+    }
+
+    public void onClick(View v) {
+        v.getId();
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == 4) {
+            if (this.webview.canGoBack()) {
+                this.webview.goBack();
+            } else if (keyCode == 4) {
+                finish();
+                overridePendingTransition(0, 0);
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public ProgressDialog showProgressDialog() {
+        if (this.mProgressBar != null) {
+            this.mProgressBar.setVisibility(0);
+        }
+        this.mProgressBar.setTag("show");
+        return this.mProgressDialog;
+    }
+
+    /* access modifiers changed from: protected */
+    public void dismissProgressDialog() {
+        if (this.mProgressBar != null) {
+            this.mProgressBar.setVisibility(4);
+        }
+        this.mProgressBar.setTag("hide");
+    }
+}

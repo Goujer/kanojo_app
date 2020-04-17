@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SlidingDrawer xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:orientation="vertical" android:id="@+id/lib_launcher_slidingdrawer" android:layout_width="match_parent" android:layout_height="match_parent" android:bottomOffset="60dp" android:handle="@+id/lib_launcher_handle" android:content="@+id/lib_launcher_content">
+    <LinearLayout android:gravity="right" android:orientation="horizontal" android:id="@+id/lib_launcher_handle" android:background="@drawable/lib_launcher_handle_background" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="40dp">
+        <Button android:id="@+id/lib_launcher_close_button" android:text="@string/lib_launcher_close_button_text" style="@style/Launcher.Dialog.Handle.Button"/>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/lib_launcher_content" android:background="#ffffff" android:layout_width="match_parent" android:layout_height="match_parent">
+        <ListView android:id="@+id/lib_launcher_listview" android:layout_width="match_parent" android:layout_height="match_parent" android:cacheColorHint="#00000000"/>
+        <TextView android:gravity="center" android:id="@+id/lib_launcher_blank" android:layout_width="match_parent" android:layout_height="match_parent"/>
+    </LinearLayout>
+</SlidingDrawer>

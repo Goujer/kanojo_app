@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:layout_width="match_parent" android:layout_height="match_parent">
+    <ImageView android:layout_gravity="center" android:id="@+id/screen_wait" android:visibility="visible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/wait"/>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/screen_main" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent">
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10dp" android:src="@drawable/title"/>
+        <ImageView android:id="@+id/free_or_premium" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="40dp" android:src="@drawable/free"/>
+        <ImageView android:id="@+id/gas_gauge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="40dp" android:src="@drawable/gas4"/>
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="20dp" android:src="@drawable/drive" android:onClick="onDriveButtonClicked"/>
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="20dp" android:src="@drawable/buy_gas" android:onClick="onBuyGasButtonClicked"/>
+        <ImageView android:id="@+id/upgrade_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/upgrade_app" android:onClick="onUpgradeAppButtonClicked"/>
+    </LinearLayout>
+</FrameLayout>

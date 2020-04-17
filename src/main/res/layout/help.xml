@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+    <WebView android:id="@+id/help_contents" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+    <LinearLayout android:gravity="center" android:orientation="horizontal" android:paddingTop="@dimen/half_padding" android:layout_width="match_parent" android:layout_height="wrap_content" android:weightSum="1" android:layout_weight="0">
+        <Button android:id="@+id/back_button" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@string/button_back" android:layout_weight="0.5"/>
+        <Button android:id="@+id/done_button" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@string/button_done" android:layout_weight="0.5"/>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:orientation="vertical" android:background="@color/edit_bg" android:layout_width="match_parent" android:layout_height="match_parent">
+        <RelativeLayout android:background="@drawable/common_title_bg" android:layout_width="match_parent" android:layout_height="@dimen/common_title_height">
+            <ImageView android:layout_width="wrap_content" android:layout_height="@dimen/common_title_logo_height" android:src="@drawable/common_logo" android:scaleType="fitCenter" android:adjustViewBounds="true" android:layout_centerInParent="true"/>
+            <Button android:id="@+id/scan_result_close" android:text="@string/scan_result_close" android:layout_alignParentLeft="true" style="@style/btn_navi"/>
+        </RelativeLayout>
+        <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1">
+            <RelativeLayout android:gravity="center_horizontal" android:padding="4dp" android:layout_width="match_parent" android:layout_height="match_parent">
+                <RelativeLayout android:gravity="center" android:id="@+id/scan_result_layout_thumb" android:background="@drawable/scan_result_thumb_bg" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true"/>
+                <TextView android:id="@+id/scan_result_message" android:paddingLeft="15dp" android:paddingRight="15dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="13dp" android:layout_below="@+id/scan_result_layout_thumb" style="@style/txt_scan_result_message"/>
+                <Button android:id="@+id/scan_result_btn_01" android:layout_marginTop="13dp" android:text="@string/scan_others_add_friend" android:layout_below="@+id/scan_result_message" android:layout_centerHorizontal="true" style="@style/btn_default"/>
+                <Button android:id="@+id/scan_result_btn_02" android:layout_marginTop="13dp" android:text="@string/scan_others_edit_productinfo" android:layout_below="@+id/scan_result_btn_01" android:layout_centerHorizontal="true" style="@style/btn_default"/>
+                <ProgressBar android:id="@+id/scan_result_progressbar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true" style="?android:attr/progressBarStyle"/>
+            </RelativeLayout>
+        </ScrollView>
+    </LinearLayout>
+    <jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView android:id="@+id/loadingView" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent"/>
+</FrameLayout>

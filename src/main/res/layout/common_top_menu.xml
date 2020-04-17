@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:orientation="horizontal" android:id="@+id/common_top_menu_root" android:layout_width="match_parent" android:layout_height="@dimen/common_top_menu_height">
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/top_menu_kanojos" android:background="@drawable/tab_bg" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
+        <ImageView android:id="@+id/tab_icon_kanojos" android:layout_width="@dimen/tab_icon_width" android:layout_height="@dimen/tab_icon_height" android:src="@drawable/tab_icon_kanojos"/>
+        <TextView android:id="@+id/tab_text_kanojos" android:text="@string/tab_kanojo" style="@style/txt_tab"/>
+    </LinearLayout> //Add Webview tabs\10
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/top_menu_webview" android:background="@drawable/tab_bg" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
+        <ImageView android:id="@+id/tab_icon_webview" android:layout_width="@dimen/tab_icon_width" android:layout_height="@dimen/tab_icon_height" android:src="@drawable/tab_icon_webview"/>
+        <TextView android:id="@+id/tab_text_webview" android:text="@string/tab_webview" style="@style/txt_tab"/>
+    </LinearLayout>\10//---------------------------------------------\10
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/top_menu_scan" android:background="@drawable/tab_bg" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
+        <ImageView android:id="@+id/tab_icon_scan" android:layout_width="@dimen/tab_icon_width" android:layout_height="@dimen/tab_icon_height" android:src="@drawable/tab_icon_scan"/>
+        <TextView android:id="@+id/tab_text_scan" android:text="@string/tab_scan" style="@style/txt_tab"/>
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/top_menu_dashboard" android:background="@drawable/tab_bg" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
+        <ImageView android:id="@+id/tab_icon_dashboard" android:layout_width="@dimen/tab_icon_width" android:layout_height="@dimen/tab_icon_height" android:src="@drawable/tab_icon_account"/>
+        <TextView android:id="@+id/tab_text_dashboard" android:text="@string/tab_dashboard" style="@style/txt_tab"/>
+    </LinearLayout>\10//Add Setting tabs\10
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/top_menu_setting" android:background="@drawable/tab_bg" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
+        <ImageView android:id="@+id/tab_icon_setting" android:layout_width="@dimen/tab_icon_width" android:layout_height="@dimen/tab_icon_height" android:src="@drawable/tab_icon_setting"/>
+        <TextView android:id="@+id/tab_text_setting" android:text="@string/tab_setting" style="@style/txt_tab"/>
+    </LinearLayout>\10//---------------------------------------------\10
+</LinearLayout>

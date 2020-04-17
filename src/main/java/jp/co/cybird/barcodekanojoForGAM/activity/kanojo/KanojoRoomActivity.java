@@ -1,0 +1,1279 @@
+package jp.co.cybird.barcodekanojoForGAM.activity.kanojo;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.net.http.SslError;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.ToggleButton;
+import com.google.ads.AdRequest;
+import com.google.ads.AdSize;
+import com.google.ads.AdView;
+import com.google.ads.mediation.nend.NendAdapterExtras;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Timer;
+import java.util.TimerTask;
+import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
+import jp.co.cybird.barcodekanojoForGAM.R;
+import jp.co.cybird.barcodekanojoForGAM.activity.DashboardActivity;
+import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity;
+import jp.co.cybird.barcodekanojoForGAM.activity.WebViewTabActivity;
+import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
+import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
+import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
+import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
+import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
+import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
+import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoItem;
+import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoMessage;
+import jp.co.cybird.barcodekanojoForGAM.core.model.LoveIncrement;
+import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel;
+import jp.co.cybird.barcodekanojoForGAM.core.model.Product;
+import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
+import jp.co.cybird.barcodekanojoForGAM.core.model.Scanned;
+import jp.co.cybird.barcodekanojoForGAM.core.model.User;
+import jp.co.cybird.barcodekanojoForGAM.core.model.WebViewData;
+import jp.co.cybird.barcodekanojoForGAM.core.util.Digest;
+import jp.co.cybird.barcodekanojoForGAM.core.util.FileUtil;
+import jp.co.cybird.barcodekanojoForGAM.core.util.FirstbootUtil;
+import jp.co.cybird.barcodekanojoForGAM.core.util.Live2dUtil;
+import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs;
+import jp.co.cybird.barcodekanojoForGAM.live2d.KanojoLive2D;
+import jp.co.cybird.barcodekanojoForGAM.live2d.KanojoSetting;
+import jp.co.cybird.barcodekanojoForGAM.live2d.view.AndroidEAGLView;
+import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
+import jp.co.cybird.barcodekanojoForGAM.view.DialogTextView;
+
+@SuppressLint({"SetJavaScriptEnabled", "NewApi"})
+public class KanojoRoomActivity extends BaseActivity implements View.OnClickListener, Observer {
+    private static final boolean DEBUG = false;
+    private static final String TAG = "KanojoRoomActivity";
+    private AdView adView;
+    private Button btnClose;
+    private Button btnDate;
+    /* access modifiers changed from: private */
+    public ImageButton btnInfo;
+    /* access modifiers changed from: private */
+    public Button btnItems;
+    private ToggleButton btnLike;
+    /* access modifiers changed from: private */
+    public ImageView btnStatusArrow;
+    private Button btnTickets;
+    private int dHeight;
+    private int dWidth;
+    /* access modifiers changed from: private */
+    public RelativeLayout dialoglayout;
+    private ImageView dropImage;
+    private String extraWebViewURL;
+    private ImageView imageView01;
+    private ImageView imageView02;
+    private ImageView imageView03;
+    /* access modifiers changed from: private */
+    public boolean isPrepared = false;
+    /* access modifiers changed from: private */
+    public WebView kanojoMessage;
+    /* access modifiers changed from: private */
+    public RelativeLayout layoutBGActionLoveGauge;
+    /* access modifiers changed from: private */
+    public RelativeLayout layoutTagLoveBar;
+    /* access modifiers changed from: private */
+    public RelativeLayout mFirstBoot;
+    /* access modifiers changed from: private */
+    public Handler mHandler = new Handler();
+    private boolean mIsFirstBoot = false;
+    /* access modifiers changed from: private */
+    public Kanojo mKanojo;
+    /* access modifiers changed from: private */
+    public DialogTextView mKanojoDialogMessage;
+    private KanojoDialogTask mKanojoDialogTask;
+    /* access modifiers changed from: private */
+    public RelativeLayout mKanojoLayout;
+    private KanojoLive2D mKanojoLive2D;
+    /* access modifiers changed from: private */
+    public KanojoMessage mKanojoMessage;
+    private KanojoRoomTask mKanojoRoomTask;
+    private DialogTextView.OnDismissListener mListener;
+    private Live2dTask mLive2dTask;
+    private Live2dUtil mLive2dUtil;
+    private CustomLoadingView mLoadingView;
+    private ProgressBar mLoveBar;
+    /* access modifiers changed from: private */
+    public LoveIncrement mLoveIncremen;
+    /* access modifiers changed from: private */
+    public MessageModel mMessage;
+    /* access modifiers changed from: private */
+    public Product mProduct;
+    /* access modifiers changed from: private */
+    public RelativeLayout mProgressBar;
+    /* access modifiers changed from: private */
+    public Runnable mProgressThread = new Runnable() {
+        public void run() {
+            if (KanojoRoomActivity.this.getLive2D().isModelAvailable()) {
+                KanojoRoomActivity.this.dismissProgressDialog();
+                KanojoRoomActivity.this.mHandler.removeCallbacks(KanojoRoomActivity.this.mProgressThread);
+                return;
+            }
+            KanojoRoomActivity.this.mHandler.postDelayed(KanojoRoomActivity.this.mProgressThread, 100);
+        }
+    };
+    /* access modifiers changed from: private */
+    public Scanned mScanned;
+    /* access modifiers changed from: private */
+    public LinearLayout mStatusLayout;
+    private Timer mTimerCallAPI;
+    /* access modifiers changed from: private */
+    public User mUser;
+    private LinearLayout statusBarLayout;
+    /* access modifiers changed from: private */
+    public WebView webview;
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_kanojo_room);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        this.dWidth = displayMetrics.widthPixels;
+        this.dHeight = displayMetrics.heightPixels;
+        this.btnClose = (Button) findViewById(R.id.kanojo_room_close);
+        this.btnClose.setOnClickListener(this);
+        this.btnInfo = (ImageButton) findViewById(R.id.kanojo_room_info);
+        this.btnInfo.setOnClickListener(this);
+        this.btnLike = (ToggleButton) findViewById(R.id.kanojo_room_like_btn);
+        this.btnLike.setOnClickListener(this);
+        this.btnDate = (Button) findViewById(R.id.kanojo_room_date_btn);
+        this.btnDate.setOnClickListener(this);
+        this.btnItems = (Button) findViewById(R.id.kanojo_room_items_btn);
+        this.btnItems.setOnClickListener(this);
+        this.btnTickets = (Button) findViewById(R.id.kanojo_room_ticket_btn);
+        this.btnTickets.setOnClickListener(this);
+        this.btnDate.setVisibility(8);
+        this.btnDate.setEnabled(false);
+        this.btnItems.setVisibility(8);
+        this.btnItems.setEnabled(false);
+        this.btnTickets.setVisibility(8);
+        this.btnTickets.setEnabled(false);
+        this.mStatusLayout = (LinearLayout) findViewById(R.id.kanojo_room_status_txt_layout);
+        this.statusBarLayout = (LinearLayout) findViewById(R.id.kanojo_room_status_bar_layout);
+        this.statusBarLayout.setOnClickListener(this);
+        TextView txtStatus = (TextView) findViewById(R.id.kanojo_room_status_txt);
+        this.mLoveBar = (ProgressBar) findViewById(R.id.kanojo_room_status_bar);
+        this.btnStatusArrow = (ImageView) findViewById(R.id.kanojo_room_arrow);
+        this.mKanojoLayout = (RelativeLayout) findViewById(R.id.kanojo_room_live2d);
+        this.mLoadingView = (CustomLoadingView) findViewById(R.id.loadingView);
+        this.kanojoMessage = (WebView) findViewById(R.id.kanojo_room_ads_banner);
+        this.kanojoMessage.setBackgroundColor(0);
+        if (Build.VERSION.SDK_INT >= 11) {
+            this.kanojoMessage.setLayerType(1, (Paint) null);
+        }
+        this.dropImage = (ImageView) findViewById(R.id.dropdown_img);
+        this.dropImage.setOnClickListener(this);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            this.mKanojo = (Kanojo) bundle.get(BaseInterface.EXTRA_KANOJO);
+        }
+        if (this.mKanojo != null) {
+            setBanner();
+            this.webview = (WebView) findViewById(R.id.radar_webview);
+            this.webview.setWebViewClient(new MyWebViewClient(this, (MyWebViewClient) null));
+            this.webview.getSettings().setJavaScriptEnabled(true);
+            this.webview.setScrollBarStyle(0);
+            this.webview.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    return event.getAction() == 2;
+                }
+            });
+            this.webview.setBackgroundColor(0);
+            if (Build.VERSION.SDK_INT >= 11) {
+                this.webview.setLayerType(1, (Paint) null);
+            }
+            this.webview.setInitialScale(1);
+            this.webview.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+            this.mProgressBar = (RelativeLayout) findViewById(R.id.progressbar_radar_view);
+            txtStatus.setText(this.mKanojo.getStatus());
+            this.btnLike.setChecked(this.mKanojo.isVoted_like());
+            TextView txtName = (TextView) findViewById(R.id.kanojo_room_name);
+            if (txtName != null) {
+                txtName.setText(this.mKanojo.getName());
+            }
+            this.mKanojoDialogMessage = (DialogTextView) findViewById(R.id.dialog_message);
+            this.dialoglayout = (RelativeLayout) findViewById(R.id.dialog_frame_all);
+            this.dialoglayout.setVisibility(4);
+            this.dialoglayout.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                }
+            });
+            getResources().getDrawable(R.drawable.dialog_frame).setAlpha(180);
+            ((RelativeLayout) findViewById(R.id.dialog_frame)).setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    KanojoRoomActivity.this.dialoglayout.setVisibility(8);
+                }
+            });
+            this.mListener = new DialogTextView.OnDismissListener() {
+                public void onSiteClick(String url) {
+                    Log.d("NguyenTT", "mKanojoMessage.getNextScreen(): " + KanojoRoomActivity.this.mKanojoMessage.getNextScreen());
+                    if (KanojoRoomActivity.this.mKanojoMessage.getNextScreen().equalsIgnoreCase("webview")) {
+                        Intent intent = new Intent(KanojoRoomActivity.this, WebViewTabActivity.class);
+                        intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, url);
+                        KanojoRoomActivity.this.startActivity(intent);
+                        KanojoRoomActivity.this.finish();
+                    } else if (KanojoRoomActivity.this.mKanojoMessage.getNextScreen().equalsIgnoreCase("dashboard")) {
+                        KanojoRoomActivity.this.startActivity(new Intent(KanojoRoomActivity.this, DashboardActivity.class));
+                        KanojoRoomActivity.this.finish();
+                    } else if (KanojoRoomActivity.this.mKanojoMessage.getNextScreen().equalsIgnoreCase("kanojo")) {
+                        Intent intent2 = new Intent(KanojoRoomActivity.this, KanojosActivity.class);
+                        intent2.putExtra(BaseInterface.EXTRA_KANOJO_ITEM, KanojoRoomActivity.this.mKanojoMessage.getKanojo_id());
+                        KanojoRoomActivity.this.setResult(BaseInterface.RESULT_KANOJO_MESSAGE_DIALOG, intent2);
+                        KanojoRoomActivity.this.finish();
+                    }
+                }
+
+                public void OnCloseClick() {
+                    KanojoRoomActivity.this.dialoglayout.setVisibility(8);
+                }
+            };
+            this.mKanojoDialogMessage.setListener(this.mListener);
+            executeKanojoRoomTask();
+            this.mFirstBoot = (RelativeLayout) findViewById(R.id.kanojo_room_firstboot);
+            if (this.mKanojo.getRelation_status() == 1) {
+                this.mIsFirstBoot = false;
+                this.mFirstBoot.setVisibility(8);
+                cleanupView(this.mFirstBoot);
+            } else if (!FirstbootUtil.isShowed(this, "kanojo_room_firstboot")) {
+                this.mIsFirstBoot = true;
+                this.mFirstBoot.setVisibility(0);
+                this.mFirstBoot.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        KanojoRoomActivity.this.mFirstBoot.setVisibility(8);
+                        KanojoRoomActivity.this.cleanupView(KanojoRoomActivity.this.mFirstBoot);
+                    }
+                });
+            } else {
+                this.mIsFirstBoot = false;
+                this.mFirstBoot.setVisibility(8);
+                cleanupView(this.mFirstBoot);
+            }
+            if (this.mKanojo.getRelation_status() == 2) {
+                this.kanojoMessage.setVisibility(0);
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) this.btnItems.getLayoutParams();
+                params.addRule(2, R.id.kanojo_room_ads_banner);
+                this.btnItems.setLayoutParams(params);
+                RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) this.dialoglayout.getLayoutParams();
+                params2.addRule(2, R.id.kanojo_room_ads_banner);
+                this.dialoglayout.setLayoutParams(params2);
+                this.adView.setVisibility(8);
+                if (this.mKanojo.getAdvertising_banner_url() == null || this.mKanojo.getAdvertising_banner_url().equals("null")) {
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.btnItems.getLayoutParams();
+                    layoutParams.addRule(12);
+                    this.btnItems.setLayoutParams(layoutParams);
+                    this.kanojoMessage.setVisibility(8);
+                } else {
+                    addReactionWord(this.mKanojo.getAdvertising_banner_url());
+                }
+            } else {
+                this.kanojoMessage.setVisibility(8);
+            }
+            executeKanojoShowDialogTask();
+        }
+    }
+
+    public View getClientView() {
+        View leyout = getLayoutInflater().inflate(R.layout.activity_kanojo_room, (ViewGroup) null);
+        LinearLayout appLayoutRoot = new LinearLayout(this);
+        appLayoutRoot.addView(leyout);
+        return appLayoutRoot;
+    }
+
+    /* access modifiers changed from: protected */
+    public void onResume() {
+        super.onResume();
+        if (this.mKanojo != null) {
+            this.mLoveBar.setProgress(this.mKanojo.getLove_gauge());
+            this.btnLike.setChecked(this.mKanojo.isVoted_like());
+            if (this.mKanojo.getRelation_status() == 1) {
+                this.btnDate.setVisibility(8);
+                this.btnDate.setEnabled(false);
+                this.btnItems.setVisibility(8);
+                this.btnItems.setEnabled(false);
+                this.btnTickets.setVisibility(8);
+                this.btnTickets.setEnabled(false);
+                this.mFirstBoot.setVisibility(8);
+            }
+        }
+        showProgressDialog();
+        this.mHandler.post(this.mProgressThread);
+        startLive2D();
+        if (!this.isPrepared) {
+            executeKanojoRoomTask();
+        } else {
+            settingLive2D();
+        }
+        bindEvent();
+    }
+
+    /* access modifiers changed from: protected */
+    public void onPause() {
+        if (this.mLive2dTask != null) {
+            this.mLive2dTask.cancel(true);
+            this.mLive2dTask = null;
+        }
+        dismissProgressDialog();
+        this.mHandler.removeCallbacks(this.mProgressThread);
+        stopLive2D();
+        if (isFinishing()) {
+            getLive2DUtil().removeObserver();
+        }
+        super.onPause();
+    }
+
+    @SuppressLint({"DefaultLocale"})
+    private void setBanner() {
+        this.adView = new AdView((Activity) this, AdSize.BANNER, getResources().getString(R.string.admob_mediation_id));
+        LinearLayout layout = (LinearLayout) findViewById(R.id.adView);
+        layout.addView(this.adView);
+        AdRequest adRequest = new AdRequest();
+        adRequest.setNetworkExtras(new NendAdapterExtras());
+        this.adView.loadAd(adRequest);
+        if (this.mKanojo.getRelation_status() == 2) {
+            layout.setVisibility(8);
+        }
+    }
+
+    public static final String md5(String s) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance(Digest.MD5);
+            digest.update(s.getBytes());
+            byte[] messageDigest = digest.digest();
+            StringBuffer hexString = new StringBuffer();
+            for (byte b : messageDigest) {
+                String h = Integer.toHexString(b & 255);
+                while (h.length() < 2) {
+                    h = GreeDefs.BARCODE + h;
+                }
+                hexString.append(h);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            Log.v(TAG, e.toString());
+            return "";
+        }
+    }
+
+    public void bindEvent() {
+        this.statusBarLayout.setOnClickListener(this);
+        this.btnClose.setOnClickListener(this);
+        this.btnInfo.setOnClickListener(this);
+        this.btnLike.setOnClickListener(this);
+        this.btnDate.setOnClickListener(this);
+        this.btnItems.setOnClickListener(this);
+        this.btnTickets.setOnClickListener(this);
+        this.dropImage.setOnClickListener(this);
+    }
+
+    public void unBindEvent() {
+        this.statusBarLayout.setOnClickListener((View.OnClickListener) null);
+        this.btnClose.setOnClickListener((View.OnClickListener) null);
+        this.btnInfo.setOnClickListener((View.OnClickListener) null);
+        this.btnLike.setOnClickListener((View.OnClickListener) null);
+        this.btnDate.setOnClickListener((View.OnClickListener) null);
+        this.btnItems.setOnClickListener((View.OnClickListener) null);
+        this.btnTickets.setOnClickListener((View.OnClickListener) null);
+        this.dropImage.setOnClickListener((View.OnClickListener) null);
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
+        if (this.adView != null) {
+            this.adView.destroy();
+        }
+        KanojoLive2D kanojoLive2D = getLive2D();
+        if (kanojoLive2D != null) {
+            kanojoLive2D.stopAnimation();
+            kanojoLive2D.releaseView();
+            kanojoLive2D.releaseModel();
+            kanojoLive2D.releaseFileManager();
+        }
+        this.mLive2dUtil.setOnRrObserver((Observer) null);
+        this.mLive2dUtil = null;
+        this.mKanojoLive2D = null;
+        this.mHandler = null;
+        if (this.mKanojoRoomTask != null) {
+            this.mKanojoRoomTask.cancel(true);
+            this.mKanojoRoomTask = null;
+        }
+        this.mProgressThread = null;
+        this.statusBarLayout.setOnClickListener((View.OnClickListener) null);
+        this.btnClose.setOnClickListener((View.OnClickListener) null);
+        this.btnInfo.setOnClickListener((View.OnClickListener) null);
+        this.btnLike.setOnClickListener((View.OnClickListener) null);
+        this.btnDate.setOnClickListener((View.OnClickListener) null);
+        this.btnItems.setOnClickListener((View.OnClickListener) null);
+        super.onDestroy();
+    }
+
+    class GetURLWebView extends AsyncTask<Void, Void, Response<?>> {
+        GetURLWebView() {
+        }
+
+        /* access modifiers changed from: protected */
+        public void onPreExecute() {
+            super.onPreExecute();
+            KanojoRoomActivity.this.showProgressDialog();
+        }
+
+        /* access modifiers changed from: protected */
+        public Response<?> doInBackground(Void... params) {
+            try {
+                getURLRadarWebView();
+                return null;
+            } catch (BarcodeKanojoException e) {
+                e.printStackTrace();
+                return null;
+            } catch (IOException e2) {
+                e2.printStackTrace();
+                return null;
+            }
+        }
+
+        /* access modifiers changed from: protected */
+        public void onPostExecute(Response<?> result) {
+            KanojoRoomActivity.this.dismissProgressDialog();
+            super.onPostExecute(result);
+        }
+
+        private void getURLRadarWebView() throws BarcodeKanojoException, IOException {
+            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) KanojoRoomActivity.this.getApplication()).getBarcodeKanojo();
+            KanojoRoomActivity.this.mUser = barcodeKanojo.getUser();
+            Response<BarcodeKanojoModel> uRLRadarWebView = barcodeKanojo.getURLRadarWebView(KanojoRoomActivity.this.mKanojo.getId());
+            if (uRLRadarWebView == null) {
+                throw new BarcodeKanojoException("Error: URL webview not found");
+            }
+            int code = uRLRadarWebView.getCode();
+            switch (code) {
+                case 200:
+                    KanojoRoomActivity.this.webview.loadUrl(((WebViewData) uRLRadarWebView.get(WebViewData.class)).getUrl());
+                    return;
+                case 400:
+                case 401:
+                case 403:
+                case 404:
+                case 500:
+                case 503:
+                    KanojoRoomActivity.this.dismissProgressDialog();
+                    throw new BarcodeKanojoException("Error: Code: " + code + " WebView not initialized!");
+                default:
+                    return;
+            }
+        }
+    }
+
+    private class MyWebViewClient extends WebViewClient {
+        private MyWebViewClient() {
+        }
+
+        /* synthetic */ MyWebViewClient(KanojoRoomActivity kanojoRoomActivity, MyWebViewClient myWebViewClient) {
+            this();
+        }
+
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            handler.proceed();
+        }
+
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+        }
+
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            KanojoRoomActivity.this.mProgressBar.setVisibility(8);
+            KanojoRoomActivity.this.webview.setVisibility(0);
+            view.clearCache(true);
+        }
+    }
+
+    public void onClick(View v) {
+        unBindEvent();
+        new Intent();
+        switch (v.getId()) {
+            case R.id.kanojo_room_close:
+                setResult(BaseInterface.RESULT_KANOJO_ROOM_EXIT);
+                close();
+                return;
+            case R.id.kanojo_room_info:
+                this.webview.setVisibility(8);
+                Intent intent = new Intent(this, KanojoInfoActivity.class);
+                if (this.mKanojo != null) {
+                    intent.putExtra(BaseInterface.EXTRA_KANOJO, this.mKanojo);
+                }
+                if (this.mProduct != null) {
+                    intent.putExtra(BaseInterface.EXTRA_PRODUCT, this.mProduct);
+                }
+                if (this.mScanned != null) {
+                    intent.putExtra(BaseInterface.EXTRA_SCANNED, this.mScanned);
+                }
+                if (this.mMessage != null) {
+                    intent.putExtra(MessageModel.NOTIFY_AMENDMENT_INFORMATION, (String) this.mMessage.get(MessageModel.NOTIFY_AMENDMENT_INFORMATION));
+                }
+                startActivityForResult(intent, BaseInterface.REQUEST_KANOJO_INFO);
+                return;
+            case R.id.kanojo_room_like_btn:
+                this.mKanojo.setVoted_like(this.btnLike.isChecked());
+                bindEvent();
+                return;
+            case R.id.kanojo_room_items_btn:
+                this.webview.setVisibility(8);
+                Intent intent2 = new Intent(this, KanojoItemsActivity.class);
+                if (this.mKanojo != null) {
+                    intent2.putExtra(BaseInterface.EXTRA_KANOJO, this.mKanojo);
+                }
+                intent2.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, 2);
+                startActivityForResult(intent2, BaseInterface.REQUEST_KANOJO_ITEMS);
+                return;
+            case R.id.kanojo_room_date_btn:
+                this.webview.setVisibility(8);
+                Intent intent3 = new Intent(this, KanojoItemsActivity.class);
+                if (this.mKanojo != null) {
+                    intent3.putExtra(BaseInterface.EXTRA_KANOJO, this.mKanojo);
+                }
+                intent3.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, 1);
+                startActivityForResult(intent3, BaseInterface.REQUEST_KANOJO_ITEMS);
+                return;
+            case R.id.kanojo_room_ticket_btn:
+                this.webview.setVisibility(8);
+                Intent intent4 = new Intent(this, KanojoItemsActivity.class);
+                if (this.mKanojo != null) {
+                    intent4.putExtra(BaseInterface.EXTRA_KANOJO, this.mKanojo);
+                }
+                KanojoItem item = new KanojoItem(3);
+                item.setTitle(getResources().getString(R.string.kanojo_items_store));
+                intent4.putExtra(BaseInterface.EXTRA_KANOJO_ITEM, item);
+                intent4.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, 3);
+                startActivityForResult(intent4, BaseInterface.REQUEST_KANOJO_TICKETS);
+                return;
+            case R.id.kanojo_room_status_bar_layout:
+                if (this.mStatusLayout.getVisibility() == 0) {
+                    this.webview.setVisibility(8);
+                    this.mStatusLayout.setVisibility(8);
+                    this.btnStatusArrow.setImageResource(R.drawable.kanojolovebararrowdown);
+                } else {
+                    this.mStatusLayout.setVisibility(0);
+                    this.webview.setVisibility(0);
+                    this.btnStatusArrow.setImageResource(R.drawable.kanojolovebararrowup);
+                    if (this.extraWebViewURL == null) {
+                        new GetURLWebView().execute(new Void[0]);
+                    } else {
+                        this.webview.loadUrl(this.extraWebViewURL);
+                    }
+                }
+                bindEvent();
+                return;
+            case R.id.dropdown_img:
+                if (this.mStatusLayout.getVisibility() == 0) {
+                    this.webview.setVisibility(8);
+                    this.mStatusLayout.setVisibility(8);
+                    this.btnStatusArrow.setImageResource(R.drawable.kanojolovebararrowdown);
+                } else {
+                    this.mStatusLayout.setVisibility(0);
+                    this.webview.setVisibility(0);
+                    this.btnStatusArrow.setImageResource(R.drawable.kanojolovebararrowup);
+                    if (this.extraWebViewURL == null) {
+                        new GetURLWebView().execute(new Void[0]);
+                    } else {
+                        this.webview.loadUrl(this.extraWebViewURL);
+                    }
+                }
+                bindEvent();
+                return;
+            default:
+                return;
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Bundle bundle;
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 101) {
+            executeKanojoRoomTask();
+            return;
+        }
+        if (!(resultCode != 204 || data == null || (bundle = data.getExtras()) == null)) {
+            Kanojo kanojo = (Kanojo) bundle.get(BaseInterface.EXTRA_KANOJO);
+            LoveIncrement loveIncrement = (LoveIncrement) bundle.get(BaseInterface.EXTRA_LOVE_INCREMENT);
+            if (kanojo != null) {
+                this.mKanojo = kanojo;
+                if (loveIncrement != null) {
+                    this.mLoveIncremen = loveIncrement;
+                }
+            } else {
+                this.isPrepared = false;
+                setResult(BaseInterface.RESULT_KANOJO_GOOD_BYE);
+                close();
+                return;
+            }
+        }
+        this.isPrepared = true;
+    }
+
+    private Live2dUtil getLive2DUtil() {
+        if (this.mLive2dUtil == null) {
+            this.mLive2dUtil = new Live2dUtil(getLive2D(), getApplicationContext());
+            this.mLive2dUtil.setOnRrObserver(this);
+        }
+        return this.mLive2dUtil;
+    }
+
+    /* access modifiers changed from: private */
+    public KanojoLive2D getLive2D() {
+        if (this.mKanojoLive2D == null) {
+            this.mKanojoLive2D = new KanojoLive2D(getApplicationContext());
+        }
+        return this.mKanojoLive2D;
+    }
+
+    private void stopLive2D() {
+        this.mKanojoLayout.removeAllViews();
+        KanojoLive2D kanojoLive2D = getLive2D();
+        if (kanojoLive2D != null) {
+            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo();
+            if (barcodeKanojo != null) {
+                barcodeKanojo.setPlayLive2d(this.mKanojo, kanojoLive2D.getUserActions());
+            }
+            kanojoLive2D.stopAnimation();
+            kanojoLive2D.releaseView();
+            kanojoLive2D.releaseModel();
+        }
+    }
+
+    private void startLive2D() {
+        KanojoLive2D kanojoLive2D = getLive2D();
+        if (kanojoLive2D != null) {
+            AndroidEAGLView view = kanojoLive2D.createView(getApplicationContext(), new Rect(0, 0, 320, 320));
+            this.mKanojoLayout.removeAllViews();
+            this.mKanojoLayout.addView(view, new LinearLayout.LayoutParams(-1, -2, 1.0f));
+            if (this.mKanojo.getMascotEnable() == 1) {
+                kanojoLive2D.setBackgroundImage("bg_permanent_kanojo.png", false);
+            } else {
+                kanojoLive2D.setBackgroundImage("back256.png", false);
+            }
+            kanojoLive2D.setKanojoRoomActivity(this);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void settingLive2D() {
+        if (FileUtil.isAvailableExternalSDMemory() || FileUtil.isAvailableInternalSDMemory()) {
+            KanojoLive2D kanojoLive2D = getLive2D();
+            if (kanojoLive2D != null && this.isPrepared) {
+                if (this.mKanojo != null) {
+                    this.mLoveBar.setProgress(this.mKanojo.getLove_gauge());
+                    this.btnLike.setChecked(this.mKanojo.isVoted_like());
+                }
+                if (!this.mIsFirstBoot) {
+                }
+                boolean in_room = this.mKanojo.isIn_room();
+                kanojoLive2D.setInRoom(in_room);
+                if (in_room && this.mKanojo.getRelation_status() != 1) {
+                    this.btnDate.setVisibility(0);
+                    this.btnDate.setEnabled(true);
+                    this.btnItems.setVisibility(0);
+                    this.btnItems.setEnabled(true);
+                    this.btnTickets.setVisibility(0);
+                    this.btnTickets.setEnabled(true);
+                }
+                if (!in_room) {
+                    dismissProgressDialog();
+                    this.mHandler.removeCallbacks(this.mProgressThread);
+                }
+                KanojoSetting setting = kanojoLive2D.getKanojoSetting();
+                setting.setKanojoState(this.mKanojo.getRelation_status());
+                if (getLive2DUtil().setLive2DKanojoPartsAndRequest(setting, this.mKanojo)) {
+                    if (getLive2DUtil().setLive2DKanojoBackground(this.mKanojo)) {
+                        setting.setLoveGage((double) this.mKanojo.getLove_gauge());
+                        kanojoLive2D.setupModel(true);
+                        kanojoLive2D.startAnimation();
+                        if (this.mLoveIncremen != null) {
+                            new Handler().postDelayed(new Runnable() {
+                                public void run() {
+                                    KanojoRoomActivity.this.addTagLoveGauge();
+                                }
+                            }, 2000);
+                        }
+                    }
+                } else if (this.mKanojo.getMascotEnable() == 1) {
+                    kanojoLive2D.setBackgroundImage("bg_permanent_kanojo.png", false);
+                } else {
+                    kanojoLive2D.setBackgroundImage("back256.png", false);
+                }
+            }
+        } else {
+            sendBroadcast(new Intent(BarcodeKanojoApp.INTENT_ACTION_FULL_STORAGE));
+        }
+    }
+
+    private void executeKanojoRoomTask() {
+        this.isPrepared = false;
+        if (this.mKanojoRoomTask == null || this.mKanojoRoomTask.getStatus() == AsyncTask.Status.FINISHED || this.mKanojoRoomTask.cancel(true) || this.mKanojoRoomTask.isCancelled()) {
+            this.mKanojoRoomTask = (KanojoRoomTask) new KanojoRoomTask().execute(new Void[0]);
+        }
+    }
+
+    class KanojoRoomTask extends AsyncTask<Void, Void, Response<?>> {
+        private Exception mReason = null;
+
+        KanojoRoomTask() {
+        }
+
+        public void onPreExecute() {
+        }
+
+        public Response<?> doInBackground(Void... params) {
+            try {
+                return process();
+            } catch (Exception e) {
+                this.mReason = e;
+                return null;
+            }
+        }
+
+        public void onPostExecute(Response<?> response) {
+            try {
+                switch (KanojoRoomActivity.this.getCodeAndShowAlert(response, this.mReason)) {
+                    case 200:
+                        KanojoRoomActivity.this.mKanojo = (Kanojo) response.get(Kanojo.class);
+                        KanojoRoomActivity.this.mProduct = (Product) response.get(Product.class);
+                        KanojoRoomActivity.this.mScanned = (Scanned) response.get(Scanned.class);
+                        KanojoRoomActivity.this.mMessage = (MessageModel) response.get(MessageModel.class);
+                        if (KanojoRoomActivity.this.mKanojo != null && KanojoRoomActivity.this.mProduct != null && KanojoRoomActivity.this.mScanned != null) {
+                            KanojoRoomActivity.this.isPrepared = true;
+                            KanojoRoomActivity.this.settingLive2D();
+                            break;
+                        } else {
+                            throw new BarcodeKanojoException("Response Error: Data is null");
+                        }
+                }
+                if (!KanojoRoomActivity.this.isPrepared) {
+                    KanojoRoomActivity.this.dismissProgressDialog();
+                    KanojoRoomActivity.this.btnInfo.setVisibility(4);
+                } else {
+                    KanojoRoomActivity.this.btnInfo.setVisibility(0);
+                }
+                if (KanojoRoomActivity.this.mStatusLayout.getVisibility() == 0) {
+                    KanojoRoomActivity.this.mStatusLayout.setVisibility(8);
+                    KanojoRoomActivity.this.btnStatusArrow.setImageResource(R.drawable.kanojolovebararrowdown);
+                }
+            } catch (BarcodeKanojoException e) {
+                if (!KanojoRoomActivity.this.isPrepared) {
+                    KanojoRoomActivity.this.dismissProgressDialog();
+                    KanojoRoomActivity.this.btnInfo.setVisibility(4);
+                } else {
+                    KanojoRoomActivity.this.btnInfo.setVisibility(0);
+                }
+                if (KanojoRoomActivity.this.mStatusLayout.getVisibility() == 0) {
+                    KanojoRoomActivity.this.mStatusLayout.setVisibility(8);
+                    KanojoRoomActivity.this.btnStatusArrow.setImageResource(R.drawable.kanojolovebararrowdown);
+                }
+            } catch (Throwable th) {
+                if (!KanojoRoomActivity.this.isPrepared) {
+                    KanojoRoomActivity.this.dismissProgressDialog();
+                    KanojoRoomActivity.this.btnInfo.setVisibility(4);
+                } else {
+                    KanojoRoomActivity.this.btnInfo.setVisibility(0);
+                }
+                if (KanojoRoomActivity.this.mStatusLayout.getVisibility() == 0) {
+                    KanojoRoomActivity.this.mStatusLayout.setVisibility(8);
+                    KanojoRoomActivity.this.btnStatusArrow.setImageResource(R.drawable.kanojolovebararrowdown);
+                }
+                throw th;
+            }
+        }
+
+        /* access modifiers changed from: protected */
+        public void onCancelled() {
+        }
+
+        /* access modifiers changed from: package-private */
+        public Response<?> process() throws BarcodeKanojoException, IllegalStateException, IOException {
+            return ((BarcodeKanojoApp) KanojoRoomActivity.this.getApplication()).getBarcodeKanojo().show(KanojoRoomActivity.this.mKanojo.getId(), true);
+        }
+    }
+
+    public void update(Observable observable, Object data) {
+        this.mHandler.post(new Runnable() {
+            public void run() {
+                KanojoRoomActivity.this.settingLive2D();
+            }
+        });
+    }
+
+    private void executeKanojoShowDialogTask() {
+        this.isPrepared = false;
+        if (this.mKanojoDialogTask == null || this.mKanojoDialogTask.getStatus() == AsyncTask.Status.FINISHED || this.mKanojoDialogTask.cancel(true) || this.mKanojoDialogTask.isCancelled()) {
+            this.mKanojoDialogTask = (KanojoDialogTask) new KanojoDialogTask().execute(new Void[0]);
+        }
+    }
+
+    class KanojoDialogTask extends AsyncTask<Void, Void, Response<?>> {
+        private Exception mReason = null;
+
+        KanojoDialogTask() {
+        }
+
+        public void onPreExecute() {
+        }
+
+        public Response<?> doInBackground(Void... params) {
+            try {
+                return process();
+            } catch (Exception e) {
+                this.mReason = e;
+                return null;
+            }
+        }
+
+        public void onPostExecute(Response<?> response) {
+            try {
+                switch (KanojoRoomActivity.this.getCodeAndShowAlert(response, this.mReason)) {
+                    case 200:
+                        KanojoRoomActivity.this.mKanojoMessage = (KanojoMessage) response.get(KanojoMessage.class);
+                        if (KanojoRoomActivity.this.mKanojoMessage == null) {
+                            KanojoRoomActivity.this.dialoglayout.setVisibility(8);
+                            return;
+                        } else if (KanojoRoomActivity.this.mKanojoMessage.getMessage() == null || KanojoRoomActivity.this.mKanojoMessage.getMessage() == "") {
+                            KanojoRoomActivity.this.dialoglayout.setVisibility(8);
+                            return;
+                        } else {
+                            KanojoRoomActivity.this.mKanojoDialogMessage.initDialogMessage(KanojoRoomActivity.this.mKanojoMessage.getMessage(), KanojoRoomActivity.this.mKanojoMessage.getSiteURL(), KanojoRoomActivity.this.mKanojoMessage.getButtonText());
+                            KanojoRoomActivity.this.dialoglayout.setVisibility(0);
+                            return;
+                        }
+                    default:
+                        return;
+                }
+            } catch (BarcodeKanojoException e) {
+            }
+        }
+
+        /* access modifiers changed from: protected */
+        public void onCancelled() {
+        }
+
+        /* access modifiers changed from: package-private */
+        public Response<?> process() throws BarcodeKanojoException, IllegalStateException, IOException {
+            return ((BarcodeKanojoApp) KanojoRoomActivity.this.getApplication()).getBarcodeKanojo().show_dialog();
+        }
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode != 4 || !this.mLoadingView.isShow()) {
+            return super.onKeyDown(keyCode, event);
+        }
+        this.mLoadingView.setMessage(getString(R.string.requesting_cant_cancel));
+        return true;
+    }
+
+    public ProgressDialog showProgressDialog() {
+        this.mLoadingView.show();
+        return new ProgressDialog(this);
+    }
+
+    /* access modifiers changed from: protected */
+    public void dismissProgressDialog() {
+        this.mLoadingView.dismiss();
+    }
+
+    class MyJavaScriptInterface {
+        MyJavaScriptInterface() {
+        }
+
+        public void getValue(String wordCount) {
+            new LongOperation(this, (LongOperation) null).execute(new String[]{wordCount});
+        }
+
+        private class LongOperation extends AsyncTask<String, Void, String> {
+            private LongOperation() {
+            }
+
+            /* synthetic */ LongOperation(MyJavaScriptInterface myJavaScriptInterface, LongOperation longOperation) {
+                this();
+            }
+
+            /* access modifiers changed from: protected */
+            public String doInBackground(String... params) {
+                try {
+                    Thread.sleep((long) (Integer.parseInt(params[0]) * 5000));
+                    return null;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            /* access modifiers changed from: protected */
+            public void onPostExecute(String result) {
+                if (KanojoRoomActivity.this.mKanojo.getRelation_status() == 2) {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) KanojoRoomActivity.this.btnItems.getLayoutParams();
+                    params.addRule(12, -1);
+                    KanojoRoomActivity.this.btnItems.setLayoutParams(params);
+                }
+                KanojoRoomActivity.this.kanojoMessage.setVisibility(8);
+            }
+        }
+    }
+
+    public void setAnimationTap(float x, float y, int type) {
+        ImageView imageViewAction = new ImageView(this);
+        if (12 == type) {
+            System.out.printf("USER_ACTION_TSUTSUKU \n", new Object[0]);
+            imageViewAction.setImageResource(R.drawable.hand_image);
+        } else if (20 == type) {
+            System.out.printf("USER_ACTION_KISS \n", new Object[0]);
+            imageViewAction.setImageResource(R.drawable.kiss_image);
+        } else if (21 == type) {
+            System.out.printf("USER_ACTION_MUNE \n", new Object[0]);
+            imageViewAction.setImageResource(R.drawable.hand_image);
+        }
+        addImageAnimationTap(imageViewAction, x, y);
+    }
+
+    private void addImageAnimationTap(final ImageView imageView, float x, float y) {
+        AnimationUtils.loadAnimation(this, R.anim.anim_touch_fade_in).setDuration(1000);
+        Animation fadeOutAnimation = AnimationUtils.loadAnimation(this, R.anim.anim_touch_fade_out);
+        fadeOutAnimation.setDuration(1000);
+        fadeOutAnimation.setStartOffset(1000);
+        AnimationSet animationActionTap = new AnimationSet(false);
+        int imageCenter = (int) (0.075d * ((double) this.dWidth));
+        animationActionTap.addAnimation(fadeOutAnimation);
+        animationActionTap.setFillEnabled(true);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-2, -2);
+        params.leftMargin = ((int) ((x / 1280.0f) * ((float) this.dWidth))) - imageCenter;
+        params.topMargin = (((int) ((y / 1280.0f) * ((float) this.dHeight))) - imageCenter) - 60;
+        imageView.setLayoutParams(params);
+        imageView.setAnimation(animationActionTap);
+        animationActionTap.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationStart(Animation animation) {
+            }
+
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            public void onAnimationEnd(Animation animation) {
+                Handler handler = new Handler();
+                final ImageView imageView = imageView;
+                handler.post(new Runnable() {
+                    public void run() {
+                        imageView.clearAnimation();
+                        imageView.setImageBitmap((Bitmap) null);
+                        KanojoRoomActivity.this.mKanojoLayout.removeView(imageView);
+                    }
+                });
+            }
+        });
+        this.mKanojoLayout.addView(imageView);
+        animationActionTap.startNow();
+    }
+
+    public void callUserAction(int userAction) {
+        if (10 == userAction || 11 == userAction || 12 == userAction || 20 != userAction) {
+        }
+        if (this.mTimerCallAPI != null) {
+            this.mTimerCallAPI.cancel();
+            this.mTimerCallAPI.purge();
+        }
+        this.mTimerCallAPI = new Timer();
+        final Handler mTimerCallAPIHandler = new Handler();
+        this.mTimerCallAPI.schedule(new TimerTask() {
+            public void run() {
+                mTimerCallAPIHandler.post(new Runnable() {
+                    public void run() {
+                        KanojoRoomActivity.this.executeLive2dTask();
+                    }
+                });
+            }
+        }, 2000);
+    }
+
+    /* access modifiers changed from: private */
+    public void executeLive2dTask() {
+        if (this.mLive2dTask == null || this.mLive2dTask.getStatus() == AsyncTask.Status.FINISHED || this.mLive2dTask.cancel(true) || this.mLive2dTask.isCancelled()) {
+            this.mLive2dTask = new Live2dTask();
+            this.mLive2dTask.execute(new Void[0]);
+        }
+    }
+
+    class Live2dTask extends AsyncTask<Void, Void, Response<BarcodeKanojoModel>> {
+        private Exception mReason = null;
+
+        Live2dTask() {
+        }
+
+        public void onPreExecute() {
+            KanojoLive2D kanojoLive2D = KanojoRoomActivity.this.getLive2D();
+            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) KanojoRoomActivity.this.getApplication()).getBarcodeKanojo();
+            if (barcodeKanojo != null) {
+                barcodeKanojo.setPlayLive2d(KanojoRoomActivity.this.mKanojo, kanojoLive2D.getUserActions());
+            }
+        }
+
+        public Response<BarcodeKanojoModel> doInBackground(Void... params) {
+            try {
+                return process();
+            } catch (Exception e) {
+                this.mReason = e;
+                return null;
+            }
+        }
+
+        public void onPostExecute(Response<BarcodeKanojoModel> response) {
+            if (response != null) {
+                int code = response.getCode();
+                KanojoRoomActivity.this.mLoveIncremen = (LoveIncrement) response.get(LoveIncrement.class);
+                if (KanojoRoomActivity.this.mLoveIncremen != null && KanojoRoomActivity.this.mLoveIncremen.getAlertShow().equals(GreeDefs.KANOJO_NAME)) {
+                    try {
+                        int unused = KanojoRoomActivity.this.getCodeAndShowAlert(response, this.mReason);
+                    } catch (BarcodeKanojoException e) {
+                        e.printStackTrace();
+                    }
+                }
+                switch (code) {
+                    case 200:
+                        KanojoRoomActivity.this.mKanojo = (Kanojo) response.get(Kanojo.class);
+                        KanojoRoomActivity.this.updateUser(response);
+                        KanojoRoomActivity.this.setAutoRefreshLoveGageAction();
+                        return;
+                    default:
+                        return;
+                }
+            }
+        }
+
+        /* access modifiers changed from: package-private */
+        public Response<BarcodeKanojoModel> process() throws BarcodeKanojoException, IllegalStateException, IOException {
+            return ((BarcodeKanojoApp) KanojoRoomActivity.this.getApplication()).getBarcodeKanojo().play_on_live2d();
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void setAutoRefreshLoveGageAction() {
+        if (!FileUtil.isAvailableExternalSDMemory() && !FileUtil.isAvailableInternalSDMemory()) {
+            sendBroadcast(new Intent(BarcodeKanojoApp.INTENT_ACTION_FULL_STORAGE));
+        } else if (getLive2D() != null && this.isPrepared && this.mKanojo != null) {
+            this.mLoveBar.setProgress(this.mKanojo.getLove_gauge());
+            addTagLoveGauge();
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void addTagLoveGauge() {
+        Rect rectLoveBar = new Rect();
+        this.mLoveBar.getLocalVisibleRect(rectLoveBar);
+        int xLoveBar = rectLoveBar.left;
+        int wLoveBar = rectLoveBar.width();
+        this.layoutTagLoveBar = (RelativeLayout) findViewById(R.id.kanojo_tag_love_gauge);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) this.layoutTagLoveBar.getLayoutParams();
+        params.leftMargin = ((wLoveBar / 100) * this.mKanojo.getLove_gauge()) + xLoveBar;
+        this.layoutTagLoveBar.setLayoutParams(params);
+        TextView textTagLoveBar = (TextView) findViewById(R.id.kanojo_tag_love_gauge_text);
+        if (this.mLoveIncremen != null) {
+            if (!this.mLoveIncremen.getIncrease_love().equals(GreeDefs.BARCODE)) {
+                textTagLoveBar.setText("+" + this.mLoveIncremen.getIncrease_love());
+                startLayoutTagLoveBarAnimation();
+                setBackGroundLoveAnimation(this.mLoveIncremen.getIncrease_love());
+            } else if (!this.mLoveIncremen.getDecrement_love().equals(GreeDefs.BARCODE)) {
+                textTagLoveBar.setText("-" + this.mLoveIncremen.getDecrement_love());
+                startLayoutTagLoveBarAnimation();
+                setBackGroundLoveAnimation(this.mLoveIncremen.getDecrement_love());
+            } else {
+                this.layoutTagLoveBar.setVisibility(8);
+            }
+            addReactionWord(this.mLoveIncremen.getReaction_word());
+            this.mLoveIncremen.clearValueAll();
+            this.mLoveIncremen = null;
+            return;
+        }
+        this.layoutTagLoveBar.setVisibility(8);
+    }
+
+    private void startLayoutTagLoveBarAnimation() {
+        this.layoutTagLoveBar.setVisibility(0);
+        Animation fadeOutAnimation = AnimationUtils.loadAnimation(this, R.anim.anim_touch_fade_out);
+        fadeOutAnimation.setStartOffset(3000);
+        fadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationStart(Animation animation) {
+            }
+
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            public void onAnimationEnd(Animation animation) {
+                KanojoRoomActivity.this.layoutTagLoveBar.setVisibility(8);
+            }
+        });
+        this.layoutTagLoveBar.setAnimation(fadeOutAnimation);
+        fadeOutAnimation.start();
+    }
+
+    @SuppressLint({"SetJavaScriptEnabled"})
+    private void addReactionWord(String reactionWord) {
+        String url = reactionWord;
+        if (url.equals("null") || url.equals("")) {
+            this.kanojoMessage.setVisibility(8);
+            return;
+        }
+        this.kanojoMessage.loadUrl(url);
+        this.kanojoMessage.setVisibility(0);
+        if (this.mKanojo.getRelation_status() == 2) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) this.btnItems.getLayoutParams();
+            params.addRule(12, 0);
+            params.addRule(2, R.id.kanojo_room_ads_banner);
+            this.btnItems.setLayoutParams(params);
+        }
+        this.kanojoMessage.addJavascriptInterface(new MyJavaScriptInterface(), "Android");
+        this.kanojoMessage.getSettings().setJavaScriptEnabled(true);
+        this.kanojoMessage.setWebViewClient(new WebViewClient() {
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+            }
+
+            public boolean shouldOverrideUrlLoading(WebView webView, String urlNewString) {
+                webView.loadUrl(urlNewString);
+                return true;
+            }
+
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+            }
+
+            public void onPageFinished(WebView lwebView, String urlPageFinished) {
+                lwebView.loadUrl("javascript:( function () { var resultSrc = slen.length ; Android.getValue(resultSrc); } ) ()");
+            }
+        });
+    }
+
+    private void setBackGroundLoveAnimation(String love) {
+        final int loveValue = Integer.parseInt(love);
+        this.layoutBGActionLoveGauge = (RelativeLayout) findViewById(R.id.kanojo_bg_action_love_gauge);
+        if (loveValue == 0) {
+            this.layoutBGActionLoveGauge.setVisibility(8);
+            return;
+        }
+        this.imageView01 = (ImageView) findViewById(R.id.imageView01);
+        this.imageView02 = (ImageView) findViewById(R.id.imageView02);
+        this.imageView03 = (ImageView) findViewById(R.id.imageView03);
+        if (loveValue > 0 && loveValue < 20) {
+            this.imageView01.setImageResource(R.drawable.music_image);
+            this.imageView02.setImageResource(R.drawable.music_image);
+            this.imageView03.setImageResource(R.drawable.music_image);
+        } else if (loveValue >= 20) {
+            this.imageView01.setImageResource(R.drawable.heart_image);
+            this.imageView02.setImageResource(R.drawable.heart_image);
+            this.imageView03.setImageResource(R.drawable.heart_image);
+        }
+        Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.anim_touch_fade_in);
+        this.layoutBGActionLoveGauge.setAnimation(fadeInAnimation);
+        fadeInAnimation.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationStart(Animation animation) {
+                KanojoRoomActivity.this.layoutBGActionLoveGauge.setVisibility(0);
+            }
+
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            public void onAnimationEnd(Animation animation) {
+                KanojoRoomActivity.this.setAnimationImageLoveBackGround(loveValue);
+            }
+        });
+        fadeInAnimation.start();
+    }
+
+    /* access modifiers changed from: private */
+    public void setAnimationImageLoveBackGround(int loveValue) {
+        if (loveValue > 0 && loveValue < 20) {
+            Animation rotateLeftAnimation = AnimationUtils.loadAnimation(this, R.anim.anim_rotate_music_bg);
+            rotateLeftAnimation.setRepeatMode(2);
+            rotateLeftAnimation.setRepeatCount(2);
+            rotateLeftAnimation.setAnimationListener(new Animation.AnimationListener() {
+                public void onAnimationStart(Animation animation) {
+                }
+
+                public void onAnimationRepeat(Animation animation) {
+                }
+
+                public void onAnimationEnd(Animation animation) {
+                    KanojoRoomActivity.this.closeBackGroundLoveAnimation();
+                }
+            });
+            this.imageView01.setAnimation(rotateLeftAnimation);
+            this.imageView02.setAnimation(rotateLeftAnimation);
+            this.imageView03.setAnimation(rotateLeftAnimation);
+            rotateLeftAnimation.start();
+        } else if (loveValue >= 20) {
+            Animation scaleAnimation = AnimationUtils.loadAnimation(this, R.anim.anim_scale_heart_bg);
+            scaleAnimation.setRepeatMode(2);
+            scaleAnimation.setRepeatCount(2);
+            scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
+                public void onAnimationStart(Animation animation) {
+                }
+
+                public void onAnimationRepeat(Animation animation) {
+                }
+
+                public void onAnimationEnd(Animation animation) {
+                    KanojoRoomActivity.this.closeBackGroundLoveAnimation();
+                }
+            });
+            this.imageView01.setAnimation(scaleAnimation);
+            this.imageView02.setAnimation(scaleAnimation);
+            this.imageView03.setAnimation(scaleAnimation);
+            scaleAnimation.start();
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void closeBackGroundLoveAnimation() {
+        Animation fadeOutAnimation = AnimationUtils.loadAnimation(this, R.anim.anim_touch_fade_out);
+        fadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationStart(Animation animation) {
+            }
+
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            public void onAnimationEnd(Animation animation) {
+                KanojoRoomActivity.this.layoutBGActionLoveGauge.setVisibility(8);
+            }
+        });
+        this.layoutBGActionLoveGauge.setAnimation(fadeOutAnimation);
+        fadeOutAnimation.start();
+    }
+}

@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<searchable xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:label="@string/kanojos_search_label" android:hint="@string/kanojos_search_hint" android:searchSuggestAuthority="jp.co.cybird.barcodekanojoForGAM.provider.KanojoSearchSuggestionsProvider" android:searchSuggestSelection=" ? "/>

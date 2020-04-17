@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:gravity="center" android:orientation="vertical" android:background="@drawable/tab_bg" android:layout_width="match_parent" android:layout_height="match_parent">
+    <ImageView android:id="@+id/tab_icon" android:layout_width="@dimen/tab_icon_width" android:layout_height="@dimen/tab_icon_height"/>
+    <TextView android:id="@+id/tab_text" style="@style/txt_tab"/>
+</LinearLayout>

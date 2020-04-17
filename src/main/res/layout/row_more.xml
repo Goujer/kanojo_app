@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jp.co.cybird.barcodekanojoForGAM.view.MoreView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:id="@+id/row_more" android:layout_width="match_parent" android:layout_height="wrap_content" android:handle="@+id/handle" android:content="@+id/content">
+    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:background="@color/default_bg" android:layout_width="match_parent" android:layout_height="@dimen/row_more_height">
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"/>
+        <ProgressBar android:id="@+id/row_more_progressbar" android:visibility="invisible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="10dp" style="?android:attr/progressBarStyle"/>
+        <TextView android:id="@+id/row_more_txt" android:text="@string/row_more" style="@style/txt_more"/>
+        <ImageView android:id="@+id/row_more_ya" android:layout_width="@dimen/row_more_ya_width" android:layout_height="@dimen/row_more_ya_height" android:layout_marginLeft="10dp" android:src="@drawable/row_more_ya"/>
+        <TextView android:layout_width="32dp" android:layout_height="match_parent" android:layout_weight="1"/>
+    </LinearLayout>
+</jp.co.cybird.barcodekanojoForGAM.view.MoreView>
