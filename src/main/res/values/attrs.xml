@@ -32,11 +32,6 @@
     </attr>
     <attr name="logout_text" format="string">
     </attr>
-    <attr name="preset_size">
-        <enum name="small" value="-2" />
-        <enum name="normal" value="-3" />
-        <enum name="large" value="-4" />
-    </attr>
     <attr name="is_cropped" format="boolean">
     </attr>
     <attr name="key" format="string">

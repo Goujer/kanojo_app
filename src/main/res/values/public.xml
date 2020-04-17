@@ -1274,18 +1274,6 @@
     <public type="color" name="viewfinder_frame" id="2131361841" />
     <public type="color" name="viewfinder_laser" id="2131361842" />
     <public type="color" name="viewfinder_mask" id="2131361843" />
-    <public type="dimen" name="com_facebook_usersettingsfragment_profile_picture_width" id="2131427328" />
-    <public type="dimen" name="com_facebook_usersettingsfragment_profile_picture_height" id="2131427329" />
-    <public type="dimen" name="com_facebook_loginview_padding_left" id="2131427330" />
-    <public type="dimen" name="com_facebook_loginview_padding_right" id="2131427331" />
-    <public type="dimen" name="com_facebook_loginview_padding_top" id="2131427332" />
-    <public type="dimen" name="com_facebook_loginview_padding_bottom" id="2131427333" />
-    <public type="dimen" name="com_facebook_loginview_width" id="2131427334" />
-    <public type="dimen" name="com_facebook_loginview_height" id="2131427335" />
-    <public type="dimen" name="com_facebook_loginview_text_size" id="2131427336" />
-    <public type="dimen" name="com_facebook_profilepictureview_preset_size_small" id="2131427337" />
-    <public type="dimen" name="com_facebook_profilepictureview_preset_size_normal" id="2131427338" />
-    <public type="dimen" name="com_facebook_profilepictureview_preset_size_large" id="2131427339" />
     <public type="dimen" name="log_in_box_height" id="2131427340" />
     <public type="dimen" name="map_kanojos_pin_width" id="2131427341" />
     <public type="dimen" name="map_kanojos_pin_height" id="2131427342" />

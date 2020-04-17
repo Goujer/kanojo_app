@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:layout_width="match_parent" android:layout_height="wrap_content">
-    <ViewStub android:id="@+id/com_facebook_picker_profile_pic_stub" android:layout="@layout/com_facebook_picker_image" android:inflatedId="@+id/com_facebook_picker_image" android:layout_width="50dp" android:layout_height="50dp"/>
-    <TextView android:textSize="18sp" android:textStyle="bold" android:textColor="#000000" android:ellipsize="end" android:gravity="left|center_vertical|center_horizontal|center" android:id="@+id/com_facebook_picker_title" android:paddingLeft="5dp" android:layout_width="100dp" android:layout_height="50dp" android:singleLine="true" android:layout_weight="1"/>
-    <ViewStub android:id="@+id/com_facebook_picker_checkbox_stub" android:layout="@layout/com_facebook_picker_checkbox" android:inflatedId="@+id/com_facebook_picker_checkbox" android:layout_width="23dp" android:layout_height="23dp" android:layout_marginRight="10dp"/>
-</LinearLayout>
