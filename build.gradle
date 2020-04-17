@@ -1,38 +1,41 @@
 buildscript {
-    repositories {
-        jcenter()
-        google()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.2'
-    }
+	repositories {
+		jcenter()
+		google()
+	}
+	dependencies {
+		classpath 'com.android.tools.build:gradle:3.6.2'
+	}
 }
 apply plugin: 'com.android.application'
 
 repositories {
-    mavenCentral()
-    jcenter()
-    google()
+	mavenCentral()
+	jcenter()
+	google()
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+	useLibrary 'org.apache.http.legacy'	//Legacy swap classes that use with HttpURLConnection instead.
 
-    defaultConfig {
-        applicationId 'jp.co.cybird.barcodekanojoForGAM'
-        minSdkVersion 1
-        targetSdkVersion 23
-        versionCode 1
-        versionName "2.4.3"
-    }
+	compileSdkVersion 28
+	buildToolsVersion '28.0.3'
 
-    lintOptions {
-        abortOnError false
-    }
+	defaultConfig {
+		applicationId 'jp.co.cybird.barcodekanojoForGAM'
+		minSdkVersion 1
+		targetSdkVersion 23
+		versionCode 1
+		versionName "2.4.3"
+	}
+
+	lintOptions {
+		abortOnError false
+	}
 }
 
 dependencies {
-    implementation project(':facebook')
-    implementation files('libs/GoogleAdMobAdsSdk-6.4.1.jar')
+	implementation project(':facebook')
+	implementation files('libs/GoogleAdMobAdsSdk-6.4.1.jar')
+	implementation files('libs/libGoogleAnalyticsV2.jar')
 }
