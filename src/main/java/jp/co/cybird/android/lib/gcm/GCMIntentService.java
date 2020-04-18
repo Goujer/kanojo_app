@@ -61,7 +61,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         String notificationTitle = getApplicationName();
         String notificationContents = message;
         getApplicationContext();
-        NotificationManager nm = (NotificationManager) getSystemService("notification");
+        NotificationManager nm = (NotificationManager) getSystemService(context.NOTIFICATION_SERVICE);
         Notification n = new Notification(getApplicationContext().getApplicationInfo().icon, message, System.currentTimeMillis());
         n.flags = 16;
         n.number = number;
@@ -75,7 +75,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         i.putExtras(extras);
         i.putExtra("push", true);
         if (isActionValid.booleanValue()) {
-            n.setLatestEventInfo(getApplicationContext(), notificationTitle, notificationContents, PendingIntent.getActivity(getApplicationContext(), 0, i, 134217728));
+            n.setLatestEventInfo(getApplicationContext(), notificationTitle, notificationContents, PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT));
             SharedPreferences prefs = context.getSharedPreferences(Const.PREF_FILE_NAME, 0);
             boolean willPlaySound = prefs.getBoolean("lib_gcm_willPlaySound", false);
             if (prefs.getBoolean("lib_gcm_willVibrate", false)) {
