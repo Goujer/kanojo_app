@@ -37,7 +37,7 @@ public class AgreementDialog implements DialogInterface.OnCancelListener, Dialog
         this.mEulaVer = eulaVersion;
         this.mEulaUrl = eulaUrl;
         this.mPref = context.getSharedPreferences(Const.PREF_FILE_NAME, 3);
-        this.mDisplayHeight = ((WindowManager) context.getSystemService("window")).getDefaultDisplay().getHeight();
+        this.mDisplayHeight = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getHeight();
         createDialog(context);
     }
 
@@ -59,13 +59,13 @@ public class AgreementDialog implements DialogInterface.OnCancelListener, Dialog
                 ((Button) findViewById(ParameterLoader.getResourceIdForType("lib_gcm_agreement_decline_button", "id", AgreementDialog.this.mContext))).setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         AgreementDialog.this.saveDecline();
-                        AnonymousClass1.this.dismiss();
+                        dismiss();
                     }
                 });
                 ((Button) findViewById(ParameterLoader.getResourceIdForType("lib_gcm_agreement_agree_button", "id", AgreementDialog.this.mContext))).setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         AgreementDialog.this.saveAgreement();
-                        AnonymousClass1.this.dismiss();
+                       dismiss();
                     }
                 });
             }
@@ -131,13 +131,13 @@ public class AgreementDialog implements DialogInterface.OnCancelListener, Dialog
         }
 
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            this.mProgress.setVisibility(0);
-            view.setVisibility(4);
+            this.mProgress.setVisibility(View.VISIBLE);
+            view.setVisibility(View.INVISIBLE);
         }
 
         public void onPageFinished(WebView view, String url) {
-            this.mProgress.setVisibility(4);
-            view.setVisibility(0);
+            this.mProgress.setVisibility(View.INVISIBLE);
+            view.setVisibility(View.VISIBLE);
         }
     }
 }

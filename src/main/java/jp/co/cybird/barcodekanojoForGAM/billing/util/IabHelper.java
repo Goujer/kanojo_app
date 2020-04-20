@@ -155,7 +155,7 @@ public class IabHelper {
         };
         Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
         if (!this.mContext.getPackageManager().queryIntentServices(serviceIntent, 0).isEmpty()) {
-            this.mContext.bindService(serviceIntent, this.mServiceConn, 1);
+            this.mContext.bindService(serviceIntent, this.mServiceConn, Context.BIND_AUTO_CREATE);
         } else if (listener != null) {
             listener.onIabSetupFinished(new IabResult(3, "Billing service unavailable on device."));
         }

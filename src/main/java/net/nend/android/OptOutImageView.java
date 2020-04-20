@@ -85,7 +85,7 @@ final class OptOutImageView extends ImageView implements View.OnClickListener, D
         String optOutUrl = "http://nend.net/privacy/optsdkgate";
         String optOutImageUrl = "http://img1.nend.net/img/common/optout/icon.png";
         try {
-            ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), 128);
+            ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             if (applicationInfo.metaData != null) {
                 optOutUrl = applicationInfo.metaData.getString(NendConstants.MetaData.OPT_OUT_URL.getName()) != null ? applicationInfo.metaData.getString(NendConstants.MetaData.OPT_OUT_URL.getName()) : optOutUrl;
                 if (applicationInfo.metaData.getString(NendConstants.MetaData.OPT_OUT_IMAGE_URL.getName()) != null) {

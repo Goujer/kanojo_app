@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -105,7 +106,7 @@ public class MapKanojosActivity extends MapActivity implements View.OnClickListe
 
         public void draw(Canvas canvas, MapView mapView, boolean isShadow) {
             if (!isShadow) {
-                MapKanojosActivity.super.draw(canvas, mapView, isShadow);
+                super.draw(canvas, mapView, isShadow);
             }
         }
     }
@@ -134,7 +135,7 @@ public class MapKanojosActivity extends MapActivity implements View.OnClickListe
         } else if (iconHeight > iconWidth) {
             width = (int) (((float) height) * ratio);
         }
-        Bitmap thumb = Bitmap.createBitmap(width, height, icon.getOpacity() != -1 ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
+        Bitmap thumb = Bitmap.createBitmap(width, height, icon.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(thumb);
         canvas.setDrawFilter(new PaintFlagsDrawFilter(4, 0));
         Rect oldBounds = new Rect();

@@ -1,13 +1,10 @@
 package jp.co.cybird.app.android.lib.commons.file.json;
 
-import com.google.ads.AdActivity;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
-import jp.co.cybird.app.android.lib.commons.file.json.JSON;
-import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs;
 
 /* compiled from: Converter */
 final class BooleanConverter implements Converter {
@@ -41,7 +38,7 @@ final class BooleanConverter implements Converter {
                 return PlainConverter.getDefaultValue(c);
             }
             String s = value.toString().trim();
-            if (s.length() == 0 || s.equalsIgnoreCase(GreeDefs.BARCODE) || s.equalsIgnoreCase(AdActivity.INTENT_FLAGS_PARAM) || s.equalsIgnoreCase("false") || s.equalsIgnoreCase("no") || s.equalsIgnoreCase("off") || s.equals("NaN")) {
+            if (s.length() == 0 || s.equalsIgnoreCase("0") || s.equalsIgnoreCase("f") || s.equalsIgnoreCase("false") || s.equalsIgnoreCase("no") || s.equalsIgnoreCase("off") || s.equals("NaN")) {
                 return false;
             }
             return true;

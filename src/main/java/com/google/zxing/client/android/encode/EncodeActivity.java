@@ -2,6 +2,7 @@ package com.google.zxing.client.android.encode;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -82,89 +83,58 @@ public final class EncodeActivity extends Activity {
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:29:0x0120 A[SYNTHETIC, Splitter:B:29:0x0120] */
-    /* JADX WARNING: Removed duplicated region for block: B:34:0x012b A[SYNTHETIC, Splitter:B:34:0x012b] */
-    /* JADX WARNING: Removed duplicated region for block: B:49:? A[RETURN, SYNTHETIC] */
     private void share() {
-        QRCodeEncoder encoder = this.qrCodeEncoder;
-        if (encoder == null) {
+        QRCodeEncoder encoder = qrCodeEncoder;
+        if (encoder == null) { // Odd
             Log.w(TAG, "No existing barcode to send?");
             return;
         }
+
         String contents = encoder.getContents();
         if (contents == null) {
             Log.w(TAG, "No existing barcode to send?");
             return;
         }
+
+        Bitmap bitmap;
         try {
-            Bitmap bitmap = encoder.encodeAsBitmap();
-            if (bitmap != null) {
-                File barcodesRoot = new File(new File(Environment.getExternalStorageDirectory(), "BarcodeScanner"), "Barcodes");
-                if (barcodesRoot.exists() || barcodesRoot.mkdirs()) {
-                    File barcodeFile = new File(barcodesRoot, makeBarcodeFileName(contents) + ".png");
-                    barcodeFile.delete();
-                    FileOutputStream fos = null;
-                    try {
-                        FileOutputStream fos2 = new FileOutputStream(barcodeFile);
-                        try {
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 0, fos2);
-                            if (fos2 != null) {
-                                try {
-                                    fos2.close();
-                                } catch (IOException e) {
-                                }
-                            }
-                            Intent intent = new Intent("android.intent.action.SEND", Uri.parse("mailto:"));
-                            intent.putExtra("android.intent.extra.SUBJECT", String.valueOf(getString(R.string.app_name)) + " - " + encoder.getTitle());
-                            intent.putExtra("android.intent.extra.TEXT", contents);
-                            intent.putExtra("android.intent.extra.STREAM", Uri.parse("file://" + barcodeFile.getAbsolutePath()));
-                            intent.setType("image/png");
-                            intent.addFlags(524288);
-                            startActivity(Intent.createChooser(intent, (CharSequence) null));
-                        } catch (FileNotFoundException e2) {
-                            fnfe = e2;
-                            fos = fos2;
-                            try {
-                                Log.w(TAG, "Couldn't access file " + barcodeFile + " due to " + fnfe);
-                                showErrorMessage(R.string.msg_unmount_usb);
-                                if (fos == null) {
-                                }
-                            } catch (Throwable th) {
-                                th = th;
-                                if (fos != null) {
-                                    try {
-                                        fos.close();
-                                    } catch (IOException e3) {
-                                    }
-                                }
-                                throw th;
-                            }
-                        } catch (Throwable th2) {
-                            th = th2;
-                            fos = fos2;
-                            if (fos != null) {
-                            }
-                            throw th;
-                        }
-                    } catch (FileNotFoundException e4) {
-                        fnfe = e4;
-                        Log.w(TAG, "Couldn't access file " + barcodeFile + " due to " + fnfe);
-                        showErrorMessage(R.string.msg_unmount_usb);
-                        if (fos == null) {
-                            try {
-                                fos.close();
-                            } catch (IOException e5) {
-                            }
-                        }
-                    }
-                } else {
-                    Log.w(TAG, "Couldn't make dir " + barcodesRoot);
-                    showErrorMessage(R.string.msg_unmount_usb);
-                }
-            }
+            bitmap = encoder.encodeAsBitmap();
         } catch (WriterException we) {
             Log.w(TAG, we);
+            return;
         }
+        if (bitmap == null) {
+            return;
+        }
+
+        File bsRoot = new File(Environment.getExternalStorageDirectory(), "BarcodeScanner");
+        File barcodesRoot = new File(bsRoot, "Barcodes");
+        if (!barcodesRoot.exists() && !barcodesRoot.mkdirs()) {
+            Log.w(TAG, "Couldn't make dir " + barcodesRoot);
+            showErrorMessage(R.string.msg_unmount_usb);
+            return;
+        }
+        File barcodeFile = new File(barcodesRoot, makeBarcodeFileName(contents) + ".png");
+        if (!barcodeFile.delete()) {
+            Log.w(TAG, "Could not delete " + barcodeFile);
+            // continue anyway
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(barcodeFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0, fos);
+        } catch (IOException ioe) {
+            Log.w(TAG, "Couldn't access file " + barcodeFile + " due to " + ioe);
+            showErrorMessage(R.string.msg_unmount_usb);
+            return;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " - " + encoder.getTitle());
+        intent.putExtra(Intent.EXTRA_TEXT, contents);
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + barcodeFile.getAbsolutePath()));
+        intent.setType("image/png");
+        intent.addFlags(Intents.FLAG_NEW_DOC);
+        startActivity(Intent.createChooser(intent, null));
     }
 
     private static CharSequence makeBarcodeFileName(CharSequence contents) {
@@ -175,11 +145,11 @@ public final class EncodeActivity extends Activity {
         return fileName;
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    @Override
+    protected void onResume() {
         int smallerDimension;
         super.onResume();
-        Display display = ((WindowManager) getSystemService("window")).getDefaultDisplay();
+        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         int width = display.getWidth();
         int height = display.getHeight();
         if (width < height) {

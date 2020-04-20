@@ -29,8 +29,7 @@ public abstract class SupplementalInfoRetriever extends AsyncTask<Object, Object
     private final List<String[]> newHistories = new ArrayList();
     private final WeakReference<TextView> textViewRef;
 
-    /* access modifiers changed from: package-private */
-    public abstract void retrieveSupplementalInfo() throws IOException;
+    abstract void retrieveSupplementalInfo() throws IOException;
 
     public static void maybeInvokeRetrieval(TextView textView, ParsedResult result, HistoryManager historyManager, Context context) {
         AsyncTaskExecInterface taskExec = (AsyncTaskExecInterface) new AsyncTaskExecManager().build();

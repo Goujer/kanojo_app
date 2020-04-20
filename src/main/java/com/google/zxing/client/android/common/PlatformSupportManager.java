@@ -28,18 +28,17 @@ public abstract class PlatformSupportManager<T> {
 
     /* access modifiers changed from: protected */
     public final void addImplementationClass(int minVersion, String className) {
-        this.implementations.put(Integer.valueOf(minVersion), className);
+        this.implementations.put(minVersion, className);
     }
 
     public final T build() {
-        Iterator<Integer> it = this.implementations.keySet().iterator();
-        while (it.hasNext()) {
-            Integer minVersion = it.next();
-            if (Build.VERSION.SDK_INT >= minVersion.intValue()) {
+        for (Integer minVersion : implementations.keySet()) {
+            if (Build.VERSION.SDK_INT >= minVersion) {
+                String className = implementations.get(minVersion);
                 try {
-                    Class<? extends U> asSubclass = Class.forName((String) this.implementations.get(minVersion)).asSubclass(this.managedInterface);
-                    Log.i(TAG, "Using implementation " + asSubclass + " of " + this.managedInterface + " for SDK " + minVersion);
-                    return asSubclass.getConstructor(new Class[0]).newInstance(new Object[0]);
+                    Class<? extends T> clazz = Class.forName(className).asSubclass(managedInterface);
+                    Log.i(TAG, "Using implementation " + clazz + " of " + managedInterface + " for SDK " + minVersion);
+                    return clazz.getConstructor().newInstance();
                 } catch (ClassNotFoundException cnfe) {
                     Log.w(TAG, cnfe);
                 } catch (IllegalAccessException iae) {
@@ -53,7 +52,7 @@ public abstract class PlatformSupportManager<T> {
                 }
             }
         }
-        Log.i(TAG, "Using default implementation " + this.defaultImplementation.getClass() + " of " + this.managedInterface);
-        return this.defaultImplementation;
+        Log.i(TAG, "Using default implementation " + defaultImplementation.getClass() + " of " + managedInterface);
+        return defaultImplementation;
     }
 }

@@ -2,6 +2,7 @@ package jp.co.cybird.barcodekanojoForGAM.activity.kanojo;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
@@ -107,7 +108,7 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
         this.mMessage = bundle.getString(MessageModel.NOTIFY_AMENDMENT_INFORMATION);
         if (this.mKanojo != null && this.mProduct != null && this.mScanned != null) {
             if (this.mKanojo.getRelation_status() == 1) {
-                this.btnEdit.setVisibility(8);
+                this.btnEdit.setVisibility(View.GONE);
                 this.btnEdit.setEnabled(false);
             }
             initProductView();
@@ -250,7 +251,7 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
     private void initGalleryView() {
         this.mProductImg = (ImageView) findViewById(R.id.kanojo_info_product_img);
         this.mGallery = new Gallery(this);
-        Display disp = ((WindowManager) getSystemService("window")).getDefaultDisplay();
+        Display disp = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         this.mGallery.setSpacing(10);
         int width = disp.getWidth();
         int h = (int) this.r.getDimension(R.dimen.kanojo_info_gallery_height);

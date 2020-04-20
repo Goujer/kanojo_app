@@ -12,8 +12,8 @@ public final class LocaleManager {
     private static final String DEFAULT_COUNTRY = "US";
     private static final String DEFAULT_LANGUAGE = "en";
     private static final String DEFAULT_TLD = "com";
-    private static final Map<String, String> GOOGLE_BOOK_SEARCH_COUNTRY_TLD = GOOGLE_COUNTRY_TLD;
     private static final Map<String, String> GOOGLE_COUNTRY_TLD = new HashMap();
+    private static final Map<String, String> GOOGLE_BOOK_SEARCH_COUNTRY_TLD = GOOGLE_COUNTRY_TLD;
     private static final Map<String, String> GOOGLE_PRODUCT_SEARCH_COUNTRY_TLD = new HashMap();
     private static final Collection<String> TRANSLATED_HELP_ASSET_LANGUAGES = Arrays.asList(new String[]{"de", DEFAULT_LANGUAGE, "es", "fr", "it", "ja", "ko", "nl", "pt", "ru", "zh-rCN", "zh-rTW"});
 

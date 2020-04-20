@@ -16,10 +16,10 @@ public abstract class GCMBaseIntentService extends IntentService {
     private static final Object LOCK = GCMBaseIntentService.class;
     private static final int MAX_BACKOFF_MS = ((int) TimeUnit.SECONDS.toMillis(3600));
     public static final String TAG = "GCMBaseIntentService";
+    private static final Random sRandom = new Random();
     private static final String TOKEN = Long.toBinaryString(sRandom.nextLong());
     private static final String WAKELOCK_KEY = "GCM_LIB";
     private static int sCounter = 0;
-    private static final Random sRandom = new Random();
     private static PowerManager.WakeLock sWakeLock;
     private final String[] mSenderIds;
 
@@ -79,7 +79,7 @@ public abstract class GCMBaseIntentService extends IntentService {
     }
 
     public final void onHandleIntent(Intent intent) {
-        String sTotal;
+        String sTotal = null;
         try {
             Context context = getApplicationContext();
             String action = intent.getAction();
