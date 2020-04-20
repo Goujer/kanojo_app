@@ -25,7 +25,7 @@ final class MapFormatter implements Formatter {
                     out.append(',');
                 }
                 if (context.isPrettyPrint()) {
-                    out.append(10);
+                    out.append('\n');
                     int indent = context.getInitialIndent() + context.getDepth() + 1;
                     for (int j = 0; j < indent; j++) {
                         out.append(context.getIndentText());

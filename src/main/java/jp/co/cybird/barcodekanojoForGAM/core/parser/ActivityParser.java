@@ -31,7 +31,7 @@ public class ActivityParser extends AbstractJSONParser<ActivityModel> {
             if (object.has("activity")) {
                 res.setActivity(object.getString("activity"));
             }
-            if (object.has(PropertyConfiguration.USER) && !object.isNull(PropertyConfiguration.USER) && (userObj2 = object.getJSONObject(PropertyConfiguration.USER)) != null) {
+            if (object.has("user") && !object.isNull("user") && (userObj2 = object.getJSONObject("user")) != null) {
                 res.setUser((User) new UserParser().parse(userObj2));
             }
             if (object.has("other_user") && !object.isNull("other_user") && (userObj = object.getJSONObject("other_user")) != null) {

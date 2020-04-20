@@ -143,13 +143,12 @@ public class AsyncHttpResponseHandler {
                 }
             }
         } catch (IOException e2) {
-            e = e2;
-            sendFailureMessage((Throwable) e, (String) null);
+            sendFailureMessage(e2, (String) null);
             if (status.getStatusCode() < 300) {
             }
         }
         if (status.getStatusCode() < 300) {
-            sendFailureMessage((Throwable) new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()), responseBody);
+            sendFailureMessage(new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()), responseBody);
         } else {
             sendSuccessMessage(status.getStatusCode(), responseBody);
         }

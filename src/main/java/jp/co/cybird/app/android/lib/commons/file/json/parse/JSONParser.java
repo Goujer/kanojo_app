@@ -104,7 +104,7 @@ public class JSONParser {
             }
             return type2;
         } while (type2 == null);
-        return type2;
+        //return type2;
     }
 
     /* access modifiers changed from: package-private */
@@ -648,10 +648,10 @@ public class JSONParser {
                 }
             }
         }
-        if (sb != null) {
-            return this.cache.getBigDecimal(sb);
-        }
-        return null;
+//        if (sb != null) {
+//            return this.cache.getBigDecimal(sb);
+//        }
+//        return null;
     }
 
     /* access modifiers changed from: package-private */
@@ -874,10 +874,10 @@ public class JSONParser {
                 }
             }
         }
-        if (sb != null) {
-            return this.cache.getString(sb);
-        }
-        return null;
+//        if (sb != null) {
+//            return this.cache.getString(sb);
+//        }
+//        return null;
     }
 
     /* access modifiers changed from: package-private */

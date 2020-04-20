@@ -459,7 +459,7 @@ public class JSON {
         try {
             JSONReader jreader = new JSONReader(new JSONContext(), is, false, true);
             if (jreader.next() != null) {
-                return jreader.getValue();
+                return (T) jreader.getValue();
             }
             return null;
         } catch (IOException e) {
@@ -494,7 +494,7 @@ public class JSON {
     public <T> T parse(InputStream in) throws IOException, JSONException {
         JSONReader jreader = new JSONReader(new JSONContext(), new ReaderInputSource(in), false, true);
         if (jreader.next() != null) {
-            return jreader.getValue();
+            return (T) jreader.getValue();
         }
         return null;
     }
@@ -512,7 +512,7 @@ public class JSON {
     public <T> T parse(Reader reader) throws IOException, JSONException {
         JSONReader jreader = new JSONReader(new JSONContext(), new ReaderInputSource(reader), false, true);
         if (jreader.next() != null) {
-            return jreader.getValue();
+            return (T) jreader.getValue();
         }
         return null;
     }
@@ -572,7 +572,7 @@ public class JSON {
 
     /* access modifiers changed from: protected */
     public <T> T postparse(JSONContext context, Object value, Class<? extends T> cls, Type type) throws Exception {
-        Converter c;
+        Converter c = null;
         Converter c2 = null;
         if (value != null) {
             JSONHint hint = context.getHint();
@@ -630,7 +630,7 @@ public class JSON {
             context.memberCache.put(cls, c);
         }
         if (c != null) {
-            return c.convert(context, value, cls, type);
+            return (T) c.convert(context, value, cls, type);
         }
         throw new UnsupportedOperationException();
     }
@@ -648,11 +648,10 @@ public class JSON {
         return true;
     }
 
-    /* access modifiers changed from: protected */
-    public <T> T create(JSONContext context, Class<? extends T> c) throws Exception {
+    protected <T> T create(JSONContext context, Class<? extends T> c) throws Exception {
         Object instance = null;
         JSONHint hint = context.getHint();
-        Class<? extends U> cls = c;
+        Class<? extends T> cls = c;
         if (hint != null) {
             cls = c;
             if (hint.type() != Object.class) {
@@ -681,7 +680,7 @@ public class JSON {
             }
         } else if ((cls.isMemberClass() || cls.isAnonymousClass()) && !Modifier.isStatic(cls.getModifiers())) {
             Class<?> eClass = cls.getEnclosingClass();
-            Constructor<? extends U> declaredConstructor = cls.getDeclaredConstructor(new Class[]{eClass});
+            Constructor<? extends T> declaredConstructor = cls.getDeclaredConstructor(new Class[]{eClass});
             declaredConstructor.setAccessible(true);
             if (context.contextObject == null || !eClass.isAssignableFrom(context.contextObject.getClass())) {
                 instance = declaredConstructor.newInstance(new Object[]{null});
@@ -691,14 +690,14 @@ public class JSON {
         } else {
             if (Date.class.isAssignableFrom(cls)) {
                 try {
-                    Constructor<? extends U> declaredConstructor2 = cls.getDeclaredConstructor(new Class[]{Long.TYPE});
+                    Constructor<? extends T> declaredConstructor2 = cls.getDeclaredConstructor(new Class[]{Long.TYPE});
                     declaredConstructor2.setAccessible(true);
                     instance = declaredConstructor2.newInstance(new Object[]{0L});
                 } catch (NoSuchMethodException e) {
                 }
             }
             if (instance == null) {
-                Constructor<? extends U> declaredConstructor3 = cls.getDeclaredConstructor(new Class[0]);
+                Constructor<? extends T> declaredConstructor3 = cls.getDeclaredConstructor(new Class[0]);
                 declaredConstructor3.setAccessible(true);
                 instance = declaredConstructor3.newInstance(new Object[0]);
             }
@@ -855,7 +854,7 @@ public class JSON {
             if (isPrimitive) {
                 c2 = PlainConverter.getDefaultValue(c).getClass();
             }
-            return c2.cast(o);
+            return (T) c2.cast(o);
         }
 
         public Object convert(Object key, Object value, Type t) throws Exception {
@@ -1084,7 +1083,7 @@ public class JSON {
             if (type instanceof TypeReference) {
                 type = ((TypeReference) type).getType();
             }
-            Class<?> cls = ClassUtil.getRawType(type);
+            Class<? extends T> cls = (Class<? extends T>) ClassUtil.getRawType(type);
             try {
                 enter('$', (JSONHint) null);
                 T result = JSON.this.postparse(this, value, cls, type);

@@ -16,60 +16,62 @@ final class MapConverter implements Converter {
 
     public Object convert(JSON.JSONContext context, Object value, Class<?> c, Type t) throws Exception {
         Map<Object, Object> map = (Map) context.createInternal(c);
-        Type t2 = ClassUtil.resolveParameterizedType(t, Map.class);
-        Class pt0 = Object.class;
-        Class pt1 = Object.class;
-        Class cls = Object.class;
-        Class cls2 = Object.class;
-        if (t2 instanceof ParameterizedType) {
-            Type[] pts = ((ParameterizedType) t2).getActualTypeArguments();
+        t = ClassUtil.resolveParameterizedType(t, Map.class);
+        Type pt0 = Object.class;
+        Type pt1 = Object.class;
+        Class<?> pc0 = Object.class;
+        Class<?> pc1 = Object.class;
+        if (t instanceof ParameterizedType) {
+            Type[] pts = ((ParameterizedType) t).getActualTypeArguments();
             pt0 = (pts == null || pts.length <= 0) ? Object.class : pts[0];
             pt1 = (pts == null || pts.length <= 1) ? Object.class : pts[1];
-            cls = ClassUtil.getRawType(pt0);
-            cls2 = ClassUtil.getRawType(pt1);
+            pc0 = ClassUtil.getRawType(pt0);
+            pc1 = ClassUtil.getRawType(pt1);
         }
+        JSONHint hint;
+        Object key;
         if (value instanceof Map) {
-            if (!Object.class.equals(cls) || !Object.class.equals(cls2)) {
-                JSONHint hint = context.getHint();
-                for (Map.Entry<?, ?> entry : ((Map) value).entrySet()) {
-                    context.enter('.', hint);
-                    Object key = context.postparseInternal(entry.getKey(), cls, pt0);
+            if (Object.class.equals(pc0) && Object.class.equals(pc1)) {
+                map.putAll((Map) value);
+            } else {
+                hint = context.getHint();
+                for (Object entry : ((Map) value).entrySet()) {
+                    context.enter(Character.valueOf('.'), hint);
+                    key = context.postparseInternal(((Map.Entry)entry).getKey(), pc0, pt0);
                     context.exit();
-                    context.enter(entry.getKey(), hint);
-                    map.put(key, context.postparseInternal(entry.getValue(), cls2, pt1));
+                    context.enter(((Map.Entry)entry).getKey(), hint);
+                    map.put(key, context.postparseInternal(((Map.Entry)entry).getValue(), pc1, pt1));
                     context.exit();
                 }
-            } else {
-                map.putAll((Map) value);
             }
         } else if (!(value instanceof List)) {
-            JSONHint hint2 = context.getHint();
-            String key2 = (hint2 == null || hint2.anonym().length() <= 0) ? null : hint2.anonym();
-            if (!Object.class.equals(cls) || !Object.class.equals(cls2)) {
-                context.enter('.', hint2);
-                Object key3 = context.postparseInternal(key2, cls, pt0);
-                context.exit();
-                context.enter(key3, hint2);
-                map.put(key3, context.postparseInternal(value, cls2, pt1));
-                context.exit();
+            hint = context.getHint();
+            key = (hint == null || hint.anonym().length() <= 0) ? null : hint.anonym();
+            if (Object.class.equals(pc0) && Object.class.equals(pc1)) {
+                map.put(value, null);
             } else {
-                map.put(value, (Object) null);
+                context.enter(Character.valueOf('.'), hint);
+                key = context.postparseInternal(key, pc0, pt0);
+                context.exit();
+                context.enter(key, hint);
+                map.put(key, context.postparseInternal(value, pc1, pt1));
+                context.exit();
             }
-        } else if (!Object.class.equals(cls) || !Object.class.equals(cls2)) {
-            List<?> src = (List) value;
-            JSONHint hint3 = context.getHint();
+        } else if (Object.class.equals(pc0) && Object.class.equals(pc1)) {
+            List src = (List) value;
             for (int i = 0; i < src.size(); i++) {
-                context.enter('.', hint3);
-                Object key4 = context.postparseInternal(Integer.valueOf(i), cls, pt0);
-                context.exit();
-                context.enter(Integer.valueOf(i), hint3);
-                map.put(key4, context.postparseInternal(src.get(i), cls2, pt1));
-                context.exit();
+                map.put(Integer.valueOf(i), src.get(i));
             }
         } else {
-            List<?> src2 = (List) value;
-            for (int i2 = 0; i2 < src2.size(); i2++) {
-                map.put(Integer.valueOf(i2), src2.get(i2));
+            List src = (List) value;
+            hint = context.getHint();
+            for (int i = 0; i < src.size(); i++) {
+                context.enter(Character.valueOf('.'), hint);
+                key = context.postparseInternal(Integer.valueOf(i), pc0, pt0);
+                context.exit();
+                context.enter(Integer.valueOf(i), hint);
+                map.put(key, context.postparseInternal(src.get(i), pc1, pt1));
+                context.exit();
             }
         }
         return map;

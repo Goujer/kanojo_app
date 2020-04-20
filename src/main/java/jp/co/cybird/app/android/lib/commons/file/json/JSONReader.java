@@ -212,7 +212,7 @@ public class JSONReader {
             }
             return ostack[0];
         } while (next != null);
-        return ostack[0];
+        //return ostack[0];
     }
 
     public int getDepth() {

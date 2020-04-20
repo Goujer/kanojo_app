@@ -24,7 +24,7 @@ final class DOMElementFormatter implements Formatter {
         StringFormatter.serialize(context, elem.getTagName(), out);
         out.append(',');
         if (context.isPrettyPrint()) {
-            out.append(10);
+            out.append('\n');
             int indent = context.getInitialIndent() + context.getDepth() + 1;
             for (int j = 0; j < indent; j++) {
                 out.append(context.getIndentText());
@@ -38,9 +38,9 @@ final class DOMElementFormatter implements Formatter {
                     out.append(',');
                 }
                 if (context.isPrettyPrint() && names.getLength() > 1) {
-                    out.append(10);
+                    out.append('\n');
                     for (int j2 = 0; j2 < context.getDepth() + 2; j2++) {
-                        out.append(9);
+                        out.append('\t');
                     }
                 }
                 Node node = names.item(i);
@@ -54,7 +54,7 @@ final class DOMElementFormatter implements Formatter {
                 }
             }
             if (context.isPrettyPrint() && names.getLength() > 1) {
-                out.append(10);
+                out.append('\n');
                 int indent2 = context.getInitialIndent() + context.getDepth() + 1;
                 for (int j3 = 0; j3 < indent2; j3++) {
                     out.append(context.getIndentText());
@@ -70,7 +70,7 @@ final class DOMElementFormatter implements Formatter {
                 if ((value instanceof Element) || ((value instanceof CharacterData) && !(value instanceof Comment))) {
                     out.append(',');
                     if (context.isPrettyPrint()) {
-                        out.append(10);
+                        out.append('\n');
                         int indent3 = context.getInitialIndent() + context.getDepth() + 1;
                         for (int j4 = 0; j4 < indent3; j4++) {
                             out.append(context.getIndentText());
@@ -86,7 +86,7 @@ final class DOMElementFormatter implements Formatter {
             }
         }
         if (context.isPrettyPrint()) {
-            out.append(10);
+            out.append('\n');
             int indent4 = context.getInitialIndent() + context.getDepth();
             for (int j5 = 0; j5 < indent4; j5++) {
                 out.append(context.getIndentText());

@@ -27,7 +27,7 @@ final class IteratorFormatter implements Formatter {
                 out.append(',');
             }
             if (context.isPrettyPrint()) {
-                out.append(10);
+                out.append('\n');
                 int indent = context.getInitialIndent() + context.getDepth() + 1;
                 for (int j = 0; j < indent; j++) {
                     out.append(context.getIndentText());
@@ -49,7 +49,7 @@ final class IteratorFormatter implements Formatter {
             count++;
         }
         if (context.isPrettyPrint() && count > 0) {
-            out.append(10);
+            out.append('\n');
             int indent2 = context.getInitialIndent() + context.getDepth();
             for (int j2 = 0; j2 < indent2; j2++) {
                 out.append(context.getIndentText());
