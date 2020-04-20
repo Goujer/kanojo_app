@@ -23,7 +23,7 @@ android {
 
 	defaultConfig {
 		applicationId 'jp.co.cybird.barcodekanojoForGAM'
-		minSdkVersion 9
+		minSdkVersion 14
 		targetSdkVersion 26
 		versionCode 1
 		versionName "2.4.3"
