@@ -32,11 +32,10 @@ public class BootActivity extends BaseKanojosActivity {
     private static final boolean DEBUG = false;
     private static final String TAG = BootActivity.class.getSimpleName();
     private volatile boolean authorizationDone;
-	/* access modifiers changed from: private */
-    public RelativeLayout mProgressbar;
+    private RelativeLayout mProgressbar;
     final Handler mTaskEndHandler = new Handler() {
         public void handleMessage(Message msg) {
-            StatusHolder next = (StatusHolder) BootActivity.this.getQueue().poll();
+            StatusHolder next = BootActivity.this.getQueue().poll();
             if (next != null) {
                 BootActivity.this.executeBootTask(next);
             }
@@ -52,7 +51,7 @@ public class BootActivity extends BaseKanojosActivity {
         super.onCreate(savedInstanceState);
         unregisterReceiver(this.mWarningFullSpaceReceiver);
         setContentView(R.layout.boot);
-        this.mProgressbar = (RelativeLayout) findViewById(R.id.progressbar);
+        this.mProgressbar = findViewById(R.id.progressbar);
     }
 
     public void onResume() {
@@ -79,15 +78,13 @@ public class BootActivity extends BaseKanojosActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void startDashboard() {
+    protected void startDashboard() {
         logout();
         GCMUtilities.runGCM(this);
         startActivity(new Intent().setClass(this, KanojosActivity.class));
     }
 
-    /* access modifiers changed from: protected */
-    public void startConfig() {
+    protected void startConfig() {
         logout();
         Intent signUp = new Intent().setClass(this, SignUpActivity.class);
         signUp.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST);
@@ -123,8 +120,7 @@ public class BootActivity extends BaseKanojosActivity {
         }
     }
 
-    /* access modifiers changed from: private */
-    public Queue<StatusHolder> getQueue() {
+    private Queue<StatusHolder> getQueue() {
         if (this.mTaskQueue == null) {
             this.mTaskQueue = new LinkedList();
         }

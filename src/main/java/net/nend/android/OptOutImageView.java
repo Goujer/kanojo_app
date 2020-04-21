@@ -102,7 +102,7 @@ final class OptOutImageView extends ImageView implements View.OnClickListener, D
 
     void loadImage() {
         if (optOutImage == null) {
-            new DownloadTask(this).execute(new Void[0]);
+            new DownloadTask(this).execute();
         } else {
             setImageBitmap(optOutImage);
         }

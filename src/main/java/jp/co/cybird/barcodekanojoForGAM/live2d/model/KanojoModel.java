@@ -156,7 +156,7 @@ public class KanojoModel {
         gl.glPopMatrix();
     }
 
-    void drawModel_core(GL10 gl) throws Exception {
+    void drawModel_core(GL10 gl) {
         KanojoSetting ks;
         if (this.live2DModel != null) {
             if (this.live2dAnimation != null) {

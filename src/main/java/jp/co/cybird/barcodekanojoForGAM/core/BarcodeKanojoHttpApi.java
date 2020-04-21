@@ -295,7 +295,7 @@ public class BarcodeKanojoHttpApi {
     }
 
     private String fullUrl(String url) {
-        return String.valueOf(this.mApiBaseUrl) + url;
+        return this.mApiBaseUrl + url;
     }
 
     public Response<BarcodeKanojoModel> getURLWebView(String uuid) throws BarcodeKanojoException, IOException {
