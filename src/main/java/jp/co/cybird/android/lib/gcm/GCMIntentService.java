@@ -95,6 +95,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 				int doesSoundExist = context.getResources().getIdentifier(snd, "raw", context.getPackageName());
 				DLog.e("JP.CO.CYBIRD.ANDROID.GCM", "doesSoundExist is " + doesSoundExist);
 				if (doesSoundExist != 0) {
+					//TODO: Should use Notification Channel for SDK 26+
 					nb.setSound(Uri.parse("android.resource://" + getPackageName() + "/raw/" + snd));
 				}
 			}

@@ -394,9 +394,9 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     }
 
     private void handleDecodeInternally(Result rawResult, ResultHandler resultHandler, Bitmap barcode) {
-        this.statusView.setVisibility(8);
-        this.viewfinderView.setVisibility(8);
-        this.resultView.setVisibility(0);
+        this.statusView.setVisibility(View.GONE);
+        this.viewfinderView.setVisibility(View.GONE);
+        this.resultView.setVisibility(View.VISIBLE);
         ImageView barcodeImageView = (ImageView) findViewById(R.id.barcode_image_view);
         if (barcode == null) {
             barcodeImageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.launcher_icon));
@@ -408,8 +408,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         ((TextView) findViewById(R.id.time_text_view)).setText(DateFormat.getDateTimeInstance(3, 3).format(new Date(rawResult.getTimestamp())));
         TextView metaTextView = (TextView) findViewById(R.id.meta_text_view);
         View metaTextViewLabel = findViewById(R.id.meta_text_view_label);
-        metaTextView.setVisibility(8);
-        metaTextViewLabel.setVisibility(8);
+        metaTextView.setVisibility(View.GONE);
+        metaTextViewLabel.setVisibility(View.GONE);
         Map<ResultMetadataType, Object> metadata = rawResult.getResultMetadata();
         if (metadata != null) {
             StringBuilder sb = new StringBuilder(20);
@@ -421,8 +421,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             if (sb.length() > 0) {
                 sb.setLength(sb.length() - 1);
                 metaTextView.setText(sb);
-                metaTextView.setVisibility(0);
-                metaTextViewLabel.setVisibility(0);
+                metaTextView.setVisibility(View.VISIBLE);
+                metaTextViewLabel.setVisibility(View.VISIBLE);
             }
         }
         TextView contentsTextView = (TextView) findViewById(R.id.contents_text_view);
@@ -441,11 +441,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         for (int x = 0; x < 4; x++) {
             TextView button = (TextView) buttonView.getChildAt(x);
             if (x < buttonCount) {
-                button.setVisibility(0);
+                button.setVisibility(View.VISIBLE);
                 button.setText(resultHandler.getButtonText(x));
                 button.setOnClickListener(new ResultButtonListener(resultHandler, x));
             } else {
-                button.setVisibility(8);
+                button.setVisibility(View.GONE);
             }
         }
         if (this.copyToClipboard && !resultHandler.areContentsSecure()) {
@@ -595,10 +595,10 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     }
 
     private void resetStatusView() {
-        this.resultView.setVisibility(8);
+        this.resultView.setVisibility(View.GONE);
         this.statusView.setText(R.string.msg_default_status);
-        this.statusView.setVisibility(0);
-        this.viewfinderView.setVisibility(0);
+        this.statusView.setVisibility(View.VISIBLE);
+        this.viewfinderView.setVisibility(View.VISIBLE);
         this.lastResult = null;
     }
 

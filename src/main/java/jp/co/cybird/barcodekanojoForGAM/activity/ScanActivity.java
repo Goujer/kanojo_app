@@ -246,8 +246,8 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
     public void updateViews() {
         switch (this.result) {
             case 1:
-                this.mLayoutThumb.setVisibility(0);
-                this.mProgressBar.setVisibility(8);
+                this.mLayoutThumb.setVisibility(View.VISIBLE);
+                this.mProgressBar.setVisibility(View.GONE);
                 this.txtMessage.setText(this.mStringMessage);
                 View viewNewKanojo = this.inflater.inflate(R.layout.scan_result_new_kanojo, (ViewGroup) null);
                 this.mBitmapView = (ImageView) viewNewKanojo.findViewById(R.id.scan_result_photo);
@@ -262,8 +262,8 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
             case 2:
             case 3:
             case 4:
-                this.mLayoutThumb.setVisibility(0);
-                this.mProgressBar.setVisibility(8);
+                this.mLayoutThumb.setVisibility(View.VISIBLE);
+                this.mProgressBar.setVisibility(View.GONE);
                 this.txtMessage.setText(this.mStringMessage);
                 View view = this.inflater.inflate(R.layout.scan_result_others, (ViewGroup) null);
                 this.mBitmapView = (ImageView) view.findViewById(R.id.scan_result_others_photo);
@@ -291,36 +291,36 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                 if (this.mLayoutThumb.getChildCount() > 0) {
                     this.mLayoutThumb.removeAllViews();
                 }
-                this.mLayoutThumb.setVisibility(8);
-                this.mProgressBar.setVisibility(8);
+                this.mLayoutThumb.setVisibility(View.GONE);
+                this.mProgressBar.setVisibility(View.GONE);
                 this.txtMessage.setText("");
                 break;
         }
         switch (this.result) {
             case 1:
-                this.btnClose.setVisibility(8);
-                this.btn01.setVisibility(0);
-                this.btn02.setVisibility(0);
+                this.btnClose.setVisibility(View.GONE);
+                this.btn01.setVisibility(View.VISIBLE);
+                this.btn02.setVisibility(View.VISIBLE);
                 this.btn01.setText(R.string.scan_result_yes);
                 this.btn02.setText(R.string.scan_result_cancel);
                 return;
             case 2:
             case 3:
-                this.btn01.setVisibility(0);
-                this.btn02.setVisibility(0);
+                this.btn01.setVisibility(View.VISIBLE);
+                this.btn02.setVisibility(View.VISIBLE);
                 this.btn01.setText(R.string.scan_result_ok);
                 this.btn02.setText(R.string.scan_result_edit_productinfo);
                 return;
             case 4:
-                this.btn01.setVisibility(0);
-                this.btn02.setVisibility(0);
+                this.btn01.setVisibility(View.VISIBLE);
+                this.btn02.setVisibility(View.VISIBLE);
                 this.btn01.setText(R.string.scan_result_add_friend);
                 this.btn02.setText(R.string.scan_result_edit_productinfo);
                 return;
             default:
-                this.btnClose.setVisibility(8);
-                this.btn01.setVisibility(8);
-                this.btn02.setVisibility(8);
+                this.btnClose.setVisibility(View.GONE);
+                this.btn01.setVisibility(View.GONE);
+                this.btn02.setVisibility(View.GONE);
                 return;
         }
     }

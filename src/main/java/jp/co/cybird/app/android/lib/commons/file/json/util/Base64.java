@@ -43,7 +43,7 @@ public class Base64 {
     }
 
     public static byte[] decode(CharSequence cs) {
-        int data;
+        int data = 0;
         int addsize = 0;
         int bufsize = 0;
         int i = 0;

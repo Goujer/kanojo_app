@@ -12,7 +12,6 @@ import java.util.Random;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.message.BasicHeader;
-import org.apache.james.mime4j.util.CharsetUtil;
 
 class SimpleMultipartEntity implements HttpEntity {
     private static final char[] MULTIPART_CHARS = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
@@ -33,7 +32,7 @@ class SimpleMultipartEntity implements HttpEntity {
     public void writeFirstBoundaryIfNeeds() {
         if (!this.isSetFirst) {
             try {
-                this.out.write(("--" + this.boundary + CharsetUtil.CRLF).getBytes());
+                this.out.write(("--" + this.boundary + "\r\n").getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -57,7 +56,7 @@ class SimpleMultipartEntity implements HttpEntity {
         try {
             this.out.write(("Content-Disposition: form-data; name=\"" + key + "\"\r\n\r\n").getBytes());
             this.out.write(value.getBytes());
-            this.out.write(("\r\n--" + this.boundary + CharsetUtil.CRLF).getBytes());
+            this.out.write(("\r\n--" + this.boundary + "\r\n").getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,7 +70,7 @@ class SimpleMultipartEntity implements HttpEntity {
         writeFirstBoundaryIfNeeds();
         try {
             this.out.write(("Content-Disposition: form-data; name=\"" + key + "\"; filename=\"" + fileName + "\"\r\n").getBytes());
-            this.out.write(("Content-Type: " + type + CharsetUtil.CRLF).getBytes());
+            this.out.write(("Content-Type: " + type + "\r\n").getBytes());
             this.out.write("Content-Transfer-Encoding: binary\r\n\r\n".getBytes());
             byte[] tmp = new byte[4096];
             while (true) {
@@ -82,7 +81,7 @@ class SimpleMultipartEntity implements HttpEntity {
                 this.out.write(tmp, 0, l);
             }
             if (!isLast) {
-                this.out.write(("\r\n--" + this.boundary + CharsetUtil.CRLF).getBytes());
+                this.out.write(("\r\n--" + this.boundary + "\r\n").getBytes());
             }
             this.out.flush();
             try {

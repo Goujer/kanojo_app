@@ -100,55 +100,55 @@ public class BarcodeKanojoHttpApi {
     }
 
     public Response<BarcodeKanojoModel> iphone_signup(String name, String password, String email, int birth_month, int birth_day, String sex, String description, File profile_image_data, String udid) throws BarcodeKanojoException, IOException {
-        HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_ACCOUNT_SIGNUP), new NameValueOrFilePair("name", name), new NameValueOrFilePair((String) PropertyConfiguration.PASSWORD, password), new NameValueOrFilePair("email", email), new NameValueOrFilePair("birth_month", String.valueOf(birth_month)), new NameValueOrFilePair("birth_day", String.valueOf(birth_day)), new NameValueOrFilePair("sex", sex), new NameValueOrFilePair("description", description), new NameValueOrFilePair("profile_image_data", profile_image_data), new NameValueOrFilePair("uuid", udid));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_ACCOUNT_SIGNUP), new NameValueOrFilePair("name", name), new NameValueOrFilePair((String) "password", password), new NameValueOrFilePair("email", email), new NameValueOrFilePair("birth_month", String.valueOf(birth_month)), new NameValueOrFilePair("birth_day", String.valueOf(birth_day)), new NameValueOrFilePair("sex", sex), new NameValueOrFilePair("description", description), new NameValueOrFilePair("profile_image_data", profile_image_data), new NameValueOrFilePair("uuid", udid));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> android_signup(int birth_year, int birth_month, int birth_day, String sex, String uuid) throws BarcodeKanojoException, IOException {
         String uuid2 = Codec.encode(uuid);
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_ACCOUNT_SIGNUP), new NameValueOrFilePair("uuid", uuid2));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> verify(int gree_id, String verify_key) throws BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpPost(fullUrl(URL_API_ACCOUNT_VERIFY), new BasicNameValuePair("gree_id", String.valueOf(gree_id)), new BasicNameValuePair("verify_key", verify_key));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> update(String name, String name_textid, File profile_image_data) throws BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_ACCOUNT_UPDATE), new NameValueOrFilePair("name", name), new NameValueOrFilePair("name_textid", name_textid), new NameValueOrFilePair("profile_image_data", profile_image_data));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> iphone_update(String name, String current_apssword, String new_password, String email, int birth_month, int birth_day, String sex, String description, File profile_image_data) throws BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_ACCOUNT_UPDATE), new NameValueOrFilePair("name", name), new NameValueOrFilePair("current_password", current_apssword), new NameValueOrFilePair("new_password", new_password), new NameValueOrFilePair("email", email), new NameValueOrFilePair("birth_month", String.valueOf(birth_month)), new NameValueOrFilePair("birth_day", String.valueOf(birth_day)), new NameValueOrFilePair("sex", sex), new NameValueOrFilePair("description", description), new NameValueOrFilePair("profile_image_data", profile_image_data));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> update(String name, File profile_image_data) throws BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_ACCOUNT_UPDATE), new NameValueOrFilePair("name", name), new NameValueOrFilePair("profile_image_data", profile_image_data));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> iphone_verify(String email, String password, String udid) throws BarcodeKanojoException, IOException {
-        HttpPost httpPost = this.mHttpApi.createHttpPost(fullUrl(URL_API_ACCOUNT_VERIFY), new BasicNameValuePair("email", email), new BasicNameValuePair(PropertyConfiguration.PASSWORD, password), new BasicNameValuePair("udid", udid));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        HttpPost httpPost = this.mHttpApi.createHttpPost(fullUrl(URL_API_ACCOUNT_VERIFY), new BasicNameValuePair("email", email), new BasicNameValuePair("password", password), new BasicNameValuePair("udid", udid));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> android_verify(String udid) throws BarcodeKanojoException, IOException {
         String udid2 = Codec.encode(udid);
         HttpPost httpPost = this.mHttpApi.createHttpPost(fullUrl(URL_API_ACCOUNT_VERIFY), new BasicNameValuePair("uuid", udid2));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> current_kanojos(int user_id, int index, int limit, String search) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpGet httpPost = this.mHttpApi.createHttpGet(fullUrl(URL_API_USER_CURRENT_KANOJOS), new BasicNameValuePair("user_id", String.valueOf(user_id)), new BasicNameValuePair("index", String.valueOf(index)), new BasicNameValuePair("limit", String.valueOf(limit)), new BasicNameValuePair("search", search));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new ModelListParser("current_kanojos", new KanojoParser()), new ModelParser(PropertyConfiguration.USER, new UserParser()), new ModelParser("search_result", new SearchResultParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new ModelListParser("current_kanojos", new KanojoParser()), new ModelParser("user", new UserParser()), new ModelParser("search_result", new SearchResultParser())));
     }
 
     public Response<BarcodeKanojoModel> friend_kanojos(int user_id, int index, int limit, String search) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpGet httpPost = this.mHttpApi.createHttpGet(fullUrl(URL_API_USER_FRIEND_KANOJOS), new BasicNameValuePair("user_id", String.valueOf(user_id)), new BasicNameValuePair("index", String.valueOf(index)), new BasicNameValuePair("limit", String.valueOf(limit)), new BasicNameValuePair("search", search));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelListParser("friend_kanojos", new KanojoParser()), new ModelParser(PropertyConfiguration.USER, new UserParser()), new ModelParser("search_result", new SearchResultParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelListParser("friend_kanojos", new KanojoParser()), new ModelParser("user", new UserParser()), new ModelParser("search_result", new SearchResultParser())));
     }
 
     public Response<BarcodeKanojoModel> like_ranking(int index, int limit) throws IllegalStateException, BarcodeKanojoException, IOException {
@@ -187,17 +187,17 @@ public class BarcodeKanojoHttpApi {
 
     public Response<BarcodeKanojoModel> scan_and_generate(String barcode, String company_name, String kanojo_name, File kanojo_profile_image_data, String product_name, int product_category_id, String product_comment, File product_image_data, GeoPoint product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_BARCODE_SCAN_AND_GENERATE), new NameValueOrFilePair("barcode", barcode), new NameValueOrFilePair("company_name", company_name), new NameValueOrFilePair("kanojo_name", kanojo_name), new NameValueOrFilePair("kanojo_profile_image_data", kanojo_profile_image_data), new NameValueOrFilePair("product_name", product_name), new NameValueOrFilePair("product_category_id", String.valueOf(product_category_id)), new NameValueOrFilePair("product_comment", product_comment), new NameValueOrFilePair("product_image_data", product_image_data), new NameValueOrFilePair("product_geo", GeoUtil.geoToString(product_geo)));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser()), new ModelParser("kanojo", new KanojoParser()), new ModelParser("scan_history", new ScanHistoryParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser()), new ModelParser("kanojo", new KanojoParser()), new ModelParser("scan_history", new ScanHistoryParser())));
     }
 
     public Response<BarcodeKanojoModel> scan_and_generate(String barcode, String company_name, String company_name_textid, String kanojo_name, String kanojo_name_textid, File kanojo_profile_image_data, String product_name, String product_name_textid, int product_category_id, String product_comment, String product_comment_textid, File product_image_data, GeoPoint product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_BARCODE_SCAN_AND_GENERATE), new NameValueOrFilePair("barcode", barcode), new NameValueOrFilePair("company_name", company_name), new NameValueOrFilePair("company_name_textid", company_name_textid), new NameValueOrFilePair("kanojo_name", kanojo_name), new NameValueOrFilePair("kanojo_name_textid", kanojo_name_textid), new NameValueOrFilePair("kanojo_profile_image_data", kanojo_profile_image_data), new NameValueOrFilePair("product_name", product_name), new NameValueOrFilePair("product_name_textid", product_name_textid), new NameValueOrFilePair("product_category_id", String.valueOf(product_category_id)), new NameValueOrFilePair("product_comment", product_comment), new NameValueOrFilePair("product_comment_textid", product_comment_textid), new NameValueOrFilePair("product_image_data", product_image_data), new NameValueOrFilePair("product_geo", GeoUtil.geoToString(product_geo)));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser()), new ModelParser("kanojo", new KanojoParser()), new ModelParser("scan_history", new ScanHistoryParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser()), new ModelParser("kanojo", new KanojoParser()), new ModelParser("scan_history", new ScanHistoryParser())));
     }
 
     public Response<BarcodeKanojoModel> decrease_generating(String barcode) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_BARCODE_DECREASE_GENERATING), new BasicNameValuePair("barcode", barcode));
-        return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser()), new ModelParser("product", new ProductParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser()), new ModelParser("product", new ProductParser())));
     }
 
     public Response<BarcodeKanojoModel> update(String barcode, String company_name, String product_name, int product_category_id, String product_comment, File product_image_data, GeoPoint product_geo) throws BarcodeKanojoException, IOException {
@@ -311,42 +311,42 @@ public class BarcodeKanojoHttpApi {
 
     public Response<BarcodeKanojoModel> delete(int user_id) throws BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_ACCOUNT_DELETE), new NameValueOrFilePair("user_id", new StringBuilder().append(user_id).toString()));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> account_show() throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_ACCOUNT_SHOW), new NameValuePair[0]);
-        return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> android_register_fb(String facebookid, String facebookToken) throws BarcodeKanojoException, IOException {
         String facebookid2 = Codec.encode(facebookid);
         String facebookToken2 = Codec.encode(facebookToken);
         HttpPost httpPost = this.mHttpApi.createHttpPost(fullUrl(URL_API_FACEBOOK_CONNECT), new BasicNameValuePair("FACEBOOK_ID", facebookid2), new BasicNameValuePair("FACEBOOK_TOKEN", facebookToken2));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> android_disconnect_fb() throws BarcodeKanojoException, IOException {
         HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_FACEBOOK_DISCONNECT), new NameValuePair[0]);
-        return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> android_register_twitter(String access_token, String access_secret) throws BarcodeKanojoException, IOException {
         String access_token2 = Codec.encode(access_token);
         String access_secret2 = Codec.encode(access_secret);
         HttpPost httpPost = this.mHttpApi.createHttpPost(fullUrl(URL_API_TWITTER_CONNECT), new BasicNameValuePair("access_token", access_token2), new BasicNameValuePair("access_secret", access_secret2));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> android_disconnect_twitter() throws BarcodeKanojoException, IOException {
         HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_TWITTER_DISCONNECT), new NameValuePair[0]);
-        return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> android_register_device(String uuid, String device_token) throws BarcodeKanojoException, IOException {
         String uuid2 = Codec.encode(uuid);
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_REGISTER_TOKEN), new NameValueOrFilePair("uuid", uuid2), new NameValueOrFilePair((String) Preferences.PREFERENCE_DEVICE_TOKEN, device_token));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> show_dialog() throws IllegalStateException, BarcodeKanojoException, IOException {
@@ -356,8 +356,8 @@ public class BarcodeKanojoHttpApi {
 
     public Response<BarcodeKanojoModel> android_uuid_verify(String email, String password, String uuid) throws IllegalStateException, BarcodeKanojoException, IOException {
         String uuid2 = Codec.encode(uuid);
-        HttpPost httpPost = this.mHttpApi.createHttpPost(fullUrl(URL_API_VERIFY_UUID), new BasicNameValuePair("email", email), new BasicNameValuePair(PropertyConfiguration.PASSWORD, password), new BasicNameValuePair("uuid", uuid2));
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        HttpPost httpPost = this.mHttpApi.createHttpPost(fullUrl(URL_API_VERIFY_UUID), new BasicNameValuePair("email", email), new BasicNameValuePair("password", password), new BasicNameValuePair("uuid", uuid2));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> android_update(String name, String current_apssword, String new_password, String email, int birth_month, int birth_day, int birth_year, String sex, String description, File profile_image_data) throws BarcodeKanojoException, IOException {
@@ -413,7 +413,7 @@ public class BarcodeKanojoHttpApi {
             value[9] = new NameValueOrFilePair("profile_image_data", profile_image_data);
         }
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_ACCOUNT_UPDATE), value);
-        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser(PropertyConfiguration.USER, new UserParser())));
+        return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> android_get_transaction_id(int store_item_id) throws BarcodeKanojoException, IOException {

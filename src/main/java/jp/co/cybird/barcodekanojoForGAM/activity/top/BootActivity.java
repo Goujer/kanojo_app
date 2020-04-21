@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.widget.RelativeLayout;
 import com.google.android.gcm.GCMRegistrar;
 import java.io.IOException;
@@ -31,8 +32,7 @@ public class BootActivity extends BaseKanojosActivity {
     private static final boolean DEBUG = false;
     private static final String TAG = BootActivity.class.getSimpleName();
     private volatile boolean authorizationDone;
-    private BootTask mBootTask;
-    /* access modifiers changed from: private */
+	/* access modifiers changed from: private */
     public RelativeLayout mProgressbar;
     final Handler mTaskEndHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -109,11 +109,8 @@ public class BootActivity extends BaseKanojosActivity {
     }
 
     private boolean isLoading(StatusHolder status) {
-        if (status.loading) {
-            return true;
-        }
-        return false;
-    }
+		return status.loading;
+	}
 
     static class StatusHolder {
         public static final int LOGIN_TASK = 0;
@@ -138,8 +135,7 @@ public class BootActivity extends BaseKanojosActivity {
         getQueue().clear();
     }
 
-    /* access modifiers changed from: private */
-    public synchronized boolean isQueueEmpty() {
+    private synchronized boolean isQueueEmpty() {
         return this.mTaskQueue.isEmpty();
     }
 
@@ -151,16 +147,15 @@ public class BootActivity extends BaseKanojosActivity {
         this.mTaskEndHandler.sendEmptyMessage(0);
     }
 
-    /* access modifiers changed from: private */
-    public void executeBootTask(StatusHolder list) {
+    private void executeBootTask(StatusHolder list) {
         if (isLoading(list)) {
             Log.d("NguyenTT", "task " + list.key + " is running ");
             return;
         }
-        this.mBootTask = new BootTask();
-        this.mBootTask.setList(list);
-        this.mProgressbar.setVisibility(8);
-        this.mBootTask.execute(new Void[0]);
+		BootTask mBootTask = new BootTask();
+        mBootTask.setList(list);
+        this.mProgressbar.setVisibility(View.GONE);
+        mBootTask.execute();
     }
 
     class BootTask extends AsyncTask<Void, Void, Response<?>> {
@@ -214,7 +209,7 @@ public class BootActivity extends BaseKanojosActivity {
                 }
             }
             if (this.mList.key != 0 || !this.mReason.getMessage().equalsIgnoreCase("user not found")) {
-                BootActivity.this.mProgressbar.setVisibility(4);
+                BootActivity.this.mProgressbar.setVisibility(View.INVISIBLE);
                 BootActivity.this.showAlertDialog(new Alert(BootActivity.this.getResources().getString(R.string.error_internet)), new DialogInterface.OnDismissListener() {
                     public void onDismiss(DialogInterface dialog) {
                         BootActivity.this.logout();
@@ -226,13 +221,11 @@ public class BootActivity extends BaseKanojosActivity {
             BootActivity.this.nextScreen(this.mList);
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
-            BootActivity.this.mProgressbar.setVisibility(4);
+        protected void onCancelled() {
+            BootActivity.this.mProgressbar.setVisibility(View.INVISIBLE);
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) BootActivity.this.getApplication()).getBarcodeKanojo();
             User user = barcodeKanojo.getUser();
             ApplicationSetting setting = new ApplicationSetting(BootActivity.this);
@@ -255,8 +248,7 @@ public class BootActivity extends BaseKanojosActivity {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void nextScreen(StatusHolder list) {
+    void nextScreen(StatusHolder list) {
         switch (list.key) {
             case 0:
                 startDashboard();
@@ -265,11 +257,10 @@ public class BootActivity extends BaseKanojosActivity {
                 startShowPrivacy();
                 break;
         }
-        this.mProgressbar.setVisibility(8);
+        this.mProgressbar.setVisibility(View.GONE);
     }
 
-    /* access modifiers changed from: private */
-    public void logout() {
+    private void logout() {
         finish();
     }
 

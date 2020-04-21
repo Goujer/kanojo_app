@@ -67,13 +67,12 @@ final class NendAdResponseParser {
         NORMAL(1),
         WEB_VIEW(2),
         APP_TARGETING(3);
-        
-        private static final SparseArray<ResponseType> intToEnum = null;
+
+        private static final SparseArray<ResponseType> intToEnum = new SparseArray<>();
         private int type;
 
         static {
             int i;
-            intToEnum = new SparseArray<>();
             for (ResponseType responseType : values()) {
                 intToEnum.put(responseType.type, responseType);
             }
@@ -83,8 +82,7 @@ final class NendAdResponseParser {
             this.type = type2;
         }
 
-        /* access modifiers changed from: private */
-        public static ResponseType valueOf(int type2) {
+        private static ResponseType valueOf(int type2) {
             return intToEnum.get(type2, UNSUPPORTED);
         }
     }
@@ -96,8 +94,7 @@ final class NendAdResponseParser {
         this.mPackageManager = context.getPackageManager();
     }
 
-    /* access modifiers changed from: package-private */
-    public AdParameter parseResponse(String responseStr) {
+    AdParameter parseResponse(String responseStr) {
         if (responseStr != null) {
             try {
                 if (responseStr.length() != 0) {

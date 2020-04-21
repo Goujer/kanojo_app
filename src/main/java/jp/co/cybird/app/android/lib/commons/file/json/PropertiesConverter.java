@@ -25,13 +25,13 @@ final class PropertiesConverter implements Converter {
 
     private static void flattenProperties(StringBuilder key, Object value, Properties props) {
         if (value instanceof Map) {
-            for (Map.Entry<?, ?> entry : ((Map) value).entrySet()) {
+            for (Object entry : ((Map) value).entrySet()) {
                 int pos = key.length();
                 if (pos > 0) {
                     key.append('.');
                 }
-                key.append(entry.getKey());
-                flattenProperties(key, entry.getValue(), props);
+                key.append(((Map.Entry)entry).getKey());
+                flattenProperties(key, ((Map.Entry)entry).getValue(), props);
                 key.setLength(pos);
             }
         } else if (value instanceof List) {

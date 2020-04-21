@@ -12,12 +12,11 @@ import android.widget.TextView;
 import jp.co.cybird.barcodekanojoForGAM.R;
 
 public class EditItemView extends LinearLayout {
-    private ImageView mAdd = ((ImageView) findViewById(R.id.edit_item_add));
-    private ImageView mArrow = ((ImageView) findViewById(R.id.edit_item_arrow));
+    private ImageView mAdd = findViewById(R.id.edit_item_add);
+    private ImageView mArrow = findViewById(R.id.edit_item_arrow);
     private boolean mHoverInital;
-    private String mHoverText;
-    private ImageView mIcon = ((ImageView) findViewById(R.id.edit_item_icon));
-    private ImageView mImageView = ((ImageView) findViewById(R.id.edit_item_avarta));
+	private ImageView mIcon = findViewById(R.id.edit_item_icon);
+    private ImageView mImageView = findViewById(R.id.edit_item_avarta);
     private EditItemViewCallback mListener;
     private String mTextString;
     private TextView mTextView;
@@ -30,43 +29,44 @@ public class EditItemView extends LinearLayout {
 
     public EditItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setOrientation(0);
+        setOrientation(HORIZONTAL);
         setGravity(16);
         setPadding(10, 0, 10, 0);
         LayoutInflater.from(context).inflate(R.layout.view_edit_item, this, true);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.EditItemView, 0, 0);
-        Drawable iconDrawable = array.getDrawable(3);
-        if (iconDrawable != null) {
-            this.mIcon.setBackgroundDrawable(iconDrawable);
-            this.mIcon.setVisibility(0);
-        }
-        Drawable arrowDrawable = array.getDrawable(4);
-        if (arrowDrawable != null) {
-            this.mArrow.setBackgroundDrawable(arrowDrawable);
-            this.mArrow.setVisibility(0);
-            this.mAdd.setVisibility(8);
-        }
-        Drawable addDrawable = array.getDrawable(5);
-        if (addDrawable != null) {
-            this.mAdd.setBackgroundDrawable(addDrawable);
-            this.mAdd.setVisibility(0);
-            this.mArrow.setVisibility(8);
-        }
+
+		Drawable iconDrawable = array.getDrawable(R.styleable.EditItemView_iconDrawable);
+		if (iconDrawable != null) {
+			mIcon.setBackgroundDrawable(iconDrawable);
+			mIcon.setVisibility(VISIBLE);
+		}
+		Drawable arrowDrawable = array.getDrawable(R.styleable.EditItemView_arrowDrawable);
+		if (arrowDrawable != null) {
+			mArrow.setBackgroundDrawable(arrowDrawable);
+			mArrow.setVisibility(VISIBLE);
+			mAdd.setVisibility(GONE);
+		}
+		Drawable addDrawable = array.getDrawable(R.styleable.EditItemView_addDrawable);
+		if (addDrawable != null) {
+			mAdd.setBackgroundDrawable(addDrawable);
+			mAdd.setVisibility(VISIBLE);
+			mArrow.setVisibility(GONE);
+		}
         this.needMask = false;
-        this.mTextString = array.getString(0);
-        this.mHoverText = array.getString(6);
+		mTextString = array.getString(R.styleable.EditItemView_key);
+		String mHoverText = array.getString(R.styleable.EditItemView_hoverText);
         if (this.mTextString == null) {
             this.mTextString = "";
         }
         ((TextView) findViewById(R.id.edit_item_key)).setText(this.mTextString);
-        this.mTextView = (TextView) findViewById(R.id.edit_item_value);
-        this.mTextString = array.getString(1);
-        this.mtxtColor = array.getColor(2, 0);
-        if (this.mHoverText == null) {
-            this.mHoverText = "";
+        this.mTextView = findViewById(R.id.edit_item_value);
+		this.mTextString = array.getString(R.styleable.EditItemView_value);
+		this.mtxtColor = array.getColor(R.styleable.EditItemView_textColor, 0);
+        if (mHoverText == null) {
+            mHoverText = "";
         }
         if (this.mTextString == null) {
-            this.mTextString = this.mHoverText;
+            this.mTextString = mHoverText;
             this.mHoverInital = true;
             this.mTextView.setTextColor(getResources().getColor(R.color.hover_initial));
         } else {
@@ -99,11 +99,11 @@ public class EditItemView extends LinearLayout {
     }
 
     public void showArrow() {
-        this.mArrow.setVisibility(0);
+        this.mArrow.setVisibility(View.VISIBLE);
     }
 
     public void hideArrow() {
-        this.mArrow.setVisibility(4);
+        this.mArrow.setVisibility(View.INVISIBLE);
     }
 
     public ImageView getIcon() {
@@ -111,24 +111,24 @@ public class EditItemView extends LinearLayout {
     }
 
     public void showIcon() {
-        this.mIcon.setVisibility(0);
+        this.mIcon.setVisibility(View.VISIBLE);
     }
 
     public void hideIcon() {
-        this.mIcon.setVisibility(4);
+        this.mIcon.setVisibility(View.INVISIBLE);
     }
 
     public ImageView getRightIcon() {
         return this.mAdd;
     }
 
-    public void showIconAdd() {
-        this.mAdd.setVisibility(0);
-    }
+	public void showIconAdd() {
+		this.mAdd.setVisibility(VISIBLE);
+	}
 
-    public void hideIconAdd() {
-        this.mAdd.setVisibility(4);
-    }
+	public void hideIconAdd() {
+		this.mAdd.setVisibility(INVISIBLE);
+	}
 
     public void setValue(String value) {
         if (this.mTextView != null && value != null) {
@@ -137,7 +137,7 @@ public class EditItemView extends LinearLayout {
             if (this.mListener != null) {
                 this.mListener.onTextChange(this.mTextView, value);
             }
-            if (this.needMask.booleanValue()) {
+            if (this.needMask) {
                 this.mTextView.setText("********");
             } else {
                 this.mTextView.setText(this.mTextString);
@@ -157,11 +157,8 @@ public class EditItemView extends LinearLayout {
     }
 
     public boolean isEmpty() {
-        if (this.mTextView == null || this.mTextView.getText() == null || this.mTextView.getText().equals("")) {
-            return true;
-        }
-        return false;
-    }
+		return this.mTextView == null || this.mTextView.getText() == null || this.mTextView.getText().equals("");
+	}
 
     public void showHoverDescription() {
         this.mHoverInital = true;

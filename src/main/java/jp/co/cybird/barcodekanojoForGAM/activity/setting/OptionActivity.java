@@ -304,27 +304,29 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
                     throw th;
                 }
             } else {
-                switch (OptionActivity.this.getCodeAndShowAlert(response, this.mReason, OptionActivity.this.mListener)) {
-                    case 200:
-                        break;
-                    default:
-                        Alert alert = response.getAlert();
-                        if (alert != null) {
-                            OptionActivity.this.showAlertDialog(alert);
-                            break;
-                        }
-                        break;
-                }
-                OptionActivity.this.dismissProgressDialog();
+            	try {
+					switch (OptionActivity.this.getCodeAndShowAlert(response, this.mReason, OptionActivity.this.mListener)) {
+						case 200:
+							break;
+						default:
+							Alert alert = response.getAlert();
+							if (alert != null) {
+								OptionActivity.this.showAlertDialog(alert);
+								break;
+							}
+							break;
+					}
+					OptionActivity.this.dismissProgressDialog();
+				} catch(BarcodeKanojoException e) {
+            		e.printStackTrace();
+				}
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        protected void onCancelled() {
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> delete_user() throws BarcodeKanojoException, IllegalStateException, IOException {
+       Response<?> delete_user() throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) OptionActivity.this.getApplication()).getBarcodeKanojo();
             return barcodeKanojo.android_delete_account(barcodeKanojo.getUser().getId());
         }

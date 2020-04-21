@@ -21,7 +21,7 @@ public class ModelListParser extends AbstractJSONParser<ModelList<BarcodeKanojoM
 
     /* access modifiers changed from: protected */
     public ModelList<BarcodeKanojoModel> parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
-        ModelList<BarcodeKanojoModel> ModelList = new ModelList<>();
+        ModelList<BarcodeKanojoModel> modelList = new ModelList<>();
         try {
             if (!object.has(this.mName)) {
                 return null;
@@ -32,12 +32,12 @@ public class ModelListParser extends AbstractJSONParser<ModelList<BarcodeKanojoM
             JSONArray jsonArray = object.getJSONArray(this.mName);
             int l = jsonArray.length();
             for (int i = 0; i < l; i++) {
-                Object parse = this.mSubParser.parse(jsonArray.getJSONObject(i));
+                BarcodeKanojoModel parse = this.mSubParser.parse(jsonArray.getJSONObject(i));
                 if (parse != null) {
-                    ModelList.add(parse);
+                    modelList.add(parse);
                 }
             }
-            return ModelList;
+            return modelList;
         } catch (JSONException e) {
             throw new BarcodeKanojoParseException(e.toString());
         }

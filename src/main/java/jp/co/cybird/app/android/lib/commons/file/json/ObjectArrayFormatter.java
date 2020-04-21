@@ -10,16 +10,17 @@ final class ObjectArrayFormatter implements Formatter {
     ObjectArrayFormatter() {
     }
 
-    /* JADX WARNING: type inference failed for: r14v0, types: [java.lang.Object] */
-    /* JADX WARNING: Unknown variable types count: 1 */
-    public boolean format(JSON.JSONContext context, Object src, Object r14, OutputSource out) throws Exception {
-        Object[] array = r14;
+    //JADX had an error
+    public boolean format(JSON.JSONContext context, Object src, Object o, OutputSource out) throws Exception {
+        Object[] array = (Object[]) o;
         JSONHint hint = context.getHint();
         Class<?> lastClass = null;
         Formatter lastFormatter = null;
         out.append('[');
         int i = 0;
         while (i < array.length) {
+            int indent;
+            int j;
             Object item = array[i];
             if (item == src) {
                 item = null;
@@ -28,31 +29,31 @@ final class ObjectArrayFormatter implements Formatter {
                 out.append(',');
             }
             if (context.isPrettyPrint()) {
-                out.append(10);
-                int indent = context.getInitialIndent() + context.getDepth() + 1;
-                for (int j = 0; j < indent; j++) {
+                out.append('\n');
+                indent = (context.getInitialIndent() + context.getDepth()) + 1;
+                for (j = 0; j < indent; j++) {
                     out.append(context.getIndentText());
                 }
             }
             context.enter(Integer.valueOf(i), hint);
-            Object item2 = context.preformatInternal(item);
-            if (item2 == null) {
-                NullFormatter.INSTANCE.format(context, src, item2, out);
+            item = context.preformatInternal(item);
+            if (item == null) {
+                NullFormatter.INSTANCE.format(context, src, item, out);
             } else if (hint != null) {
-                context.formatInternal(item2, out);
-            } else if (item2.getClass().equals(lastClass)) {
-                lastFormatter.format(context, src, item2, out);
+                context.formatInternal(item, out);
+            } else if (item.getClass().equals(lastClass)) {
+                lastFormatter.format(context, src, item, out);
             } else {
-                lastFormatter = context.formatInternal(item2, out);
-                lastClass = item2.getClass();
+                lastFormatter = context.formatInternal(item, out);
+                lastClass = item.getClass();
             }
             context.exit();
             i++;
         }
         if (context.isPrettyPrint() && i > 0) {
-            out.append(10);
-            int indent2 = context.getInitialIndent() + context.getDepth();
-            for (int j2 = 0; j2 < indent2; j2++) {
+            out.append('\n');
+            int indent = context.getInitialIndent() + context.getDepth();
+            for (int j = 0; j < indent; j++) {
                 out.append(context.getIndentText());
             }
         }

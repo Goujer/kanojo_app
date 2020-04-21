@@ -98,7 +98,7 @@ public class CustomWebViewActivity extends BaseKanojosActivity implements View.O
 
     public ProgressDialog showProgressDialog() {
         if (this.mProgressBar != null) {
-            this.mProgressBar.setVisibility(0);
+            this.mProgressBar.setVisibility(View.VISIBLE);
         }
         this.mProgressBar.setTag("show");
         return this.mProgressDialog;
@@ -107,7 +107,7 @@ public class CustomWebViewActivity extends BaseKanojosActivity implements View.O
     /* access modifiers changed from: protected */
     public void dismissProgressDialog() {
         if (this.mProgressBar != null) {
-            this.mProgressBar.setVisibility(4);
+            this.mProgressBar.setVisibility(View.INVISIBLE);
         }
         this.mProgressBar.setTag("hide");
     }

@@ -42,7 +42,7 @@ public class TopActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top);
         this.mProgressBar = (ProgressBar) findViewById(R.id.top_progressbar);
-        this.mProgressBar.setVisibility(4);
+        this.mProgressBar.setVisibility(View.INVISIBLE);
         this.login_btn = (Button) findViewById(R.id.top_log_in);
         this.login_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -73,8 +73,8 @@ public class TopActivity extends BaseActivity {
 
     public void onResume() {
         super.onResume();
-        this.login_btn.setVisibility(0);
-        this.signup_btn.setVisibility(0);
+        this.login_btn.setVisibility(View.VISIBLE);
+        this.signup_btn.setVisibility(View.VISIBLE);
         BarcodeKanojoApp barcodeKanojoApp = (BarcodeKanojoApp) getApplication();
         barcodeKanojoApp.requestLocationUpdates(false);
         if (isSdCardWriteable()) {
@@ -160,8 +160,8 @@ public class TopActivity extends BaseActivity {
     }
 
     private void logout() {
-        this.login_btn.setVisibility(0);
-        this.signup_btn.setVisibility(0);
+        this.login_btn.setVisibility(View.VISIBLE);
+        this.signup_btn.setVisibility(View.VISIBLE);
     }
 
     private void executeTopSignUpTask() {
@@ -179,9 +179,9 @@ public class TopActivity extends BaseActivity {
         }
 
         public void onPreExecute() {
-            TopActivity.this.mProgressBar.setVisibility(0);
-            TopActivity.this.login_btn.setVisibility(4);
-            TopActivity.this.signup_btn.setVisibility(4);
+            TopActivity.this.mProgressBar.setVisibility(View.VISIBLE);
+            TopActivity.this.login_btn.setVisibility(View.INVISIBLE);
+            TopActivity.this.signup_btn.setVisibility(View.INVISIBLE);
         }
 
         public Response<?> doInBackground(Void... params) {
@@ -204,13 +204,13 @@ public class TopActivity extends BaseActivity {
                         TopActivity.this.showAlertDialog(new Alert(TopActivity.this.getResources().getString(R.string.error_internet)));
                         TopActivity.this.close();
                     }
-                    TopActivity.this.mProgressBar.setVisibility(4);
-                    TopActivity.this.login_btn.setVisibility(0);
-                    TopActivity.this.signup_btn.setVisibility(0);
+                    TopActivity.this.mProgressBar.setVisibility(View.INVISIBLE);
+                    TopActivity.this.login_btn.setVisibility(View.VISIBLE);
+                    TopActivity.this.signup_btn.setVisibility(View.VISIBLE);
                 } catch (Throwable th) {
-                    TopActivity.this.mProgressBar.setVisibility(4);
-                    TopActivity.this.login_btn.setVisibility(0);
-                    TopActivity.this.signup_btn.setVisibility(0);
+                    TopActivity.this.mProgressBar.setVisibility(View.INVISIBLE);
+                    TopActivity.this.login_btn.setVisibility(View.VISIBLE);
+                    TopActivity.this.signup_btn.setVisibility(View.VISIBLE);
                     throw th;
                 }
             } else {
@@ -231,17 +231,17 @@ public class TopActivity extends BaseActivity {
                         }
                         break;
                 }
-                TopActivity.this.mProgressBar.setVisibility(4);
-                TopActivity.this.login_btn.setVisibility(0);
-                TopActivity.this.signup_btn.setVisibility(0);
+                TopActivity.this.mProgressBar.setVisibility(View.INVISIBLE);
+                TopActivity.this.login_btn.setVisibility(View.VISIBLE);
+                TopActivity.this.signup_btn.setVisibility(View.VISIBLE);
             }
         }
 
         /* access modifiers changed from: protected */
         public void onCancelled() {
-            TopActivity.this.mProgressBar.setVisibility(4);
-            TopActivity.this.login_btn.setVisibility(0);
-            TopActivity.this.signup_btn.setVisibility(0);
+            TopActivity.this.mProgressBar.setVisibility(View.INVISIBLE);
+            TopActivity.this.login_btn.setVisibility(View.VISIBLE);
+            TopActivity.this.signup_btn.setVisibility(View.VISIBLE);
         }
 
         /* access modifiers changed from: package-private */
@@ -261,9 +261,9 @@ public class TopActivity extends BaseActivity {
         }
 
         public void onPreExecute() {
-            TopActivity.this.mProgressBar.setVisibility(0);
-            TopActivity.this.login_btn.setVisibility(4);
-            TopActivity.this.signup_btn.setVisibility(4);
+            TopActivity.this.mProgressBar.setVisibility(View.VISIBLE);
+            TopActivity.this.login_btn.setVisibility(View.INVISIBLE);
+            TopActivity.this.signup_btn.setVisibility(View.INVISIBLE);
         }
 
         public Response<?> doInBackground(Void... params) {
@@ -281,9 +281,9 @@ public class TopActivity extends BaseActivity {
                     throw new BarcodeKanojoException("response is null! \n" + this.mReason);
                 } catch (BarcodeKanojoException e) {
                     TopActivity.this.showAlertDialog(new Alert(TopActivity.this.getResources().getString(R.string.error_internet)));
-                    TopActivity.this.mProgressBar.setVisibility(4);
+                    TopActivity.this.mProgressBar.setVisibility(View.INVISIBLE);
                 } catch (Throwable th) {
-                    TopActivity.this.mProgressBar.setVisibility(4);
+                    TopActivity.this.mProgressBar.setVisibility(View.INVISIBLE);
                     throw th;
                 }
             } else {
@@ -299,15 +299,15 @@ public class TopActivity extends BaseActivity {
                         }
                         break;
                 }
-                TopActivity.this.mProgressBar.setVisibility(4);
+                TopActivity.this.mProgressBar.setVisibility(View.INVISIBLE);
             }
         }
 
         /* access modifiers changed from: protected */
         public void onCancelled() {
-            TopActivity.this.mProgressBar.setVisibility(4);
-            TopActivity.this.login_btn.setVisibility(0);
-            TopActivity.this.signup_btn.setVisibility(0);
+            TopActivity.this.mProgressBar.setVisibility(View.INVISIBLE);
+            TopActivity.this.login_btn.setVisibility(View.VISIBLE);
+            TopActivity.this.signup_btn.setVisibility(View.VISIBLE);
         }
 
         /* access modifiers changed from: package-private */

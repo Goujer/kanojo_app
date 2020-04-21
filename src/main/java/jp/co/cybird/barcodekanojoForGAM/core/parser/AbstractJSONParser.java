@@ -58,5 +58,6 @@ public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implement
         } catch (JSONException e) {
         } catch (IOException e2) {
         }
+		return null;
     }
 }

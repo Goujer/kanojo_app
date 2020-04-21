@@ -39,7 +39,6 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
-import org.apache.james.mime4j.field.ContentTypeField;
 
 public class HttpApi {
     private static final String BOUNDARY = "0xKhTmLbOuNdArY";
@@ -195,7 +194,7 @@ public class HttpApi {
         MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, BOUNDARY, (Charset) null);
         for (NameValueOrFilePair param : nameValueOrFilePairs) {
             if (param != null && param.getValue() != null) {
-                entity.addPart(param.getName(), new StringBody(param.getValue(), ContentTypeField.TYPE_TEXT_PLAIN, Charset.forName("UTF-8")));
+                entity.addPart(param.getName(), new StringBody(param.getValue(), "text/plain", Charset.forName("UTF-8")));
             } else if (!(param == null || (file = param.getFile()) == null || !file.exists())) {
                 entity.addPart(param.getName(), new FileBody(file, "application/octet-stream"));
             }

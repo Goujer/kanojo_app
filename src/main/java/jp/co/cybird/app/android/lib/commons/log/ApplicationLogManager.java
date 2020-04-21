@@ -30,6 +30,7 @@ public class ApplicationLogManager {
         return resultArray;
     }
 
+    //JADX error
     public static synchronized String getAllLogsJsonString(Context context) {
         String str;
         synchronized (ApplicationLogManager.class) {
@@ -47,19 +48,23 @@ public class ApplicationLogManager {
                         Object tag = tmpAppLog.getTag();
                         String message = tmpAppLog.getMessage();
                         if (!(timestamp == 0 || tag == null || message == null)) {
-                            jsonObject.put("timestamp", timestamp);
-                            jsonObject.put("tag", tag);
-                            jsonObject.put("message", Unicode.escape(message));
+							try {
+								jsonObject.put("timestamp", timestamp);
+								jsonObject.put("tag", tag);
+								jsonObject.put("message", Unicode.escape(message));
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
                             jsonArray.put(jsonObject);
                         }
                     }
                 }
-                try {
-                    str = jsonArray.toString();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    str = null;
-                }
+//                try {
+				str = jsonArray.toString();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                    str = null;
+//                }
             }
         }
         return str;

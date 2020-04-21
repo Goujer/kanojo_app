@@ -76,90 +76,76 @@ public class EditBitmapView extends View {
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:18:0x0045 A[SYNTHETIC, Splitter:B:18:0x0045] */
-    /* JADX WARNING: Removed duplicated region for block: B:23:0x004e A[SYNTHETIC, Splitter:B:23:0x004e] */
-    /* JADX WARNING: Removed duplicated region for block: B:28:0x0057 A[SYNTHETIC, Splitter:B:28:0x0057] */
-    /* JADX WARNING: Removed duplicated region for block: B:33:0x0060 A[SYNTHETIC, Splitter:B:33:0x0060] */
-    /* JADX WARNING: Removed duplicated region for block: B:49:? A[RETURN, SYNTHETIC] */
-    /* JADX WARNING: Removed duplicated region for block: B:50:? A[RETURN, SYNTHETIC] */
-    /* JADX WARNING: Removed duplicated region for block: B:51:? A[RETURN, SYNTHETIC] */
-    public void saveBitmap(String filename) {
-        setDrawingCacheEnabled(true);
-        OutputStream outputStream = null;
-        try {
-            Bitmap source = cropBitmap(getDrawingCache(), this.frame);
-            File dir = new File(this.dirPath);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            File file = new File(dir, filename);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            OutputStream outputStream2 = new FileOutputStream(file);
-            if (source != null) {
-                try {
-                    source.compress(Bitmap.CompressFormat.JPEG, 100, outputStream2);
-                } catch (FileNotFoundException e) {
-                    outputStream = outputStream2;
-                    if (outputStream == null) {
-                    }
-                } catch (IOException e2) {
-                    outputStream = outputStream2;
-                    if (outputStream == null) {
-                    }
-                } catch (NullPointerException e3) {
-                    outputStream = outputStream2;
-                    if (outputStream == null) {
-                    }
-                } catch (Throwable th) {
-                    th = th;
-                    outputStream = outputStream2;
-                    if (outputStream != null) {
-                    }
-                    throw th;
-                }
-            }
-            if (outputStream2 != null) {
-                try {
-                    outputStream2.close();
-                    OutputStream outputStream3 = outputStream2;
-                } catch (Throwable th2) {
-                    OutputStream outputStream4 = outputStream2;
-                }
-            }
-        } catch (FileNotFoundException e4) {
-            if (outputStream == null) {
-                try {
-                    outputStream.close();
-                } catch (Throwable th3) {
-                }
-            }
-        } catch (IOException e5) {
-            if (outputStream == null) {
-                try {
-                    outputStream.close();
-                } catch (Throwable th4) {
-                }
-            }
-        } catch (NullPointerException e6) {
-            if (outputStream == null) {
-                try {
-                    outputStream.close();
-                } catch (Throwable th5) {
-                }
-            }
-        } catch (Throwable th6) {
-            th = th6;
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (Throwable th7) {
-                }
-            }
-            throw th;
-        }
-    }
+    //JADX had an error
+	public void saveBitmap(String filename) throws Throwable {
+		Throwable th;
+		setDrawingCacheEnabled(true);
+		OutputStream outputStream = null;
+		try {
+			Bitmap source = cropBitmap(getDrawingCache(), this.frame);
+			File dir = new File(this.dirPath);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			File file = new File(dir, filename);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			OutputStream outputStream2 = new FileOutputStream(file);
+			if (source != null) {
+				try {
+					source.compress(Bitmap.CompressFormat.JPEG, 100, outputStream2);
+				} catch (NullPointerException e3) {
+					outputStream = outputStream2;
+					if (outputStream != null) {
+						try {
+							outputStream.close();
+						} catch (Throwable th4) {
+							return;
+						}
+					}
+				} catch (Throwable th5) {
+					th = th5;
+					outputStream = outputStream2;
+					if (outputStream != null) {
+						try {
+							outputStream.close();
+						} catch (Throwable th6) {
+						}
+					}
+					throw th;
+				}
+			}
+			if (outputStream2 != null) {
+				try {
+					outputStream2.close();
+					outputStream = outputStream2;
+					return;
+				} catch (Throwable th7) {
+					outputStream = outputStream2;
+					return;
+				}
+			}
+		} catch (FileNotFoundException e4) {
+			if (outputStream != null) {
+				outputStream.close();
+			}
+		} catch (IOException e5) {
+			if (outputStream != null) {
+				outputStream.close();
+			}
+		} catch (NullPointerException e6) {
+			if (outputStream != null) {
+				outputStream.close();
+			}
+		} catch (Throwable th8) {
+			th = th8;
+			if (outputStream != null) {
+				outputStream.close();
+			}
+			throw th;
+		}
+	}
 
     /* access modifiers changed from: protected */
     public void onSizeChanged(int w, int h, int oldw, int oldh) {

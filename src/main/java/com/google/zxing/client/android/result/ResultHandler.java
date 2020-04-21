@@ -5,7 +5,9 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v4.view.accessibility.AccessibilityEventCompat;
@@ -25,7 +27,6 @@ import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Locale;
 import jp.co.cybird.barcodekanojoForGAM.R;
-import org.apache.james.mime4j.field.ContentTypeField;
 
 public abstract class ResultHandler {
     private static final String[] ADDRESS_TYPE_STRINGS = {"home", "work"};
@@ -69,7 +70,7 @@ public abstract class ResultHandler {
         this.activity = activity2;
         this.rawResult = rawResult2;
         this.customProductSearch = parseCustomSearchURL();
-        activity2.findViewById(R.id.shopper_button).setVisibility(8);
+        activity2.findViewById(R.id.shopper_button).setVisibility(View.GONE);
     }
 
     public final ParsedResult getResult() {
@@ -93,7 +94,7 @@ public abstract class ResultHandler {
     /* access modifiers changed from: package-private */
     public final void showGoogleShopperButton(View.OnClickListener listener) {
         View shopperButton = this.activity.findViewById(R.id.shopper_button);
-        shopperButton.setVisibility(0);
+        shopperButton.setVisibility(View.VISIBLE);
         shopperButton.setOnClickListener(listener);
     }
 
@@ -188,7 +189,7 @@ public abstract class ResultHandler {
 
     private static int doToContractType(String typeString, String[] types, int[] values) {
         if (typeString == null) {
-            return -1;
+            return NO_TYPE;
         }
         for (int i = 0; i < types.length; i++) {
             String type = types[i];
@@ -196,7 +197,7 @@ public abstract class ResultHandler {
                 return values[i];
             }
         }
-        return -1;
+        return NO_TYPE;
     }
 
     /* access modifiers changed from: package-private */
@@ -209,43 +210,37 @@ public abstract class ResultHandler {
         sendEmailFromUri("mailto:" + address, address, subject, body);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void sendEmailFromUri(String uri, String email, String subject, String body) {
+    final void sendEmailFromUri(String uri, String email, String subject, String body) {
         Intent intent = new Intent("android.intent.action.SEND", Uri.parse(uri));
         if (email != null) {
             intent.putExtra("android.intent.extra.EMAIL", new String[]{email});
         }
         putExtra(intent, "android.intent.extra.SUBJECT", subject);
         putExtra(intent, "android.intent.extra.TEXT", body);
-        intent.setType(ContentTypeField.TYPE_TEXT_PLAIN);
+        intent.setType("text/plain");
         launchIntent(intent);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void shareBySMS(String contents) {
+	final void shareBySMS(String contents) {
         sendSMSFromUri("smsto:", String.valueOf(this.activity.getString(R.string.msg_share_subject_line)) + ":\n" + contents);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void sendSMS(String phoneNumber, String body) {
+	final void sendSMS(String phoneNumber, String body) {
         sendSMSFromUri("smsto:" + phoneNumber, body);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void sendSMSFromUri(String uri, String body) {
+    private final void sendSMSFromUri(String uri, String body) {
         Intent intent = new Intent("android.intent.action.SENDTO", Uri.parse(uri));
         putExtra(intent, "sms_body", body);
         intent.putExtra("compose_mode", true);
         launchIntent(intent);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void sendMMS(String phoneNumber, String subject, String body) {
+    final void sendMMS(String phoneNumber, String subject, String body) {
         sendMMSFromUri("mmsto:" + phoneNumber, subject, body);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void sendMMSFromUri(String uri, String subject, String body) {
+    private final void sendMMSFromUri(String uri, String subject, String body) {
         Intent intent = new Intent("android.intent.action.SENDTO", Uri.parse(uri));
         if (subject == null || subject.length() == 0) {
             putExtra(intent, "subject", this.activity.getString(R.string.msg_default_mms_subject));
@@ -257,23 +252,19 @@ public abstract class ResultHandler {
         launchIntent(intent);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void dialPhone(String phoneNumber) {
+    final void dialPhone(String phoneNumber) {
         launchIntent(new Intent("android.intent.action.DIAL", Uri.parse("tel:" + phoneNumber)));
     }
 
-    /* access modifiers changed from: package-private */
-    public final void dialPhoneFromUri(String uri) {
+    final void dialPhoneFromUri(String uri) {
         launchIntent(new Intent("android.intent.action.DIAL", Uri.parse(uri)));
     }
 
-    /* access modifiers changed from: package-private */
-    public final void openMap(String geoURI) {
+    final void openMap(String geoURI) {
         launchIntent(new Intent("android.intent.action.VIEW", Uri.parse(geoURI)));
     }
 
-    /* access modifiers changed from: package-private */
-    public final void searchMap(String address, CharSequence title) {
+    final void searchMap(String address, CharSequence title) {
         String query = address;
         if (title != null && title.length() > 0) {
             query = String.valueOf(query) + " (" + title + ')';
@@ -281,31 +272,26 @@ public abstract class ResultHandler {
         launchIntent(new Intent("android.intent.action.VIEW", Uri.parse("geo:0,0?q=" + Uri.encode(query))));
     }
 
-    /* access modifiers changed from: package-private */
-    public final void getDirections(double latitude, double longitude) {
+    final void getDirections(double latitude, double longitude) {
         launchIntent(new Intent("android.intent.action.VIEW", Uri.parse("http://maps.google." + LocaleManager.getCountryTLD(this.activity) + "/maps?f=d&daddr=" + latitude + ',' + longitude)));
     }
 
-    /* access modifiers changed from: package-private */
-    public final void openProductSearch(String upc) {
+    final void openProductSearch(String upc) {
         launchIntent(new Intent("android.intent.action.VIEW", Uri.parse("http://www.google." + LocaleManager.getProductSearchCountryTLD(this.activity) + "/m/products?q=" + upc + "&source=zxing")));
     }
 
-    /* access modifiers changed from: package-private */
-    public final void openBookSearch(String isbn) {
+    final void openBookSearch(String isbn) {
         launchIntent(new Intent("android.intent.action.VIEW", Uri.parse("http://books.google." + LocaleManager.getBookSearchCountryTLD(this.activity) + "/books?vid=isbn" + isbn)));
     }
 
-    /* access modifiers changed from: package-private */
-    public final void searchBookContents(String isbnOrUrl) {
+    final void searchBookContents(String isbnOrUrl) {
         Intent intent = new Intent(Intents.SearchBookContents.ACTION);
         intent.setClassName(this.activity, SearchBookContentsActivity.class.getName());
         putExtra(intent, Intents.SearchBookContents.ISBN, isbnOrUrl);
         launchIntent(intent);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void openURL(String url) {
+    final void openURL(String url) {
         if (url.startsWith("HTTP://")) {
             url = "http" + url.substring(4);
         } else if (url.startsWith("HTTPS://")) {
@@ -319,19 +305,17 @@ public abstract class ResultHandler {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void webSearch(String query) {
+    final void webSearch(String query) {
         Intent intent = new Intent("android.intent.action.WEB_SEARCH");
         intent.putExtra("query", query);
         launchIntent(intent);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void openGoogleShopper(String query) {
+    final void openGoogleShopper(String query) {
         Intent intent = new Intent("android.intent.action.SEARCH");
         intent.setClassName(GOOGLE_SHOPPER_PACKAGE, GOOGLE_SHOPPER_ACTIVITY);
         intent.putExtra("query", query);
-        Collection<?> availableApps = this.activity.getPackageManager().queryIntentActivities(intent, AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
+        Collection<?> availableApps = this.activity.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         if (availableApps == null || availableApps.isEmpty()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
             builder.setTitle(R.string.msg_google_shopper_missing);
@@ -345,17 +329,19 @@ public abstract class ResultHandler {
         this.activity.startActivity(intent);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void rawLaunchIntent(Intent intent) {
+    final void rawLaunchIntent(Intent intent) {
         if (intent != null) {
-            intent.addFlags(524288);
+        	if (Build.VERSION.SDK_INT < 21) {
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+			} else {
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        	}
             Log.d(TAG, "Launching intent: " + intent + " with extras: " + intent.getExtras());
             this.activity.startActivity(intent);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void launchIntent(Intent intent) {
+    final void launchIntent(Intent intent) {
         try {
             rawLaunchIntent(intent);
         } catch (ActivityNotFoundException e) {
@@ -374,15 +360,14 @@ public abstract class ResultHandler {
     }
 
     private String parseCustomSearchURL() {
-        String customProductSearch2 = PreferenceManager.getDefaultSharedPreferences(this.activity).getString(PreferencesActivity.KEY_CUSTOM_PRODUCT_SEARCH, (String) null);
+        String customProductSearch2 = PreferenceManager.getDefaultSharedPreferences(this.activity).getString(PreferencesActivity.KEY_CUSTOM_PRODUCT_SEARCH, null);
         if (customProductSearch2 == null || customProductSearch2.trim().length() != 0) {
             return customProductSearch2;
         }
         return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public final String fillInCustomSearchURL(String text) {
+    final String fillInCustomSearchURL(String text) {
         if (this.customProductSearch == null) {
             return text;
         }

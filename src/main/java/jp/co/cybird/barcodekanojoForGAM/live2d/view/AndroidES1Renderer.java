@@ -18,23 +18,23 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
     static final int DEFAULT_VISIBLE_HEIGHT = 1200;
     static final int DEFAULT_VISIBLE_OFFSET_Y = 0;
     static final int RENDER_SETUP_INTERVAL = 60;
-    static float acceleration_x = 0.0f;
-    static float acceleration_y = 0.0f;
-    static float acceleration_z = 0.0f;
-    static float dst_acceleration_x = 0.0f;
-    static float dst_acceleration_y = 0.0f;
-    static float dst_acceleration_z = 0.0f;
-    static float lastMove;
-    static long lastTimeMSec = -1;
-    static float last_dst_acceleration_x = 0.0f;
-    static float last_dst_acceleration_y = 0.0f;
-    static float last_dst_acceleration_z = 0.0f;
+    private static float acceleration_x = 0.0f;
+    private static float acceleration_y = 0.0f;
+    private static float acceleration_z = 0.0f;
+    private static float dst_acceleration_x = 0.0f;
+    private static float dst_acceleration_y = 0.0f;
+    private static float dst_acceleration_z = 0.0f;
+    private static float lastMove;
+    private static long lastTimeMSec = -1;
+    private static float last_dst_acceleration_x = 0.0f;
+    private static float last_dst_acceleration_y = 0.0f;
+    private static float last_dst_acceleration_z = 0.0f;
     private final float MAX_ACCEL_D = 0.04f;
-    float[] accel = new float[3];
-    LDRectF backDstR = new LDRectF(0.0f, 0.0f, 1.0f, 1.0f);
-    int backImage2;
-    boolean backImageIsCache = false;
-    String backImagePath;
+    private float[] accel = new float[3];
+    private LDRectF backDstR = new LDRectF(0.0f, 0.0f, 1.0f, 1.0f);
+    private int backImage2;
+    private boolean backImageIsCache = false;
+    private String backImagePath;
     boolean backImageUpdated;
     LDRectF backSrcR = new LDRectF(0.0f, 0.0f, 1.0f, 1.0f);
     int backingHeight;
@@ -86,8 +86,7 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateAccel() {
+	private void updateAccel() {
         float dx = dst_acceleration_x - acceleration_x;
         float dy = dst_acceleration_y - acceleration_y;
         float dz = dst_acceleration_z - acceleration_z;
@@ -136,10 +135,7 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
                 gl2.glMatrixMode(5889);
                 gl2.glLoadIdentity();
                 float marginW = 0.5f * (1280.0f - this.logicalW);
-                this.visibleRect.x = (int) marginW;
-                this.visibleRect.y = 0;
-                this.visibleRect.width = (int) this.logicalW;
-                this.visibleRect.height = (int) this.logicalH;
+				this.visibleRect.setRect((int) marginW, 0, (int) this.logicalW, (int) this.logicalH);
                 gl2.glOrthof(marginW, marginW + this.logicalW, 0.0f + this.logicalH, 0.0f, 0.5f, -0.5f);
                 gl2.glMatrixMode(5888);
                 gl2.glLoadIdentity();
@@ -150,8 +146,7 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void renderMain(GL10 gl2) {
+	private void renderMain(GL10 gl2) {
         gl2.glEnable(3042);
         gl2.glDisable(2929);
         gl2.glBlendFunc(1, 771);
@@ -183,7 +178,7 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
         gl2.glTranslatef((-1.7f) * ACCEL_PIX * this.accel[0], 0.8f * ACCEL_PIX * this.accel[1], 0.0f);
         gl2.glTranslatef(-200.0f, -200.0f, 0.0f);
         gl2.glScalef(1700.0f, 1700.0f, 1.0f);
-        UtOpenGL.drawImage(gl2, this.backImage2, this.backDstR.x, this.backDstR.y, this.backDstR.width, this.backDstR.height, this.backSrcR.x, this.backSrcR.y, this.backSrcR.width, this.backSrcR.height);
+		UtOpenGL.drawImage(gl, this.backImage2, this.backDstR.a/*getX()*/, this.backDstR.b/*getY()*/, this.backDstR.c/*getWidth()*/, this.backDstR.d/*getHeight()*/, this.backSrcR.a/*getX()*/, this.backSrcR.b/*getY()*/, this.backSrcR.c/*getWidth()*/, this.backSrcR.d/*getHeight()*/);
         gl2.glPopMatrix();
         if (this.kanojoLive2D.isInRoom()) {
             gl2.glPushMatrix();
@@ -218,14 +213,8 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
     }
 
     public boolean setBackgroundImage(String filepath, boolean isCache, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh) {
-        this.backSrcR.x = sx;
-        this.backSrcR.y = sy;
-        this.backSrcR.width = sw;
-        this.backSrcR.height = sh;
-        this.backDstR.x = sx;
-        this.backDstR.y = sy;
-        this.backDstR.width = sw;
-        this.backDstR.height = sh;
+		this.backSrcR.setRect(sx, sy, sw, sh);
+		this.backDstR.setRect(sx, sy, sw, sh);	//TODO: This might not be the correct parameters
         if (filepath == null) {
             filepath = "back256.png";
         }
@@ -235,11 +224,11 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
         return true;
     }
 
-    public float viewToLogicalX(float x) {
-        return ((float) this.visibleRect.x) + (((float) this.visibleRect.width) * (x / ((float) this.backingWidth)));
-    }
+	float viewToLogicalX(float x) {
+		return ((float) this.visibleRect.a/*getX()*/) + (((float) this.visibleRect.c/*getWidth()*/) * (x / ((float) this.backingWidth)));
+	}
 
-    public float viewToLogicalY(float y) {
-        return ((float) this.visibleRect.y) + (((float) this.visibleRect.height) * (y / ((float) this.backingHeight)));
-    }
+	float viewToLogicalY(float y) {
+		return ((float) this.visibleRect.b/*getY()*/) + (((float) this.visibleRect.d/*getHeight()*/) * (y / ((float) this.backingHeight)));
+	}
 }

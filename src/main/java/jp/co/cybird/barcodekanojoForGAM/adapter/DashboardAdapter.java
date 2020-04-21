@@ -92,8 +92,8 @@ public class DashboardAdapter extends BaseActivityModelAdapter implements Observ
             final Kanojo kanojo = act.getKanojo();
             holder.imgLeft.setOnClickListener((View.OnClickListener) null);
             holder.imgRight.setOnClickListener((View.OnClickListener) null);
-            holder.imgRight.setVisibility(0);
-            holder.imgRightCover.setVisibility(0);
+            holder.imgRight.setVisibility(View.VISIBLE);
+            holder.imgRightCover.setVisibility(View.VISIBLE);
             switch (act.getActivity_type()) {
                 case 2:
                 case 9:
@@ -118,8 +118,8 @@ public class DashboardAdapter extends BaseActivityModelAdapter implements Observ
                     });
                     break;
                 case 11:
-                    holder.imgRight.setVisibility(8);
-                    holder.imgRightCover.setVisibility(8);
+                    holder.imgRight.setVisibility(View.GONE);
+                    holder.imgRightCover.setVisibility(View.GONE);
                     break;
             }
         }

@@ -103,13 +103,13 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         this.mUser = ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().getUser();
         final RelativeLayout firstBoot = (RelativeLayout) findViewById(R.id.kanojo_firstboot);
         if (FirstbootUtil.isShowed(this, "kanojo_firstboot")) {
-            firstBoot.setVisibility(8);
+            firstBoot.setVisibility(View.GONE);
             cleanupView(firstBoot);
         } else {
-            firstBoot.setVisibility(0);
+            firstBoot.setVisibility(View.VISIBLE);
             firstBoot.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    firstBoot.setVisibility(8);
+                    firstBoot.setVisibility(View.GONE);
                     KanojosActivity.this.cleanupView(firstBoot);
                 }
             });

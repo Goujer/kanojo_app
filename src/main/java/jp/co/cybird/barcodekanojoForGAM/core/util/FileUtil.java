@@ -104,7 +104,7 @@ public class FileUtil {
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:22:0x0042  */
+	//JADX Error
     /* JADX WARNING: Removed duplicated region for block: B:24:0x0047  */
     /* JADX WARNING: Removed duplicated region for block: B:42:0x0082  */
     /* JADX WARNING: Removed duplicated region for block: B:44:0x0087  */
@@ -160,15 +160,13 @@ public class FileUtil {
                                     throw th;
                                 }
                             } catch (IOException e2) {
-                                e = e2;
                                 in = in2;
-                                Log.v("unzip", e.getMessage());
+                                Log.v("unzip", e2.getMessage());
                                 if (in != null) {
                                 }
                                 if (os != null) {
                                 }
                             } catch (Throwable th2) {
-                                th = th2;
                                 in = in2;
                                 if (in != null) {
                                     in.close();
@@ -176,34 +174,31 @@ public class FileUtil {
                                 if (os != null) {
                                     os.close();
                                 }
-                                throw th;
+                                throw th2;
                             }
                         }
                         os.close();
                         os2 = os;
                     }
                 } catch (FileNotFoundException e3) {
-                    e = e3;
                     os = os2;
                     in = in2;
                 } catch (IOException e4) {
-                    e = e4;
                     os = os2;
                     in = in2;
-                    Log.v("unzip", e.getMessage());
+                    Log.v("unzip", e4.getMessage());
                     if (in != null) {
                     }
                     if (os != null) {
                     }
                 } catch (Throwable th3) {
-                    th = th3;
                     os = os2;
                     in = in2;
                     if (in != null) {
                     }
                     if (os != null) {
                     }
-                    throw th;
+                    th3.printStackTrace();
                 }
             }
             if (in2 != null) {
@@ -215,8 +210,7 @@ public class FileUtil {
             FileOutputStream fileOutputStream = os2;
             ZipInputStream zipInputStream = in2;
         } catch (FileNotFoundException e5) {
-            e = e5;
-            Log.v("unzip", e.getMessage());
+            Log.v("unzip", e5.getMessage());
             if (in != null) {
                 in.close();
             }
@@ -224,8 +218,7 @@ public class FileUtil {
                 os.close();
             }
         } catch (IOException e6) {
-            e = e6;
-            Log.v("unzip", e.getMessage());
+            Log.v("unzip", e6.getMessage());
             if (in != null) {
                 in.close();
             }

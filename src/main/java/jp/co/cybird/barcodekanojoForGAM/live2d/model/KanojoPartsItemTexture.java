@@ -5,17 +5,17 @@ import javax.microedition.khronos.opengles.GL10;
 import jp.co.cybird.barcodekanojoForGAM.live2d.KanojoSetting;
 import jp.co.cybird.barcodekanojoForGAM.live2d.util.UIImage;
 import jp.live2d.android.UtOpenGL;
-import jp.live2d.base.LDAffineTransform;
+//import jp.live2d.base.LDAffineTransform;
 import jp.live2d.util.UtDebug;
 
 public class KanojoPartsItemTexture {
     static int[] TEX_SIZE_LIST = {64, 128, 256, 512, 1024, 2048};
-    LDAffineTransform clippedToMargedTex;
+	/*LDAffineTransform*/ jp.live2d.base.d clippedToMargedTex;
     ColorConvert colorConvert;
     int glTextureNo;
     int height;
     UIImage image;
-    LDAffineTransform localToClippedTex;
+	/*LDAffineTransform*/ jp.live2d.base.d localToClippedTex;
     int modelTextureNo;
     transient Bitmap preTextureBitmap;
     int texHeight;
@@ -26,8 +26,7 @@ public class KanojoPartsItemTexture {
         setImage(img);
     }
 
-    /* access modifiers changed from: package-private */
-    public void releaseTexture() {
+	void releaseTexture() {
         if (this.preTextureBitmap != null) {
             this.preTextureBitmap.recycle();
             this.preTextureBitmap = null;
@@ -38,8 +37,7 @@ public class KanojoPartsItemTexture {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setImage(UIImage img) {
+    private void setImage(UIImage img) {
         this.image = img;
         if (img != null) {
             this.width = img.getWidth();
@@ -47,8 +45,7 @@ public class KanojoPartsItemTexture {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void bindTexture_process1(KanojoSetting setting) {
+    void bindTexture_process1(KanojoSetting setting) {
         int texSizeW = -1;
         int texSizeH = -1;
         int i = 0;
@@ -93,8 +90,7 @@ public class KanojoPartsItemTexture {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int bindTexture_process2(GL10 gl) {
+    int bindTexture_process2(GL10 gl) {
         if (this.preTextureBitmap == null) {
             return 0;
         }
@@ -106,7 +102,7 @@ public class KanojoPartsItemTexture {
         }
         int error = gl.glGetError();
         if (error != 0) {
-            UtDebug.error("load texture error . %d  @KanojoPartsItemTexture", Integer.valueOf(error));
+            UtDebug.error("load texture error . %d  @KanojoPartsItemTexture", error);
         }
         return this.glTextureNo;
     }
@@ -119,23 +115,23 @@ public class KanojoPartsItemTexture {
         return this.glTextureNo;
     }
 
-    public void setModelTextureNo(int modelTexNo) {
+    void setModelTextureNo(int modelTexNo) {
         this.modelTextureNo = modelTexNo;
     }
 
-    public int getModelTextureNo() {
+    int getModelTextureNo() {
         return this.modelTextureNo;
     }
 
-    public int getTextureWidth() {
+    int getTextureWidth() {
         return this.texWidth;
     }
 
-    public int getTextureHeight() {
+    int getTextureHeight() {
         return this.texHeight;
     }
 
-    public void setColorConvert(ColorConvert conv) {
+    void setColorConvert(ColorConvert conv) {
         this.colorConvert = conv;
     }
 }

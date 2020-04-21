@@ -49,5 +49,6 @@ public class FaceBookProfileParser extends AbstractJSONParser<FaceBookProfile> {
         } catch (JSONException e) {
             res.setMessage(e.getMessage());
         }
+        return null;
     }
 }

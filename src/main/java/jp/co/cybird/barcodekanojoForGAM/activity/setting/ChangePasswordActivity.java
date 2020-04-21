@@ -51,11 +51,11 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
         this.btnSave = (Button) findViewById(R.id.kanojo_password_change_btn);
         this.btnSave.setOnClickListener(this);
         if (this.isNewEmail) {
-            this.txtCurrent.setVisibility(8);
+            this.txtCurrent.setVisibility(View.GONE);
             this.txtPassword.setBackgroundResource(R.drawable.row_kanojo_edit_bg_top);
             return;
         }
-        this.txtCurrent.setVisibility(0);
+        this.txtCurrent.setVisibility(View.VISIBLE);
         this.txtPassword.setBackgroundResource(R.drawable.row_kanojo_edit_bg_middle);
     }
 

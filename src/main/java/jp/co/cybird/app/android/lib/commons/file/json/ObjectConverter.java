@@ -32,8 +32,8 @@ final class ObjectConverter implements Converter {
             if (o == null) {
                 return null;
             }
-            for (Map.Entry<?, ?> entry : ((Map) value).entrySet()) {
-                String name = entry.getKey().toString();
+            for (Object entry : ((Map) value).entrySet()) {
+                String name = ((Map.Entry)entry).getKey().toString();
                 PropertyInfo target = this.props.get(name);
                 if (target == null) {
                     target = this.props.get(toLowerCamel(context, name));
@@ -46,7 +46,7 @@ final class ObjectConverter implements Converter {
                         gtype = resolveTypeVariable((TypeVariable) gtype, (ParameterizedType) t);
                         cls2 = ClassUtil.getRawType(gtype);
                     }
-                    target.set(o, context.postparseInternal(entry.getValue(), cls2, gtype));
+                    target.set(o, context.postparseInternal(((Map.Entry)entry).getValue(), cls2, gtype));
                     context.exit();
                 }
             }

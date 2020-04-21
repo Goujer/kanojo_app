@@ -4,7 +4,6 @@ import java.io.IOException;
 import jp.co.cybird.app.android.lib.commons.file.json.JSONEventType;
 import jp.co.cybird.app.android.lib.commons.file.json.io.InputSource;
 import jp.co.cybird.app.android.lib.commons.file.json.util.LocalCache;
-import org.apache.james.mime4j.field.datetime.parser.DateTimeParserConstants;
 
 public class TraditionalParser extends JSONParser {
     private boolean emptyRoot = false;
@@ -39,7 +38,7 @@ public class TraditionalParser extends JSONParser {
                 }
                 set(JSONEventType.WHITESPACE, ws, false);
                 return 0;
-            case DateTimeParserConstants.QUOTEDPAIR /*47*/:
+            case 47:
                 this.in.back();
                 String comment = parseComment(this.in);
                 if (isIgnoreWhitespace()) {
@@ -84,7 +83,7 @@ public class TraditionalParser extends JSONParser {
                     return 0;
                 }
                 break;
-            case DateTimeParserConstants.QUOTEDPAIR /*47*/:
+            case 47:
                 this.in.back();
                 String comment = parseComment(this.in);
                 if (isIgnoreWhitespace()) {
@@ -100,7 +99,7 @@ public class TraditionalParser extends JSONParser {
             this.in.back();
             return 0;
         }
-        throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+        throw createParseException(this.in, "json.parse.UnexpectedChar", (char) n);
     }
 
     /* access modifiers changed from: package-private */
@@ -130,7 +129,7 @@ public class TraditionalParser extends JSONParser {
                 set(JSONEventType.NAME, parseString(this.in, true), false);
                 return 3;
             case 45:
-            case DateTimeParserConstants.ANY /*48*/:
+            case 48:
             case 49:
             case 50:
             case 51:
@@ -148,7 +147,7 @@ public class TraditionalParser extends JSONParser {
                 }
                 set(jSONEventType, str, false);
                 return 3;
-            case DateTimeParserConstants.QUOTEDPAIR /*47*/:
+            case 47:
                 this.in.back();
                 String comment = parseComment(this.in);
                 if (!isIgnoreWhitespace()) {
@@ -164,10 +163,10 @@ public class TraditionalParser extends JSONParser {
                     } else if (!this.emptyRoot) {
                         return 1;
                     } else {
-                        throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                        throw createParseException(this.in, "json.parse.UnexpectedChar", (char) n);
                     }
                 } else {
-                    throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                    throw createParseException(this.in, "json.parse.UnexpectedChar", (char) n);
                 }
             default:
                 this.in.back();
@@ -198,7 +197,7 @@ public class TraditionalParser extends JSONParser {
                 }
                 set(JSONEventType.WHITESPACE, ws, false);
                 return 3;
-            case DateTimeParserConstants.QUOTEDPAIR /*47*/:
+            case 47:
                 this.in.back();
                 String comment = parseComment(this.in);
                 if (isIgnoreWhitespace()) {
@@ -213,7 +212,7 @@ public class TraditionalParser extends JSONParser {
                 this.in.back();
                 return 4;
             default:
-                throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                throw createParseException(this.in, "json.parse.UnexpectedChar", (char) n);
         }
     }
 
@@ -224,7 +223,7 @@ public class TraditionalParser extends JSONParser {
             case -1:
                 if (getBeginType() == JSONEventType.START_OBJECT) {
                     this.in.back();
-                    set(JSONEventType.NULL, (Object) null, true);
+                    set(JSONEventType.NULL, null, true);
                     return 5;
                 } else if (getBeginType() == JSONEventType.START_ARRAY) {
                     throw createParseException(this.in, "json.parse.ArrayNotClosedError");
@@ -250,16 +249,16 @@ public class TraditionalParser extends JSONParser {
                 return 5;
             case 44:
                 if (getBeginType() == JSONEventType.START_OBJECT) {
-                    set(JSONEventType.NULL, (Object) null, true);
+                    set(JSONEventType.NULL, null, true);
                     return 2;
                 } else if (getBeginType() == JSONEventType.START_ARRAY) {
-                    set(JSONEventType.NULL, (Object) null, true);
+                    set(JSONEventType.NULL, null, true);
                     return 4;
                 } else {
-                    throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                    throw createParseException(this.in, "json.parse.UnexpectedChar", (char) n);
                 }
             case 45:
-            case DateTimeParserConstants.ANY /*48*/:
+            case 48:
             case 49:
             case 50:
             case 51:
@@ -273,7 +272,7 @@ public class TraditionalParser extends JSONParser {
                 set(JSONEventType.NUMBER, parseNumber(this.in), true);
                 this.nameLineNumber = this.in.getLineNumber();
                 return 5;
-            case DateTimeParserConstants.QUOTEDPAIR /*47*/:
+            case 47:
                 this.in.back();
                 String comment = parseComment(this.in);
                 if (isIgnoreWhitespace()) {
@@ -286,7 +285,7 @@ public class TraditionalParser extends JSONParser {
                 return 4;
             case 93:
                 if (getBeginType() != JSONEventType.START_ARRAY) {
-                    throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                    throw createParseException(this.in, "json.parse.UnexpectedChar", (char) n);
                 } else if (isFirst()) {
                     pop();
                     if (getBeginType() == null) {
@@ -295,7 +294,7 @@ public class TraditionalParser extends JSONParser {
                     this.nameLineNumber = this.in.getLineNumber();
                     return 5;
                 } else {
-                    set(JSONEventType.NULL, (Object) null, true);
+                    set(JSONEventType.NULL, null, true);
                     this.in.back();
                     return 5;
                 }
@@ -304,11 +303,11 @@ public class TraditionalParser extends JSONParser {
                 return 2;
             case 125:
                 if (getBeginType() == JSONEventType.START_OBJECT) {
-                    set(JSONEventType.NULL, (Object) null, true);
+                    set(JSONEventType.NULL, null, true);
                     this.in.back();
                     return 5;
                 }
-                throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                throw createParseException(this.in, "json.parse.UnexpectedChar", (char) n);
             default:
                 this.in.back();
                 set(getType(), parseLiteral(this.in, true), true);
@@ -351,8 +350,8 @@ public class TraditionalParser extends JSONParser {
                 if (getBeginType() == JSONEventType.START_ARRAY) {
                     return 4;
                 }
-                throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
-            case DateTimeParserConstants.QUOTEDPAIR /*47*/:
+                throw createParseException(this.in, "json.parse.UnexpectedChar", (char) n);
+            case 47:
                 this.in.back();
                 String comment = parseComment(this.in);
                 if (isIgnoreWhitespace()) {
@@ -368,7 +367,7 @@ public class TraditionalParser extends JSONParser {
                     }
                     return 5;
                 }
-                throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                throw createParseException(this.in, "json.parse.UnexpectedChar", (char) n);
             case 125:
                 if (getBeginType() == JSONEventType.START_OBJECT) {
                     pop();
@@ -378,9 +377,9 @@ public class TraditionalParser extends JSONParser {
                     if (!this.emptyRoot) {
                         return 1;
                     }
-                    throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                    throw createParseException(this.in, "json.parse.UnexpectedChar", (char) n);
                 }
-                throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                throw createParseException(this.in, "json.parse.UnexpectedChar", (char) n);
             default:
                 if (this.in.getLineNumber() > this.nameLineNumber) {
                     this.in.back();
@@ -391,9 +390,9 @@ public class TraditionalParser extends JSONParser {
                     if (getBeginType() == JSONEventType.START_ARRAY) {
                         return 4;
                     }
-                    throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                    throw createParseException(this.in, "json.parse.UnexpectedChar", (char) n);
                 }
-                throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                throw createParseException(this.in, "json.parse.UnexpectedChar", (char) n);
         }
     }
 }

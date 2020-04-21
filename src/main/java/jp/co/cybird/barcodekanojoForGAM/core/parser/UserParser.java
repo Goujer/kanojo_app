@@ -84,8 +84,8 @@ public class UserParser extends AbstractJSONParser<User> {
             if (object.has("email") && !object.getString("email").equals("null")) {
                 res.setEmail(object.getString("email"));
             }
-            if (object.has(PropertyConfiguration.PASSWORD) && !object.getString(PropertyConfiguration.PASSWORD).equals("null")) {
-                res.setCurrentPassword(object.getString(PropertyConfiguration.PASSWORD));
+            if (object.has("password") && !object.getString("password").equals("null")) {
+                res.setCurrentPassword(object.getString("password"));
             }
             return res;
         } catch (JSONException e) {

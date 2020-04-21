@@ -6,21 +6,21 @@ import jp.live2d.motion.MotionQueueManager;
 import jp.live2d.type.LDRectF;
 
 public class KanojoTouchMotion extends AMotion {
-    static KanojoTouchMotion clothesPull = setup("PARAM_CLOTHES_Y", 0.0f, -3.3333333f, -1.0f, 0.0f, 0.8f, -0.2f, 0.4f, 0.4f, 0.3f);
-    static KanojoTouchMotion[] entries = {clothesPull};
-    boolean finished = false;
-    float lastX;
-    float lastY;
-    float paramBackScale;
-    String paramID;
-    float paramMax;
-    float paramMin;
-    float paramVX;
-    float paramVY;
-    float startX;
-    float startY;
-    LDRectF touchBounds = new LDRectF();
-    float v = 0.0f;
+    private static KanojoTouchMotion clothesPull = setup("PARAM_CLOTHES_Y", 0.0f, -3.3333333f, -1.0f, 0.0f, 0.8f, -0.2f, 0.4f, 0.4f, 0.3f);
+    private static KanojoTouchMotion[] entries = {clothesPull};
+    private boolean finished = false;
+    private float lastX;
+    private float lastY;
+    private float paramBackScale;
+    private String paramID;
+    private float paramMax;
+    private float paramMin;
+    private float paramVX;
+    private float paramVY;
+    private float startX;
+    private float startY;
+    private LDRectF touchBounds = new LDRectF();
+    private float v = 0.0f;
 
     private static KanojoTouchMotion setup(String id, float paramVX2, float paramVY2, float paramMin2, float paramMax2, float paramBackScale2, float x, float y, float w, float h) {
         KanojoTouchMotion ret = new KanojoTouchMotion();
@@ -30,19 +30,16 @@ public class KanojoTouchMotion extends AMotion {
         ret.paramMin = paramMin2;
         ret.paramMax = paramMax2;
         ret.paramBackScale = paramBackScale2;
-        ret.touchBounds.x = x;
-        ret.touchBounds.y = y;
-        ret.touchBounds.width = w;
-        ret.touchBounds.height = h;
+		ret.touchBounds.setRect(x, y, w, h);
         return ret;
     }
 
-    public static KanojoTouchMotion getTouchEntry(float x, float y) {
+    static KanojoTouchMotion getTouchEntry(float x, float y) {
         System.out.printf("mouse (%6.3f,%6.3f)\t\t\t\t\t@@KanojoAnimation\n", new Object[]{Float.valueOf(x), Float.valueOf(y)});
         int i = 0;
         while (i < entries.length) {
             KanojoTouchMotion e = entries[i];
-            if (e.touchBounds.x > x || x > e.touchBounds.x + e.touchBounds.width || e.touchBounds.y > y || y > e.touchBounds.y + e.touchBounds.height) {
+			if (e.touchBounds.a/*getX()*/ > x || x > e.touchBounds.a/*getX()*/ + e.touchBounds.c/*getWidth()*/ || e.touchBounds.b/*getY()*/ > y || y > e.touchBounds.b/*getY()*/ + e.touchBounds.d/*getHeight()*/) {
                 i++;
             } else {
                 e.startX = x;
@@ -56,17 +53,17 @@ public class KanojoTouchMotion extends AMotion {
         return null;
     }
 
-    public KanojoTouchMotion() {
+    private KanojoTouchMotion() {
         setFadeIn(300);
         setFadeOut(300);
     }
 
-    public void touchesMoved(float mouseX, float mouseY) {
+    void touchesMoved(float mouseX, float mouseY) {
         this.lastX = mouseX;
         this.lastY = mouseY;
     }
 
-    public void touchesEnded() {
+    void touchesEnded() {
         this.finished = true;
     }
 

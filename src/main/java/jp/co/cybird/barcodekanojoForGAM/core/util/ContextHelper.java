@@ -17,7 +17,7 @@ public final class ContextHelper {
         private TelephonyManager telephonyManager;
 
         public TelephonyContext(Context context2) {
-            this.telephonyManager = (TelephonyManager) context2.getSystemService("phone");
+            this.telephonyManager = (TelephonyManager) context2.getSystemService(Context.TELEPHONY_SERVICE);
             this.context = context2;
         }
 
@@ -36,7 +36,7 @@ public final class ContextHelper {
                 throw new Exception("google account not found.");
             }
             try {
-                return am.getAuthToken(accounts[0], service, false, (AccountManagerCallback) null, (Handler) null).getResult().getString("authtoken");
+                return am.getAuthToken(accounts[0], service, false, null, null).getResult().getString("authtoken");
             } catch (Exception e) {
                 throw new Exception("get auth token failed.", e);
             }

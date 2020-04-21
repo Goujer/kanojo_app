@@ -298,19 +298,6 @@
     <public type="layout" name="bookmark_picker_list_item" id="2130903069" />
     <public type="layout" name="boot" id="2130903070" />
     <public type="layout" name="capture" id="2130903071" />
-    <public type="layout" name="com_facebook_friendpickerfragment" id="2130903072" />
-    <public type="layout" name="com_facebook_login_activity_layout" id="2130903073" />
-    <public type="layout" name="com_facebook_picker_activity_circle_row" id="2130903074" />
-    <public type="layout" name="com_facebook_picker_checkbox" id="2130903075" />
-    <public type="layout" name="com_facebook_picker_image" id="2130903076" />
-    <public type="layout" name="com_facebook_picker_list_row" id="2130903077" />
-    <public type="layout" name="com_facebook_picker_list_section_header" id="2130903078" />
-    <public type="layout" name="com_facebook_picker_search_box" id="2130903079" />
-    <public type="layout" name="com_facebook_picker_title_bar" id="2130903080" />
-    <public type="layout" name="com_facebook_picker_title_bar_stub" id="2130903081" />
-    <public type="layout" name="com_facebook_placepickerfragment" id="2130903082" />
-    <public type="layout" name="com_facebook_placepickerfragment_list_row" id="2130903083" />
-    <public type="layout" name="com_facebook_usersettingsfragment" id="2130903084" />
     <public type="layout" name="common_enemy_profile" id="2130903085" />
     <public type="layout" name="common_profile" id="2130903086" />
     <public type="layout" name="common_top_menu" id="2130903087" />

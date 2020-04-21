@@ -8,7 +8,6 @@ import jp.co.cybird.app.android.lib.commons.file.json.JSONException;
 import jp.co.cybird.app.android.lib.commons.file.json.io.InputSource;
 import jp.co.cybird.app.android.lib.commons.file.json.util.LocalCache;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
-import org.apache.james.mime4j.field.datetime.parser.DateTimeParserConstants;
 
 public class JSONParser {
     static final int AFTER_NAME = 3;
@@ -254,7 +253,7 @@ public class JSONParser {
                 set(JSONEventType.STRING, parseString(this.in, false), true);
                 return 5;
             case 45:
-            case DateTimeParserConstants.ANY /*48*/:
+            case 48:
             case 49:
             case 50:
             case 51:
@@ -572,7 +571,7 @@ public class JSONParser {
                         } else {
                             throw createParseException(in2, "json.parse.UnexpectedChar", Character.valueOf(c));
                         }
-                    case DateTimeParserConstants.DIGITS /*46*/:
+                    case '.':
                         if (point == 2 || point == 3) {
                             if (rest == 0 && sb != null) {
                                 in2.copy(sb, len);
@@ -582,7 +581,7 @@ public class JSONParser {
                         } else {
                             throw createParseException(in2, "json.parse.UnexpectedChar", Character.valueOf(c));
                         }
-                    case DateTimeParserConstants.ANY /*48*/:
+                    case '0':
                     case '1':
                     case '2':
                     case '3':
@@ -654,8 +653,7 @@ public class JSONParser {
 //        return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public Object parseLiteral(InputSource in2, String expected, Object result) throws IOException {
+    Object parseLiteral(InputSource in2, String expected, Object result) throws IOException {
         int pos = 0;
         while (true) {
             int n = in2.next();
@@ -807,7 +805,7 @@ public class JSONParser {
                                 }
                             }
                         } else {
-                            throw createParseException(in2, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                            throw createParseException(in2, "json.parse.UnexpectedChar", (char) n);
                         }
                     case 42:
                         if (point == 1) {
@@ -828,9 +826,9 @@ public class JSONParser {
                                 break;
                             }
                         } else {
-                            throw createParseException(in2, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                            throw createParseException(in2, "json.parse.UnexpectedChar", (char) n);
                         }
-                    case DateTimeParserConstants.QUOTEDPAIR /*47*/:
+                    case 47:
                         if (point == 0) {
                             if (rest == 0 && sb != null) {
                                 in2.copy(sb, len);
@@ -854,7 +852,7 @@ public class JSONParser {
                                 break;
                             }
                         } else {
-                            throw createParseException(in2, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                            throw createParseException(in2, "json.parse.UnexpectedChar", (char) n);
                         }
                     default:
                         if (point == 3) {
@@ -869,7 +867,7 @@ public class JSONParser {
                                 break;
                             }
                         } else {
-                            throw createParseException(in2, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                            throw createParseException(in2, "json.parse.UnexpectedChar", (char) n);
                         }
                 }
             }
@@ -880,8 +878,7 @@ public class JSONParser {
 //        return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public String parseWhitespace(InputSource in2) throws IOException {
+    String parseWhitespace(InputSource in2) throws IOException {
         StringBuilder sb;
         if (!isIgnoreWhitespace()) {
             sb = this.cache.getCachedBuffer();

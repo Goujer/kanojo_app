@@ -140,13 +140,13 @@ public class BaseAgreementDialog implements DialogInterface.OnCancelListener, Di
 		}
 
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
-			this.mProgress.setVisibility(0);
-			view.setVisibility(4);
+			this.mProgress.setVisibility(View.VISIBLE);
+			view.setVisibility(View.INVISIBLE);
 		}
 
 		public void onPageFinished(WebView view, String url) {
-			this.mProgress.setVisibility(4);
-			view.setVisibility(0);
+			this.mProgress.setVisibility(View.INVISIBLE);
+			view.setVisibility(View.VISIBLE);
 		}
 	}
 }

@@ -33,13 +33,7 @@ final class OptOutImageView extends ImageView implements View.OnClickListener, D
     private final Scroller mScroller;
 
     static {
-        boolean z;
-        if (!OptOutImageView.class.desiredAssertionStatus()) {
-            z = true;
-        } else {
-            z = false;
-        }
-        $assertionsDisabled = z;
+        $assertionsDisabled = !OptOutImageView.class.desiredAssertionStatus();
     }
 
     private static class OptOutHandler extends Handler {
@@ -52,7 +46,7 @@ final class OptOutImageView extends ImageView implements View.OnClickListener, D
 
         public void handleMessage(Message message) {
             super.handleMessage(message);
-            OptOutImageView view = (OptOutImageView) this.weakReference.get();
+            OptOutImageView view = this.weakReference.get();
             if (view != null) {
                 view.scrollRight();
             }
@@ -96,18 +90,17 @@ final class OptOutImageView extends ImageView implements View.OnClickListener, D
             if (!$assertionsDisabled) {
                 throw new AssertionError();
             }
-            NendLog.d(NendStatus.ERR_UNEXPECTED, (Throwable) e);
+            NendLog.d(NendStatus.ERR_UNEXPECTED, e);
         } finally {
             str = "?uid=";
-            this.mOptOutUrl = String.valueOf(optOutUrl) + str + uid;
+            this.mOptOutUrl = optOutUrl + str + uid;
             this.mOptOutImageUrl = optOutImageUrl;
         }
-        setPadding(realScrollLength(18), 0, realScrollLength(78) * -1, realScrollLength(18));
+        setPadding(realScrollLength(18), 0, realScrollLength(ScrollParams.SCROLL_LENGTH) * -1, realScrollLength(18));
         setOnClickListener(this);
     }
 
-    /* access modifiers changed from: package-private */
-    public void loadImage() {
+    void loadImage() {
         if (optOutImage == null) {
             new DownloadTask(this).execute(new Void[0]);
         } else {
@@ -133,13 +126,13 @@ final class OptOutImageView extends ImageView implements View.OnClickListener, D
             if (!$assertionsDisabled) {
                 throw new AssertionError();
             }
-            NendLog.d(NendStatus.ERR_HTTP_REQUEST, (Throwable) e);
+            NendLog.d(NendStatus.ERR_HTTP_REQUEST, e);
             return null;
         } catch (IOException e2) {
             if (!$assertionsDisabled) {
                 throw new AssertionError();
             }
-            NendLog.d(NendStatus.ERR_HTTP_REQUEST, (Throwable) e2);
+            NendLog.d(NendStatus.ERR_HTTP_REQUEST, e2);
             return null;
         }
     }
@@ -160,7 +153,7 @@ final class OptOutImageView extends ImageView implements View.OnClickListener, D
             return;
         }
         this.mRetryCnt++;
-        if (this.mRetryCnt < 3) {
+        if (this.mRetryCnt < MAX_RETRY_CNT) {
             loadImage();
         }
     }
@@ -172,7 +165,7 @@ final class OptOutImageView extends ImageView implements View.OnClickListener, D
 
     public void computeScroll() {
         if (this.mScroller.computeScrollOffset()) {
-            setPadding(this.mScroller.getCurrX() + ((realScrollLength(18) * (realScrollLength(78) - this.mScroller.getCurrX())) / realScrollLength(78)), 0, realScrollLength(78) * -1, realScrollLength(18));
+            setPadding(this.mScroller.getCurrX() + ((realScrollLength(18) * (realScrollLength(ScrollParams.SCROLL_LENGTH) - this.mScroller.getCurrX())) / realScrollLength(ScrollParams.SCROLL_LENGTH)), 0, realScrollLength(ScrollParams.SCROLL_LENGTH) * -1, realScrollLength(18));
             scrollTo(this.mScroller.getCurrX(), this.mScroller.getCurrY());
             postInvalidate();
         }
@@ -181,7 +174,7 @@ final class OptOutImageView extends ImageView implements View.OnClickListener, D
     /* access modifiers changed from: package-private */
     public void scrollLeft() {
         this.mScroller.forceFinished(true);
-        this.mScroller.startScroll(this.mScroller.getCurrX(), this.mScroller.getCurrY(), realScrollLength(78) - this.mScroller.getCurrX(), 0, 1000);
+        this.mScroller.startScroll(this.mScroller.getCurrX(), this.mScroller.getCurrY(), realScrollLength(ScrollParams.SCROLL_LENGTH) - this.mScroller.getCurrX(), 0, 1000);
         invalidate();
     }
 

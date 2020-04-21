@@ -32,15 +32,14 @@ public class GCMProxyActivity extends Activity {
                         unityClass = Class.forName(GCMProxyActivity.customActivityArray[i]);
                     }
                     Intent unityIntent = new Intent(((Activity) GCMProxyActivity.mThisActivity.get()).getApplication(), unityClass);
-                    unityIntent.addFlags(AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
+                    unityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     ((Activity) GCMProxyActivity.mThisActivity.get()).startActivity(unityIntent);
                     ((Activity) GCMProxyActivity.mThisActivity.get()).finish();
                 } catch (ClassNotFoundException e) {
                     ((Activity) GCMProxyActivity.mThisActivity.get()).finish();
                 } catch (Throwable th) {
-                    Throwable th2 = th;
                     ((Activity) GCMProxyActivity.mThisActivity.get()).finish();
-                    throw th2;
+                    throw th;
                 }
             }
         }
@@ -68,16 +67,15 @@ public class GCMProxyActivity extends Activity {
             editor.putString(GCMUtilities.CYLIB_GCM_PARAM_DATA, param);
         }
         editor.commit();
-        mThisActivity = new WeakReference<>(this);
+        mThisActivity = new WeakReference(this);
         mHandler.sendEmptyMessage(0);
     }
 
-    /* access modifiers changed from: protected */
-    public void loadActivityClassName(Context context) {
+    protected void loadActivityClassName(Context context) {
         boolean classFound;
         boolean classFound2;
         try {
-            Bundle bundle = context.getPackageManager().getApplicationInfo(context.getPackageName(), 128).metaData;
+            Bundle bundle = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA).metaData;
             if (bundle != null) {
                 for (String key : bundle.keySet()) {
                     if (key.equals("gcm.unity.activity")) {

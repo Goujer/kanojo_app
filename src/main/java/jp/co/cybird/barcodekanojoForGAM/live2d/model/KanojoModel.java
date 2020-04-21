@@ -69,7 +69,7 @@ public class KanojoModel {
                         partsItem = KanojoPartsItem.importPartsItem(this.kanojoLive2D, id, 1);
                     }
                     if (partsItem == null) {
-                        UtDebug.error("Failed to load parts item [ %s / %d]¥n", id, Integer.valueOf(no));
+                        UtDebug.error("Failed to load parts item [ %s / %d]¥n", id, no);
                     } else if (partsIndex >= 0) {
                         this.partsItemList.set(partsIndex, partsItem);
                     } else {
@@ -88,7 +88,7 @@ public class KanojoModel {
                         if (k < modelPartsDataList.size()) {
                             PartsData partsData = modelPartsDataList.get(k);
                             if (_partsID.equals(partsData.getPartsID().toString())) {
-                                item.getAvatarPartsItem().replacePartsData(partsData);
+								item.getAvatarPartsItem()./*replacePartsData*/a(partsData);
                                 break;
                             }
                             k++;
@@ -156,7 +156,7 @@ public class KanojoModel {
         gl.glPopMatrix();
     }
 
-    public void drawModel_core(GL10 gl) throws Exception {
+    void drawModel_core(GL10 gl) throws Exception {
         KanojoSetting ks;
         if (this.live2DModel != null) {
             if (this.live2dAnimation != null) {
@@ -180,7 +180,7 @@ public class KanojoModel {
                     this.live2DModel.setParamFloat("PARAM_BROW_R_Y", dstBrowRY);
                 }
             } catch (Throwable e) {
-                System.err.printf("%s\t@@KanojoModel#setup brow\n", new Object[]{e.getMessage()});
+                System.err.printf("%s\t@@KanojoModel#setup brow\n", e.getMessage());
             }
             this.live2DModel.setGL(gl);
             this.live2DModel.update();

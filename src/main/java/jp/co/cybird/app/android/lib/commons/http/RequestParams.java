@@ -98,7 +98,7 @@ public class RequestParams {
 
     public HttpEntity getEntity() {
         if (!this.fileParams.isEmpty()) {
-            HttpEntity multipartEntity = new SimpleMultipartEntity();
+			SimpleMultipartEntity multipartEntity = new SimpleMultipartEntity();
             for (Map.Entry<String, String> entry : this.urlParams.entrySet()) {
                 multipartEntity.addPart(entry.getKey(), entry.getValue());
             }

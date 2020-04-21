@@ -24,14 +24,13 @@ public final class BeanInfo {
      */
     public static BeanInfo get(Class<?> cls) {
         BeanInfo info;
-        BeanInfo info2;
+        BeanInfo info2 = null;
         synchronized (cache) {
             try {
                 Map<Class<?>, BeanInfo> map = cache.get(cls.getClassLoader());
                 if (map == null) {
                     map = new LinkedHashMap<Class<?>, BeanInfo>(16, 0.75f, true) {
-                        /* access modifiers changed from: protected */
-                        public boolean removeEldestEntry(Map.Entry<Class<?>, BeanInfo> entry) {
+                        protected boolean removeEldestEntry(Map.Entry<Class<?>, BeanInfo> entry) {
                             return size() > 1024;
                         }
                     };
@@ -53,10 +52,10 @@ public final class BeanInfo {
                     info2 = info;
                 }
             } catch (Throwable th2) {
-                th = th2;
-                throw th;
+                //throw th2;
             }
         }
+        return info2;
     }
 
     public static void clear() {

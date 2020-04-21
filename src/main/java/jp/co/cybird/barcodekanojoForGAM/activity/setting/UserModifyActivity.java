@@ -94,14 +94,14 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         if (bundle2 != null) {
             this.mRequestCode = bundle2.getInt(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_SETTING);
             if (this.mRequestCode == 1102) {
-                this.modifiedUser = (User) bundle2.getParcelable(PropertyConfiguration.USER);
+                this.modifiedUser = (User) bundle2.getParcelable("user");
                 this.user = this.modifiedUser;
                 setAutoRefreshSession(false);
             }
         }
         if (savedInstanceState != null && this.user == null) {
             this.mRequestCode = savedInstanceState.getInt(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_SETTING);
-            this.modifiedUser = (User) savedInstanceState.getParcelable(PropertyConfiguration.USER);
+            this.modifiedUser = (User) savedInstanceState.getParcelable("user");
             this.user = this.modifiedUser;
         }
         if (this.user == null) {
@@ -151,7 +151,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         this.btnDelete = (Button) findViewById(R.id.kanojo_user_delete_btn);
         this.btnDelete.setOnClickListener(this);
         this.imgAvarta = this.txtIcon.getAvarta();
-        this.imgAvarta.setVisibility(0);
+        this.imgAvarta.setVisibility(View.VISIBLE);
         this.mChangeDeviceLayout = (LinearLayout) findViewById(R.id.kanojo_user_account_device_layout);
         if (this.user.getProfile_image_url() != null) {
             ImageCache.setImageAndRequest(this, this.imgAvarta, this.user.getProfile_image_url(), this.mRrm, R.drawable.common_noimage);
@@ -196,7 +196,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         } else if (getFile() != null) {
             this.user.setProfile_image_url(getFile().getAbsolutePath());
         }
-        outState.putParcelable(PropertyConfiguration.USER, this.user);
+        outState.putParcelable("user", this.user);
         super.onSaveInstanceState(outState);
     }
 
@@ -363,13 +363,13 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
     private void switchLayout() {
         switch (this.mRequestCode) {
             case BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST:
-                this.mChangeDeviceLayout.setVisibility(8);
-                this.btnDelete.setVisibility(8);
+                this.mChangeDeviceLayout.setVisibility(View.GONE);
+                this.btnDelete.setVisibility(View.GONE);
                 this.btnSave.setEnabled(true);
                 return;
             case BaseInterface.REQUEST_SOCIAL_CONFIG_SETTING:
-                this.mChangeDeviceLayout.setVisibility(8);
-                this.btnDelete.setVisibility(0);
+                this.mChangeDeviceLayout.setVisibility(View.GONE);
+                this.btnDelete.setVisibility(View.VISIBLE);
                 return;
             default:
                 return;

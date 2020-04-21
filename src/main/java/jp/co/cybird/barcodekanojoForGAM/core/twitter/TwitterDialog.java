@@ -97,7 +97,7 @@ public class TwitterDialog extends Dialog {
         parameters = parameters == null ? new Bundle() : parameters;
         parameters.putString(ServerProtocol.DIALOG_PARAM_DISPLAY, DISPLAY_TOUCH);
         parameters.putString("type", USER_AGENT);
-        this.url = Utility.buildUri(ServerProtocol.DIALOG_AUTHORITY, ServerProtocol.DIALOG_PATH + action, parameters).toString();
+        this.url = Utility.buildUri("m.facebook.com", ServerProtocol.DIALOG_PATH + action, parameters).toString();
         this.onCompleteListener = listener;
     }
 
@@ -177,8 +177,7 @@ public class TwitterDialog extends Dialog {
         }
     }
 
-    /* access modifiers changed from: private */
-    public void sendCancelToListener() {
+    private void sendCancelToListener() {
         sendErrorToListener(new FacebookOperationCanceledException());
     }
 
@@ -191,7 +190,7 @@ public class TwitterDialog extends Dialog {
             }
         });
         this.crossImageView.setImageDrawable(getContext().getResources().getDrawable(R.drawable.com_facebook_close));
-        this.crossImageView.setVisibility(4);
+        this.crossImageView.setVisibility(View.INVISIBLE);
     }
 
     @SuppressLint({"SetJavaScriptEnabled"})
@@ -203,7 +202,7 @@ public class TwitterDialog extends Dialog {
         this.webView.getSettings().setJavaScriptEnabled(true);
         this.webView.loadUrl(this.url);
         this.webView.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
-        this.webView.setVisibility(4);
+        this.webView.setVisibility(View.INVISIBLE);
         this.webView.getSettings().setSavePassword(false);
         webViewContainer.setPadding(margin, margin, margin, margin);
         webViewContainer.addView(this.webView);
@@ -295,11 +294,11 @@ public class TwitterDialog extends Dialog {
 
         /* access modifiers changed from: protected */
         public Result doInBackground(Object... args) {
-            String consumerKey = args[0];
-            String consumerSecret = args[1];
-            this.callbackUrl = args[2];
-            this.dummyCallbackUrl = args[3].booleanValue();
-            this.listener = args[4];
+            String consumerKey = (String) args[0];
+            String consumerSecret = (String) args[1];
+            this.callbackUrl = (String) args[2];
+            this.dummyCallbackUrl = (Boolean) args[3];
+            this.listener = (Listener) args[4];
             Log.d(TwitterDialog.TAG, "CONSUMER KEY = " + consumerKey);
             Log.d(TwitterDialog.TAG, "CONSUMER SECRET = " + consumerSecret);
             Log.d(TwitterDialog.TAG, "CALLBACK URL = " + this.callbackUrl);
@@ -374,8 +373,7 @@ public class TwitterDialog extends Dialog {
             Log.d(TwitterDialog.TAG, "Finished waiting for the authorization step to be done.");
         }
 
-        /* access modifiers changed from: private */
-        public void notifyAuthorization() {
+        private void notifyAuthorization() {
             this.authorizationDone = true;
             synchronized (this) {
                 Log.d(TwitterDialog.TAG, "Notifying that the authorization step was done.");
@@ -423,8 +421,8 @@ public class TwitterDialog extends Dialog {
                     TwitterDialog.this.dismissProgressDialog();
                 }
                 TwitterDialog.this.contentFrameLayout.setBackgroundColor(0);
-                TwitterDialog.this.webView.setVisibility(0);
-                TwitterDialog.this.crossImageView.setVisibility(0);
+                TwitterDialog.this.webView.setVisibility(View.VISIBLE);
+                TwitterDialog.this.crossImageView.setVisibility(View.VISIBLE);
             }
         }
 

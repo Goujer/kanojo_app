@@ -99,14 +99,14 @@ public class KanojoItemAdapter extends BaseKanojoItemAdapter implements Observab
             holder.description.setText(item.getPrice());
         }
         if (this.mode != 4 && this.mode != 5) {
-            holder.layoutUplevel.setVisibility(8);
+            holder.layoutUplevel.setVisibility(View.GONE);
         } else if (item.getPurchasable_level() == null) {
-            holder.layoutUplevel.setVisibility(8);
+            holder.layoutUplevel.setVisibility(View.GONE);
         } else if (Integer.parseInt(item.getPurchasable_level()) > this.userLevel) {
-            holder.layoutUplevel.setVisibility(0);
+            holder.layoutUplevel.setVisibility(View.VISIBLE);
             holder.textViewPurchasableLevel.setText("Level " + item.getPurchasable_level());
         } else {
-            holder.layoutUplevel.setVisibility(8);
+            holder.layoutUplevel.setVisibility(View.GONE);
         }
         ImageCache.setImage(holder.img, item.getImage_thumbnail_url(), this.mRrm, R.drawable.common_noimage_product);
         return view;

@@ -1,10 +1,10 @@
 package jp.co.cybird.barcodekanojoForGAM.view;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,12 +14,12 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.ImageCache;
 import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 
 public class UserProfileView extends RelativeLayout {
-    private ImageView imgPhoto = ((ImageView) findViewById(R.id.common_profile_img));
+    private ImageView imgPhoto = findViewById(R.id.common_profile_img);
     private Context mContext;
     private TextView txtBcoin;
     private TextView txtKanojos;
-    private TextView txtLevel = ((TextView) findViewById(R.id.common_profile_level));
-    private TextView txtName = ((TextView) findViewById(R.id.common_profile_name));
+    private TextView txtLevel = findViewById(R.id.common_profile_level);
+    private TextView txtName = findViewById(R.id.common_profile_name);
     private TextView txtStamina;
     private TextView txtTickets;
 
@@ -27,17 +27,17 @@ public class UserProfileView extends RelativeLayout {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.view_user_profile, this, true);
         this.mContext = context;
-        this.txtLevel.setVisibility(8);
-        this.txtStamina = (TextView) findViewById(R.id.common_profile_stamina);
-        this.txtKanojos = (TextView) findViewById(R.id.common_profile_kanojos);
-        this.txtBcoin = (TextView) findViewById(R.id.common_profile_b_coin);
-        this.txtTickets = (TextView) findViewById(R.id.common_profile_ticket);
+        this.txtLevel.setVisibility(View.GONE);
+        this.txtStamina = findViewById(R.id.common_profile_stamina);
+        this.txtKanojos = findViewById(R.id.common_profile_kanojos);
+        this.txtBcoin = findViewById(R.id.common_profile_b_coin);
+        this.txtTickets = findViewById(R.id.common_profile_ticket);
         this.txtName.setSingleLine();
         this.txtName.setEllipsize(TextUtils.TruncateAt.END);
     }
 
     public void clear() {
-        this.imgPhoto.setImageDrawable((Drawable) null);
+        this.imgPhoto.setImageDrawable(null);
         this.mContext = null;
     }
 
@@ -55,16 +55,16 @@ public class UserProfileView extends RelativeLayout {
                 this.txtName.setText(String.valueOf(getResources().getString(R.string.blank_name)) + this.txtLevel.getText().toString());
             }
             if (this.txtStamina != null) {
-                this.txtStamina.setText(new StringBuilder().append(user.getStamina()).toString());
+                this.txtStamina.setText(String.valueOf(user.getStamina()));
             }
             if (this.txtKanojos != null) {
-                this.txtKanojos.setText(new StringBuilder().append(user.getKanojo_count()).toString());
+                this.txtKanojos.setText(String.valueOf(user.getKanojo_count()));
             }
             if (this.txtBcoin != null) {
-                this.txtBcoin.setText(new StringBuilder().append(user.getMoney()).toString());
+                this.txtBcoin.setText(String.valueOf(user.getMoney()));
             }
             if (this.txtTickets != null) {
-                this.txtTickets.setText(new StringBuilder().append(user.getTickets()).toString());
+                this.txtTickets.setText(String.valueOf(user.getTickets()));
             }
         }
     }

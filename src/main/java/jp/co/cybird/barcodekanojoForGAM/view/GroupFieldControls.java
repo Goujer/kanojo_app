@@ -58,7 +58,7 @@ public class GroupFieldControls extends LinearLayout {
         View MakeThirdView = MakeThirdView(rl, type);
         switch (type) {
             case 1:
-                firstView.setVisibility(8);
+                firstView.setVisibility(View.GONE);
                 break;
         }
         addView(rl, new LinearLayout.LayoutParams(-1, -2));

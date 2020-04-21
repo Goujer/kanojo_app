@@ -73,10 +73,10 @@ public class MoreView extends FrameLayout {
                     MoreView.this.txt.setText(MoreView.this.r.getString(R.string.row_more_loading));
                 }
                 if (MoreView.this.ya != null) {
-                    MoreView.this.ya.setVisibility(8);
+                    MoreView.this.ya.setVisibility(View.GONE);
                 }
                 if (MoreView.this.progress != null) {
-                    MoreView.this.progress.setVisibility(0);
+                    MoreView.this.progress.setVisibility(View.VISIBLE);
                 }
                 MoreView.this.listener.onMoreClick(MoreView.this.Id);
             }

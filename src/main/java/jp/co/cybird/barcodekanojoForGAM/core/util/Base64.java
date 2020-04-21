@@ -583,7 +583,7 @@ public class Base64 {
             DECODE_WEBSAFE = iArr2;
         }
 
-        public Decoder(int flags, byte[] output) {
+        Decoder(int flags, byte[] output) {
             this.output = output;
             this.alphabet = (flags & 8) == 0 ? DECODE : DECODE_WEBSAFE;
             this.state = 0;
@@ -704,39 +704,40 @@ public class Base64 {
                     p = p2;
                 }
             }
-            if (!finish) {
-                this.state = state2;
-                this.value = value2;
-                this.op = op;
-                return true;
-            }
-            switch (state2) {
-                case 0:
-                    op2 = op;
-                    break;
-                case 1:
-                    this.state = 6;
-                    return false;
-                case 2:
-                    op2 = op + 1;
-                    output[op] = (byte) (value2 >> 4);
-                    break;
-                case 3:
-                    int op4 = op + 1;
-                    output[op] = (byte) (value2 >> 10);
-                    output[op4] = (byte) (value2 >> 2);
-                    op2 = op4 + 1;
-                    break;
-                case 4:
-                    this.state = 6;
-                    return false;
-                default:
-                    op2 = op;
-                    break;
-            }
-            this.state = state2;
-            this.op = op2;
-            return true;
+            //Unreachable past here
+//            if (!finish) {
+//                this.state = state2;
+//                this.value = value2;
+//                this.op = op;
+//                return true;
+//            }
+//            switch (state2) {
+//                case 0:
+//                    op2 = op;
+//                    break;
+//                case 1:
+//                    this.state = 6;
+//                    return false;
+//                case 2:
+//                    op2 = op + 1;
+//                    output[op] = (byte) (value2 >> 4);
+//                    break;
+//                case 3:
+//                    int op4 = op + 1;
+//                    output[op] = (byte) (value2 >> 10);
+//                    output[op4] = (byte) (value2 >> 2);
+//                    op2 = op4 + 1;
+//                    break;
+//                case 4:
+//                    this.state = 6;
+//                    return false;
+//                default:
+//                    op2 = op;
+//                    break;
+//            }
+//            this.state = state2;
+//            this.op = op2;
+//            return true;
         }
     }
 

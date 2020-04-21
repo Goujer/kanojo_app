@@ -25,7 +25,7 @@ public class ResponseParser extends AbstractJSONParser<Response<BarcodeKanojoMod
             }
             response.setCode(object.getInt("code"));
             for (JSONParser<? extends BarcodeKanojoModel> parse : this.mSubParser) {
-                Object parse2 = parse.parse(object);
+				BarcodeKanojoModel parse2 = parse.parse(object);
                 if (parse2 != null) {
                     response.add(parse2);
                 }

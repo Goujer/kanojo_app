@@ -62,7 +62,7 @@ public class KanojoView extends RelativeLayout {
     public void setKanojo(Kanojo kanojo, RemoteResourceManager rrm) {
         if (kanojo != null) {
             if (this.viewCover != null) {
-                this.viewCover.setVisibility(8);
+                this.viewCover.setVisibility(View.GONE);
             }
             if (this.imgKanojo != null) {
                 ImageCache.setImage(this.imgKanojo, kanojo.getProfile_image_url(), rrm, R.drawable.common_noimage);
@@ -89,7 +89,7 @@ public class KanojoView extends RelativeLayout {
                 setBackgroundResource(R.drawable.row_kanojos_bg);
             }
         } else if (this.viewCover != null) {
-            this.viewCover.setVisibility(0);
+            this.viewCover.setVisibility(View.VISIBLE);
         }
     }
 

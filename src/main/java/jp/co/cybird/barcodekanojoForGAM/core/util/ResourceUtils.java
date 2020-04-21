@@ -62,7 +62,7 @@ public final class ResourceUtils {
         r0 = res.getIdentifier(r4.concat(DEV_RES_SUFFIX), r5, packageName);
      */
     private static int getDevResourceId(String name, String defType) {
-        int resId;
+        int resId = res.getIdentifier(name.concat(DEV_RES_SUFFIX), defType, packageName);
         return (!isDebuggable || resId == 0) ? res.getIdentifier(name, defType, packageName) : resId;
     }
 

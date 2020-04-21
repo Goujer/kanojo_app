@@ -100,7 +100,7 @@ public class EditBitmapActivity extends Activity implements BaseInterface, View.
             unregisterReceiver(this.mLoggedOutReceiver);
         } catch (Exception e) {
         }
-        ViewGroup root = (ViewGroup) getWindow().getDecorView().findViewById(16908290);
+        ViewGroup root = (ViewGroup) getWindow().getDecorView().findViewById(R.id.common_top_menu_root);
         if (!(root == null || root.getChildCount() == 0)) {
             cleanupView(root.getChildAt(0));
         }
@@ -197,80 +197,66 @@ public class EditBitmapActivity extends Activity implements BaseInterface, View.
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:20:0x0058 A[SYNTHETIC, Splitter:B:20:0x0058] */
-    /* JADX WARNING: Removed duplicated region for block: B:25:0x0061 A[SYNTHETIC, Splitter:B:25:0x0061] */
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.edit_bitmap_retake:
-                startPhotoActivity(this.mode);
-                return;
-            case R.id.edit_bitmap_ok:
-                this.mView.saveBitmap(FILENAME);
-                OutputStream outputStream = null;
-                try {
-                    File dir = new File(this.mRootDir.getPath());
-                    if (!dir.exists()) {
-                        dir.mkdirs();
-                    }
-                    File file = new File(dir, FILENAME);
-                    if (file.exists()) {
-                        Bitmap resized = loadBitmap(file, 200, 200);
-                        OutputStream outputStream2 = new FileOutputStream(file);
-                        if (resized != null) {
-                            try {
-                                resized.compress(Bitmap.CompressFormat.JPEG, 100, outputStream2);
-                                outputStream = outputStream2;
-                            } catch (FileNotFoundException e) {
-                                outputStream = outputStream2;
-                                if (outputStream != null) {
-                                    try {
-                                        outputStream.close();
-                                    } catch (Throwable th) {
-                                    }
-                                }
-                                setResult(-1);
-                                finish();
-                                return;
-                            } catch (Throwable th2) {
-                                th = th2;
-                                outputStream = outputStream2;
-                                if (outputStream != null) {
-                                    try {
-                                        outputStream.close();
-                                    } catch (Throwable th3) {
-                                    }
-                                }
-                                throw th;
-                            }
-                        } else {
-                            outputStream = outputStream2;
-                        }
-                    }
-                    if (outputStream != null) {
-                        try {
-                            outputStream.close();
-                        } catch (Throwable th4) {
-                        }
-                    }
-                } catch (FileNotFoundException e2) {
-                    if (outputStream != null) {
-                    }
-                    setResult(-1);
-                    finish();
-                    return;
-                } catch (Throwable th5) {
-                    th = th5;
-                    if (outputStream != null) {
-                    }
-                    throw th;
-                }
-                setResult(-1);
-                finish();
-                return;
-            default:
-                return;
-        }
-    }
+    // JADX made a booboo
+	public void onClick(View v) {
+		Throwable th;
+		switch (v.getId()) {
+			case R.id.edit_bitmap_retake:
+				startPhotoActivity(this.mode);
+				return;
+			case R.id.edit_bitmap_ok:
+				try{
+					this.mView.saveBitmap(FILENAME);
+					OutputStream outputStream = null;
+					try {
+						File dir = new File(this.mRootDir.getPath());
+						if (!dir.exists()) {
+							dir.mkdirs();
+						}
+						File file = new File(dir, FILENAME);
+						if (file.exists()) {
+							Bitmap resized = loadBitmap(file, 200, 200);
+							OutputStream outputStream2 = new FileOutputStream(file);
+							if (resized != null) {
+								resized.compress(Bitmap.CompressFormat.JPEG, 100, outputStream2);
+								outputStream = outputStream2;
+							}
+							outputStream = outputStream2;
+						}
+						if (outputStream != null) {
+							try {
+								outputStream.close();
+							} catch (Throwable th5) {
+							}
+						}
+					} catch (FileNotFoundException e2) {
+						if (outputStream != null) {
+							outputStream.close();
+						}
+						setResult(-1);
+						finish();
+						return;
+					} catch (Throwable th6) {
+						th = th6;
+						if (outputStream != null) {
+							outputStream.close();
+						}
+						throw th;
+					}}
+				catch(IOException e){
+					e.printStackTrace();
+				}
+				catch (Throwable th2)
+				{
+					th2.printStackTrace();
+				}
+				setResult(-1);
+				finish();
+				return;
+			default:
+				return;
+		}
+	}
 
     public static File getEditedFile() {
         String mRootPath2;

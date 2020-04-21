@@ -5,7 +5,6 @@ import jp.co.cybird.app.android.lib.commons.file.json.JSONEventType;
 import jp.co.cybird.app.android.lib.commons.file.json.io.InputSource;
 import jp.co.cybird.app.android.lib.commons.file.json.util.LocalCache;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
-import org.apache.james.mime4j.field.datetime.parser.DateTimeParserConstants;
 
 public class ScriptParser extends JSONParser {
     private InputSource in;
@@ -44,7 +43,7 @@ public class ScriptParser extends JSONParser {
                 set(JSONEventType.STRING, parseString(this.in, true), true);
                 return 1;
             case 45:
-            case DateTimeParserConstants.ANY /*48*/:
+            case 48:
             case 49:
             case 50:
             case 51:
@@ -57,7 +56,7 @@ public class ScriptParser extends JSONParser {
                 this.in.back();
                 set(JSONEventType.NUMBER, parseNumber(this.in), true);
                 return 1;
-            case DateTimeParserConstants.QUOTEDPAIR /*47*/:
+            case 47:
                 this.in.back();
                 String comment = parseComment(this.in);
                 if (isIgnoreWhitespace()) {
@@ -84,7 +83,7 @@ public class ScriptParser extends JSONParser {
                 push(JSONEventType.START_OBJECT);
                 return 2;
             default:
-                throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
+                throw createParseException(this.in, "json.parse.UnexpectedChar", (char) n);
         }
     }
 
@@ -108,7 +107,7 @@ public class ScriptParser extends JSONParser {
             case 34:
             case 39:
             case 45:
-            case DateTimeParserConstants.ANY /*48*/:
+            case 48:
             case 49:
             case 50:
             case 51:
@@ -128,7 +127,7 @@ public class ScriptParser extends JSONParser {
                     return 0;
                 }
                 break;
-            case DateTimeParserConstants.QUOTEDPAIR /*47*/:
+            case 47:
                 this.in.back();
                 String comment = parseComment(this.in);
                 if (isIgnoreWhitespace()) {
@@ -162,7 +161,7 @@ public class ScriptParser extends JSONParser {
                 this.in.back();
                 set(JSONEventType.NAME, parseString(this.in, true), false);
                 return 3;
-            case DateTimeParserConstants.QUOTEDPAIR /*47*/:
+            case 47:
                 this.in.back();
                 String comment = parseComment(this.in);
                 if (isIgnoreWhitespace()) {
@@ -170,7 +169,7 @@ public class ScriptParser extends JSONParser {
                 }
                 set(JSONEventType.COMMENT, comment, false);
                 return 2;
-            case DateTimeParserConstants.ANY /*48*/:
+            case 48:
             case 49:
             case 50:
             case 51:
@@ -217,7 +216,7 @@ public class ScriptParser extends JSONParser {
                 }
                 set(JSONEventType.WHITESPACE, ws, false);
                 return 3;
-            case DateTimeParserConstants.QUOTEDPAIR /*47*/:
+            case 47:
                 this.in.back();
                 String comment = parseComment(this.in);
                 if (isIgnoreWhitespace()) {
@@ -261,7 +260,7 @@ public class ScriptParser extends JSONParser {
                 set(JSONEventType.STRING, parseString(this.in, true), true);
                 return 5;
             case 45:
-            case DateTimeParserConstants.ANY /*48*/:
+            case 48:
             case 49:
             case 50:
             case 51:
@@ -274,7 +273,7 @@ public class ScriptParser extends JSONParser {
                 this.in.back();
                 set(JSONEventType.NUMBER, parseNumber(this.in), true);
                 return 5;
-            case DateTimeParserConstants.QUOTEDPAIR /*47*/:
+            case 47:
                 this.in.back();
                 String comment = parseComment(this.in);
                 if (isIgnoreWhitespace()) {
@@ -345,7 +344,7 @@ public class ScriptParser extends JSONParser {
                     return 4;
                 }
                 throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
-            case DateTimeParserConstants.QUOTEDPAIR /*47*/:
+            case 47:
                 this.in.back();
                 String comment = parseComment(this.in);
                 if (isIgnoreWhitespace()) {

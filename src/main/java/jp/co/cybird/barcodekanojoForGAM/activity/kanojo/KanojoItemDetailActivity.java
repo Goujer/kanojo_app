@@ -93,11 +93,11 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
         ((Button) findViewById(R.id.kanojo_item_detail_close)).setOnClickListener(this);
         this.txtTitle = (TextView) findViewById(R.id.kanojo_item_detail_title);
         this.imgView = (ImageView) findViewById(R.id.kanojo_item_detail_img);
-        this.imgView.setVisibility(4);
+        this.imgView.setVisibility(View.INVISIBLE);
         this.txtDescription = (TextView) findViewById(R.id.kanojo_item_detail_description);
-        this.txtDescription.setVisibility(4);
+        this.txtDescription.setVisibility(View.INVISIBLE);
         this.btnOk = (Button) findViewById(R.id.kanojo_item_detail_btn_01);
-        this.btnOk.setVisibility(4);
+        this.btnOk.setVisibility(View.INVISIBLE);
         this.btnOk.setOnClickListener(this);
         Button btnCancel = (Button) findViewById(R.id.kanojo_item_detail_btn_02);
         btnCancel.setOnClickListener(this);
@@ -109,7 +109,7 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
             this.mKanojoItem = (KanojoItem) bundle.get(BaseInterface.EXTRA_KANOJO_ITEM);
             this.mode = bundle.getInt(BaseInterface.EXTRA_KANOJO_ITEM_MODE);
         }
-        btnCancel.setVisibility(8);
+        btnCancel.setVisibility(View.GONE);
         this.mPurchaseAPI = ((BarcodeKanojoApp) getApplication()).getPurchaseApi();
         this.mListener = new PurchaseApi.OnPurchaseListener() {
             public void onSetUpFailed(String message) {
@@ -160,9 +160,9 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
 
     public void loadContent(int btnTextRes) {
         if (this.mKanojoItem != null) {
-            this.imgView.setVisibility(0);
-            this.txtDescription.setVisibility(0);
-            this.btnOk.setVisibility(0);
+            this.imgView.setVisibility(View.VISIBLE);
+            this.txtDescription.setVisibility(View.VISIBLE);
+            this.btnOk.setVisibility(View.VISIBLE);
             this.txtTitle.setText(this.mKanojoItem.getTitle());
             ImageCache.setImageAndRequest(this, this.imgView, this.mKanojoItem.getImage_url(), this.mRrm, R.drawable.common_noimage_product);
             if (this.mKanojoItem.isHas()) {
@@ -186,9 +186,9 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
     }
 
     public void hideContent() {
-        this.imgView.setVisibility(4);
-        this.txtDescription.setVisibility(4);
-        this.btnOk.setVisibility(4);
+        this.imgView.setVisibility(View.INVISIBLE);
+        this.txtDescription.setVisibility(View.INVISIBLE);
+        this.btnOk.setVisibility(View.INVISIBLE);
     }
 
     public View getClientView() {

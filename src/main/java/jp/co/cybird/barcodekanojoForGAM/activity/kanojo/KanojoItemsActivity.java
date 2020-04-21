@@ -142,12 +142,12 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
             switch (this.mode) {
                 case 1:
                     txtTitle.setText(r.getString(R.string.kanojo_items_date));
-                    mLayoutTab.setVisibility(0);
+                    mLayoutTab.setVisibility(View.VISIBLE);
                     onTabType(1);
                     break;
                 case 2:
                     txtTitle.setText(r.getString(R.string.kanojo_items_gift));
-                    mLayoutTab.setVisibility(0);
+                    mLayoutTab.setVisibility(View.VISIBLE);
                     onTabType(1);
                     break;
                 case 3:
@@ -384,11 +384,11 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
     private void showLayoutNoitemView(ModelList<KanojoItemCategory> list) {
         LinearLayout layoutNoitem = (LinearLayout) findViewById(R.id.layout_no_item);
         if (list == null) {
-            layoutNoitem.setVisibility(0);
+            layoutNoitem.setVisibility(View.VISIBLE);
         } else if (list.size() == 0) {
-            layoutNoitem.setVisibility(0);
+            layoutNoitem.setVisibility(View.VISIBLE);
         } else {
-            layoutNoitem.setVisibility(8);
+            layoutNoitem.setVisibility(View.GONE);
         }
     }
 

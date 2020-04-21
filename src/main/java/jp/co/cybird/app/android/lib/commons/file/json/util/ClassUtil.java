@@ -27,7 +27,7 @@ public final class ClassUtil {
         ClassLoader cl;
         Map<String, Class<?>> map;
         Class<?> cls;
-        Class<?> target;
+        Class<?> target = null;
         try {
             cl = Thread.currentThread().getContextClassLoader();
         } catch (SecurityException e) {
@@ -54,8 +54,12 @@ public final class ClassUtil {
                         target = null;
                     }
                 } else {
-                    target = Class.forName(name);
-                }
+					try {
+						target = Class.forName(name);
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
                 map.put(name, target);
             }
             cls = map.get(name);
@@ -163,8 +167,7 @@ public final class ClassUtil {
                 ObjectOutputStream objectOutputStream3 = out;
             }
         } catch (ObjectStreamException e3) {
-            e = e3;
-            throw e;
+            throw e3;
         } catch (IOException e4) {
         }
         return array.toByteArray();
@@ -179,15 +182,13 @@ public final class ClassUtil {
                 contextObjectInputStream.close();
                 ContextObjectInputStream contextObjectInputStream2 = contextObjectInputStream;
             } catch (ObjectStreamException e) {
-                e = e;
                 ContextObjectInputStream contextObjectInputStream3 = contextObjectInputStream;
                 throw e;
             } catch (IOException e2) {
                 ContextObjectInputStream contextObjectInputStream4 = contextObjectInputStream;
             }
         } catch (ObjectStreamException e3) {
-            e = e3;
-            throw e;
+            throw e3;
         } catch (IOException e4) {
         }
         return ret;

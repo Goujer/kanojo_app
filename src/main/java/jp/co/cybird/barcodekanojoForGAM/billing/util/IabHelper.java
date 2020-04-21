@@ -311,8 +311,7 @@ public class IabHelper {
                     if (this.mPurchaseListener != null) {
                         this.mPurchaseListener.onIabPurchaseFinished(new IabResult(0, "Success"), purchase);
                     }
-                } catch (JSONException e) {
-                    e = e;
+                } catch (Exception e) {	//JSONException
                     Purchase purchase2 = purchase;
                     logError("Failed to parse purchase data.");
                     e.printStackTrace();
@@ -323,9 +322,8 @@ public class IabHelper {
                     return true;
                 }
             } catch (JSONException e2) {
-                e = e2;
                 logError("Failed to parse purchase data.");
-                e.printStackTrace();
+                e2.printStackTrace();
                 IabResult result42 = new IabResult(IABHELPER_BAD_RESPONSE, "Failed to parse purchase data.");
                 if (this.mPurchaseListener != null) {
                 }
@@ -409,8 +407,6 @@ public class IabHelper {
                 final IabResult result_f = result;
                 final Inventory inv_f = inv;
                 if (!IabHelper.this.mDisposed && queryInventoryFinishedListener != null) {
-                    Handler handler = handler;
-                    final QueryInventoryFinishedListener queryInventoryFinishedListener = queryInventoryFinishedListener;
                     handler.post(new Runnable() {
                         public void run() {
                             queryInventoryFinishedListener.onQueryInventoryFinished(result_f, inv_f);
@@ -636,8 +632,7 @@ public class IabHelper {
         return 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public void consumeAsyncInternal(List<Purchase> purchases, OnConsumeFinishedListener singleListener, OnConsumeMultiFinishedListener multiListener) {
+	private void consumeAsyncInternal(List<Purchase> purchases, OnConsumeFinishedListener singleListener, OnConsumeMultiFinishedListener multiListener) {
         final Handler handler = new Handler();
         flagStartAsync("consume");
         final List<Purchase> list = purchases;
@@ -656,9 +651,6 @@ public class IabHelper {
                 }
                 IabHelper.this.flagEndAsync();
                 if (!IabHelper.this.mDisposed && onConsumeFinishedListener != null) {
-                    Handler handler = handler;
-                    final OnConsumeFinishedListener onConsumeFinishedListener = onConsumeFinishedListener;
-                    final List list = list;
                     handler.post(new Runnable() {
                         public void run() {
                             onConsumeFinishedListener.onConsumeFinished((Purchase) list.get(0), (IabResult) results.get(0));
@@ -667,7 +659,6 @@ public class IabHelper {
                 }
                 if (!IabHelper.this.mDisposed && onConsumeMultiFinishedListener != null) {
                     Handler handler2 = handler;
-                    final OnConsumeMultiFinishedListener onConsumeMultiFinishedListener = onConsumeMultiFinishedListener;
                     final List list2 = list;
                     handler2.post(new Runnable() {
                         public void run() {
@@ -679,20 +670,17 @@ public class IabHelper {
         }).start();
     }
 
-    /* access modifiers changed from: package-private */
-    public void logDebug(String msg) {
+	private void logDebug(String msg) {
         if (this.mDebugLog) {
             Log.d(this.mDebugTag, msg);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void logError(String msg) {
+	private void logError(String msg) {
         Log.e(this.mDebugTag, "In-app billing error: " + msg);
     }
 
-    /* access modifiers changed from: package-private */
-    public void logWarn(String msg) {
+	private void logWarn(String msg) {
         Log.w(this.mDebugTag, "In-app billing warning: " + msg);
     }
 }

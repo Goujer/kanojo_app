@@ -25,7 +25,7 @@ public class CustomLoadingView extends LinearLayout implements View.OnClickListe
         LayoutInflater.from(context).inflate(R.layout.view_custom_loading_view, this, true);
         this.mLoadingview = (LinearLayout) findViewById(R.id.progressbar);
         this.mLoadingview.setOnClickListener(this);
-        this.mLoadingview.setVisibility(4);
+        this.mLoadingview.setVisibility(View.INVISIBLE);
         this.mLoadingview.setTag("hide");
         this.mLoadingViewStatus = (TextView) findViewById(R.id.loadingViewStatus);
         this.mLoadingViewStatus.setText("Loading...");
@@ -37,12 +37,12 @@ public class CustomLoadingView extends LinearLayout implements View.OnClickListe
     }
 
     public void show() {
-        this.mLoadingview.setVisibility(0);
+        this.mLoadingview.setVisibility(View.VISIBLE);
         this.mLoadingview.setTag("show");
     }
 
     public void dismiss() {
-        this.mLoadingview.setVisibility(4);
+        this.mLoadingview.setVisibility(View.INVISIBLE);
         setStatus(this.mContext.getResources().getString(R.string.common_progress_dialog_message));
         setMessage("");
         this.mLoadingview.setTag("hide");

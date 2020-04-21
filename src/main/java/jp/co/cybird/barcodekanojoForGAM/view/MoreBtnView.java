@@ -41,10 +41,10 @@ public class MoreBtnView extends FrameLayout {
                 this.txt.setText(this.r.getString(R.string.row_more_loading));
             }
             if (this.ya != null) {
-                this.ya.setVisibility(8);
+                this.ya.setVisibility(View.GONE);
             }
             if (this.progress != null) {
-                this.progress.setVisibility(0);
+                this.progress.setVisibility(View.VISIBLE);
                 return;
             }
             return;
@@ -53,10 +53,10 @@ public class MoreBtnView extends FrameLayout {
             this.txt.setText(this.r.getString(R.string.row_more));
         }
         if (this.ya != null) {
-            this.ya.setVisibility(0);
+            this.ya.setVisibility(View.VISIBLE);
         }
         if (this.progress != null) {
-            this.progress.setVisibility(4);
+            this.progress.setVisibility(View.INVISIBLE);
         }
     }
 

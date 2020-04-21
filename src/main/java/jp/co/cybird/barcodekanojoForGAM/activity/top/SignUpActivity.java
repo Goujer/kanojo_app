@@ -324,32 +324,32 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
     public void switchLayout() {
         switch (this.mRequestCode) {
             case BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST:
-                this.mSocialLayout.setVisibility(0);
-                this.mSkipLayout.setVisibility(0);
-                this.mSukiyaLayout.setVisibility(8);
-                this.btnBack.setVisibility(4);
-                this.btnoldID.setVisibility(0);
+                this.mSocialLayout.setVisibility(View.VISIBLE);
+                this.mSkipLayout.setVisibility(View.VISIBLE);
+                this.mSukiyaLayout.setVisibility(View.GONE);
+                this.btnBack.setVisibility(View.INVISIBLE);
+                this.btnoldID.setVisibility(View.VISIBLE);
                 this.txtSettingTitle.setText(getResources().getString(R.string.social_setting_singup));
                 this.btnFaceBook.setKey(getString(R.string.social_setting_facebook));
                 this.btnTwitter.setKey(getString(R.string.social_setting_twister));
                 this.btnTwitter.setBackgroundResource(R.drawable.row_kanojo_edit_bg_middle);
                 return;
             case BaseInterface.REQUEST_SOCIAL_CONFIG_SETTING:
-                this.mSocialLayout.setVisibility(0);
-                this.mSkipLayout.setVisibility(8);
-                this.mSukiyaLayout.setVisibility(8);
-                this.btnBack.setVisibility(0);
+                this.mSocialLayout.setVisibility(View.VISIBLE);
+                this.mSkipLayout.setVisibility(View.GONE);
+                this.mSukiyaLayout.setVisibility(View.GONE);
+                this.btnBack.setVisibility(View.VISIBLE);
                 this.txtSettingTitle.setText(getResources().getString(R.string.social_setting_common_setting));
                 this.btnFaceBook.setKey(getString(R.string.common_setting_facebook));
                 this.btnTwitter.setKey(getString(R.string.common_setting_twister));
-                this.btnoldID.setVisibility(8);
+                this.btnoldID.setVisibility(View.GONE);
                 this.btnTwitter.setBackgroundResource(R.drawable.row_kanojo_edit_bg_bottom);
                 return;
             case BaseInterface.REQUEST_SOCIAL_SUKIYA_SETTING:
-                this.mSocialLayout.setVisibility(8);
-                this.mSkipLayout.setVisibility(8);
-                this.mSukiyaLayout.setVisibility(0);
-                this.btnBack.setVisibility(0);
+                this.mSocialLayout.setVisibility(View.GONE);
+                this.mSkipLayout.setVisibility(View.GONE);
+                this.mSukiyaLayout.setVisibility(View.VISIBLE);
+                this.btnBack.setVisibility(View.VISIBLE);
                 return;
             default:
                 return;
@@ -739,7 +739,7 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
     public void gotoNextStep() {
         if (this.mRequestCode == 1102) {
             Intent intent = new Intent(this, UserModifyActivity.class);
-            intent.putExtra(PropertyConfiguration.USER, this.modifiedUser);
+            intent.putExtra("user", this.modifiedUser);
             intent.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST);
             startActivityForResult(intent, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST);
         }

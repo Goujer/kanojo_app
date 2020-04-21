@@ -160,13 +160,12 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
         return fugou * a1;
     }
 
-    /* access modifiers changed from: package-private */
-    public void touchesMoved(MotionEvent event) {
+    void touchesMoved(MotionEvent event) {
         int touchNum = event.getPointerCount();
         if (touchNum == 1) {
             LDPointF lDPointF = new LDPointF(event.getX(), event.getY());
-            this.lastx = lDPointF.x;
-            this.lasty = lDPointF.y;
+			this.lastx = lDPointF.a;//getX();
+			this.lasty = lDPointF.b;//getY();
             this.lastD = -1.0f;
         } else if (touchNum >= 2) {
             int index1 = 0;
@@ -176,8 +175,8 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
                 LDPointF pp1 = new LDPointF(event.getX(i1), event.getY(i1));
                 for (int i2 = 0; i2 < touchNum; i2++) {
                     if (i1 != i2) {
-                        LDPointF lDPointF2 = new LDPointF(event.getX(i2), event.getY(i2));
-                        int distTotal = (int) (((this.last_p1x - pp1.x) * (this.last_p1x - pp1.x)) + ((this.last_p1y - pp1.y) * (this.last_p1y - pp1.y)) + ((this.last_p2x - lDPointF2.x) * (this.last_p2x - lDPointF2.x)) + ((this.last_p2y - lDPointF2.y) * (this.last_p2y - lDPointF2.y)));
+                        LDPointF lDPointF = new LDPointF(event.getX(i2), event.getY(i2));
+						int distTotal = (int) ((((this.last_p1x - pp1.a/*getX()*/) * (this.last_p1x - pp1.a/*getX()*/)) + ((this.last_p1y - pp1.b/*getY()*/) * (this.last_p1y - pp1.b/*getY()*/))) + (((this.last_p2x - lDPointF.a/*getX()*/) * (this.last_p2x - lDPointF.a/*getX()*/)) + ((this.last_p2y - lDPointF.b/*getY()*/) * (this.last_p2y - lDPointF.b/*getY()*/))));
                         if (distTotal < minDist2) {
                             minDist2 = distTotal;
                             index1 = i1;
@@ -187,15 +186,16 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
                 }
             }
             if (minDist2 <= 9800 || touchNum <= 2) {
-                LDPointF lDPointF3 = new LDPointF(event.getX(index1), event.getY(index1));
-                LDPointF lDPointF4 = new LDPointF(event.getX(index2), event.getY(index2));
-                float dist = (float) Math.sqrt((double) (((lDPointF3.x - lDPointF4.x) * (lDPointF3.x - lDPointF4.x)) + ((lDPointF3.y - lDPointF4.y) * (lDPointF3.y - lDPointF4.y))));
-                this.lastx = (lDPointF3.x + lDPointF4.x) * 0.5f;
-                this.lasty = (lDPointF3.y + lDPointF4.y) * 0.5f;
-                this.last_p1x = lDPointF3.x;
-                this.last_p1y = lDPointF3.y;
-                this.last_p2x = lDPointF4.x;
-                this.last_p2y = lDPointF4.y;
+				LDPointF lDPointF = new LDPointF(event.getX(index1), event.getY(index1));
+				LDPointF lDPointF2 = new LDPointF(event.getX(index2), event.getY(index2));
+				float dist = (float) Math.sqrt((double) (((lDPointF.a/*getX()*/ - lDPointF2.a/*getX()*/) * (lDPointF.a/*getX()*/ - lDPointF2.a/*getX()*/)) + ((lDPointF.b/*getY()*/ - lDPointF2.b/*getY()*/) * (lDPointF.b/*getY()*/ - lDPointF2.b/*getY()*/))));
+				float cy = (lDPointF.b/*getY()*/ + lDPointF2.b/*getY()*/) * 0.5f;
+				this.lastx = (lDPointF.a/*getX()*/ + lDPointF2.a/*getX()*/) * 0.5f;
+				this.lasty = cy;
+				this.last_p1x = lDPointF.a/*getX()*/;
+				this.last_p1y = lDPointF.b/*getY()*/;
+				this.last_p2x = lDPointF2.a/*getX()*/;
+				this.last_p2y = lDPointF2.b/*getY()*/;
                 this.lastD = dist;
                 this.multitouch = true;
             } else {
