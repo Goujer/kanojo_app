@@ -34,7 +34,8 @@ public class BootActivity extends BaseKanojosActivity {
     private volatile boolean authorizationDone;
     private RelativeLayout mProgressbar;
     final Handler mTaskEndHandler = new Handler() {
-        public void handleMessage(Message msg) {
+		@Override
+    	public void handleMessage(Message msg) {
             StatusHolder next = BootActivity.this.getQueue().poll();
             if (next != null) {
                 BootActivity.this.executeBootTask(next);
@@ -150,7 +151,7 @@ public class BootActivity extends BaseKanojosActivity {
         }
 		BootTask mBootTask = new BootTask();
         mBootTask.setList(list);
-        this.mProgressbar.setVisibility(View.GONE);
+        this.mProgressbar.setVisibility(View.VISIBLE);
         mBootTask.execute();
     }
 
@@ -174,6 +175,7 @@ public class BootActivity extends BaseKanojosActivity {
                 return process(this.mList);
             } catch (Exception e) {
                 this.mReason = e;
+                e.printStackTrace();
                 return null;
             }
         }
@@ -185,7 +187,7 @@ public class BootActivity extends BaseKanojosActivity {
                 if (this.mReason != null) {
                 }
                 switch (response.getCode()) {
-                    case 200:
+                    case Response.CODE_SUCCESS:
                         if (!BootActivity.this.isQueueEmpty()) {
                             BootActivity.this.mTaskEndHandler.sendEmptyMessage(0);
                             return;
@@ -193,18 +195,17 @@ public class BootActivity extends BaseKanojosActivity {
                             BootActivity.this.nextScreen(this.mList);
                             return;
                         }
-                    case 403:
-                        this.mList.key = 2;
+                    case Response.CODE_ERROR_FORBIDDEN:
+                        this.mList.key = StatusHolder.SIGNUP_TASK;
                         BootActivity.this.nextScreen(this.mList);
                         return;
                     default:
                         return;
                 }
             } catch (Exception e) {
-                if (this.mList.key != 0 || !this.mReason.getMessage().equalsIgnoreCase("user not found")) {
-                }
-            }
-            if (this.mList.key != 0 || !this.mReason.getMessage().equalsIgnoreCase("user not found")) {
+            	e.printStackTrace();
+			}
+            if (this.mList.key != StatusHolder.LOGIN_TASK || !this.mReason.getMessage().equalsIgnoreCase("user not found")) {
                 BootActivity.this.mProgressbar.setVisibility(View.INVISIBLE);
                 BootActivity.this.showAlertDialog(new Alert(BootActivity.this.getResources().getString(R.string.error_internet)), new DialogInterface.OnDismissListener() {
                     public void onDismiss(DialogInterface dialog) {
@@ -213,7 +214,7 @@ public class BootActivity extends BaseKanojosActivity {
                 });
                 return;
             }
-            this.mList.key = 2;
+            this.mList.key = StatusHolder.SIGNUP_TASK;
             BootActivity.this.nextScreen(this.mList);
         }
 
@@ -229,14 +230,14 @@ public class BootActivity extends BaseKanojosActivity {
                 throw new BarcodeKanojoException("process:StatusHolder is null!");
             }
             switch (list.key) {
-                case 0:
+                case StatusHolder.LOGIN_TASK:
                     Response<BarcodeKanojoModel> android_verify = barcodeKanojo.android_verify(((BarcodeKanojoApp) BootActivity.this.getApplication()).getUUID());
                     if (android_verify == null) {
                         return android_verify;
                     }
                     barcodeKanojo.init_product_category_list();
                     return android_verify;
-                case 1:
+                case StatusHolder.UUIDVERIFY_TASK:
                     return barcodeKanojo.android_uuid_verify(user.getEmail(), user.getPassword(), setting.getUUID());
                 default:
                     return null;
@@ -246,10 +247,10 @@ public class BootActivity extends BaseKanojosActivity {
 
     void nextScreen(StatusHolder list) {
         switch (list.key) {
-            case 0:
+            case StatusHolder.LOGIN_TASK:
                 startDashboard();
                 break;
-            case 2:
+            case StatusHolder.SIGNUP_TASK:
                 startShowPrivacy();
                 break;
         }

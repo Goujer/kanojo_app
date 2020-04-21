@@ -150,7 +150,7 @@ public class BarcodeKanojo {
     public Response<BarcodeKanojoModel> android_disconnect_twitter() throws BarcodeKanojoException {
         try {
             Response<BarcodeKanojoModel> response = this.mBCKApi.android_disconnect_twitter();
-            if (((User) response.get(User.class)) != null) {
+            if (response.get(User.class) != null) {
                 return response;
             }
             throw new BarcodeKanojoException("user not found");
@@ -175,7 +175,7 @@ public class BarcodeKanojo {
         return this.mBCKApi.friend_kanojos(user_id, index, limit, search);
     }
 
-    public Response<BarcodeKanojoModel> account_show() throws IllegalStateException, BarcodeKanojoException, IOException {
+    public Response<BarcodeKanojoModel> account_show() throws IllegalStateException, BarcodeKanojoException {
         try {
             Response<BarcodeKanojoModel> response = this.mBCKApi.account_show();
             User user = (User) response.get(User.class);
