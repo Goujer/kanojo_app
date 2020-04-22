@@ -136,7 +136,7 @@ public class HttpApi {
         if (nameValuePairs == null || nameValuePairs.length == 0) {
             httpGet = new HttpGet(url);
         } else {
-            httpGet = new HttpGet(String.valueOf(url) + "?" + URLEncodedUtils.format(stripNulls(nameValuePairs), "UTF-8"));
+            httpGet = new HttpGet(url + "?" + URLEncodedUtils.format(stripNulls(nameValuePairs), "UTF-8"));
         }
         httpGet.addHeader("User-Agent", this.mClientVersion);
         httpGet.addHeader(CLIENT_LANGUAGE_HEADER, this.mClientLanguage);
