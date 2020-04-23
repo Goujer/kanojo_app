@@ -1,30 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
     <FrameLayout android:id="@+id/common_profile_layout_img" android:padding="4dp" android:layout_width="@dimen/profile_img_width" android:layout_height="@dimen/profile_img_height">
         <ImageView android:id="@+id/common_profile_img" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/dummy_face_90" android:scaleType="fitXY" android:adjustViewBounds="true"/>
         <ImageView android:id="@+id/common_profile_img_cover" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/userprofile_cover" android:scaleType="fitXY" android:adjustViewBounds="true"/>
     </FrameLayout>
-    <TextView android:ellipsize="marquee" android:id="@+id/common_profile_name" android:layout_marginLeft="4dp" android:layout_marginTop="4dp" android:layout_toRightOf="@+id/common_profile_layout_img" android:layout_alignParentTop="true" style="@style/txt_userprofile_name"/>
-    <TextView android:id="@+id/common_profile_level" android:layout_marginTop="4dp" android:layout_toRightOf="@+id/common_profile_name" android:layout_alignParentTop="true" style="@style/txt_userprofile_name"/>
+    <TextView
+		android:id="@+id/common_profile_name"
+		style="@style/txt_userprofile_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:layout_marginLeft="4dp"
+		android:layout_marginTop="4dp"
+		android:layout_toRightOf="@+id/common_profile_layout_img"
+		android:ellipsize="marquee" />
+    <TextView
+		android:id="@+id/common_profile_level"
+		style="@style/txt_userprofile_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:layout_marginTop="4dp"
+		android:layout_toRightOf="@+id/common_profile_name" />
     <LinearLayout android:orientation="horizontal" android:paddingRight="4dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_toRightOf="@+id/common_profile_layout_img" android:layout_below="@+id/common_profile_name">
         <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1">
-            <TextView android:text="@string/userprofile_stamina" style="@style/txt_userprofile_title"/>
-            <TextView android:id="@+id/common_profile_stamina" style="@style/txt_userprofile_digit"/>
+            <TextView
+				style="@style/txt_userprofile_title"
+				android:text="@string/userprofile_stamina"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+            <TextView
+				android:id="@+id/common_profile_stamina"
+				style="@style/txt_userprofile_digit"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
         </LinearLayout>
         <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:layout_marginBottom="4dp" android:src="@drawable/userprofile_separator"/>
         <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1">
-            <TextView android:text="@string/userprofile_kanojos" style="@style/txt_userprofile_title"/>
-            <TextView android:id="@+id/common_profile_kanojos" style="@style/txt_userprofile_digit"/>
+            <TextView
+				style="@style/txt_userprofile_title"
+				android:text="@string/userprofile_kanojos"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+            <TextView
+				android:id="@+id/common_profile_kanojos"
+				style="@style/txt_userprofile_digit"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
         </LinearLayout>
         <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:layout_marginBottom="4dp" android:src="@drawable/userprofile_separator"/> //Add Ticket---------------------------------------\10
         <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1">
-            <TextView android:text="@string/userprofile_ticket" style="@style/txt_userprofile_title"/>
-            <TextView android:id="@+id/common_profile_ticket" style="@style/txt_userprofile_digit"/>
+            <TextView
+				style="@style/txt_userprofile_title"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/userprofile_ticket" />
+            <TextView
+				android:id="@+id/common_profile_ticket"
+				style="@style/txt_userprofile_digit"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
         </LinearLayout>
         <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:layout_marginBottom="4dp" android:src="@drawable/userprofile_separator"/> //------------------------------------------------------------------------\10
         <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1">
-            <TextView android:text="@string/userprofile_b_coin" style="@style/txt_userprofile_title"/>
-            <TextView android:id="@+id/common_profile_b_coin" style="@style/txt_userprofile_digit"/>
+            <TextView
+				style="@style/txt_userprofile_title"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/userprofile_b_coin"/>
+            <TextView
+				android:id="@+id/common_profile_b_coin"
+				style="@style/txt_userprofile_digit"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
 </merge>
