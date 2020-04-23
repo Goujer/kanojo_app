@@ -290,7 +290,7 @@ public class BarcodeKanojoHttpApi {
     }
 
     public Response<BarcodeKanojoModel> product_category_list() throws BarcodeKanojoException, IOException {
-        HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_RESOURCE_PRODUCT_CATEGORY_LIST), new NameValuePair[0]);
+        HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_RESOURCE_PRODUCT_CATEGORY_LIST));
         return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new CategoryParser()));
     }
 

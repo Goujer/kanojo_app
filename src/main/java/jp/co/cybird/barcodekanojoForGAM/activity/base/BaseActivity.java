@@ -41,12 +41,10 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.PhoneInfo;
 import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
 
 public abstract class BaseActivity extends GreeBaseActivity implements BaseInterface, DialogInterface.OnDismissListener {
-    /* access modifiers changed from: private */
-    public static boolean DEBUG = false;
+    private static boolean DEBUG = true;
     protected static final String TAG = "BaseActivity";
     public static int mActivityCount;
-    /* access modifiers changed from: private */
-    public int code = 0;
+    private int code = 0;
     private boolean mAutoRefresh = true;
     public boolean mBaseLoadingFinished = false;
     final OnAccountsUpdateListener mChangeAccountListener = new OnAccountsUpdateListener() {
@@ -366,22 +364,16 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     }
 
     public void onDismiss(DialogInterface dialog, int code2) {
-        switch (code2) {
-            case 401:
-                executeRefreshSession();
-                return;
-            default:
-                return;
-        }
-    }
+		if (code2 == 401) {
+			executeRefreshSession();
+		}
+	}
 
-    /* access modifiers changed from: protected */
-    public void showNoticeDialog(String message) {
+    protected void showNoticeDialog(String message) {
         showNoticeDialog(message, this);
     }
 
-    /* access modifiers changed from: protected */
-    public void showNoticeDialog(String message, DialogInterface.OnDismissListener listener) {
+    protected void showNoticeDialog(String message, DialogInterface.OnDismissListener listener) {
         if (this.mCommondialog == null) {
             this.mCommondialog = new AlertDialog.Builder(this).setTitle(R.string.app_name).setIcon(R.drawable.icon_72).setMessage(message).setPositiveButton(R.string.common_dialog_ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
@@ -396,31 +388,29 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         this.mCommondialog.show();
     }
 
-    /* access modifiers changed from: protected */
-    public void showToast(String message) {
-        Toast.makeText(this, message, 1).show();
+    protected void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    /* access modifiers changed from: protected */
-    public final void cleanupView(View view) {
+    protected final void cleanupView(View view) {
         Drawable d = view.getBackground();
         if (d != null) {
-            d.setCallback((Drawable.Callback) null);
+            d.setCallback(null);
         }
         if (view instanceof ImageButton) {
-            ((ImageButton) view).setImageDrawable((Drawable) null);
+            ((ImageButton) view).setImageDrawable(null);
         } else if (view instanceof ImageView) {
-            ((ImageView) view).setImageDrawable((Drawable) null);
+            ((ImageView) view).setImageDrawable(null);
         } else if (view instanceof SeekBar) {
             SeekBar sb = (SeekBar) view;
-            sb.setProgressDrawable((Drawable) null);
-            sb.setThumb((Drawable) null);
+            sb.setProgressDrawable(null);
+            sb.setThumb(null);
         } else if (view instanceof TextView) {
             ((TextView) view).setBackgroundDrawable((Drawable) null);
         } else if (view instanceof Button) {
-            ((Button) view).setBackgroundDrawable((Drawable) null);
+            view.setBackgroundDrawable(null);
         }
-        view.setBackgroundDrawable((Drawable) null);
+        view.setBackgroundDrawable(null);
         if (view instanceof ViewGroup) {
             ViewGroup vg = (ViewGroup) view;
             int size = vg.getChildCount();
@@ -439,31 +429,31 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
 
     public void showPrivacy() {
         Intent intent = new Intent(getApplicationContext(), CustomWebViewActivity.class);
-        intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, String.valueOf(Defs.URL_BASE()) + Defs.URL_LEGAL_PRIVACY);
+        intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, Defs.URL_BASE() + Defs.URL_LEGAL_PRIVACY);
         startActivity(intent);
     }
 
     public void showTerms() {
         Intent intent = new Intent(getApplicationContext(), CustomWebViewActivity.class);
-        intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, String.valueOf(Defs.URL_BASE()) + Defs.URL_LEGAL_TERMS);
+        intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, Defs.URL_BASE() + Defs.URL_LEGAL_TERMS);
         startActivity(intent);
     }
 
     public void showRules() {
         Intent intent = new Intent(getApplicationContext(), CustomWebViewActivity.class);
-        intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, String.valueOf(Defs.URL_BASE()) + Defs.URL_ABOUT_RULES);
+        intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, Defs.URL_BASE() + Defs.URL_ABOUT_RULES);
         startActivity(intent);
     }
 
     public void showBarcodeKanojo() {
         Intent intent = new Intent(getApplicationContext(), CustomWebViewActivity.class);
-        intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, String.valueOf(Defs.URL_BASE()) + Defs.URL_ABOUT_BARCODEKANOJO);
+        intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, Defs.URL_BASE() + Defs.URL_ABOUT_BARCODEKANOJO);
         startActivity(intent);
     }
 
     public void showTeam() {
         Intent intent = new Intent(getApplicationContext(), CustomWebViewActivity.class);
-        intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, String.valueOf(Defs.URL_BASE()) + Defs.URL_ABOUT_TEAM);
+        intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, Defs.URL_BASE() + Defs.URL_ABOUT_TEAM);
         startActivity(intent);
     }
 
@@ -472,7 +462,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         String locale = Locale.getDefault().getLanguage();
         String uuid = ((BarcodeKanojoApp) getApplicationContext()).getUUID();
         if (DEBUG) {
-            Log.e("lang", locale.toString());
+            Log.e("lang", locale);
         }
         if (locale.equals(Locale.JAPANESE.toString())) {
             if (DEBUG) {

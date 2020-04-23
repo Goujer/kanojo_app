@@ -10,7 +10,7 @@ public class GeoUtil {
         if (gp == null) {
             return null;
         }
-        return String.valueOf(((double) gp.getLatitudeE6()) / 1000000.0d) + "," + (((double) gp.getLongitudeE6()) / 1000000.0d);
+        return ((double) gp.getLatitudeE6()) / 1000000.0d + "," + (((double) gp.getLongitudeE6()) / 1000000.0d);
     }
 
     public static GeoPoint stringToGeo(String geo) {

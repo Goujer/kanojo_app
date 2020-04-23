@@ -19,7 +19,7 @@ import jp.co.cybird.barcodekanojoForGAM.activity.setting.OptionActivity;
 public class CustomToolBarView extends LinearLayout implements View.OnClickListener {
     private static final boolean DEBUG = false;
     private Context mContext;
-    private LinearLayout mDashboard = ((LinearLayout) findViewById(R.id.top_menu_dashboard));
+    private LinearLayout mDashboard;
     private LinearLayout mKanojos;
     private LinearLayout mScan;
     private LinearLayout mSetting;
@@ -29,17 +29,18 @@ public class CustomToolBarView extends LinearLayout implements View.OnClickListe
         super(context, attrs);
         this.mContext = context;
         this.mContext.getClass().getName();
-        setOrientation(0);
+        setOrientation(LinearLayout.HORIZONTAL);
         setGravity(16);
         LayoutInflater.from(context).inflate(R.layout.common_top_menu, this, true);
+        this.mDashboard = findViewById(R.id.top_menu_dashboard);
         this.mDashboard.setOnClickListener(this);
-        this.mKanojos = (LinearLayout) findViewById(R.id.top_menu_kanojos);
+        this.mKanojos = findViewById(R.id.top_menu_kanojos);
         this.mKanojos.setOnClickListener(this);
-        this.mScan = (LinearLayout) findViewById(R.id.top_menu_scan);
+        this.mScan = findViewById(R.id.top_menu_scan);
         this.mScan.setOnClickListener(this);
-        this.mWebView = (LinearLayout) findViewById(R.id.top_menu_webview);
+        this.mWebView = findViewById(R.id.top_menu_webview);
         this.mWebView.setOnClickListener(this);
-        this.mSetting = (LinearLayout) findViewById(R.id.top_menu_setting);
+        this.mSetting = findViewById(R.id.top_menu_setting);
         this.mSetting.setOnClickListener(this);
         setActive();
     }
@@ -66,26 +67,24 @@ public class CustomToolBarView extends LinearLayout implements View.OnClickListe
         unlock();
     }
 
-    /* access modifiers changed from: protected */
-    public void changeTab(Context packageContext, Class<?> cls) {
+    protected void changeTab(Context packageContext, Class<?> cls) {
         if (packageContext.getClass().getName().equalsIgnoreCase(cls.getName())) {
             unlock();
             return;
         }
         Intent intent = new Intent().setClass(packageContext, cls);
-        intent.addFlags(AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         packageContext.startActivity(intent);
         ((Activity) packageContext).overridePendingTransition(0, 0);
     }
 
-    /* access modifiers changed from: protected */
-    public void changeTabForResult(Context packageContext, Class<?> cls, int requestCode) {
+    protected void changeTabForResult(Context packageContext, Class<?> cls, int requestCode) {
         if (packageContext.getClass().getName().equalsIgnoreCase(cls.getName())) {
             unlock();
             return;
         }
         Intent intent = new Intent().setClass(packageContext, cls);
-        intent.addFlags(AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         ((Activity) packageContext).startActivityForResult(intent, requestCode);
         ((Activity) packageContext).overridePendingTransition(0, 0);
     }
@@ -105,8 +104,7 @@ public class CustomToolBarView extends LinearLayout implements View.OnClickListe
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void unlock() {
+    protected void unlock() {
         this.mDashboard.setOnClickListener(this);
         this.mKanojos.setOnClickListener(this);
         this.mScan.setOnClickListener(this);
@@ -114,12 +112,11 @@ public class CustomToolBarView extends LinearLayout implements View.OnClickListe
         this.mSetting.setOnClickListener(this);
     }
 
-    /* access modifiers changed from: protected */
-    public void lock() {
-        this.mDashboard.setOnClickListener((View.OnClickListener) null);
-        this.mKanojos.setOnClickListener((View.OnClickListener) null);
-        this.mScan.setOnClickListener((View.OnClickListener) null);
-        this.mWebView.setOnClickListener((View.OnClickListener) null);
-        this.mSetting.setOnClickListener((View.OnClickListener) null);
+    protected void lock() {
+        this.mDashboard.setOnClickListener(null);
+        this.mKanojos.setOnClickListener(null);
+        this.mScan.setOnClickListener(null);
+        this.mWebView.setOnClickListener(null);
+        this.mSetting.setOnClickListener(null);
     }
 }

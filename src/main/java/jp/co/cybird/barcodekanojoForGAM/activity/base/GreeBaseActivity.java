@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import jp.co.cybird.barcodekanojoForGAM.R;
+
 public abstract class GreeBaseActivity extends Activity {
     private static final boolean DEBUG = false;
     public static final String FLG_NO_ANIMATION = "flg_no_animation";
@@ -26,47 +28,41 @@ public abstract class GreeBaseActivity extends Activity {
     private int layoutResID;
     private Bundle savedInstanceState;
 
-    /* access modifiers changed from: protected */
-    public void onStop() {
-        ViewGroup root;
-        if (!(this.isReUsed || (root = (ViewGroup) getWindow().getDecorView().findViewById(16908290)) == null || root.getChildCount() == 0)) {
+    protected void onStop() {
+        ViewGroup root = getWindow().getDecorView().findViewById(R.id.common_top_menu_root);
+        if (!(this.isReUsed || root == null || root.getChildCount() == 0)) {
             cleanupView(root.getChildAt(0));
         }
         super.onStop();
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (!this.isReUsed) {
             close();
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void stop() {
+    protected void stop() {
         this.isReUsed = false;
     }
 
-    /* access modifiers changed from: protected */
-    public void close() {
+    protected void close() {
         finish();
     }
 
-    /* access modifiers changed from: protected */
-    public void changeTab(Context packageContext, Class<?> cls) {
+    protected void changeTab(Context packageContext, Class<?> cls) {
         Intent intent = new Intent().setClass(packageContext, cls);
-        intent.addFlags(AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(FLG_NO_ANIMATION, true);
         startActivity(intent);
     }
 
-    /* access modifiers changed from: protected */
-    public void backTab(Context packageContext, Class<?> cls) {
+    protected void backTab(Context packageContext, Class<?> cls) {
         this.backTabFlg = true;
         Intent intent = new Intent().setClass(packageContext, cls);
-        intent.setFlags(AccessibilityEventCompat.TYPE_VIEW_TEXT_TRAVERSED_AT_MOVEMENT_GRANULARITY);
-        intent.addFlags(AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(FLG_NO_ANIMATION, true);
         startActivity(intent);
     }
@@ -79,12 +75,10 @@ public abstract class GreeBaseActivity extends Activity {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void clearHistory() {
+    protected void clearHistory() {
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    protected void onDestroy() {
         if (this.savedInstanceState != null) {
             this.savedInstanceState.clear();
             this.savedInstanceState = null;
@@ -102,9 +96,8 @@ public abstract class GreeBaseActivity extends Activity {
         super.setContentView(layoutResID2);
     }
 
-    /* access modifiers changed from: protected */
-    public View getClientView() {
-        ViewGroup root = (ViewGroup) getWindow().getDecorView().findViewById(16908290);
+    protected View getClientView() {
+        ViewGroup root = getWindow().getDecorView().findViewById(R.id.common_top_menu_root);
         if (root == null || root.getChildCount() == 0) {
             return null;
         }
@@ -114,22 +107,22 @@ public abstract class GreeBaseActivity extends Activity {
     private void cleanupView(View view) {
         Drawable d = view.getBackground();
         if (d != null) {
-            d.setCallback((Drawable.Callback) null);
+            d.setCallback(null);
         }
         if (view instanceof ImageButton) {
-            ((ImageButton) view).setImageDrawable((Drawable) null);
+            ((ImageButton) view).setImageDrawable(null);
         } else if (view instanceof ImageView) {
-            ((ImageView) view).setImageDrawable((Drawable) null);
+            ((ImageView) view).setImageDrawable(null);
         } else if (view instanceof SeekBar) {
             SeekBar sb = (SeekBar) view;
-            sb.setProgressDrawable((Drawable) null);
-            sb.setThumb((Drawable) null);
+            sb.setProgressDrawable(null);
+            sb.setThumb(null);
         } else if (view instanceof TextView) {
-            ((TextView) view).setBackgroundDrawable((Drawable) null);
+            view.setBackgroundDrawable(null);
         } else if (view instanceof Button) {
-            ((Button) view).setBackgroundDrawable((Drawable) null);
+            view.setBackgroundDrawable(null);
         }
-        view.setBackgroundDrawable((Drawable) null);
+        view.setBackgroundDrawable(null);
         if (view instanceof ViewGroup) {
             ViewGroup vg = (ViewGroup) view;
             int size = vg.getChildCount();

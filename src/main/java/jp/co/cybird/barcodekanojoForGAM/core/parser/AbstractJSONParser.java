@@ -14,8 +14,7 @@ public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implement
     private static final boolean DEBUG = false;
     protected static final String TAG = "AbstractJSONParser";
 
-    /* access modifiers changed from: protected */
-    public abstract T parseInner(JSONObject jSONObject) throws IOException, BarcodeKanojoException, BarcodeKanojoParseException;
+    protected abstract T parseInner(JSONObject jSONObject) throws IOException, BarcodeKanojoException, BarcodeKanojoParseException;
 
     public final T parse(JSONObject object) throws BarcodeKanojoParseException, BarcodeKanojoException {
         try {
@@ -39,7 +38,7 @@ public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implement
      */
     /* JADX WARNING: Failed to process nested try/catch */
     /* JADX WARNING: Removed duplicated region for block: B:12:0x004d A[ExcHandler: IOException (r0v0 'e' java.io.IOException A[CUSTOM_DECLARE]), Splitter:B:0:0x0000] */
-    public static final JSONObject createJSONObject(InputStream is) {
+    public static JSONObject createJSONObject(InputStream is) {
         try {
             InputStreamReader objReader = new InputStreamReader(is);
             BufferedReader objBuf = new BufferedReader(objReader);
@@ -52,11 +51,13 @@ public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implement
                     objBuf.close();
                     return new JSONObject(objJson.toString());
                 }
-                new JSONObject(sLine);
+                //new JSONObject(sLine);
                 objJson.append(sLine);
             }
         } catch (JSONException e) {
+        	e.printStackTrace();
         } catch (IOException e2) {
+			e2.printStackTrace();
         }
 		return null;
     }

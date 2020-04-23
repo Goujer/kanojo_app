@@ -88,8 +88,8 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         setContentView(R.layout.activity_kanojos);
         this.r = getResources();
         this.mRrm = ((BarcodeKanojoApp) getApplication()).getRemoteResourceManager();
-        this.mProfileView = (UserProfileView) findViewById(R.id.common_profile);
-        this.mKanojosListView = (ListView) findViewById(R.id.kanojos_list);
+        this.mProfileView = findViewById(R.id.common_profile);
+        this.mKanojosListView = findViewById(R.id.kanojos_list);
         this.mYourKanojos = new StatusHolder();
         this.mYourKanojos.what = 0;
         this.mFriends = new StatusHolder();
@@ -101,7 +101,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         this.mKanojosListView.setDividerHeight(0);
         this.isSearch = false;
         this.mUser = ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().getUser();
-        final RelativeLayout firstBoot = (RelativeLayout) findViewById(R.id.kanojo_firstboot);
+        final RelativeLayout firstBoot = findViewById(R.id.kanojo_firstboot);
         if (FirstbootUtil.isShowed(this, "kanojo_firstboot")) {
             firstBoot.setVisibility(View.GONE);
             cleanupView(firstBoot);
@@ -292,11 +292,11 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 
     private void addSection(int id, String title, String key, StatusHolder list) {
         View headerView = LayoutInflater.from(this).inflate(R.layout.row_selection, (ViewGroup) null);
-        TextView txtTitle = (TextView) headerView.findViewById(R.id.row_selection_title);
+        TextView txtTitle = headerView.findViewById(R.id.row_selection_title);
         if (txtTitle != null) {
             txtTitle.setText(title);
         }
-        list.txtNumber = (TextView) headerView.findViewById(R.id.row_selection_number);
+        list.txtNumber = headerView.findViewById(R.id.row_selection_number);
         list.more = new MoreBtnView(getApplicationContext());
         list.more.setOnMoreClickListener(id, this);
         list.displayed = 0;
@@ -307,8 +307,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         this.mAdapter.addSection(key, headerView, list.adapter, list.more);
     }
 
-    /* access modifiers changed from: private */
-    public synchronized void executeListTask(boolean initflg) {
+    private synchronized void executeListTask(boolean initflg) {
         int i;
         int i2 = 6;
         synchronized (this) {
@@ -583,12 +582,11 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void executeLogInTask() {
+    protected void executeLogInTask() {
         if (this.mLogInTask == null || this.mLogInTask.getStatus() == AsyncTask.Status.FINISHED || this.mLogInTask.cancel(true) || this.mLogInTask.isCancelled()) {
             this.mLogInTask = (LogInTask) new LogInTask().execute(new Void[0]);
         } else {
-            Toast.makeText(this, "ttttttt", 0);
+            Toast.makeText(this, "ttttttt", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -12,14 +12,12 @@ import jp.co.cybird.barcodekanojoForGAM.R;
 
 public class MoreBtnView extends FrameLayout {
     public static final String TAG = "MoreBtnView";
-    /* access modifiers changed from: private */
-    public int Id;
-    /* access modifiers changed from: private */
-    public OnMoreClickListener listener;
-    private ProgressBar progress = ((ProgressBar) findViewById(R.id.row_more_progressbar));
+    private int Id;
+    private OnMoreClickListener listener;
+    private ProgressBar progress = findViewById(R.id.row_more_progressbar);
     private Resources r = getResources();
-    private TextView txt = ((TextView) findViewById(R.id.row_more_txt));
-    private ImageView ya = ((ImageView) findViewById(R.id.row_more_ya));
+    private TextView txt = findViewById(R.id.row_more_txt);
+    private ImageView ya = findViewById(R.id.row_more_ya);
 
     public interface OnMoreClickListener {
         void onMoreClick(int i);
