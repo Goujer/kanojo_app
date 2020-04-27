@@ -2,7 +2,9 @@ package jp.co.cybird.barcodekanojoForGAM.core.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.google.android.maps.GeoPoint;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import jp.co.cybird.barcodekanojoForGAM.core.util.GeoUtil;
 
 public class Kanojo implements BarcodeKanojoModel, Parcelable {
@@ -39,7 +41,7 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
     private int face_type;
     private int follower_count;
     private int fringe_type;
-    private GeoPoint geo;
+    private LatLng geo;
     private int glasses_type;
     private int hair_color;
     private int hair_type;
@@ -68,7 +70,7 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
     private boolean voted_like;
 
     public Kanojo() {
-        this.geo = new GeoPoint(0, 0);
+        this.geo = new LatLng(0, 0);
     }
 
     public Kanojo(Barcode in) {
@@ -108,8 +110,8 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
         dest.writeInt(this.id);
         dest.writeString(this.name);
         dest.writeString(this.barcode);
-        dest.writeInt(GeoUtil.getLatitudeE6(this.geo));
-        dest.writeInt(GeoUtil.getLongitudeE6(this.geo));
+        dest.writeDouble(GeoUtil.getLatitudeE6(this.geo));
+        dest.writeDouble(GeoUtil.getLongitudeE6(this.geo));
         dest.writeString(this.location);
         dest.writeInt(this.birth_year);
         dest.writeInt(this.birth_month);
@@ -157,7 +159,7 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
         this.id = in.readInt();
         this.name = in.readString();
         this.barcode = in.readString();
-        this.geo = new GeoPoint(in.readInt(), in.readInt());
+        this.geo = new LatLng(in.readDouble(), in.readDouble());
         this.location = in.readString();
         this.birth_year = in.readInt();
         this.birth_month = in.readInt();
@@ -205,7 +207,7 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
         this.mascot_enabled = in.readInt();
     }
 
-    /* synthetic */ Kanojo(Parcel parcel, Kanojo kanojo) {
+	private Kanojo(Parcel parcel, Kanojo kanojo) {
         this(parcel);
     }
 
@@ -233,11 +235,11 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
         this.barcode = barcode2;
     }
 
-    public GeoPoint getGeo() {
+    public LatLng getGeo() {
         return this.geo;
     }
 
-    public void setGeo(GeoPoint geo2) {
+    public void setGeo(LatLng geo2) {
         this.geo = geo2;
     }
 
@@ -265,7 +267,7 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
         this.birth_year = birthYear;
     }
 
-    public int getBirth_month() {
+    int getBirth_month() {
         return this.birth_month;
     }
 
@@ -273,7 +275,7 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
         this.birth_month = birthMonth;
     }
 
-    public int getBirth_day() {
+    int getBirth_day() {
         return this.birth_day;
     }
 
@@ -489,7 +491,7 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
         this.love_gauge = loveGauge;
     }
 
-    public int getFollower_count() {
+    int getFollower_count() {
         return this.follower_count;
     }
 
@@ -505,7 +507,7 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
         this.source = source2;
     }
 
-    public String getNationality() {
+    String getNationality() {
         return this.nationality;
     }
 

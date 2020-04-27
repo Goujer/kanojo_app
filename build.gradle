@@ -4,7 +4,7 @@ buildscript {
 		google()
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.6.2'
+		classpath 'com.android.tools.build:gradle:3.6.3'
 	}
 }
 apply plugin: 'com.android.application'
@@ -27,6 +27,9 @@ android {
 		targetSdkVersion 22
 		versionCode 1
 		versionName "2.4.3"
+		ndk {
+			abiFilters "armeabi", "armeabi-v7a", "mips", "x86"
+		}
 	}
 
 	lintOptions {
@@ -49,8 +52,9 @@ dependencies {
 	//implementation project(':facebook')
 	implementation 'com.android.support:support-v4:22.2.1'
 	//Maps
-	implementation files('libs/maps.jar')
-	//implementation 'com.google.android.gms:play-services-maps:6.5.87'
+	//implementation files('libs/maps-7_r1.jar')
+	//implementation 'com.google.android.maps:maps:7_r1'
+	implementation 'com.google.android.gms:play-services-maps:6.5.87'
 	//implementation 'com.google.android.maps:maps:15_r2'
 	//providedImplementation group: 'com.google.android.maps', name: 'maps', version: '15_r2'
 	//Ads
@@ -69,6 +73,9 @@ dependencies {
 	//implementation 'com.google.zxing:android-integration:3.2.1'
 	//implementation 'com.google.protobuf:protobuf-java:2.6.1'
 	//Other
-    implementation 'org.apache.httpcomponents:httpmime:4.5.6'
+    implementation('org.apache.httpcomponents:httpmime:4.5.6') {
+	    exclude module: 'httpclient'
+	}
+	implementation 'org.apache.httpcomponents:httpclient-android:4.3.5'
     implementation files('libs/live2d_android.jar')
 }

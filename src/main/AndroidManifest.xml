@@ -102,7 +102,6 @@
         <service android:name="jp.co.cybird.barcodekanojoForGAM.push.BarcodeService"/>
         <service android:name="BillingService"/>
         <receiver android:name="BillingReceiver"/>
-        <uses-library android:name="com.google.android.maps"/>
         <meta-data android:name="ADMOB_PUBLISHER_ID" android:value="@string/admob_mediation_id"/>
         <activity android:name="com.google.ads.AdActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
     </application>

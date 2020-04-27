@@ -1,6 +1,7 @@
 package jp.co.cybird.barcodekanojoForGAM.core;
 
-import com.google.android.maps.GeoPoint;
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.File;
 import java.io.IOException;
 import jp.co.cybird.app.android.lib.commons.security.popgate.Codec;
@@ -170,27 +171,27 @@ public class BarcodeKanojoHttpApi {
         return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("kanojo", new KanojoParser())));
     }
 
-    public Response<BarcodeKanojoModel> query(String barcode, GeoPoint geo) throws IllegalStateException, BarcodeKanojoException, IOException {
+    public Response<BarcodeKanojoModel> query(String barcode, LatLng geo) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_BARCODE_QUERY), new BasicNameValuePair("barcode", barcode), new BasicNameValuePair("geo", GeoUtil.geoToString(geo)));
         return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelParser("owner_user", new UserParser()), new ModelParser("kanojo", new KanojoParser()), new ModelParser("barcode", new BarcodeParser()), new ModelParser("product", new ProductParser()), new ModelParser("scanned", new ScannedParser()), new ModelParser("scan_history", new ScanHistoryParser()), new MessageParser(MessageModel.NOTIFY_AMENDMENT_INFORMATION, MessageModel.DO_GENERATE_KANOJO, MessageModel.DO_ADD_FRIEND, MessageModel.INFORM_GIRLFRIEND, MessageModel.INFORM_FRIEND)));
     }
 
-    public Response<BarcodeKanojoModel> scan(String barcode, String company_name, String product_name, int product_category_id, String product_comment, File product_image_data, GeoPoint product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
+    public Response<BarcodeKanojoModel> scan(String barcode, String company_name, String product_name, int product_category_id, String product_comment, File product_image_data, LatLng product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_BARCODE_SCAN), new NameValueOrFilePair("barcode", barcode), new NameValueOrFilePair("company_name", company_name), new NameValueOrFilePair("product_name", product_name), new NameValueOrFilePair("product_category_id", String.valueOf(product_category_id)), new NameValueOrFilePair("product_comment", product_comment), new NameValueOrFilePair("product_image_data", product_image_data), new NameValueOrFilePair("product_geo", GeoUtil.geoToString(product_geo)));
         return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("kanojo", new KanojoParser()), new ModelParser("scan_history", new ScanHistoryParser())));
     }
 
-    public Response<BarcodeKanojoModel> scan(String barcode, String company_name, String comapny_name_textid, String product_name, String product_name_textid, int product_category_id, String product_comment, String product_comment_textid, File product_image_data, GeoPoint product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
+    public Response<BarcodeKanojoModel> scan(String barcode, String company_name, String comapny_name_textid, String product_name, String product_name_textid, int product_category_id, String product_comment, String product_comment_textid, File product_image_data, LatLng product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_BARCODE_SCAN), new NameValueOrFilePair("barcode", barcode), new NameValueOrFilePair("company_name", company_name), new NameValueOrFilePair("company_name_textid", comapny_name_textid), new NameValueOrFilePair("product_name", product_name), new NameValueOrFilePair("product_name_textid", product_name_textid), new NameValueOrFilePair("product_category_id", String.valueOf(product_category_id)), new NameValueOrFilePair("product_comment", product_comment), new NameValueOrFilePair("product_comment_textid", product_comment_textid), new NameValueOrFilePair("product_image_data", product_image_data), new NameValueOrFilePair("product_geo", GeoUtil.geoToString(product_geo)));
         return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("kanojo", new KanojoParser()), new ModelParser("scan_history", new ScanHistoryParser())));
     }
 
-    public Response<BarcodeKanojoModel> scan_and_generate(String barcode, String company_name, String kanojo_name, File kanojo_profile_image_data, String product_name, int product_category_id, String product_comment, File product_image_data, GeoPoint product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
+    public Response<BarcodeKanojoModel> scan_and_generate(String barcode, String company_name, String kanojo_name, File kanojo_profile_image_data, String product_name, int product_category_id, String product_comment, File product_image_data, LatLng product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_BARCODE_SCAN_AND_GENERATE), new NameValueOrFilePair("barcode", barcode), new NameValueOrFilePair("company_name", company_name), new NameValueOrFilePair("kanojo_name", kanojo_name), new NameValueOrFilePair("kanojo_profile_image_data", kanojo_profile_image_data), new NameValueOrFilePair("product_name", product_name), new NameValueOrFilePair("product_category_id", String.valueOf(product_category_id)), new NameValueOrFilePair("product_comment", product_comment), new NameValueOrFilePair("product_image_data", product_image_data), new NameValueOrFilePair("product_geo", GeoUtil.geoToString(product_geo)));
         return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser()), new ModelParser("kanojo", new KanojoParser()), new ModelParser("scan_history", new ScanHistoryParser())));
     }
 
-    public Response<BarcodeKanojoModel> scan_and_generate(String barcode, String company_name, String company_name_textid, String kanojo_name, String kanojo_name_textid, File kanojo_profile_image_data, String product_name, String product_name_textid, int product_category_id, String product_comment, String product_comment_textid, File product_image_data, GeoPoint product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
+    public Response<BarcodeKanojoModel> scan_and_generate(String barcode, String company_name, String company_name_textid, String kanojo_name, String kanojo_name_textid, File kanojo_profile_image_data, String product_name, String product_name_textid, int product_category_id, String product_comment, String product_comment_textid, File product_image_data, LatLng product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_BARCODE_SCAN_AND_GENERATE), new NameValueOrFilePair("barcode", barcode), new NameValueOrFilePair("company_name", company_name), new NameValueOrFilePair("company_name_textid", company_name_textid), new NameValueOrFilePair("kanojo_name", kanojo_name), new NameValueOrFilePair("kanojo_name_textid", kanojo_name_textid), new NameValueOrFilePair("kanojo_profile_image_data", kanojo_profile_image_data), new NameValueOrFilePair("product_name", product_name), new NameValueOrFilePair("product_name_textid", product_name_textid), new NameValueOrFilePair("product_category_id", String.valueOf(product_category_id)), new NameValueOrFilePair("product_comment", product_comment), new NameValueOrFilePair("product_comment_textid", product_comment_textid), new NameValueOrFilePair("product_image_data", product_image_data), new NameValueOrFilePair("product_geo", GeoUtil.geoToString(product_geo)));
         return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser()), new ModelParser("kanojo", new KanojoParser()), new ModelParser("scan_history", new ScanHistoryParser())));
     }
@@ -200,12 +201,12 @@ public class BarcodeKanojoHttpApi {
         return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser()), new ModelParser("product", new ProductParser())));
     }
 
-    public Response<BarcodeKanojoModel> update(String barcode, String company_name, String product_name, int product_category_id, String product_comment, File product_image_data, GeoPoint product_geo) throws BarcodeKanojoException, IOException {
+    public Response<BarcodeKanojoModel> update(String barcode, String company_name, String product_name, int product_category_id, String product_comment, File product_image_data, LatLng product_geo) throws BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_BARCODE_UPDATE), new NameValueOrFilePair("barcode", barcode), new NameValueOrFilePair("company_name", company_name), new NameValueOrFilePair("product_name", product_name), new NameValueOrFilePair("product_category_id", String.valueOf(product_category_id)), new NameValueOrFilePair("product_comment", product_comment), new NameValueOrFilePair("product_image_data", product_image_data), new NameValueOrFilePair("product_geo", GeoUtil.geoToString(product_geo)));
         return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser()));
     }
 
-    public Response<BarcodeKanojoModel> update(String barcode, String company_name, String company_name_textid, String product_name, String product_name_textid, int product_category_id, String product_comment, String product_comment_textid, File product_image_data, GeoPoint product_geo) throws BarcodeKanojoException, IOException {
+    public Response<BarcodeKanojoModel> update(String barcode, String company_name, String company_name_textid, String product_name, String product_name_textid, int product_category_id, String product_comment, String product_comment_textid, File product_image_data, LatLng product_geo) throws BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_BARCODE_UPDATE), new NameValueOrFilePair("barcode", barcode), new NameValueOrFilePair("company_name", company_name), new NameValueOrFilePair("company_name_textid", company_name_textid), new NameValueOrFilePair("product_name", product_name), new NameValueOrFilePair("product_name_textid", product_name_textid), new NameValueOrFilePair("product_category_id", String.valueOf(product_category_id)), new NameValueOrFilePair("product_comment", product_comment), new NameValueOrFilePair("product_comment_textid", product_comment_textid), new NameValueOrFilePair("product_image_data", product_image_data), new NameValueOrFilePair("product_geo", GeoUtil.geoToString(product_geo)));
         return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser()));
     }

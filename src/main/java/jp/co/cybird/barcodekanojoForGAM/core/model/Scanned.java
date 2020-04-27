@@ -2,7 +2,9 @@ package jp.co.cybird.barcodekanojoForGAM.core.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.google.android.maps.GeoPoint;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import jp.co.cybird.barcodekanojoForGAM.core.util.GeoUtil;
 import jp.co.cybird.barcodekanojoForGAM.core.util.StringUtil;
 
@@ -21,7 +23,7 @@ public class Scanned implements BarcodeKanojoModel, Parcelable {
     private String category;
     private int category_id;
     private String comment;
-    private GeoPoint geo;
+    private LatLng geo;
     private int id;
     private String location;
     private String name;
@@ -30,7 +32,7 @@ public class Scanned implements BarcodeKanojoModel, Parcelable {
     private int user_id;
 
     public Scanned() {
-        this.geo = new GeoPoint(0, 0);
+        this.geo = new LatLng(0, 0);
     }
 
     public int describeContents() {
@@ -41,8 +43,8 @@ public class Scanned implements BarcodeKanojoModel, Parcelable {
         dest.writeInt(this.id);
         dest.writeString(this.barcode);
         dest.writeInt(this.user_id);
-        dest.writeInt(GeoUtil.getLatitudeE6(this.geo));
-        dest.writeInt(GeoUtil.getLongitudeE6(this.geo));
+        dest.writeDouble(GeoUtil.getLatitudeE6(this.geo));
+        dest.writeDouble(GeoUtil.getLongitudeE6(this.geo));
         dest.writeString(this.location);
         dest.writeString(this.name);
         dest.writeInt(this.category_id);
@@ -56,7 +58,7 @@ public class Scanned implements BarcodeKanojoModel, Parcelable {
         this.id = in.readInt();
         this.barcode = in.readString();
         this.user_id = in.readInt();
-        this.geo = new GeoPoint(in.readInt(), in.readInt());
+        this.geo = new LatLng(in.readDouble(), in.readDouble());
         this.location = in.readString();
         this.name = in.readString();
         this.category_id = in.readInt();
@@ -66,7 +68,7 @@ public class Scanned implements BarcodeKanojoModel, Parcelable {
         this.nationality = in.readString();
     }
 
-    /* synthetic */ Scanned(Parcel parcel, Scanned scanned) {
+	private Scanned(Parcel parcel, Scanned scanned) {
         this(parcel);
     }
 
@@ -94,11 +96,11 @@ public class Scanned implements BarcodeKanojoModel, Parcelable {
         this.user_id = userId;
     }
 
-    public GeoPoint getGeo() {
+    public LatLng getGeo() {
         return this.geo;
     }
 
-    public void setGeo(GeoPoint geo2) {
+    public void setGeo(LatLng geo2) {
         this.geo = geo2;
     }
 

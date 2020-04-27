@@ -1,57 +1,58 @@
 package jp.co.cybird.barcodekanojoForGAM.core.util;
 
 import android.location.Location;
-import com.google.android.maps.GeoPoint;
+
+import com.google.android.gms.maps.model.LatLng;
 
 public class GeoUtil {
     private static final boolean DEBUG = false;
 
-    public static String geoToString(GeoPoint gp) {
+    public static String geoToString(LatLng gp) {
         if (gp == null) {
             return null;
         }
-        return ((double) gp.getLatitudeE6()) / 1000000.0d + "," + (((double) gp.getLongitudeE6()) / 1000000.0d);
+        return gp.latitude + "," + gp.longitude;
     }
 
-    public static GeoPoint stringToGeo(String geo) {
+    public static LatLng stringToGeo(String geo) {
         if (geo == null) {
             return null;
         }
         String[] s = geo.split(",");
         if (s.length == 2) {
             try {
-                return new GeoPoint((int) (((double) Float.parseFloat(s[0])) * 1000000.0d), (int) (((double) Float.parseFloat(s[1])) * 1000000.0d));
+                return new LatLng(Float.parseFloat(s[0]), Float.parseFloat(s[1]));
             } catch (Exception e) {
             }
         }
         return null;
     }
 
-    public static int getLatitudeE6(GeoPoint geo) {
+    public static double getLatitudeE6(LatLng geo) {
         if (geo != null) {
-            return geo.getLatitudeE6();
+            return geo.latitude;
         }
         return 0;
     }
 
-    public static int getLongitudeE6(GeoPoint geo) {
+    public static double getLongitudeE6(LatLng geo) {
         if (geo != null) {
-            return geo.getLongitudeE6();
+            return geo.longitude;
         }
         return 0;
     }
 
-    public static void getToLoaction(GeoPoint geo, Location location) {
+    public static void getToLocation(LatLng geo, Location location) {
         if (geo != null) {
-            location.setLatitude(((double) geo.getLatitudeE6()) / 1000000.0d);
-            location.setLongitude(((double) geo.getLongitudeE6()) / 1000000.0d);
+            location.setLatitude(geo.latitude);
+            location.setLongitude(geo.longitude);
         }
     }
 
-    public static GeoPoint LocationToGeo(Location location) {
+    public static LatLng LocationToGeo(Location location) {
         if (location == null) {
             return null;
         }
-        return new GeoPoint((int) (location.getLatitude() * 1000000.0d), (int) (location.getLongitude() * 1000000.0d));
+        return new LatLng(location.getLatitude(), location.getLongitude());
     }
 }

@@ -2,7 +2,9 @@ package jp.co.cybird.barcodekanojoForGAM.core.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.google.android.maps.GeoPoint;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import jp.co.cybird.barcodekanojoForGAM.core.util.GeoUtil;
 import jp.co.cybird.barcodekanojoForGAM.core.util.StringUtil;
 
@@ -24,7 +26,7 @@ public class Product implements BarcodeKanojoModel, Parcelable {
     private String comment;
     private String company_name;
     private String country;
-    private GeoPoint geo;
+    private LatLng geo;
     private String location;
     private String name;
     private String price;
@@ -42,8 +44,8 @@ public class Product implements BarcodeKanojoModel, Parcelable {
         dest.writeInt(this.category_id);
         dest.writeString(this.category);
         dest.writeString(this.comment);
-        dest.writeInt(GeoUtil.getLatitudeE6(this.geo));
-        dest.writeInt(GeoUtil.getLongitudeE6(this.geo));
+        dest.writeDouble(GeoUtil.getLatitudeE6(this.geo));
+        dest.writeDouble(GeoUtil.getLongitudeE6(this.geo));
         dest.writeString(this.location);
         dest.writeString(this.product_image_url);
         dest.writeInt(this.scan_count);
@@ -60,7 +62,7 @@ public class Product implements BarcodeKanojoModel, Parcelable {
         this.category_id = in.readInt();
         this.category = in.readString();
         this.comment = in.readString();
-        this.geo = new GeoPoint(in.readInt(), in.readInt());
+        this.geo = new LatLng(in.readDouble(), in.readDouble());
         this.location = in.readString();
         this.product_image_url = in.readString();
         this.scan_count = in.readInt();
@@ -70,13 +72,13 @@ public class Product implements BarcodeKanojoModel, Parcelable {
         this.product = in.readString();
     }
 
-    /* synthetic */ Product(Parcel parcel, Product product2) {
+	private Product(Parcel parcel, Product product2) {
         this(parcel);
     }
 
     public Product() {
         this.category_id = 1;
-        this.geo = new GeoPoint(0, 0);
+        this.geo = new LatLng(0.0, 0.0);
     }
 
     public String getBarcode() {
@@ -119,11 +121,11 @@ public class Product implements BarcodeKanojoModel, Parcelable {
         this.comment = StringUtil.comment(comment2);
     }
 
-    public GeoPoint getGeo() {
+    public LatLng getGeo() {
         return this.geo;
     }
 
-    public void setGeo(GeoPoint geo2) {
+    public void setGeo(LatLng geo2) {
         this.geo = geo2;
     }
 
@@ -131,7 +133,7 @@ public class Product implements BarcodeKanojoModel, Parcelable {
         String[] s = geo2.split(" ");
         if (s.length == 2) {
             try {
-                setGeo(new GeoPoint((int) (((double) Float.parseFloat(s[0])) * 1000000.0d), (int) (((double) Float.parseFloat(s[1])) * 1000000.0d)));
+                setGeo(new LatLng(Double.parseDouble(s[0]), Double.parseDouble(s[1])));
             } catch (Exception e) {
             }
         }

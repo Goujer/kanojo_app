@@ -15,14 +15,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import com.google.android.maps.GeoPoint;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.R;
-import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.util.ApiTask;
 import jp.co.cybird.barcodekanojoForGAM.activity.util.EditBitmapActivity;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
@@ -42,8 +43,7 @@ import jp.co.cybird.barcodekanojoForGAM.view.ProductAndKanojoView;
 public abstract class BaseEditActivity extends BaseActivity implements BaseInterface {
     protected static final boolean DEBUG = false;
     protected static final String TAG = "BaseEditActivity";
-    /* access modifiers changed from: private */
-    public ModelList<Category> mCategories;
+    private ModelList<Category> mCategories;
     protected String[] mCategoryList = {""};
     protected File mFile;
     private KanojoGenerateAndUpdate mKanojoGenerateAndUpdateTask;
@@ -61,7 +61,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
             int size = this.mCategories.size();
             this.mCategoryList = new String[size];
             for (int i = 0; i < size; i++) {
-                this.mCategoryList[i] = ((Category) this.mCategories.get(i)).getName();
+                this.mCategoryList[i] = this.mCategories.get(i).getName();
             }
         } catch (BarcodeKanojoException e) {
             new Thread(new Runnable() {
@@ -73,7 +73,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                         int size = BaseEditActivity.this.mCategories.size();
                         BaseEditActivity.this.mCategoryList = new String[size];
                         for (int i = 0; i < size; i++) {
-                            BaseEditActivity.this.mCategoryList[i] = ((Category) BaseEditActivity.this.mCategories.get(i)).getName();
+                            BaseEditActivity.this.mCategoryList[i] = BaseEditActivity.this.mCategories.get(i).getName();
                         }
                     } catch (IOException | BarcodeKanojoException e) {
                     }
@@ -95,8 +95,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         super.onPause();
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == -1) {
             switch (requestCode) {
@@ -410,18 +409,17 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
             task.productNameTextId = param.get(GreeDefs.PRODUCT_NAME_TEXTID);
             task.companyNameTextId = param.get(GreeDefs.COMPANY_NAME_TEXTID);
             this.mKanojoGenerateAndUpdateTask = new KanojoGenerateAndUpdate(param, task, 3);
-            this.mKanojoGenerateAndUpdateTask.execute(new String[0]);
+            this.mKanojoGenerateAndUpdateTask.execute();
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void executeInspectionAndGenerateTask(String barcode, String company_name, String kanojo_name, String product_name, int product_category_id, String product_comment, GeoPoint product_geo, Kanojo kanojo) {
+    protected void executeInspectionAndGenerateTask(String barcode, String company_name, String kanojo_name, String product_name, int product_category_id, String product_comment, LatLng product_geo, Kanojo kanojo) {
         HashMap<String, String> param = new HashMap<>();
         param.put(GreeDefs.BARCODE, barcode);
         param.put(GreeDefs.KANOJO_NAME, kanojo_name);
         param.put(GreeDefs.COMPANY_NAME, company_name);
         param.put(GreeDefs.PRODUCT_NAME, product_name);
-        param.put(GreeDefs.PRODUCT_CUTEGORY_ID, new StringBuilder().append(product_category_id).toString());
+        param.put(GreeDefs.PRODUCT_CUTEGORY_ID, String.valueOf(product_category_id));
         param.put(GreeDefs.PRODUCT_COMMENT, product_comment);
         HashMap<String, Object> options = new HashMap<>();
         options.put(Kanojo.TAG, kanojo);
@@ -431,7 +429,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
     public void exectuteGenerateTask(HashMap<String, String> params, Kanojo kanojo) {
         if (this.mKanojoGenerateAndUpdateTask == null || this.mKanojoGenerateAndUpdateTask.getStatus() == AsyncTask.Status.FINISHED) {
             this.mKanojoGenerateAndUpdateTask = new KanojoGenerateAndUpdate(params, kanojo, 2);
-            this.mKanojoGenerateAndUpdateTask.execute(new String[0]);
+            this.mKanojoGenerateAndUpdateTask.execute();
         }
     }
 
