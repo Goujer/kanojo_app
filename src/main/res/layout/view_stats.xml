@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_weight="1">
-        <TextView android:layout_gravity="left" android:paddingLeft="10dp" android:paddingTop="2dp" android:text="@string/row_stats_kanjos" style="@style/txt_stats"/>
+        <TextView
+			style="@style/txt_stats"
+			android:layout_width="wrap_content"
+			android:layout_gravity="left"
+			android:paddingLeft="10dp"
+			android:paddingTop="2dp"
+			android:text="@string/row_stats_kanjos" />
         <TextView android:layout_gravity="right" android:id="@+id/row_stats_kanjos" android:paddingRight="12dp" style="@style/txt_stats_number"/>
     </LinearLayout>
     <LinearLayout android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_weight="1">
