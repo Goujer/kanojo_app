@@ -59,7 +59,7 @@ public class ApplicationSetting {
     }
 
     public String getICCID() {
-        return this.setting.getString(this.keys.userICCID, (String) null);
+        return this.setting.getString(this.keys.userICCID, null);
     }
 
     public void commitUUID(String uuid) {
@@ -69,7 +69,7 @@ public class ApplicationSetting {
     }
 
     public String getUUID() {
-        return this.setting.getString(this.keys.userAndroidId, (String) null);
+        return this.setting.getString(this.keys.userAndroidId, null);
     }
 
     public void clearUUID() {
@@ -119,7 +119,7 @@ public class ApplicationSetting {
     }
 
     public String getFaceBookToken() {
-        return this.setting.getString(this.keys.facebookToken, (String) null);
+        return this.setting.getString(this.keys.facebookToken, null);
     }
 
     public void clearFaceBookToken() {
@@ -130,12 +130,12 @@ public class ApplicationSetting {
 
     public void commitFacebookLastUpdate(Long faceBookLastUpdate) {
         SharedPreferences.Editor editor = this.setting.edit();
-        editor.putLong(this.keys.facebookLastUpdate, faceBookLastUpdate.longValue());
+        editor.putLong(this.keys.facebookLastUpdate, faceBookLastUpdate);
         editor.commit();
     }
 
     public Long getFaceBookLastUpdate() {
-        return Long.valueOf(this.setting.getLong(this.keys.facebookLastUpdate, 0));
+        return this.setting.getLong(this.keys.facebookLastUpdate, 0);
     }
 
     public void clearFaceBookLastUpdate() {

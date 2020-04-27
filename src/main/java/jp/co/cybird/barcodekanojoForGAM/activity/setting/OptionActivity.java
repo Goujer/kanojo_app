@@ -57,7 +57,7 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         requestWindowFeature(1);
         setContentView(R.layout.activity_option);
-        this.account_btn = (EditItemView) findViewById(R.id.kanojo_option_account_modify);
+        this.account_btn = findViewById(R.id.kanojo_option_account_modify);
         this.account_btn.setOnClickListener(this);
         this.common_btn = (EditItemView) findViewById(R.id.kanojo_option_common);
         this.common_btn.setOnClickListener(this);

@@ -561,12 +561,10 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        protected void onCancelled() {
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> process() throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> process() throws BarcodeKanojoException, IllegalStateException, IOException {
             return ((BarcodeKanojoApp) BaseActivity.this.getApplication()).getBarcodeKanojo().android_verify(((BarcodeKanojoApp) BaseActivity.this.getApplication()).getUUID());
         }
     }

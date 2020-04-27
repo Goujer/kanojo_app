@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import com.google.android.maps.GeoPoint;
 import java.io.File;
 import java.util.Arrays;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
@@ -35,26 +34,26 @@ public class ScanKanojoGenerateActivity extends BaseEditActivity implements View
     private Product mProduct;
     private ProductAndKanojoView mProductAndKanojo;
     private EditItemView mProductName;
-
+	//TODO make arrows include generated icons and perhaps barcode image.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_generate);
-        ((Button) findViewById(R.id.edit_close)).setOnClickListener(this);
-        this.mProductAndKanojo = (ProductAndKanojoView) findViewById(R.id.scan_generate_photo);
-        this.mKanojoName = (EditItemView) findViewById(R.id.scan_generate_1_kanojo_name);
+        findViewById(R.id.edit_close).setOnClickListener(this);
+        this.mProductAndKanojo = findViewById(R.id.scan_generate_photo);
+        this.mKanojoName = findViewById(R.id.scan_generate_1_kanojo_name);
         this.mKanojoName.setOnClickListener(this);
-        this.mCompanyName = (EditItemView) findViewById(R.id.scan_generate_2_company_name);
+        this.mCompanyName = findViewById(R.id.scan_generate_2_company_name);
         this.mCompanyName.setOnClickListener(this);
-        this.mProductName = (EditItemView) findViewById(R.id.scan_generate_3_product_name);
+        this.mProductName = findViewById(R.id.scan_generate_3_product_name);
         this.mProductName.setOnClickListener(this);
-        this.mCategoryName = (EditItemView) findViewById(R.id.scan_generate_4_category);
+        this.mCategoryName = findViewById(R.id.scan_generate_4_category);
         this.mCategoryName.setOnClickListener(this);
-        EditItemView mBarcode = (EditItemView) findViewById(R.id.scan_generate_5_barcode);
+        EditItemView mBarcode = findViewById(R.id.scan_generate_5_barcode);
         mBarcode.setOnClickListener(this);
-        ((EditItemView) findViewById(R.id.scan_generate_6_photo)).setOnClickListener(this);
-        this.mComment = (EditItemView) findViewById(R.id.scan_generate_7_comment);
+        findViewById(R.id.scan_generate_6_photo).setOnClickListener(this);
+        this.mComment = findViewById(R.id.scan_generate_7_comment);
         this.mComment.setOnClickListener(this);
-        this.btnSave = (Button) findViewById(R.id.scan_generate_btn_save);
+        this.btnSave = findViewById(R.id.scan_generate_btn_save);
         this.btnSave.setOnClickListener(this);
         this.btnSave.setEnabled(false);
         Bundle bundle = getIntent().getExtras();
@@ -158,10 +157,7 @@ public class ScanKanojoGenerateActivity extends BaseEditActivity implements View
                 if (this.isDetailByAmazon && getFile() == null) {
                     setFile(ImageCache.saveImageBitmap(((BarcodeKanojoApp) getApplication()).getRemoteResourceManager(), this.mProduct.getProduct_image_url()));
                 }
-                executeInspectionAndGenerateTask(this.mKanojo.getBarcode(), this.mCompanyName.getValue(), this.mKanojoName.getValue(), this.mProductName.getValue(), this.mProduct.getCategory_id(), this.mComment.getValue(), (GeoPoint) null, this.mKanojo);
-                return;
-            default:
-                return;
+                executeInspectionAndGenerateTask(this.mKanojo.getBarcode(), this.mCompanyName.getValue(), this.mKanojoName.getValue(), this.mProductName.getValue(), this.mProduct.getCategory_id(), this.mComment.getValue(), null, this.mKanojo);
         }
     }
 

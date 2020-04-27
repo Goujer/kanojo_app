@@ -28,19 +28,18 @@ public class WebViewTabActivity extends BaseKanojosActivity implements View.OnCl
     private final boolean DEBUG = false;
     private String extraWebViewURL;
     private RelativeLayout mProgressBar;
-    /* access modifiers changed from: private */
-    public WebView webview;
+    private WebView webview;
 
     @SuppressLint({"SetJavaScriptEnabled"})
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(1);
         setContentView(R.layout.activity_webview);
-        this.webview = (WebView) findViewById(R.id.webview);
-        this.webview.setWebViewClient(new MyWebViewClient(this, (MyWebViewClient) null));
+        this.webview = findViewById(R.id.webview);
+        this.webview.setWebViewClient(new MyWebViewClient(this, null));
         this.webview.getSettings().setJavaScriptEnabled(true);
-        this.webview.setScrollBarStyle(0);
-        this.mProgressBar = (RelativeLayout) findViewById(R.id.progressbar);
+        this.webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        this.mProgressBar = findViewById(R.id.progressbar);
         this.mProgressBar.setOnClickListener(this);
         showProgressDialog();
     }
@@ -51,7 +50,7 @@ public class WebViewTabActivity extends BaseKanojosActivity implements View.OnCl
         this.extraWebViewURL = getIntent().getStringExtra(BaseInterface.EXTRA_WEBVIEW_URL);
         Log.d("NguyenTT", "WebViewTabActivity onResume " + this.extraWebViewURL);
         if (this.extraWebViewURL == null) {
-            new GetURLWebView().execute(new Void[0]);
+            new GetURLWebView().execute();
         } else {
             this.webview.loadUrl(this.extraWebViewURL);
         }

@@ -1160,7 +1160,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 		if (Build.VERSION.SDK_INT >= 17) {
 			this.kanojoMessage.addJavascriptInterface(new MyJavaScriptInterface(), "Android");
 		}
-		//TODO: Figure out what to do for earlier versions. (Go through all methods and variales and restrict as much as possible)
+		//TODO: Figure out what to do for earlier versions. (Go through all methods and variables and restrict as much as possible)
         this.kanojoMessage.getSettings().setJavaScriptEnabled(true);
         this.kanojoMessage.setWebViewClient(new WebViewClient() {
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {

@@ -8,17 +8,17 @@ import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 
 public class DashboardHeaderView extends LinearLayout {
-    private StatsView statsView = ((StatsView) findViewById(R.id.dashboard_header_stats));
+    private StatsView statsView = findViewById(R.id.dashboard_header_stats);
 
     public DashboardHeaderView(Context context) {
         super(context);
-        setOrientation(1);
+        setOrientation(LinearLayout.VERTICAL);
         LayoutInflater.from(context).inflate(R.layout.view_dashboard_header, this, true);
     }
 
     public void clear() {
         this.statsView.clear();
-        setBackgroundDrawable((Drawable) null);
+        setBackgroundDrawable(null);
     }
 
     public void setUser(User user) {
