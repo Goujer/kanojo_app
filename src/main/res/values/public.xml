@@ -865,7 +865,6 @@
     <public type="id" name="kanojo_info_scanned" id="2131296310" />
     <public type="id" name="kanojo_info_layout_gallery" id="2131296311" />
     <public type="id" name="kanojo_info_list" id="2131296312" />
-    <public type="id" name="adView" id="2131296313" />
     <public type="id" name="kanojo_item_detail_close" id="2131296314" />
     <public type="id" name="kanojo_item_detail_title" id="2131296315" />
     <public type="id" name="kanojo_item_detail_dummy" id="2131296316" />
@@ -892,7 +891,7 @@
     <public type="id" name="kanojo_room_items_btn" id="2131296337" />
     <public type="id" name="kanojo_room_date_btn" id="2131296338" />
     <public type="id" name="kanojo_room_ticket_btn" id="2131296339" />
-    <public type="id" name="kanojo_room_ads_banner" id="2131296340" />
+    <public type="id" name="kanojo_room_message_banner" id="2131296340" />
     <public type="id" name="kanojo_room_status_txt_layout" id="2131296341" />
     <public type="id" name="progressbar_radar_view" id="2131296342" />
     <public type="id" name="radar_webview" id="2131296343" />

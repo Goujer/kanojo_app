@@ -56,22 +56,23 @@ public class EditBitmapActivity extends Activity implements BaseInterface, View.
         void onDismiss(DialogInterface dialogInterface, int i);
     }
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_bitmap);
-        ((Button) findViewById(R.id.edit_bitmap_retake)).setOnClickListener(this);
-        ((Button) findViewById(R.id.edit_bitmap_ok)).setOnClickListener(this);
+        findViewById(R.id.edit_bitmap_retake).setOnClickListener(this);
+        findViewById(R.id.edit_bitmap_ok).setOnClickListener(this);
         if (FileUtil.isAvailableExternalSDMemory() || FileUtil.isAvailableInternalMemory()) {
             if (FileUtil.isAvailableExternalSDMemory()) {
-                this.mRootPath = String.valueOf(Environment.getExternalStorageDirectory().getPath()) + "/barcodekanojo/";
+                this.mRootPath = Environment.getExternalStorageDirectory().getPath() + "/barcodekanojo/";
             } else {
-                this.mRootPath = String.valueOf(getFilesDir().getAbsolutePath()) + "/barcodekanojo/";
+                this.mRootPath = getFilesDir().getAbsolutePath() + "/barcodekanojo/";
             }
             this.mRootDir = new File(this.mRootPath);
             createDirectory(this.mRootDir);
-            this.mView = (EditBitmapView) findViewById(R.id.edit_bitmap_view);
+            this.mView = findViewById(R.id.edit_bitmap_view);
             this.mView.setDirPath(this.mRootPath);
-            ZoomControls zoomCtl = (ZoomControls) findViewById(R.id.edit_bitmap_zoom_control);
+            ZoomControls zoomCtl = findViewById(R.id.edit_bitmap_zoom_control);
             zoomCtl.setOnZoomInClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     EditBitmapActivity.this.mView.ZoomIn();

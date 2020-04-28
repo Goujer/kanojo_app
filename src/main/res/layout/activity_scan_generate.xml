@@ -23,7 +23,12 @@
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/scan_generate_3_product_name" android:background="@drawable/row_kanojo_edit_bg_middle" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/common_product_name" EditItemView:textColor="@color/editable_color"/>
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/scan_generate_4_category" android:background="@drawable/row_kanojo_edit_bg_middle" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/common_product_category" EditItemView:textColor="@color/editable_color"/>
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/scan_generate_5_barcode" android:background="@drawable/row_kanojo_edit_bg_middle" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/common_product_barcode"/>
-            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/scan_generate_6_photo" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/common_product_photo"/>
+            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+				android:id="@+id/scan_generate_6_photo"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/row_kanojo_edit_txt_height"
+				android:background="@drawable/row_kanojo_edit_bg_bottom"
+				EditItemView:key="@string/common_product_photo" />
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/scan_generate_7_comment" android:background="@drawable/row_kanojo_edit_bg_name" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/common_product_comment" EditItemView:textColor="@color/editable_color"/>
             <TextView
 				style="@style/txt_notice_input"

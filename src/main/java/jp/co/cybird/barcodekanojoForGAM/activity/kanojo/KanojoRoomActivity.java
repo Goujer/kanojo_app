@@ -1,7 +1,6 @@
 package jp.co.cybird.barcodekanojoForGAM.activity.kanojo;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -34,10 +33,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import com.google.ads.AdRequest;
-import com.google.ads.AdSize;
-import com.google.ads.AdView;
-import com.google.ads.mediation.nend.NendAdapterExtras;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -80,65 +75,46 @@ import jp.co.cybird.barcodekanojoForGAM.view.DialogTextView;
 public class KanojoRoomActivity extends BaseActivity implements View.OnClickListener, Observer {
     private static final boolean DEBUG = false;
     private static final String TAG = "KanojoRoomActivity";
-    private AdView adView;
     private Button btnClose;
     private Button btnDate;
-    /* access modifiers changed from: private */
-    public ImageButton btnInfo;
-    /* access modifiers changed from: private */
-    public Button btnItems;
+    private ImageButton btnInfo;
+    private Button btnItems;
     private ToggleButton btnLike;
-    /* access modifiers changed from: private */
-    public ImageView btnStatusArrow;
+    private ImageView btnStatusArrow;
     private Button btnTickets;
     private int dHeight;
     private int dWidth;
-    /* access modifiers changed from: private */
-    public RelativeLayout dialoglayout;
+    private RelativeLayout dialoglayout;
     private ImageView dropImage;
     private String extraWebViewURL;
     private ImageView imageView01;
     private ImageView imageView02;
     private ImageView imageView03;
-    /* access modifiers changed from: private */
-    public boolean isPrepared = false;
+    private boolean isPrepared = false;
 
 	private WebView kanojoMessage;
-    /* access modifiers changed from: private */
-    public RelativeLayout layoutBGActionLoveGauge;
-    /* access modifiers changed from: private */
-    public RelativeLayout layoutTagLoveBar;
-    /* access modifiers changed from: private */
-    public RelativeLayout mFirstBoot;
-    /* access modifiers changed from: private */
-    public Handler mHandler = new Handler();
+    private RelativeLayout layoutBGActionLoveGauge;
+    private RelativeLayout layoutTagLoveBar;
+    private RelativeLayout mFirstBoot;
+    private Handler mHandler = new Handler();
     private boolean mIsFirstBoot = false;
-    /* access modifiers changed from: private */
-    public Kanojo mKanojo;
-    /* access modifiers changed from: private */
-    public DialogTextView mKanojoDialogMessage;
+    private Kanojo mKanojo;
+    private DialogTextView mKanojoDialogMessage;
     private KanojoDialogTask mKanojoDialogTask;
-    /* access modifiers changed from: private */
-    public RelativeLayout mKanojoLayout;
+    private RelativeLayout mKanojoLayout;
     private KanojoLive2D mKanojoLive2D;
-    /* access modifiers changed from: private */
-    public KanojoMessage mKanojoMessage;
+    private KanojoMessage mKanojoMessage;
     private KanojoRoomTask mKanojoRoomTask;
     private DialogTextView.OnDismissListener mListener;
     private Live2dTask mLive2dTask;
     private Live2dUtil mLive2dUtil;
     private CustomLoadingView mLoadingView;
     private ProgressBar mLoveBar;
-    /* access modifiers changed from: private */
-    public LoveIncrement mLoveIncremen;
-    /* access modifiers changed from: private */
-    public MessageModel mMessage;
-    /* access modifiers changed from: private */
-    public Product mProduct;
-    /* access modifiers changed from: private */
-    public RelativeLayout mProgressBar;
-    /* access modifiers changed from: private */
-    public Runnable mProgressThread = new Runnable() {
+    private LoveIncrement mLoveIncremen;
+    private MessageModel mMessage;
+    private Product mProduct;
+    private RelativeLayout mProgressBar;
+    private Runnable mProgressThread = new Runnable() {
         public void run() {
             if (KanojoRoomActivity.this.getLive2D().isModelAvailable()) {
                 KanojoRoomActivity.this.dismissProgressDialog();
@@ -148,10 +124,8 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
             KanojoRoomActivity.this.mHandler.postDelayed(KanojoRoomActivity.this.mProgressThread, 100);
         }
     };
-    /* access modifiers changed from: private */
-    public Scanned mScanned;
-    /* access modifiers changed from: private */
-    public LinearLayout mStatusLayout;
+    private Scanned mScanned;
+    private LinearLayout mStatusLayout;
     private Timer mTimerCallAPI;
     private User mUser;
     private LinearLayout statusBarLayout;
@@ -190,25 +164,25 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
         this.btnStatusArrow = findViewById(R.id.kanojo_room_arrow);
         this.mKanojoLayout = findViewById(R.id.kanojo_room_live2d);
         this.mLoadingView = findViewById(R.id.loadingView);
-        this.kanojoMessage = findViewById(R.id.kanojo_room_ads_banner);
+        this.kanojoMessage = findViewById(R.id.kanojo_room_message_banner);
         this.kanojoMessage.setBackgroundColor(0);
         if (Build.VERSION.SDK_INT >= 11) {
-            this.kanojoMessage.setLayerType(1, (Paint) null);
+            this.kanojoMessage.setLayerType(1, null);
         }
-        this.dropImage = (ImageView) findViewById(R.id.dropdown_img);
+        this.dropImage = findViewById(R.id.dropdown_img);
         this.dropImage.setOnClickListener(this);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             this.mKanojo = (Kanojo) bundle.get(BaseInterface.EXTRA_KANOJO);
         }
         if (this.mKanojo != null) {
-            setBanner();
-            this.webview = (WebView) findViewById(R.id.radar_webview);
-            this.webview.setWebViewClient(new MyWebViewClient(this, (MyWebViewClient) null));
+            this.webview = findViewById(R.id.radar_webview);
+            this.webview.setWebViewClient(new MyWebViewClient(this, null));
             this.webview.getSettings().setJavaScriptEnabled(true);
             this.webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
             this.webview.setOnTouchListener(new View.OnTouchListener() {
-                public boolean onTouch(View v, MotionEvent event) {
+                @Override
+            	public boolean onTouch(View v, MotionEvent event) {
                     return event.getAction() == 2;
                 }
             });
@@ -285,12 +259,11 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
             if (this.mKanojo.getRelation_status() == 2) {
                 this.kanojoMessage.setVisibility(View.VISIBLE);
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) this.btnItems.getLayoutParams();
-                params.addRule(2, R.id.kanojo_room_ads_banner);
+                params.addRule(2, R.id.kanojo_room_message_banner);
                 this.btnItems.setLayoutParams(params);
                 RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) this.dialoglayout.getLayoutParams();
-                params2.addRule(2, R.id.kanojo_room_ads_banner);
+                params2.addRule(2, R.id.kanojo_room_message_banner);
                 this.dialoglayout.setLayoutParams(params2);
-                this.adView.setVisibility(View.GONE);
                 if (this.mKanojo.getAdvertising_banner_url() == null || this.mKanojo.getAdvertising_banner_url().equals("null")) {
                     RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.btnItems.getLayoutParams();
                     layoutParams.addRule(12);
@@ -355,19 +328,6 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
         super.onPause();
     }
 
-    @SuppressLint({"DefaultLocale"})
-    private void setBanner() {
-        this.adView = new AdView((Activity) this, AdSize.BANNER, getResources().getString(R.string.admob_mediation_id));
-        LinearLayout layout = (LinearLayout) findViewById(R.id.adView);
-        layout.addView(this.adView);
-        AdRequest adRequest = new AdRequest();
-        adRequest.setNetworkExtras(new NendAdapterExtras());
-        this.adView.loadAd(adRequest);
-        if (this.mKanojo.getRelation_status() == 2) {
-            layout.setVisibility(View.GONE);
-        }
-    }
-
     public static final String md5(String s) {
         try {
             MessageDigest digest = MessageDigest.getInstance(Digest.MD5);
@@ -400,21 +360,18 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     }
 
     public void unBindEvent() {
-        this.statusBarLayout.setOnClickListener((View.OnClickListener) null);
-        this.btnClose.setOnClickListener((View.OnClickListener) null);
-        this.btnInfo.setOnClickListener((View.OnClickListener) null);
-        this.btnLike.setOnClickListener((View.OnClickListener) null);
-        this.btnDate.setOnClickListener((View.OnClickListener) null);
-        this.btnItems.setOnClickListener((View.OnClickListener) null);
-        this.btnTickets.setOnClickListener((View.OnClickListener) null);
-        this.dropImage.setOnClickListener((View.OnClickListener) null);
+        this.statusBarLayout.setOnClickListener(null);
+        this.btnClose.setOnClickListener(null);
+        this.btnInfo.setOnClickListener(null);
+        this.btnLike.setOnClickListener(null);
+        this.btnDate.setOnClickListener(null);
+        this.btnItems.setOnClickListener(null);
+        this.btnTickets.setOnClickListener(null);
+        this.dropImage.setOnClickListener(null);
     }
 
     @Override
     protected void onDestroy() {
-        if (this.adView != null) {
-            this.adView.destroy();
-        }
         KanojoLive2D kanojoLive2D = getLive2D();
         if (kanojoLive2D != null) {
             kanojoLive2D.stopAnimation();
@@ -422,7 +379,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
             kanojoLive2D.releaseModel();
             kanojoLive2D.releaseFileManager();
         }
-        this.mLive2dUtil.setOnRrObserver((Observer) null);
+        this.mLive2dUtil.setOnRrObserver(null);
         this.mLive2dUtil = null;
         this.mKanojoLive2D = null;
         this.mHandler = null;
@@ -1152,7 +1109,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 		if (this.mKanojo.getRelation_status() == Kanojo.RELATION_KANOJO) {
 			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) this.btnItems.getLayoutParams();
 			params.addRule(12, 0);
-			params.addRule(2, R.id.kanojo_room_ads_banner);
+			params.addRule(2, R.id.kanojo_room_message_banner);
 			this.btnItems.setLayoutParams(params);
 		}
 		if (Build.VERSION.SDK_INT >= 17) {
@@ -1182,14 +1139,14 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 
     private void setBackGroundLoveAnimation(String love) {
         final int loveValue = Integer.parseInt(love);
-        this.layoutBGActionLoveGauge = (RelativeLayout) findViewById(R.id.kanojo_bg_action_love_gauge);
+        this.layoutBGActionLoveGauge = findViewById(R.id.kanojo_bg_action_love_gauge);
         if (loveValue == 0) {
             this.layoutBGActionLoveGauge.setVisibility(View.GONE);
             return;
         }
-        this.imageView01 = (ImageView) findViewById(R.id.imageView01);
-        this.imageView02 = (ImageView) findViewById(R.id.imageView02);
-        this.imageView03 = (ImageView) findViewById(R.id.imageView03);
+        this.imageView01 = findViewById(R.id.imageView01);
+        this.imageView02 = findViewById(R.id.imageView02);
+        this.imageView03 = findViewById(R.id.imageView03);
         if (loveValue > 0 && loveValue < 20) {
             this.imageView01.setImageResource(R.drawable.music_image);
             this.imageView02.setImageResource(R.drawable.music_image);

@@ -52,13 +52,9 @@ dependencies {
 	//implementation project(':facebook')
 	implementation 'com.android.support:support-v4:22.2.1'
 	//Maps
-	//implementation files('libs/maps-7_r1.jar')
 	//implementation 'com.google.android.maps:maps:7_r1'
 	implementation 'com.google.android.gms:play-services-maps:6.5.87'
 	//implementation 'com.google.android.maps:maps:15_r2'
-	//providedImplementation group: 'com.google.android.maps', name: 'maps', version: '15_r2'
-	//Ads
-	implementation files('libs/GoogleAdMobAdsSdk-6.4.1.jar')
 	//Analytics
 	//implementation files('libs/libGoogleAnalyticsV2.jar')
 	//implementation 'com.google.android.gms:play-services:3.2.65'	//Need to migrate to Jetpack WorkManager
