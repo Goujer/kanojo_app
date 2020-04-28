@@ -46,34 +46,30 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
     private static final int DEFAULT_LIMIT = 6;
     protected static final String TAG = "DashboardActivity";
     private int code;
-    /* access modifiers changed from: private */
-    public boolean isFinishedLoading = true;
+    private boolean isFinishedLoading = true;
     private boolean isVisible = false;
-    /* access modifiers changed from: private */
-    public int mActivityCount = 0;
-    /* access modifiers changed from: private */
-    public DashboardAdapter mDashboardAdapter;
+    private int mActivityCount = 0;
+    private DashboardAdapter mDashboardAdapter;
     private View mFooter;
     private DashboardHeaderView mHeader;
-    /* access modifiers changed from: private */
-    public int mLimit = 6;
+    private int mLimit = 6;
     private ListView mListView;
     private LogInTask mLogInTask;
     private UserProfileView mProfileView;
     private ReadActivitiesTask mReadActivitiesTask;
     private RemoteResourceManagerObserver mResourcesObserver;
     private RemoteResourceManager mRrm;
-    /* access modifiers changed from: private */
-    public boolean readAllFlg = false;
+    private boolean readAllFlg = false;
     private boolean test = false;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(1);
         setContentView(R.layout.activity_dashboard);
         this.mRrm = ((BarcodeKanojoApp) getApplication()).getRemoteResourceManager();
-        this.mProfileView = (UserProfileView) findViewById(R.id.common_profile);
-        this.mListView = (ListView) findViewById(R.id.list_activities);
+        this.mProfileView = findViewById(R.id.common_profile);
+        this.mListView = findViewById(R.id.list_activities);
         this.mFooter = getLayoutInflater().inflate(R.layout.row_footer, (ViewGroup) null, false);
         this.mHeader = new DashboardHeaderView(this);
         this.mResourcesObserver = new RemoteResourceManagerObserver(this, (RemoteResourceManagerObserver) null);
@@ -92,8 +88,8 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         return appLayoutRoot;
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         init();
         this.mListView.setOnScrollListener(this);
@@ -105,8 +101,8 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         executeReadActivitiesTask();
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    @Override
+    protected void onPause() {
         this.isVisible = false;
         if (this.mReadActivitiesTask != null) {
             this.mReadActivitiesTask.cancel(true);
@@ -124,11 +120,13 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         super.onPause();
     }
 
+    @Override
     public void onStop() {
         this.readAllFlg = false;
         super.onStop();
     }
 
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == 4) {
             finish();
@@ -137,8 +135,8 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         return super.onKeyDown(keyCode, event);
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1050 && resultCode == 107) {
             setResult(BaseInterface.RESULT_LOG_OUT, (Intent) null);
@@ -157,18 +155,19 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onUserUpdated() {
+    @Override
+    protected void onUserUpdated() {
         updateProfileView();
     }
 
+    @Override
     public void onClick(View v) {
     }
 
-    /* access modifiers changed from: protected */
-    public void changeTab(Context packageContext, Class<?> cls) {
+    @Override
+    protected void changeTab(Context packageContext, Class<?> cls) {
         Intent intent = new Intent().setClass(packageContext, cls);
-        intent.addFlags(AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(GreeBaseActivity.FLG_NO_ANIMATION, true);
         startActivity(intent);
     }
@@ -192,7 +191,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
     }
 
     public void onKanojoClick(Kanojo kanojo) {
-        this.mDashboardAdapter.setOnKanojoClickListener((DashboardAdapter.OnKanojoClickListener) null);
+        this.mDashboardAdapter.setOnKanojoClickListener(null);
         startKanojoRoomActivity(kanojo);
     }
 
@@ -209,8 +208,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         this.mListView.addFooterView(this.mFooter);
     }
 
-    /* access modifiers changed from: private */
-    public void invisibleFooter() {
+    private void invisibleFooter() {
         this.mListView.removeFooterView(this.mFooter);
     }
 
@@ -222,8 +220,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         }
     }
 
-    /* access modifiers changed from: private */
-    public void updateProfileView() {
+    private void updateProfileView() {
         User mUser = ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().getUser();
         if (mUser == null) {
             executeLogInTask();
@@ -233,8 +230,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         this.mHeader.setUser(mUser);
     }
 
-    /* access modifiers changed from: private */
-    public void executeReadActivitiesTask() {
+    private void executeReadActivitiesTask() {
         if (!this.isVisible || this.readAllFlg) {
             return;
         }
@@ -249,9 +245,6 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         private Exception mReason = null;
         private boolean refreshFlg = false;
 
-        ReadActivitiesTask() {
-        }
-
         public void onPreExecute() {
             DashboardActivity.this.isFinishedLoading = false;
         }
@@ -259,7 +252,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         public Response<?> doInBackground(Integer... params) {
             boolean z = true;
             if (!(params == null || params.length == 0)) {
-                if (params[0].intValue() != 1) {
+                if (params[0] != 1) {
                     z = false;
                 }
                 this.refreshFlg = z;

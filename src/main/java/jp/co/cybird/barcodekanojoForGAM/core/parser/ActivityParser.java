@@ -38,10 +38,10 @@ public class ActivityParser extends AbstractJSONParser<ActivityModel> {
                 res.setOther_user((User) new UserParser().parse(userObj));
             }
             if (object.has("kanojo") && !object.isNull("kanojo") && (kanojoObj = object.getJSONObject("kanojo")) != null) {
-                res.setKanojo((Kanojo) new KanojoParser().parse(kanojoObj));
+                res.setKanojo(new KanojoParser().parse(kanojoObj));
             }
             if (object.has("scanned") && !object.isNull("scanned") && (scannedObj = object.getJSONObject("scanned")) != null) {
-                res.setScanned((Scanned) new ScannedParser().parse(scannedObj));
+                res.setScanned(new ScannedParser().parse(scannedObj));
             }
             return res;
         } catch (JSONException e) {

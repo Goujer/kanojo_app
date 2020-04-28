@@ -35,8 +35,7 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
     private EditItemView kddi_btn;
     private LinearLayout mDashboard;
     private LinearLayout mKanojos;
-    /* access modifiers changed from: private */
-    public BaseActivity.OnDialogDismissListener mListener;
+    private BaseActivity.OnDialogDismissListener mListener;
     private OptionChangeDeviceTask mOptionChangeDeviceTask;
     private OptionDeleteTask mOptionDeleteTask;
     private OptionModifyTask mOptionModifyTask;
@@ -44,36 +43,35 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
     private LinearLayout mSetting;
     private LinearLayout mWebView;
     private EditItemView mail_btn;
-    /* access modifiers changed from: private */
-    public File modifiedPhoto;
-    /* access modifiers changed from: private */
-    public User modifiedUser;
+    private File modifiedPhoto;
+    private User modifiedUser;
     private EditItemView privacy_btn;
     private EditItemView rules_btn;
     private EditItemView team_btn;
     private EditItemView terms_btn;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(1);
         setContentView(R.layout.activity_option);
         this.account_btn = findViewById(R.id.kanojo_option_account_modify);
         this.account_btn.setOnClickListener(this);
-        this.common_btn = (EditItemView) findViewById(R.id.kanojo_option_common);
+        this.common_btn = findViewById(R.id.kanojo_option_common);
         this.common_btn.setOnClickListener(this);
-        this.privacy_btn = (EditItemView) findViewById(R.id.kanojo_option_privacy);
+        this.privacy_btn = findViewById(R.id.kanojo_option_privacy);
         this.privacy_btn.setOnClickListener(this);
-        this.terms_btn = (EditItemView) findViewById(R.id.kanojo_option_terms);
+        this.terms_btn = findViewById(R.id.kanojo_option_terms);
         this.terms_btn.setOnClickListener(this);
-        this.rules_btn = (EditItemView) findViewById(R.id.kanojo_option_rules);
+        this.rules_btn = findViewById(R.id.kanojo_option_rules);
         this.rules_btn.setOnClickListener(this);
-        this.bck_btn = (EditItemView) findViewById(R.id.kanojo_option_barcodekanojo);
+        this.bck_btn = findViewById(R.id.kanojo_option_barcodekanojo);
         this.bck_btn.setOnClickListener(this);
-        this.team_btn = (EditItemView) findViewById(R.id.kanojo_option_team);
+        this.team_btn = findViewById(R.id.kanojo_option_team);
         this.team_btn.setOnClickListener(this);
-        this.mail_btn = (EditItemView) findViewById(R.id.kanojo_option_mail);
+        this.mail_btn = findViewById(R.id.kanojo_option_mail);
         this.mail_btn.setOnClickListener(this);
-        this.kddi_btn = (EditItemView) findViewById(R.id.kanojo_option_kddi);
+        this.kddi_btn = findViewById(R.id.kanojo_option_kddi);
         this.kddi_btn.setOnClickListener(this);
         this.mListener = new BaseActivity.OnDialogDismissListener() {
             public void onDismiss(DialogInterface dialog, int code) {
@@ -83,30 +81,29 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         };
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
-        this.account_btn.setOnClickListener((View.OnClickListener) null);
-        this.common_btn.setOnClickListener((View.OnClickListener) null);
-        this.privacy_btn.setOnClickListener((View.OnClickListener) null);
-        this.terms_btn.setOnClickListener((View.OnClickListener) null);
-        this.rules_btn.setOnClickListener((View.OnClickListener) null);
-        this.bck_btn.setOnClickListener((View.OnClickListener) null);
-        this.team_btn.setOnClickListener((View.OnClickListener) null);
-        this.mail_btn.setOnClickListener((View.OnClickListener) null);
-        this.kddi_btn.setOnClickListener((View.OnClickListener) null);
+    protected void onDestroy() {
+        this.account_btn.setOnClickListener(null);
+        this.common_btn.setOnClickListener(null);
+        this.privacy_btn.setOnClickListener(null);
+        this.terms_btn.setOnClickListener(null);
+        this.rules_btn.setOnClickListener(null);
+        this.bck_btn.setOnClickListener(null);
+        this.team_btn.setOnClickListener(null);
+        this.mail_btn.setOnClickListener(null);
+        this.kddi_btn.setOnClickListener(null);
         super.onDestroy();
     }
 
     public void unBindEvent() {
-        this.account_btn.setOnClickListener((View.OnClickListener) null);
-        this.common_btn.setOnClickListener((View.OnClickListener) null);
-        this.privacy_btn.setOnClickListener((View.OnClickListener) null);
-        this.terms_btn.setOnClickListener((View.OnClickListener) null);
-        this.rules_btn.setOnClickListener((View.OnClickListener) null);
-        this.bck_btn.setOnClickListener((View.OnClickListener) null);
-        this.team_btn.setOnClickListener((View.OnClickListener) null);
-        this.mail_btn.setOnClickListener((View.OnClickListener) null);
-        this.kddi_btn.setOnClickListener((View.OnClickListener) null);
+        this.account_btn.setOnClickListener(null);
+        this.common_btn.setOnClickListener(null);
+        this.privacy_btn.setOnClickListener(null);
+        this.terms_btn.setOnClickListener(null);
+        this.rules_btn.setOnClickListener(null);
+        this.bck_btn.setOnClickListener(null);
+        this.team_btn.setOnClickListener(null);
+        this.mail_btn.setOnClickListener(null);
+        this.kddi_btn.setOnClickListener(null);
     }
 
     public void bindEvent() {
@@ -156,20 +153,19 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         bindEvent();
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         bindEvent();
     }
 
-    /* access modifiers changed from: protected */
-    public void fixUser() {
+    protected void fixUser() {
         checkAndCopyUser();
         showNoticeDialog(getString(R.string.edit_account_update_done));
     }
@@ -180,13 +176,11 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         startActivityForResult(intent, BaseInterface.REQUEST_MODIFY_USER);
     }
 
-    /* access modifiers changed from: private */
-    public void logout() {
+    private void logout() {
         ((BarcodeKanojoApp) getApplication()).logged_out();
     }
 
-    /* access modifiers changed from: private */
-    public void showAlertDialog(Alert alert) {
+    private void showAlertDialog(Alert alert) {
         super.showAlertDialog(alert, new DialogInterface.OnDismissListener() {
             public void onDismiss(DialogInterface dialog) {
             }
@@ -197,7 +191,7 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         if (this.mOptionModifyTask == null || this.mOptionModifyTask.getStatus() == AsyncTask.Status.FINISHED || this.mOptionModifyTask.cancel(true) || this.mOptionModifyTask.isCancelled()) {
             this.mOptionModifyTask = (OptionModifyTask) new OptionModifyTask().execute(new Void[0]);
         } else {
-            Toast.makeText(this, "ttttttt", 0);
+            Toast.makeText(this, "ttttttt", Toast.LENGTH_SHORT);
         }
     }
 
@@ -248,12 +242,11 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        @Override
+        protected void onCancelled() {
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> modify_user() throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> modify_user() throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) OptionActivity.this.getApplication()).getBarcodeKanojo();
             User user = barcodeKanojo.getUser();
             if (OptionActivity.this.modifiedUser.getPassword().equals("")) {
@@ -344,8 +337,7 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         startActivityForResult(signUp, BaseInterface.REQUEST_SOCIAL_CONFIG_SETTING);
     }
 
-    /* access modifiers changed from: private */
-    public void executeOptionChangeDeviceTask() {
+    private void executeOptionChangeDeviceTask() {
         if (this.mOptionChangeDeviceTask == null || this.mOptionChangeDeviceTask.getStatus() == AsyncTask.Status.FINISHED || this.mOptionChangeDeviceTask.cancel(true) || this.mOptionChangeDeviceTask.isCancelled()) {
             this.mOptionChangeDeviceTask = (OptionChangeDeviceTask) new OptionChangeDeviceTask().execute(new Void[0]);
         }
@@ -357,10 +349,12 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         OptionChangeDeviceTask() {
         }
 
+        @Override
         public void onPreExecute() {
             ProgressDialog unused = OptionActivity.this.showProgressDialog();
         }
 
+        @Override
         public Response<?> doInBackground(Void... params) {
             try {
                 return changeDevice();
@@ -370,6 +364,7 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
             }
         }
 
+        @Override
         public void onPostExecute(Response<?> response) {
             if (response == null) {
                 try {
@@ -398,16 +393,16 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        @Override
+        protected void onCancelled() {
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> changeDevice() throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> changeDevice() throws BarcodeKanojoException, IllegalStateException, IOException {
             return ((BarcodeKanojoApp) OptionActivity.this.getApplication()).getBarcodeKanojo().android_uuid_verify(OptionActivity.this.modifiedUser.getEmail(), OptionActivity.this.modifiedUser.getPassword(), ((BarcodeKanojoApp) OptionActivity.this.getApplication()).getUUID());
         }
     }
 
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == 4) {
             finish();

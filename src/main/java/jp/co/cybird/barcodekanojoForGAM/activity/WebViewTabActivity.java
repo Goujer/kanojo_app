@@ -44,8 +44,8 @@ public class WebViewTabActivity extends BaseKanojosActivity implements View.OnCl
         showProgressDialog();
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         this.extraWebViewURL = getIntent().getStringExtra(BaseInterface.EXTRA_WEBVIEW_URL);
         Log.d("NguyenTT", "WebViewTabActivity onResume " + this.extraWebViewURL);
@@ -57,36 +57,30 @@ public class WebViewTabActivity extends BaseKanojosActivity implements View.OnCl
     }
 
     class GetURLWebView extends AsyncTask<Void, Void, Response<?>> {
-        GetURLWebView() {
-        }
 
-        /* access modifiers changed from: protected */
-        public void onPreExecute() {
+        @Override
+        protected void onPreExecute() {
             super.onPreExecute();
             WebViewTabActivity.this.showProgressDialog();
         }
 
-        /* access modifiers changed from: protected */
-        public Response<?> doInBackground(Void... params) {
+        @Override
+        protected Response<?> doInBackground(Void... params) {
             try {
                 getURLWebView();
-                return null;
             } catch (BarcodeKanojoException e) {
                 e.printStackTrace();
-                return null;
-            } catch (IOException e2) {
-                e2.printStackTrace();
-                return null;
             }
+			return null;
         }
 
-        /* access modifiers changed from: protected */
-        public void onPostExecute(Response<?> result) {
+        @Override
+        protected void onPostExecute(Response<?> result) {
             WebViewTabActivity.this.dismissProgressDialog();
             super.onPostExecute(result);
         }
 
-        private void getURLWebView() throws BarcodeKanojoException, IOException {
+        private void getURLWebView() throws BarcodeKanojoException {
             Response<BarcodeKanojoModel> uRLWebView = ((BarcodeKanojoApp) WebViewTabActivity.this.getApplication()).getBarcodeKanojo().getURLWebView(new ApplicationSetting(WebViewTabActivity.this).getUUID());
             if (uRLWebView == null) {
                 throw new BarcodeKanojoException("Error: URL webview not found");
@@ -132,15 +126,17 @@ public class WebViewTabActivity extends BaseKanojosActivity implements View.OnCl
         }
     }
 
+    @Override
     public void onClick(View v) {
         v.getId();
     }
 
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == 4) {
             if (this.webview.canGoBack()) {
                 this.webview.goBack();
-            } else if (keyCode == 4) {
+            } else {
                 finish();
                 overridePendingTransition(0, 0);
             }
@@ -148,6 +144,7 @@ public class WebViewTabActivity extends BaseKanojosActivity implements View.OnCl
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
     public ProgressDialog showProgressDialog() {
         if (this.mProgressBar != null) {
             this.mProgressBar.setVisibility(View.VISIBLE);
@@ -156,8 +153,8 @@ public class WebViewTabActivity extends BaseKanojosActivity implements View.OnCl
         return this.mProgressDialog;
     }
 
-    /* access modifiers changed from: protected */
-    public void dismissProgressDialog() {
+    @Override
+    protected void dismissProgressDialog() {
         if (this.mProgressBar != null) {
             this.mProgressBar.setVisibility(View.INVISIBLE);
         }

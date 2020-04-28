@@ -18,17 +18,8 @@ public abstract class BaseKanojosActivity extends BaseActivity {
     public static final String TAG = "BaseKanojosActivity";
     private Live2dTask mLive2dTask;
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    /* access modifiers changed from: protected */
-    public void onResume() {
-        super.onResume();
-    }
-
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    @Override
+    protected void onPause() {
         if (this.mLive2dTask != null) {
             this.mLive2dTask.cancel(true);
             this.mLive2dTask = null;
@@ -36,8 +27,8 @@ public abstract class BaseKanojosActivity extends BaseActivity {
         super.onPause();
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1000) {
             if (resultCode != 209) {
@@ -50,33 +41,29 @@ public abstract class BaseKanojosActivity extends BaseActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void startKanojoRoomActivity(Kanojo kanojo) {
+    protected void startKanojoRoomActivity(Kanojo kanojo) {
         if (kanojo != null) {
             Intent intent = new Intent().setClass(this, KanojoRoomActivity.class);
-            if (kanojo != null) {
-                intent.putExtra(BaseInterface.EXTRA_KANOJO, kanojo);
-                startActivityForResult(intent, 1000);
-            }
+			intent.putExtra(BaseInterface.EXTRA_KANOJO, kanojo);
+			startActivityForResult(intent, 1000);
         }
     }
 
     private void executeLive2dTask() {
         if (this.mLive2dTask == null || this.mLive2dTask.getStatus() == AsyncTask.Status.FINISHED || this.mLive2dTask.cancel(true) || this.mLive2dTask.isCancelled()) {
             this.mLive2dTask = new Live2dTask();
-            this.mLive2dTask.execute(new Void[0]);
+            this.mLive2dTask.execute();
         }
     }
 
     class Live2dTask extends AsyncTask<Void, Void, Response<BarcodeKanojoModel>> {
         private Exception mReason = null;
 
-        Live2dTask() {
-        }
-
+        @Override
         public void onPreExecute() {
         }
 
+        @Override
         public Response<BarcodeKanojoModel> doInBackground(Void... params) {
             try {
                 return process();
@@ -86,6 +73,7 @@ public abstract class BaseKanojosActivity extends BaseActivity {
             }
         }
 
+        @Override
         public void onPostExecute(Response<BarcodeKanojoModel> response) {
             try {
                 switch (BaseKanojosActivity.this.getCodeAndShowAlert(response, this.mReason)) {
@@ -94,8 +82,7 @@ public abstract class BaseKanojosActivity extends BaseActivity {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<BarcodeKanojoModel> process() throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<BarcodeKanojoModel> process() throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) BaseKanojosActivity.this.getApplication()).getBarcodeKanojo();
             Response<BarcodeKanojoModel> response = barcodeKanojo.play_on_live2d();
             Response<BarcodeKanojoModel> response2 = barcodeKanojo.vote_like();

@@ -410,8 +410,8 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
         this.dropImage.setOnClickListener((View.OnClickListener) null);
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    @Override
+    protected void onDestroy() {
         if (this.adView != null) {
             this.adView.destroy();
         }
@@ -431,12 +431,12 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
             this.mKanojoRoomTask = null;
         }
         this.mProgressThread = null;
-        this.statusBarLayout.setOnClickListener((View.OnClickListener) null);
-        this.btnClose.setOnClickListener((View.OnClickListener) null);
-        this.btnInfo.setOnClickListener((View.OnClickListener) null);
-        this.btnLike.setOnClickListener((View.OnClickListener) null);
-        this.btnDate.setOnClickListener((View.OnClickListener) null);
-        this.btnItems.setOnClickListener((View.OnClickListener) null);
+        this.statusBarLayout.setOnClickListener(null);
+        this.btnClose.setOnClickListener(null);
+        this.btnInfo.setOnClickListener(null);
+        this.btnLike.setOnClickListener(null);
+        this.btnDate.setOnClickListener(null);
+        this.btnItems.setOnClickListener(null);
         super.onDestroy();
     }
 
@@ -444,14 +444,14 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
         GetURLWebView() {
         }
 
-        /* access modifiers changed from: protected */
-        public void onPreExecute() {
+        @Override
+        protected void onPreExecute() {
             super.onPreExecute();
             KanojoRoomActivity.this.showProgressDialog();
         }
 
-        /* access modifiers changed from: protected */
-        public Response<?> doInBackground(Void... params) {
+        @Override
+        protected Response<?> doInBackground(Void... params) {
             try {
                 getURLRadarWebView();
                 return null;
@@ -464,8 +464,8 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onPostExecute(Response<?> result) {
+        @Override
+        protected void onPostExecute(Response<?> result) {
             KanojoRoomActivity.this.dismissProgressDialog();
             super.onPostExecute(result);
         }
@@ -491,7 +491,6 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
                     KanojoRoomActivity.this.dismissProgressDialog();
                     throw new BarcodeKanojoException("Error: Code: " + code + " WebView not initialized!");
                 default:
-                    return;
             }
         }
     }
@@ -901,13 +900,14 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
         return true;
     }
 
+    @Override
     public ProgressDialog showProgressDialog() {
         this.mLoadingView.show();
         return new ProgressDialog(this);
     }
 
-    /* access modifiers changed from: protected */
-    public void dismissProgressDialog() {
+    @Override
+    protected void dismissProgressDialog() {
         this.mLoadingView.dismiss();
     }
 

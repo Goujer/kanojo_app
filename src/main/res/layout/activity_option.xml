@@ -2,28 +2,52 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:EditItemView="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:background="@color/edit_bg" android:layout_width="match_parent" android:layout_height="match_parent">
     <include layout="@layout/titlebar_with_option2"/>
     <jp.co.cybird.barcodekanojoForGAM.view.CustomToolBarView android:layout_width="match_parent" android:layout_height="wrap_content"/>
-    <ScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
         <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/edit_bg" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="match_parent">
             <TextView
 				android:id="@+id/kanojo_user_account_mode_text"
 				style="@style/txt_notice_input"
-				android:layout_height="wrap_content"
 				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
 				android:layout_marginTop="28dp"
-				android:gravity="left"
+				android:gravity="start"
 				android:text="@string/setting_account" />
-            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_account_modify" android:background="@drawable/row_kanojo_edit_bg_top" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/setting_account_change"/>
+            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+				android:id="@+id/kanojo_option_account_modify"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/row_kanojo_edit_txt_height"
+				android:layout_marginTop="@dimen/row_kanojo_edit_separator_height"
+				android:background="@drawable/row_kanojo_edit_bg_top"
+				EditItemView:key="@string/setting_account_change" />
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_common" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/setting_common"/>
-            <TextView android:gravity="left" android:layout_width="match_parent" android:layout_marginTop="28dp" android:text="@string/setting_legal" style="@style/txt_notice_input"/>
+            <TextView
+				style="@style/txt_notice_input"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="28dp"
+				android:gravity="start"
+				android:text="@string/setting_legal" />
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_privacy" android:background="@drawable/row_kanojo_edit_bg_top" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/setting_legal_privacy"/>
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_terms" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/setting_legal_terms"/>
-            <TextView android:gravity="left" android:layout_width="match_parent" android:layout_marginTop="28dp" android:text="@string/setting_about" style="@style/txt_notice_input"/>
+            <TextView
+				style="@style/txt_notice_input"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="28dp"
+				android:gravity="start"
+				android:text="@string/setting_about" />
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_rules" android:background="@drawable/row_kanojo_edit_bg_top" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/setting_about_rules"/>
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_barcodekanojo" android:background="@drawable/row_kanojo_edit_bg_middle" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/setting_about_barcodekanojo"/>
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_team" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/setting_about_team"/>
-            <TextView android:gravity="left" android:layout_width="match_parent" android:layout_marginTop="28dp" android:text="@string/setting_support" style="@style/txt_notice_input"/>
+			<TextView
+				style="@style/txt_notice_input"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="28dp"
+				android:gravity="start"
+				android:text="@string/setting_support" />
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_mail" android:background="@drawable/row_kanojo_edit_bg_name" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" android:layout_marginBottom="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/setting_support_mail"/>
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_kddi" android:background="@drawable/row_kanojo_edit_bg_bottom" android:visibility="gone" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/setting_support_kddi"/>
-        </LinearLayout>
-    </ScrollView>
+		</LinearLayout>
+	</ScrollView>
 </LinearLayout>

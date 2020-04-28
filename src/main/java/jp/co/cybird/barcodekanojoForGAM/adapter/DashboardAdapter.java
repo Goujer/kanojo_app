@@ -23,24 +23,18 @@ public class DashboardAdapter extends BaseActivityModelAdapter implements Observ
     private static final boolean DEBUG = false;
     private static final String TAG = "DashboardAdapter";
     private boolean isFirst = false;
-    /* access modifiers changed from: private */
-    public Handler mHandler;
+    private Handler mHandler;
     private LayoutInflater mInflater;
-    /* access modifiers changed from: private */
-    public OnKanojoClickListener mListener;
-    /* access modifiers changed from: private */
-    public int mLoadedPhotoIndex = 0;
-    /* access modifiers changed from: private */
-    public final Runnable mNotifyThread = new Runnable() {
+    private OnKanojoClickListener mListener;
+    private int mLoadedPhotoIndex = 0;
+    private final Runnable mNotifyThread = new Runnable() {
         public void run() {
             DashboardAdapter.this.superNotifyDataSetChanged();
         }
     };
     private RemoteResourceManagerObserver mResourcesObserver;
-    /* access modifiers changed from: private */
-    public RemoteResourceManager mRrm;
-    /* access modifiers changed from: private */
-    public Runnable mRunnableLoadPhotos = new Runnable() {
+    private RemoteResourceManager mRrm;
+    private Runnable mRunnableLoadPhotos = new Runnable() {
         public void run() {
             if (DashboardAdapter.this.mLoadedPhotoIndex < DashboardAdapter.this.getCount()) {
                 DashboardAdapter dashboardAdapter = DashboardAdapter.this;
@@ -68,16 +62,17 @@ public class DashboardAdapter extends BaseActivityModelAdapter implements Observ
         this.mRrm.addObserver(this.mResourcesObserver);
     }
 
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         View view = convertView;
         if (view == null) {
-            view = this.mInflater.inflate(R.layout.row_activities, (ViewGroup) null);
-            holder = new ViewHolder(this, (ViewHolder) null);
-            holder.imgLeft = (ImageView) view.findViewById(R.id.row_activities_left_img);
-            holder.imgRight = (ImageView) view.findViewById(R.id.row_activities_right_img);
-            holder.imgRightCover = (ImageView) view.findViewById(R.id.row_activities_right_img_cover);
-            holder.txtActivity = (TextView) view.findViewById(R.id.row_activities_txt);
+            view = this.mInflater.inflate(R.layout.row_activities, null);
+            holder = new ViewHolder(this, null);
+            holder.imgLeft = view.findViewById(R.id.row_activities_left_img);
+            holder.imgRight = view.findViewById(R.id.row_activities_right_img);
+            holder.imgRightCover = view.findViewById(R.id.row_activities_right_img_cover);
+            holder.txtActivity = view.findViewById(R.id.row_activities_txt);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -90,8 +85,8 @@ public class DashboardAdapter extends BaseActivityModelAdapter implements Observ
                 holder.txtActivity.setText(act.getActivity());
             }
             final Kanojo kanojo = act.getKanojo();
-            holder.imgLeft.setOnClickListener((View.OnClickListener) null);
-            holder.imgRight.setOnClickListener((View.OnClickListener) null);
+            holder.imgLeft.setOnClickListener(null);
+            holder.imgRight.setOnClickListener(null);
             holder.imgRight.setVisibility(View.VISIBLE);
             holder.imgRightCover.setVisibility(View.VISIBLE);
             switch (act.getActivity_type()) {

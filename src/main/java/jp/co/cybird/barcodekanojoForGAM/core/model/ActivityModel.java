@@ -49,22 +49,25 @@ public class ActivityModel implements BarcodeKanojoModel {
     }
 
     public String getRightImgUrl() {
-        switch (getActivity_type()) {
-            case 2:
-                return this.scanned.getProduct_image_url();
-            case 5:
-                return this.kanojo.getProfile_image_url();
-            case 7:
-                return this.kanojo.getProfile_image_url();
-            case 8:
-                return this.kanojo.getProfile_image_url();
-            case 9:
-                return this.other_user.getProfile_image_url();
-            case 10:
-                return this.kanojo.getProfile_image_url();
-            default:
-                return null;
-        }
+    	try {
+			switch (getActivity_type()) {
+				case 2:
+					return this.scanned.getProduct_image_url();
+				case 5:
+				case 7:
+				case 8:
+					return this.kanojo.getProfile_image_url();
+				case 9:
+					return this.other_user.getProfile_image_url();
+				case 10:
+					return this.kanojo.getProfile_image_url();
+				default:
+					return null;
+			}
+		} catch (NullPointerException e) {
+    		e.printStackTrace();
+    		return null;
+		}
     }
 
     public User getUser() {
@@ -91,7 +94,7 @@ public class ActivityModel implements BarcodeKanojoModel {
         this.scanned = scanned2;
     }
 
-    public User getOther_user() {
+    User getOther_user() {
         return this.other_user;
     }
 
@@ -99,7 +102,7 @@ public class ActivityModel implements BarcodeKanojoModel {
         this.other_user = otherUser;
     }
 
-    public int getCreated_timestamp() {
+    int getCreated_timestamp() {
         return this.created_timestamp;
     }
 

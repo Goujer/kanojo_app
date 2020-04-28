@@ -110,6 +110,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         void onDismiss(DialogInterface dialogInterface, int i);
     }
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityCount++;
@@ -121,6 +122,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         registerReceiver(this.mWarningFullSpaceReceiver, new IntentFilter(BarcodeKanojoApp.INTENT_ACTION_FULL_STORAGE));
     }
 
+    @Override
     protected void onResume() {
         super.onResume();
         if (this.mAutoRefresh) {
@@ -131,11 +133,13 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         }
     }
 
+    @Override
     protected void onPause() {
         super.onPause();
         dismissNoticeDialog();
     }
 
+    @Override
     protected void onDestroy() {
         if (DEBUG) {
             mActivityCount--;

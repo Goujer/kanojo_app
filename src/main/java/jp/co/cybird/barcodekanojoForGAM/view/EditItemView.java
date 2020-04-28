@@ -12,11 +12,11 @@ import android.widget.TextView;
 import jp.co.cybird.barcodekanojoForGAM.R;
 
 public class EditItemView extends LinearLayout {
-    private ImageView mAdd = findViewById(R.id.edit_item_add);
-    private ImageView mArrow = findViewById(R.id.edit_item_arrow);
+    private ImageView mAdd;
+    private ImageView mArrow;
     private boolean mHoverInital;
-	private ImageView mIcon = findViewById(R.id.edit_item_icon);
-    private ImageView mImageView = findViewById(R.id.edit_item_avarta);
+	private ImageView mIcon;
+    private ImageView mImageView;
     private EditItemViewCallback mListener;
     private String mTextString;
     private TextView mTextView;
@@ -35,12 +35,17 @@ public class EditItemView extends LinearLayout {
         LayoutInflater.from(context).inflate(R.layout.view_edit_item, this, true);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.EditItemView, 0, 0);
 
+		mImageView = findViewById(R.id.edit_item_avartar);
+
 		Drawable iconDrawable = array.getDrawable(R.styleable.EditItemView_iconDrawable);
+		mIcon = findViewById(R.id.edit_item_icon);
 		if (iconDrawable != null) {
 			mIcon.setBackgroundDrawable(iconDrawable);
 			mIcon.setVisibility(VISIBLE);
 		}
 		Drawable arrowDrawable = array.getDrawable(R.styleable.EditItemView_arrowDrawable);
+		mArrow = findViewById(R.id.edit_item_arrow);
+		mAdd = findViewById(R.id.edit_item_add);
 		if (arrowDrawable != null) {
 			mArrow.setBackgroundDrawable(arrowDrawable);
 			mArrow.setVisibility(VISIBLE);
@@ -90,37 +95,37 @@ public class EditItemView extends LinearLayout {
         return this.mImageView;
     }
 
-    public void showText() {
-        this.needMask = false;
-    }
+//    public void showText() {
+//        this.needMask = false;
+//    }
 
     public void hideText() {
         this.needMask = true;
     }
 
-    public void showArrow() {
-        this.mArrow.setVisibility(View.VISIBLE);
-    }
-
-    public void hideArrow() {
-        this.mArrow.setVisibility(View.INVISIBLE);
-    }
+//    public void showArrow() {
+//        this.mArrow.setVisibility(View.VISIBLE);
+//    }
+//
+//    public void hideArrow() {
+//        this.mArrow.setVisibility(View.INVISIBLE);
+//    }
 
     public ImageView getIcon() {
         return this.mIcon;
     }
 
-    public void showIcon() {
-        this.mIcon.setVisibility(View.VISIBLE);
-    }
-
-    public void hideIcon() {
-        this.mIcon.setVisibility(View.INVISIBLE);
-    }
-
-    public ImageView getRightIcon() {
-        return this.mAdd;
-    }
+//    public void showIcon() {
+////        this.mIcon.setVisibility(View.VISIBLE);
+////    }
+////
+////    public void hideIcon() {
+////        this.mIcon.setVisibility(View.INVISIBLE);
+////    }
+////
+////    public ImageView getRightIcon() {
+////        return this.mAdd;
+////    }
 
 	public void showIconAdd() {
 		this.mAdd.setVisibility(VISIBLE);

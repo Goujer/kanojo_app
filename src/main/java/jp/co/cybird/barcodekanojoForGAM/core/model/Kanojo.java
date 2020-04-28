@@ -58,7 +58,7 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
     private int nose_type;
     private boolean on_advertising;
     private int possession;
-    private String profile_image_url;
+    private String profile_image_url; //TODO: Implement a native icon lookup
     private int race_type;
     private int recognition;
     private int relation_status;

@@ -1,7 +1,5 @@
 package jp.co.cybird.barcodekanojoForGAM.activity.kanojo;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -20,10 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.google.ads.AdRequest;
-import com.google.ads.AdSize;
-import com.google.ads.AdView;
-import com.google.ads.mediation.nend.NendAdapterExtras;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -54,7 +48,6 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
     private static final int DEFAULT_LIMIT = 6;
     private static final String TAG = "KanojoInfoActivity";
     private final int MORE_ACTIVITIES = 11;
-    private AdView adView;
     private Button btnClose;
     private Button btnEdit;
     /* access modifiers changed from: private */
@@ -65,36 +58,30 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
     /* access modifiers changed from: private */
     public MoreBtnView mFooter;
     private Gallery mGallery;
-    /* access modifiers changed from: private */
-    public KanojoInfoImgAdapter mImgAdapter;
+    private KanojoInfoImgAdapter mImgAdapter;
     private Kanojo mKanojo;
     private KanojoInfoTask mKanojoInfoTask;
-    /* access modifiers changed from: private */
-    public int mLimit = 6;
+    private int mLimit = 6;
     private ListView mListView;
     private String mMessage;
-    /* access modifiers changed from: private */
-    public Product mProduct;
-    /* access modifiers changed from: private */
-    public ImageView mProductImg;
-    /* access modifiers changed from: private */
-    public RemoteResourceManager mRrm;
+    private Product mProduct;
+    private ImageView mProductImg;
+    private RemoteResourceManager mRrm;
     private Scanned mScanned;
     private Resources r;
-    /* access modifiers changed from: private */
-    public boolean readAllFlg = false;
+    private boolean readAllFlg = false;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kanojo_info);
         this.r = getResources();
-        setBanner();
         this.mRrm = ((BarcodeKanojoApp) getApplication()).getRemoteResourceManager();
-        this.btnClose = (Button) findViewById(R.id.kanojo_info_close);
+        this.btnClose = findViewById(R.id.kanojo_info_close);
         this.btnClose.setOnClickListener(this);
-        this.btnEdit = (Button) findViewById(R.id.kanojo_info_edit);
+        this.btnEdit = findViewById(R.id.kanojo_info_edit);
         this.btnEdit.setOnClickListener(this);
-        this.mListView = (ListView) findViewById(R.id.kanojo_info_list);
+        this.mListView = findViewById(R.id.kanojo_info_list);
         this.mFooter = new MoreBtnView(this);
         this.mFooter.setOnMoreClickListener(11, this);
         this.mAdapter = new KanojoInfoAdapter(this, this.mRrm);
@@ -141,12 +128,12 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
     }
 
     public void unBindEvent() {
-        this.btnClose.setOnClickListener((View.OnClickListener) null);
-        this.btnEdit.setOnClickListener((View.OnClickListener) null);
+        this.btnClose.setOnClickListener(null);
+        this.btnEdit.setOnClickListener(null);
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    @Override
+    protected void onPause() {
         if (this.mKanojoInfoTask != null) {
             this.mKanojoInfoTask.cancel(true);
             this.mKanojoInfoTask = null;
@@ -160,11 +147,8 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
         super.onPause();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
-        if (this.adView != null) {
-            this.adView.destroy();
-        }
+    @Override
+    protected void onDestroy() {
         this.mImgAdapter.removeObserver();
         this.mImgAdapter = null;
         this.mAdapter.removeObserver();
@@ -173,6 +157,7 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
         super.onDestroy();
     }
 
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.kanojo_info_close:
@@ -350,8 +335,7 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    /* access modifiers changed from: private */
-    public void addImgToGallery(ModelList<ActivityModel> l) {
+    private void addImgToGallery(ModelList<ActivityModel> l) {
         Iterator it = l.iterator();
         while (it.hasNext()) {
             String strUrl = ((ActivityModel) it.next()).getScanned().getProduct_image_url();
@@ -359,15 +343,6 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
                 this.mImgAdapter.addImgUrl(strUrl);
             }
         }
-    }
-
-    @SuppressLint({"DefaultLocale"})
-    private void setBanner() {
-        this.adView = new AdView((Activity) this, AdSize.BANNER, getResources().getString(R.string.admob_mediation_id));
-        ((LinearLayout) findViewById(R.id.adView)).addView(this.adView);
-        AdRequest adRequest = new AdRequest();
-        adRequest.setNetworkExtras(new NendAdapterExtras());
-        this.adView.loadAd(adRequest);
     }
 
     public static final String md5(String s) {

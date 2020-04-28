@@ -48,69 +48,61 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
     private BarcodeKanojoApp app;
     private Button btnClose;
     private Button btnDelete;
-    /* access modifiers changed from: private */
-    public Button btnSave;
-    /* access modifiers changed from: private */
-    public String currentPassword;
+    private Button btnSave;
+    private String currentPassword;
     private ImageView imgAvarta;
-    /* access modifiers changed from: private */
-    public AutoLoginTask mAutoLoginTask;
+    private AutoLoginTask mAutoLoginTask;
     private LinearLayout mChangeDeviceLayout;
-    /* access modifiers changed from: private */
-    public BaseActivity.OnDialogDismissListener mListener;
+    private BaseActivity.OnDialogDismissListener mListener;
     private CustomLoadingView mLoadingView;
-    /* access modifiers changed from: private */
-    public int mRequestCode;
+    private int mRequestCode;
     private int mResultCode;
     private RemoteResourceManager mRrm;
     final Handler mTaskEndHandler = new Handler() {
+    	@Override
         public void handleMessage(Message msg) {
-            UserModifyActivity.this.executeAutoLoginTask((StatusHolder) UserModifyActivity.this.getQueue().poll());
+            UserModifyActivity.this.executeAutoLoginTask(UserModifyActivity.this.getQueue().poll());
         }
     };
     private Queue<StatusHolder> mTaskQueue;
     private EditItemView.EditItemViewCallback mTextChangeListener;
-    /* access modifiers changed from: private */
-    public File modifiedPhoto;
-    /* access modifiers changed from: private */
-    public User modifiedUser;
+    private File modifiedPhoto;
+    private User modifiedUser;
     private EditItemView txtBirthday;
-    /* access modifiers changed from: private */
-    public EditItemView txtEmail;
+    private EditItemView txtEmail;
     private EditItemView txtGender;
     private EditItemView txtIcon;
-    /* access modifiers changed from: private */
-    public EditItemView txtName;
+    private EditItemView txtName;
     private EditItemView txtPassword;
     private User user = null;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = savedInstanceState;
-        requestWindowFeature(1);
+		requestWindowFeature(1);
         setContentView(R.layout.activity_user_modify);
         this.app = (BarcodeKanojoApp) getApplication();
         Bundle bundle2 = getIntent().getExtras();
         if (bundle2 != null) {
             this.mRequestCode = bundle2.getInt(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_SETTING);
             if (this.mRequestCode == 1102) {
-                this.modifiedUser = (User) bundle2.getParcelable("user");
+                this.modifiedUser = bundle2.getParcelable("user");
                 this.user = this.modifiedUser;
                 setAutoRefreshSession(false);
             }
         }
         if (savedInstanceState != null && this.user == null) {
             this.mRequestCode = savedInstanceState.getInt(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_SETTING);
-            this.modifiedUser = (User) savedInstanceState.getParcelable("user");
+            this.modifiedUser = savedInstanceState.getParcelable("user");
             this.user = this.modifiedUser;
         }
         if (this.user == null) {
             this.user = this.app.getUser();
         }
         this.mRrm = this.app.getRemoteResourceManager();
-        this.btnClose = (Button) findViewById(R.id.kanojo_user_modify_close);
+        this.btnClose = findViewById(R.id.kanojo_user_modify_close);
         this.btnClose.setOnClickListener(this);
-        this.btnSave = (Button) findViewById(R.id.kanojo_user_update_btn);
+        this.btnSave = findViewById(R.id.kanojo_user_update_btn);
         this.btnSave.setOnClickListener(this);
         this.btnSave.setEnabled(true);
         if (this.mRequestCode == 1103) {
@@ -118,7 +110,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         } else if (this.mRequestCode == 1102) {
             this.btnSave.setText(R.string.user_register_btn);
         }
-        this.txtName = (EditItemView) findViewById(R.id.kanojo_user_modify_name);
+        this.txtName = findViewById(R.id.kanojo_user_modify_name);
         this.txtName.setOnClickListener(this);
         this.txtName.setTextChangeListner(this.mTextChangeListener);
         if (this.user.getName() != null && this.user.getName() != "null") {

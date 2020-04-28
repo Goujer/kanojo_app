@@ -5,6 +5,13 @@
         <ImageView android:layout_width="@dimen/row_activities_img_width" android:layout_height="@dimen/row_activities_img_height" android:layout_margin="4dp" android:src="@drawable/row_activities_img_cover" android:scaleType="fitXY" android:adjustViewBounds="true" android:layout_alignParentLeft="true"/>
         <ImageView android:id="@+id/row_activities_right_img" android:layout_width="@dimen/row_activities_img_width" android:layout_height="@dimen/row_activities_img_height" android:layout_margin="4dp" android:src="@drawable/common_noimage_product" android:scaleType="fitXY" android:adjustViewBounds="true" android:layout_alignParentRight="true"/>
         <ImageView android:id="@+id/row_activities_right_img_cover" android:layout_width="@dimen/row_activities_img_width" android:layout_height="@dimen/row_activities_img_height" android:layout_margin="4dp" android:src="@drawable/row_activities_img_cover" android:scaleType="fitXY" android:adjustViewBounds="true" android:layout_alignParentRight="true"/>
-        <TextView android:id="@+id/row_activities_txt" android:maxLines="3" android:layout_toLeftOf="@+id/row_activities_right_img" android:layout_toRightOf="@+id/row_activities_left_img" style="@style/txt_activites"/>
+        <TextView
+			android:id="@+id/row_activities_txt"
+			style="@style/txt_activites"
+			android:layout_toLeftOf="@+id/row_activities_right_img"
+			android:layout_toRightOf="@+id/row_activities_left_img"
+			android:maxLines="3"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"/>
     </RelativeLayout>
 </FrameLayout>

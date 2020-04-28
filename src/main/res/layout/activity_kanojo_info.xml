@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
     <RelativeLayout android:background="@drawable/common_title_bg" android:layout_width="match_parent" android:layout_height="@dimen/common_title_height">
-        <TextView android:id="@+id/kanojo_info_title" android:text="@string/kanojo_info_title" android:layout_centerInParent="true" style="@style/txt_kanojo_room_name"/>
-        <Button android:id="@+id/kanojo_info_close" android:text="@string/kanojo_room_close" android:layout_alignParentLeft="true" style="@style/btn_navi"/>
-        <Button android:id="@+id/kanojo_info_edit" android:text="@string/kanojo_info_edit" android:layout_alignParentRight="true" style="@style/btn_navi"/>
+        <TextView
+			android:id="@+id/kanojo_info_title"
+			style="@style/txt_kanojo_room_name"
+			android:layout_centerInParent="true"
+			android:text="@string/kanojo_info_title"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"/>
+        <Button android:id="@+id/kanojo_info_close" android:text="@string/kanojo_room_close" android:layout_alignParentLeft="true" style="@style/btn_navi"
+			android:layout_alignParentStart="true" />
+        <Button android:id="@+id/kanojo_info_edit" android:text="@string/kanojo_info_edit" android:layout_alignParentRight="true" style="@style/btn_navi"
+			android:layout_alignParentEnd="true" />
     </RelativeLayout>
     <LinearLayout android:orientation="vertical" android:background="@drawable/product_info_bg" android:padding="@dimen/kanojo_info_padding" android:layout_width="match_parent" android:layout_height="@dimen/kanojo_info_height">
         <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
@@ -11,18 +22,45 @@
                 <ImageView android:id="@+id/kanojo_info_product_img" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/common_noimage_product" android:scaleType="fitXY" android:adjustViewBounds="true"/>
                 <ImageView android:layout_width="wrap_content" android:layout_height="match_parent" android:src="@drawable/product_info_cover" android:scaleType="fitXY" android:adjustViewBounds="true"/>
             </FrameLayout>
-            <LinearLayout android:orientation="vertical" android:paddingLeft="12dp" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1">
-                <TextView android:ellipsize="end" android:id="@+id/kanojo_info_name" android:singleLine="true" style="@style/txt_kanojo_info_name"/>
-                <TextView android:ellipsize="end" android:id="@+id/kanojo_info_company_name" android:singleLine="true" style="@style/txt_kanojo_info"/>
-                <TextView android:id="@+id/kanojo_info_country" style="@style/txt_kanojo_info"/>
-                <TextView android:id="@+id/kanojo_info_barcode" style="@style/txt_kanojo_info"/>
-                <TextView android:id="@+id/kanojo_info_category" style="@style/txt_kanojo_info"/>
-                <TextView android:id="@+id/kanojo_info_scanned" style="@style/txt_kanojo_info"/>
+            <LinearLayout android:orientation="vertical" android:paddingLeft="12dp" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
+                <TextView
+					android:id="@+id/kanojo_info_name"
+					style="@style/txt_kanojo_info_name"
+					android:ellipsize="end"
+					android:singleLine="true"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+                <TextView
+					android:id="@+id/kanojo_info_company_name"
+					style="@style/txt_kanojo_info"
+					android:ellipsize="end"
+					android:singleLine="true"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+                <TextView
+					android:id="@+id/kanojo_info_country"
+					style="@style/txt_kanojo_info"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+                <TextView
+					android:id="@+id/kanojo_info_barcode"
+					style="@style/txt_kanojo_info"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+                <TextView
+					android:id="@+id/kanojo_info_category"
+					style="@style/txt_kanojo_info"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
+                <TextView
+					android:id="@+id/kanojo_info_scanned"
+					style="@style/txt_kanojo_info"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
         <ImageView android:layout_width="@dimen/kanojo_info_ya_width" android:layout_height="@dimen/kanojo_info_ya_height" android:layout_marginLeft="@dimen/kanojo_info_ya_padding_left" android:src="@drawable/product_info_ya"/>
         <FrameLayout android:id="@+id/kanojo_info_layout_gallery" android:layout_width="match_parent" android:layout_height="@dimen/kanojo_info_gallery_height"/>
     </LinearLayout>
-    <ListView android:id="@+id/kanojo_info_list" android:background="@color/default_bg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1"/>
-    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/adView" android:background="@drawable/dummy_ad_bg" android:layout_width="match_parent" android:layout_height="50dp" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" android:layout_centerVertical="true"/>
+    <ListView android:id="@+id/kanojo_info_list" android:background="@color/default_bg" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
 </LinearLayout>

@@ -65,32 +65,25 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
     private Button buttonTabItemsList;
     private Button buttonTabItemsStore;
     private List<String> lstProductId;
-    /* access modifiers changed from: private */
-    public SeparatedListAdapter mAdapter;
-    /* access modifiers changed from: private */
-    public String mAlertMsgLst = "";
+    private SeparatedListAdapter mAdapter;
+    private String mAlertMsgLst = "";
     private ConsumeTask mConsumeTask;
-    /* access modifiers changed from: private */
-    public ModelList<KanojoItemCategory> mCurrentCategory;
-    /* access modifiers changed from: private */
-    public Inventory mInventory;
-    /* access modifiers changed from: private */
-    public Kanojo mKanojo;
-    /* access modifiers changed from: private */
-    public KanojoItem mKanojoItem;
-    /* access modifiers changed from: private */
-    public ListView mListView;
+    private ModelList<KanojoItemCategory> mCurrentCategory;
+    private Inventory mInventory;
+    private Kanojo mKanojo;
+    private KanojoItem mKanojoItem;
+    private ListView mListView;
     private PurchaseApi.OnPurchaseListener mListener;
     private LoadItemsTask mLoadItemsTask;
-    /* access modifiers changed from: private */
-    public boolean mLoadingFinshed = false;
+    private boolean mLoadingFinshed = false;
     private CustomLoadingView mLoadingView;
     private PurchaseApi mPurchaseAPI;
     private int mRequestCode;
     private RemoteResourceManager mRrm;
     final Handler mTaskEndHandler = new Handler() {
+    	@Override
         public void handleMessage(Message msg) {
-            TicketHolder next = (TicketHolder) KanojoItemsActivity.this.getQueue().poll();
+            TicketHolder next = KanojoItemsActivity.this.getQueue().poll();
             if (next != null) {
                 KanojoItemsActivity.this.showProgressDialog();
                 KanojoItemsActivity.this.executeConsumeTicketTask(next);
@@ -100,11 +93,10 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
     private Queue<TicketHolder> mTaskQueue;
     private User mUser;
     private int mUserLevel = 0;
-    /* access modifiers changed from: private */
-    public int mode;
-    /* access modifiers changed from: private */
-    public int type;
+    private int mode;
+    private int type;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kanojo_items);
@@ -122,25 +114,25 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
         Resources r = getResources();
         this.mRrm = ((BarcodeKanojoApp) getApplication()).getRemoteResourceManager();
         this.mPurchaseAPI = ((BarcodeKanojoApp) getApplication()).getPurchaseApi();
-        Button btnClose = (Button) findViewById(R.id.kanojo_items_close);
+        Button btnClose = findViewById(R.id.kanojo_items_close);
         btnClose.setOnClickListener(this);
         btnClose.setText(this.mKanojo.getName());
-        TextView txtTitle = (TextView) findViewById(R.id.kanojo_items_title);
-        this.mListView = (ListView) findViewById(R.id.kanojo_items_list);
+        TextView txtTitle = findViewById(R.id.kanojo_items_title);
+        this.mListView = findViewById(R.id.kanojo_items_list);
         this.mListView.setOnItemClickListener(this);
         this.mAdapter = new SeparatedListAdapter(this, R.layout.view_list_header);
-        RelativeLayout mLayoutTab = (RelativeLayout) findViewById(R.id.layoutTab);
-        this.buttonTabItemsStore = (Button) findViewById(R.id.kanojo_tab_items_store);
+        RelativeLayout mLayoutTab = findViewById(R.id.layoutTab);
+        this.buttonTabItemsStore = findViewById(R.id.kanojo_tab_items_store);
         this.buttonTabItemsStore.getLayoutParams().width = (dWidth / 2) + 10;
         this.buttonTabItemsStore.setOnClickListener(this);
-        this.buttonTabItemsList = (Button) findViewById(R.id.kanojo_tab_items_list);
+        this.buttonTabItemsList = findViewById(R.id.kanojo_tab_items_list);
         this.buttonTabItemsList.getLayoutParams().width = (dWidth / 2) + 10;
         this.buttonTabItemsList.setOnClickListener(this);
         this.mUser = ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().getUser();
-        this.mLoadingView = (CustomLoadingView) findViewById(R.id.loadingView);
+        this.mLoadingView = findViewById(R.id.loadingView);
         if (this.mUser != null) {
             switch (this.mode) {
-                case 1:
+                case MODE_DATE:
                     txtTitle.setText(r.getString(R.string.kanojo_items_date));
                     mLayoutTab.setVisibility(View.VISIBLE);
                     onTabType(1);
