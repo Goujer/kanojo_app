@@ -34,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Observable;
@@ -397,14 +398,17 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
         super.onDestroy();
     }
 
-    class GetURLWebView extends AsyncTask<Void, Void, Response<?>> {
-        GetURLWebView() {
+    static class GetURLWebView extends AsyncTask<Void, Void, Response<?>> {
+        WeakReference<KanojoRoomActivity> contextRef;
+
+    	GetURLWebView(KanojoRoomActivity context) {
+    		contextRef = new WeakReference<>(context);
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            KanojoRoomActivity.this.showProgressDialog();
+            contextRef.get().showProgressDialog();
         }
 
         @Override
@@ -415,29 +419,31 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
             } catch (BarcodeKanojoException e) {
                 e.printStackTrace();
                 return null;
-            } catch (IOException e2) {
-                e2.printStackTrace();
-                return null;
             }
         }
 
         @Override
         protected void onPostExecute(Response<?> result) {
-            KanojoRoomActivity.this.dismissProgressDialog();
+			contextRef.get().dismissProgressDialog();
             super.onPostExecute(result);
         }
 
-        private void getURLRadarWebView() throws BarcodeKanojoException, IOException {
-            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) KanojoRoomActivity.this.getApplication()).getBarcodeKanojo();
-            KanojoRoomActivity.this.mUser = barcodeKanojo.getUser();
-            Response<BarcodeKanojoModel> uRLRadarWebView = barcodeKanojo.getURLRadarWebView(KanojoRoomActivity.this.mKanojo.getId());
+        private void getURLRadarWebView() throws BarcodeKanojoException {
+            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) contextRef.get().getApplication()).getBarcodeKanojo();
+			contextRef.get().mUser = barcodeKanojo.getUser();
+            final Response<BarcodeKanojoModel> uRLRadarWebView = barcodeKanojo.getURLRadarWebView(contextRef.get().mKanojo.getId());
             if (uRLRadarWebView == null) {
                 throw new BarcodeKanojoException("Error: URL webview not found");
             }
             int code = uRLRadarWebView.getCode();
             switch (code) {
                 case 200:
-                    KanojoRoomActivity.this.webview.loadUrl(((WebViewData) uRLRadarWebView.get(WebViewData.class)).getUrl());
+					contextRef.get().runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							contextRef.get().webview.loadUrl(((WebViewData) uRLRadarWebView.get(WebViewData.class)).getUrl());
+						}
+					});
                     return;
                 case 400:
                 case 401:
@@ -445,7 +451,12 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
                 case 404:
                 case 500:
                 case 503:
-                    KanojoRoomActivity.this.dismissProgressDialog();
+					contextRef.get().runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							contextRef.get().dismissProgressDialog();
+						}
+					});
                     throw new BarcodeKanojoException("Error: Code: " + code + " WebView not initialized!");
                 default:
             }
@@ -476,6 +487,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    @Override
     public void onClick(View v) {
         unBindEvent();
         new Intent();
@@ -497,7 +509,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
                     intent.putExtra(BaseInterface.EXTRA_SCANNED, this.mScanned);
                 }
                 if (this.mMessage != null) {
-                    intent.putExtra(MessageModel.NOTIFY_AMENDMENT_INFORMATION, (String) this.mMessage.get(MessageModel.NOTIFY_AMENDMENT_INFORMATION));
+                    intent.putExtra(MessageModel.NOTIFY_AMENDMENT_INFORMATION, this.mMessage.get(MessageModel.NOTIFY_AMENDMENT_INFORMATION));
                 }
                 startActivityForResult(intent, BaseInterface.REQUEST_KANOJO_INFO);
                 return;
@@ -536,22 +548,6 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
                 startActivityForResult(intent4, BaseInterface.REQUEST_KANOJO_TICKETS);
                 return;
             case R.id.kanojo_room_status_bar_layout:
-                if (this.mStatusLayout.getVisibility() == View.VISIBLE) {
-                    this.webview.setVisibility(View.GONE);
-                    this.mStatusLayout.setVisibility(View.GONE);
-                    this.btnStatusArrow.setImageResource(R.drawable.kanojolovebararrowdown);
-                } else {
-                    this.mStatusLayout.setVisibility(View.VISIBLE);
-                    this.webview.setVisibility(View.VISIBLE);
-                    this.btnStatusArrow.setImageResource(R.drawable.kanojolovebararrowup);
-                    if (this.extraWebViewURL == null) {
-                        new GetURLWebView().execute();
-                    } else {
-                        this.webview.loadUrl(this.extraWebViewURL);
-                    }
-                }
-                bindEvent();
-                return;
             case R.id.dropdown_img:
                 if (this.mStatusLayout.getVisibility() == View.VISIBLE) {
                     this.webview.setVisibility(View.GONE);
@@ -562,7 +558,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
                     this.webview.setVisibility(View.VISIBLE);
                     this.btnStatusArrow.setImageResource(R.drawable.kanojolovebararrowup);
                     if (this.extraWebViewURL == null) {
-                        new GetURLWebView().execute();
+                        new GetURLWebView(this).execute();
                     } else {
                         this.webview.loadUrl(this.extraWebViewURL);
                     }
@@ -570,12 +566,11 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
                 bindEvent();
                 return;
             default:
-                return;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Bundle bundle;
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 101) {
@@ -887,7 +882,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 
             protected String doInBackground(String... params) {
                 try {
-                    Thread.sleep((long) (Integer.parseInt(params[0]) * 5000));
+                    Thread.sleep(Integer.parseInt(params[0]) * 5000);
                     return null;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -909,13 +904,13 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     public void setAnimationTap(float x, float y, int type) {
         ImageView imageViewAction = new ImageView(this);
         if (12 == type) {
-            System.out.printf("USER_ACTION_TSUTSUKU \n", new Object[0]);
+            System.out.printf("USER_ACTION_TSUTSUKU \n");
             imageViewAction.setImageResource(R.drawable.hand_image);
         } else if (20 == type) {
-            System.out.printf("USER_ACTION_KISS \n", new Object[0]);
+            System.out.printf("USER_ACTION_KISS \n");
             imageViewAction.setImageResource(R.drawable.kiss_image);
         } else if (21 == type) {
-            System.out.printf("USER_ACTION_MUNE \n", new Object[0]);
+            System.out.printf("USER_ACTION_MUNE \n");
             imageViewAction.setImageResource(R.drawable.hand_image);
         }
         addImageAnimationTap(imageViewAction, x, y);
@@ -977,8 +972,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
         }, 2000);
     }
 
-    /* access modifiers changed from: private */
-    public void executeLive2dTask() {
+    private void executeLive2dTask() {
         if (this.mLive2dTask == null || this.mLive2dTask.getStatus() == AsyncTask.Status.FINISHED || this.mLive2dTask.cancel(true) || this.mLive2dTask.isCancelled()) {
             this.mLive2dTask = new Live2dTask();
             this.mLive2dTask.execute();
@@ -1031,14 +1025,12 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<BarcodeKanojoModel> process() throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<BarcodeKanojoModel> process() throws BarcodeKanojoException, IllegalStateException, IOException {
             return ((BarcodeKanojoApp) KanojoRoomActivity.this.getApplication()).getBarcodeKanojo().play_on_live2d();
         }
     }
 
-    /* access modifiers changed from: private */
-    public void setAutoRefreshLoveGageAction() {
+    private void setAutoRefreshLoveGageAction() {
         if (!FileUtil.isAvailableExternalSDMemory() && !FileUtil.isAvailableInternalSDMemory()) {
             sendBroadcast(new Intent(BarcodeKanojoApp.INTENT_ACTION_FULL_STORAGE));
         } else if (getLive2D() != null && this.isPrepared && this.mKanojo != null) {
@@ -1047,17 +1039,16 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    /* access modifiers changed from: private */
-    public void addTagLoveGauge() {
+    private void addTagLoveGauge() {
         Rect rectLoveBar = new Rect();
         this.mLoveBar.getLocalVisibleRect(rectLoveBar);
         int xLoveBar = rectLoveBar.left;
         int wLoveBar = rectLoveBar.width();
-        this.layoutTagLoveBar = (RelativeLayout) findViewById(R.id.kanojo_tag_love_gauge);
+        this.layoutTagLoveBar = findViewById(R.id.kanojo_tag_love_gauge);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) this.layoutTagLoveBar.getLayoutParams();
         params.leftMargin = ((wLoveBar / 100) * this.mKanojo.getLove_gauge()) + xLoveBar;
         this.layoutTagLoveBar.setLayoutParams(params);
-        TextView textTagLoveBar = (TextView) findViewById(R.id.kanojo_tag_love_gauge_text);
+        TextView textTagLoveBar = findViewById(R.id.kanojo_tag_love_gauge_text);
         if (this.mLoveIncremen != null) {
             if (!this.mLoveIncremen.getIncrease_love().equals(GreeDefs.BARCODE)) {
                 textTagLoveBar.setText("+" + this.mLoveIncremen.getIncrease_love());
