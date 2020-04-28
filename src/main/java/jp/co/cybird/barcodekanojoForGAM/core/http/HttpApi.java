@@ -1,21 +1,23 @@
 package jp.co.cybird.barcodekanojoForGAM.core.http;
 
+import android.os.Build;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import jp.co.cybird.app.android.lib.commons.file.DownloadHelper;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 import jp.co.cybird.barcodekanojoForGAM.core.parser.AbstractJSONParser;
 import jp.co.cybird.barcodekanojoForGAM.core.parser.JSONParser;
+
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
@@ -28,9 +30,9 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -100,28 +102,24 @@ public class HttpApi {
         throw new BarcodeKanojoException(response.getStatusLine().toString());
     }
 
-    public String doHttpPost(String url, NameValuePair... nameValuePairs) throws BarcodeKanojoException, IOException {
-        HttpResponse response = executeHttpRequest(createHttpPost(url, nameValuePairs));
-        switch (response.getStatusLine().getStatusCode()) {
-            case 200:
-                try {
-                    return EntityUtils.toString(response.getEntity());
-                } catch (ParseException e) {
-                    throw new BarcodeKanojoException(e.getMessage());
-                }
-            case 401:
-                response.getEntity().consumeContent();
-                throw new BarcodeKanojoException(response.getStatusLine().toString());
-            case 404:
-                response.getEntity().consumeContent();
-                throw new BarcodeKanojoException(response.getStatusLine().toString());
-            default:
-                response.getEntity().consumeContent();
-                throw new BarcodeKanojoException(response.getStatusLine().toString());
-        }
-    }
+//	public String doHttpPost(String url, NameValuePair... nameValuePairs) throws BarcodeKanojoException, IOException {
+//        HttpResponse response = executeHttpRequest(createHttpPost(url, nameValuePairs));
+//        switch (response.getStatusLine().getStatusCode()) {
+//            case 200:
+//                try {
+//                    return EntityUtils.toString(response.getEntity());
+//                } catch (ParseException e) {
+//                    throw new BarcodeKanojoException(e.getMessage());
+//                }
+//            case 401:
+//            case 404:
+//            default:
+//                response.getEntity().consumeContent();
+//                throw new BarcodeKanojoException(response.getStatusLine().toString());
+//        }
+//    }
 
-    public HttpResponse executeHttpRequest(HttpRequestBase httpRequest) throws IOException {
+    private HttpResponse executeHttpRequest(HttpRequestBase httpRequest) throws IOException {
         try {
             this.mHttpClient.getConnectionManager().closeExpiredConnections();
             return this.mHttpClient.execute(httpRequest);
@@ -167,17 +165,17 @@ public class HttpApi {
         }
     }
 
-    public HttpURLConnection createHttpURLConnectionPost(URL url, String boundary) throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setDoInput(true);
-        conn.setDoOutput(true);
-        conn.setUseCaches(false);
-        conn.setConnectTimeout(30000);
-        conn.setRequestMethod(DownloadHelper.REQUEST_METHOD_POST);
-        conn.setRequestProperty("Connection", "Keep-Alive");
-        conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-        return conn;
-    }
+//    public HttpURLConnection createHttpURLConnectionPost(URL url, String boundary) throws IOException {
+//        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//        conn.setDoInput(true);
+//        conn.setDoOutput(true);
+//        conn.setUseCaches(false);
+//        conn.setConnectTimeout(30000);
+//        conn.setRequestMethod(DownloadHelper.REQUEST_METHOD_POST);
+//        conn.setRequestProperty("Connection", "Keep-Alive");
+//        conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+//        return conn;
+//    }
 
     private List<NameValuePair> stripNulls(NameValuePair... nameValuePairs) {
         List<NameValuePair> params = new ArrayList<>();
@@ -189,29 +187,38 @@ public class HttpApi {
         return params;
     }
 
-    private MultipartEntity createMultipartEntity(NameValueOrFilePair... nameValueOrFilePairs) throws UnsupportedEncodingException {
-        File file;
-        MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, BOUNDARY, (Charset) null);
-        for (NameValueOrFilePair param : nameValueOrFilePairs) {
-            if (param != null && param.getValue() != null) {
-                entity.addPart(param.getName(), new StringBody(param.getValue(), "text/plain", Charset.forName("UTF-8")));
-            } else if (!(param == null || (file = param.getFile()) == null || !file.exists())) {
-                entity.addPart(param.getName(), new FileBody(file, "application/octet-stream"));
-            }
-        }
-        return entity;
+    private HttpEntity createMultipartEntity(NameValueOrFilePair... nameValueOrFilePairs) throws UnsupportedEncodingException {
+		MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+		entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+		entityBuilder.setBoundary(BOUNDARY);
+		for (NameValueOrFilePair param : nameValueOrFilePairs) {
+			File file;
+			if (param != null && param.getValue() != null) {
+				if (Build.VERSION.SDK_INT < 19) {
+					entityBuilder.addPart(param.getName(), new StringBody(param.getValue(), ContentType.TEXT_PLAIN.withCharset(Charset.forName("UTF-8"))));
+				} else {
+					entityBuilder.addPart(param.getName(), new StringBody(param.getValue(), ContentType.TEXT_PLAIN.withCharset(StandardCharsets.UTF_8)));
+				}
+			} else if (!(param == null || (file = param.getFile()) == null || !file.exists())) {
+				entityBuilder.addPart(param.getName(), new FileBody(file, ContentType.APPLICATION_OCTET_STREAM, "image.png"));
+			}
+		}
+		return entityBuilder.build();
     }
 
-    public static final DefaultHttpClient createHttpClient() {
+    //TODO: Make sure this is proper when the time comes
+	//TODO: The whole Scheme thing is deprecated, better fix it.
+    public static DefaultHttpClient createHttpClient() {
         SchemeRegistry supportedSchemes = new SchemeRegistry();
-        supportedSchemes.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        supportedSchemes.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+        //supportedSchemes.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+        //supportedSchemes.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+		supportedSchemes.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 5000));
         HttpParams httpParams = createHttpParams();
         HttpClientParams.setRedirecting(httpParams, false);
         return new DefaultHttpClient(new ThreadSafeClientConnManager(httpParams, supportedSchemes), httpParams);
     }
 
-    private static final HttpParams createHttpParams() {
+    private static HttpParams createHttpParams() {
         HttpParams params = new BasicHttpParams();
         HttpConnectionParams.setStaleCheckingEnabled(params, false);
         HttpConnectionParams.setConnectionTimeout(params, 30000);
