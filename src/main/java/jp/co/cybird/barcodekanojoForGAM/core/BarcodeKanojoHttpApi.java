@@ -261,34 +261,34 @@ public class BarcodeKanojoHttpApi {
         return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("self_user", new UserParser()), new ModelParser("owner_user", new UserParser()), new ModelParser("kanojo", new KanojoParser()), new ModelParser("love_increment", new LoveIncrementParser())));
     }
 
-    public Response<BarcodeKanojoModel> do_extend_gift(int kanojo_id, int extend_item_id) throws IllegalStateException, BarcodeKanojoException, IOException {
+    Response<BarcodeKanojoModel> do_extend_gift(int kanojo_id, int extend_item_id) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpPost(fullUrl(URL_API_COMMUNICATION_DO_EXTEND_GIFT), new BasicNameValuePair("kanojo_id", String.valueOf(kanojo_id)), new BasicNameValuePair("extend_item_id", String.valueOf(extend_item_id)));
         return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("self_user", new UserParser()), new ModelParser("owner_user", new UserParser()), new ModelParser("kanojo", new KanojoParser()), new ModelParser("love_increment", new LoveIncrementParser())));
     }
 
-    public Response<BarcodeKanojoModel> play_on_live2d(int kanojo_id, String actions) throws IllegalStateException, BarcodeKanojoException, IOException {
+    Response<BarcodeKanojoModel> play_on_live2d(int kanojo_id, String actions) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpPost(fullUrl(URL_API_COMMUNICATION_PLAY_ON_LIVE2D), new BasicNameValuePair("kanojo_id", String.valueOf(kanojo_id)), new BasicNameValuePair("actions", actions));
         return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("self_user", new UserParser()), new ModelParser("owner_user", new UserParser()), new ModelParser("kanojo", new KanojoParser()), new ModelParser("love_increment", new LoveIncrementParser())));
     }
 
-    public Response<BarcodeKanojoModel> user_timeline(int user_id, int since_id, int index, int limit) throws IllegalStateException, BarcodeKanojoException, IOException {
+    Response<BarcodeKanojoModel> user_timeline(int user_id, int since_id, int index, int limit) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_ACTIVITY_USER_TIMELINE), new BasicNameValuePair("user_id", String.valueOf(user_id)), new BasicNameValuePair("since_id", String.valueOf(since_id)), new BasicNameValuePair("index", String.valueOf(index)), new BasicNameValuePair("limit", String.valueOf(limit)));
         return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelListParser("activities", new ActivityParser())));
     }
 
-    public Response<BarcodeKanojoModel> scanned_timeline(String barcode, int since_id, int index, int limit) throws IllegalStateException, BarcodeKanojoException, IOException {
+    Response<BarcodeKanojoModel> scanned_timeline(String barcode, int since_id, int index, int limit) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_ACTIVITY_SCANNED_TIMELINE), new BasicNameValuePair("barcode", barcode), new BasicNameValuePair("since_id", String.valueOf(since_id)), new BasicNameValuePair("index", String.valueOf(index)), new BasicNameValuePair("limit", String.valueOf(limit)));
         return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelListParser("activities", new ActivityParser())));
     }
 
-    public String item_detail(int store_item_id) {
-        return String.valueOf(fullUrl(URL_API_PAYMENT_ITEM_DETAIL)) + "?" + new BasicNameValuePair("store_item_id", String.valueOf(store_item_id));
-    }
+//    public String item_detail(int store_item_id) {
+//        return fullUrl(URL_API_PAYMENT_ITEM_DETAIL) + "?" + new BasicNameValuePair("store_item_id", String.valueOf(store_item_id));
+//    }
 
-    public Response<BarcodeKanojoModel> payment_verify(String payment_id) throws IllegalStateException, BarcodeKanojoException, IOException {
-        HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_PAYMENT_VERIFY), new BasicNameValuePair("payment_id", payment_id));
-        return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser()));
-    }
+//    public Response<BarcodeKanojoModel> payment_verify(String payment_id) throws IllegalStateException, BarcodeKanojoException, IOException {
+//        HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_PAYMENT_VERIFY), new BasicNameValuePair("payment_id", payment_id));
+//        return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser()));
+//    }
 
     public Response<BarcodeKanojoModel> product_category_list() throws BarcodeKanojoException, IOException {
         HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_RESOURCE_PRODUCT_CATEGORY_LIST));
@@ -311,12 +311,12 @@ public class BarcodeKanojoHttpApi {
     }
 
     public Response<BarcodeKanojoModel> delete(int user_id) throws BarcodeKanojoException, IOException {
-        HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_ACCOUNT_DELETE), new NameValueOrFilePair("user_id", new StringBuilder().append(user_id).toString()));
+        HttpPost httpPost = this.mHttpApi.createHttpMultipartPost(fullUrl(URL_API_ACCOUNT_DELETE), new NameValueOrFilePair("user_id", String.valueOf(user_id)));
         return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 
     public Response<BarcodeKanojoModel> account_show() throws IllegalStateException, BarcodeKanojoException, IOException {
-        HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_ACCOUNT_SHOW), new NameValuePair[0]);
+        HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_ACCOUNT_SHOW));
         return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelParser("user", new UserParser())));
     }
 

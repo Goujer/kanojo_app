@@ -21,7 +21,15 @@
             <Button android:id="@+id/kanojo_room_items_btn" android:background="@drawable/btn_kanojo_items" android:layout_width="70dp" android:layout_height="25dp" android:layout_marginRight="15dp" android:layout_marginBottom="20dp" android:layout_above="@+id/kanojo_room_message_banner" android:layout_alignParentRight="true"/>
             <Button android:id="@+id/kanojo_room_date_btn" android:background="@drawable/btn_kanojo_date" android:layout_width="70dp" android:layout_height="25dp" android:layout_marginRight="15dp" android:layout_marginBottom="12dp" android:layout_above="@+id/kanojo_room_items_btn" android:layout_alignParentRight="true"/>
             <Button android:id="@+id/kanojo_room_ticket_btn" android:background="@drawable/btn_kanojo_tickets" android:layout_width="70dp" android:layout_height="25dp" android:layout_marginRight="15dp" android:layout_marginBottom="12dp" android:layout_above="@+id/kanojo_room_date_btn" android:layout_alignParentRight="true"/>
-            <WebView android:gravity="center" android:id="@+id/kanojo_room_message_banner" android:background="@android:color/transparent" android:layout_width="match_parent" android:layout_height="50dp" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" android:layout_centerVertical="true"/>
+            <WebView
+				android:id="@+id/kanojo_room_message_banner"
+				android:layout_width="match_parent"
+				android:layout_height="50dp"
+				android:layout_alignParentBottom="true"
+				android:layout_centerHorizontal="true"
+				android:layout_centerVertical="true"
+				android:background="@android:color/transparent"
+				android:gravity="center" />
             <LinearLayout android:orientation="vertical" android:id="@+id/kanojo_room_status_txt_layout" android:background="@color/kanojo_room_status_bg" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true">
                 <RelativeLayout android:id="@+id/progressbar_radar_view" android:visibility="gone" android:layout_width="match_parent" android:layout_height="220dp">
                     <ProgressBar android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true"/>
