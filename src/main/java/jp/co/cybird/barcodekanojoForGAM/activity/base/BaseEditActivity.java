@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.DatePicker;
@@ -20,6 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.HashMap;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
@@ -82,8 +84,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    protected void onPause() {
         if (this.mKanojoGenerateAndUpdateTask != null) {
             this.mKanojoGenerateAndUpdateTask.cancel(true);
             this.mKanojoGenerateAndUpdateTask = null;
@@ -99,18 +100,14 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == -1) {
             switch (requestCode) {
-                case 1100:
+                case BaseInterface.REQUEST_GALLERY:
                 case BaseInterface.REQUEST_CAMERA:
                     this.mFile = EditBitmapActivity.getEditedFile();
-                    return;
-                default:
-                    return;
             }
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void setBitmapFromFile(ProductAndKanojoView view, File file) {
+    protected void setBitmapFromFile(ProductAndKanojoView view, File file) {
         Bitmap setBitmap;
         Bitmap bitmap = loadBitmap(file, 200, 200);
         if (bitmap != null) {
@@ -127,8 +124,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         }
     }
 
-    /* access modifiers changed from: protected */
-    public Bitmap loadBitmap(File file, int view_width, int view_height) {
+    protected Bitmap loadBitmap(File file, int view_width, int view_height) {
         int sample_size;
         if (file == null) {
             return null;
@@ -173,36 +169,31 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void setFile(File file) {
+    protected void setFile(File file) {
         this.mFile = file;
     }
 
-    /* access modifiers changed from: protected */
-    public File getFile() {
+    protected File getFile() {
         return this.mFile;
     }
 
-    /* access modifiers changed from: protected */
-    public void setOnDismissListener(DialogInterface.OnDismissListener listener) {
+    protected void setOnDismissListener(DialogInterface.OnDismissListener listener) {
         this.mListener = listener;
     }
 
-    /* access modifiers changed from: protected */
-    public Category getDefaultCategory() {
+   protected Category getDefaultCategory() {
         if (this.mCategories == null || this.mCategories.size() == 0) {
             return null;
         }
-        return (Category) this.mCategories.get(0);
+        return this.mCategories.get(0);
     }
 
-    /* access modifiers changed from: protected */
-    public void showListDialog(String title, final Product product, final EditItemView value) {
+    protected void showListDialog(String title, final Product product, final EditItemView value) {
         int selected = 0;
         if (this.mCategories != null) {
             int size = this.mCategories.size();
             for (int i = 0; i < size; i++) {
-                if (((Category) this.mCategories.get(i)).getId() == product.getCategory_id()) {
+                if (this.mCategories.get(i).getId() == product.getCategory_id()) {
                     selected = i;
                 }
             }
@@ -211,8 +202,8 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
             public void onClick(DialogInterface dialog, int position) {
                 product.setCategory(BaseEditActivity.this.mCategoryList[position]);
                 if (BaseEditActivity.this.mCategories != null) {
-                    product.setCategory_id(((Category) BaseEditActivity.this.mCategories.get(position)).getId());
-                    value.setValue(((Category) BaseEditActivity.this.mCategories.get(position)).getName());
+                    product.setCategory_id(BaseEditActivity.this.mCategories.get(position).getId());
+                    value.setValue(BaseEditActivity.this.mCategories.get(position).getName());
                 }
             }
         }).setPositiveButton(R.string.common_dialog_ok, new DialogInterface.OnClickListener() {
@@ -225,8 +216,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         dialog.show();
     }
 
-    /* access modifiers changed from: protected */
-    public void showGenderDialog(String title, final EditItemView value) {
+    protected void showGenderDialog(String title, final EditItemView value) {
         final String[] genderList = getResources().getStringArray(R.array.user_account_gender_list);
         int selected = -1;
         if (genderList != null) {
@@ -251,14 +241,13 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         dialog.show();
     }
 
-    /* access modifiers changed from: protected */
-    public void showDatePickDialog(String title, final EditItemView value) {
+    protected void showDatePickDialog(String title, final EditItemView value) {
         Calendar cal = Calendar.getInstance();
         String birthText = value.getValue();
         int year = cal.get(1);
         int month = cal.get(2);
         int day = cal.get(5);
-        if (!(birthText == null || birthText == "")) {
+        if (!(birthText == null || birthText.equals(""))) {
             try {
                 String[] arr = birthText.split("\\.");
                 if (arr.length == 3) {
@@ -271,7 +260,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         }
         DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                value.setValue(String.valueOf(String.format("%02d", new Object[]{Integer.valueOf(monthOfYear + 1)})) + "." + String.format("%02d", new Object[]{Integer.valueOf(dayOfMonth)}) + "." + String.format("%04d", new Object[]{Integer.valueOf(year)}));
+                value.setValue(String.format("%02d", monthOfYear + 1) + "." + String.format("%02d", dayOfMonth) + "." + String.format("%04d", year));
             }
         }, year, month, day);
         if (this.mListener != null) {
@@ -280,16 +269,14 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         dialog.show();
     }
 
-    /* access modifiers changed from: protected */
-    public void showEditTextDialog(String title, EditItemView value) {
+    protected void showEditTextDialog(String title, EditItemView value) {
         EditText edit = new EditText(this);
         edit.setInputType(1);
         edit.setText(value.getValue());
         showEditTextDialog(title, value, edit);
     }
 
-    /* access modifiers changed from: protected */
-    public void showEditTextDialog(String title, EditItemView value, int lines) {
+    protected void showEditTextDialog(String title, EditItemView value, int lines) {
         EditText edit = new EditText(this);
         edit.setText(value.getValue());
         edit.setLines(lines);
@@ -297,8 +284,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         showEditTextDialog(title, value, edit);
     }
 
-    /* access modifiers changed from: protected */
-    public void showEditTextDialog(String title, final EditItemView value, final EditText edit) {
+    protected void showEditTextDialog(String title, final EditItemView value, final EditText edit) {
         AlertDialog dialog = new AlertDialog.Builder(this).setTitle(title).setView(edit).setPositiveButton(R.string.common_dialog_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 value.setValue(edit.getText().toString());
@@ -313,8 +299,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         dialog.show();
     }
 
-    /* access modifiers changed from: protected */
-    public void showImagePickerDialog(String title) {
+    protected void showImagePickerDialog(String title) {
         AlertDialog dialog = new AlertDialog.Builder(this).setTitle(title).setItems(this.r.getStringArray(R.array.common_product_photo_dialog), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int position) {
                 switch (position) {
@@ -329,7 +314,6 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                         BaseEditActivity.this.startActivityForResult(intent2, BaseInterface.REQUEST_CAMERA);
                         return;
                     default:
-                        return;
                 }
             }
         }).setNegativeButton(R.string.common_dialog_cancel, new DialogInterface.OnClickListener() {
@@ -342,8 +326,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         dialog.show();
     }
 
-    /* access modifiers changed from: protected */
-    public ProgressDialog showProgressDialog() {
+    protected ProgressDialog showProgressDialog() {
         try {
             if (this.mProgressDialog == null) {
                 ProgressDialog dialog = new ProgressDialog(this);
@@ -362,8 +345,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         return this.mProgressDialog;
     }
 
-    /* access modifiers changed from: protected */
-    public void dismissProgressDialog() {
+    protected void dismissProgressDialog() {
         try {
             if (this.mProgressDialog != null) {
                 this.mProgressDialog.dismiss();
@@ -372,26 +354,24 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void executeInspectionAndUpdateTask(String barcode, String company_name, String product_name, int product_category_id, String product_comment) {
+    protected void executeInspectionAndUpdateTask(String barcode, String company_name, String product_name, int product_category_id, String product_comment) {
         HashMap<String, String> param = new HashMap<>();
         param.put(GreeDefs.BARCODE, barcode);
         param.put(GreeDefs.COMPANY_NAME, company_name);
         param.put(GreeDefs.PRODUCT_NAME, product_name);
-        param.put(GreeDefs.PRODUCT_CUTEGORY_ID, new StringBuilder().append(product_category_id).toString());
+        param.put(GreeDefs.PRODUCT_CUTEGORY_ID, String.valueOf(product_category_id));
         param.put(GreeDefs.PRODUCT_COMMENT, product_comment);
-        inspectionAndUpdateByAction(param, 4, (HashMap<String, Object>) null);
+        inspectionAndUpdateByAction(param, 4, null);
     }
 
     public void executeUpdateTask(HashMap<String, String> map) {
         if (this.mKanojoGenerateAndUpdateTask == null || this.mKanojoGenerateAndUpdateTask.getStatus() == AsyncTask.Status.FINISHED) {
-            this.mKanojoGenerateAndUpdateTask = new KanojoGenerateAndUpdate(map, (Object) null, 4);
-            this.mKanojoGenerateAndUpdateTask.execute(new String[0]);
+            this.mKanojoGenerateAndUpdateTask = new KanojoGenerateAndUpdate(this, map, null, 4);
+            this.mKanojoGenerateAndUpdateTask.execute();
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void executeInspectionAndScanOthersTask(ApiTask task) {
+    protected void executeInspectionAndScanOthersTask(ApiTask task) {
         HashMap<String, String> param = new HashMap<>();
         param.put(GreeDefs.COMPANY_NAME, task.product.getCompany_name());
         param.put(GreeDefs.PRODUCT_NAME, task.product.getName());
@@ -408,7 +388,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
             }
             task.productNameTextId = param.get(GreeDefs.PRODUCT_NAME_TEXTID);
             task.companyNameTextId = param.get(GreeDefs.COMPANY_NAME_TEXTID);
-            this.mKanojoGenerateAndUpdateTask = new KanojoGenerateAndUpdate(param, task, 3);
+            this.mKanojoGenerateAndUpdateTask = new KanojoGenerateAndUpdate(this, param, task, 3);
             this.mKanojoGenerateAndUpdateTask.execute();
         }
     }
@@ -428,25 +408,27 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
 
     public void exectuteGenerateTask(HashMap<String, String> params, Kanojo kanojo) {
         if (this.mKanojoGenerateAndUpdateTask == null || this.mKanojoGenerateAndUpdateTask.getStatus() == AsyncTask.Status.FINISHED) {
-            this.mKanojoGenerateAndUpdateTask = new KanojoGenerateAndUpdate(params, kanojo, 2);
+            this.mKanojoGenerateAndUpdateTask = new KanojoGenerateAndUpdate(this, params, kanojo, 2);
             this.mKanojoGenerateAndUpdateTask.execute();
         }
     }
 
-    protected class KanojoGenerateAndUpdate extends AsyncTask<String, Void, Response<?>> {
+    protected static class KanojoGenerateAndUpdate extends AsyncTask<String, Void, Response<?>> {
         private int mAction;
-        private Object mOption = null;
+        private Object mOption;
         private HashMap<String, String> mParam;
         private Exception mReason = null;
+        private WeakReference<BaseEditActivity> contextRef;
 
-        public KanojoGenerateAndUpdate(HashMap<String, String> param, Object opton, int action) {
+        KanojoGenerateAndUpdate(BaseEditActivity context, HashMap<String, String> param, Object option, int action) {
+        	this.contextRef = new WeakReference<>(context);
             this.mParam = param;
-            this.mOption = opton;
+            this.mOption = option;
             this.mAction = action;
         }
 
         public void onPreExecute() {
-            BaseEditActivity.this.showProgressDialog();
+			contextRef.get().showProgressDialog();
         }
 
         public Response<?> doInBackground(String... params) {
@@ -462,16 +444,16 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
             int code = 0;
             try {
                 if (this.mAction == 2) {
-                    code = BaseEditActivity.this.getCodeAndShowAlert(response, this.mReason, new BaseActivity.OnDialogDismissListener() {
+                    code = contextRef.get().getCodeAndShowAlert(response, this.mReason, new BaseActivity.OnDialogDismissListener() {
                         public void onDismiss(DialogInterface dialog, int code) {
                             if (code == 200) {
-                                BaseEditActivity.this.setResult(102);
-                                BaseEditActivity.this.close();
+								contextRef.get().setResult(102);
+								contextRef.get().close();
                             }
                         }
                     });
                 } else if (this.mAction == 3) {
-                    code = BaseEditActivity.this.getCodeAndShowAlert(response, this.mReason);
+                    code = contextRef.get().getCodeAndShowAlert(response, this.mReason);
                 } else if (this.mAction == 4) {
                     if (response == null) {
                         throw new BarcodeKanojoException(this.mReason.toString());
@@ -483,13 +465,13 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                         if (this.mAction != 2) {
                             if (this.mAction != 4) {
                                 if (this.mAction == 3) {
-                                    BaseEditActivity.this.dismissProgressDialog();
+									contextRef.get().dismissProgressDialog();
                                     ApiTask task = (ApiTask) this.mOption;
                                     task.result = 1;
                                     if (task.what != 2) {
                                         if (task.what == 1) {
-                                            BaseEditActivity.this.setResult(103);
-                                            BaseEditActivity.this.close();
+											contextRef.get().setResult(103);
+											contextRef.get().close();
                                             break;
                                         }
                                     } else {
@@ -501,46 +483,44 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                                 Alert alert = response.getAlert();
                                 final Product product = (Product) response.get(Product.class);
                                 if (alert != null) {
-                                    BaseEditActivity.this.dismissProgressDialog();
-                                    BaseEditActivity.this.showNoticeDialog(alert.getBody(), new DialogInterface.OnDismissListener() {
+									contextRef.get().dismissProgressDialog();
+									contextRef.get().showNoticeDialog(alert.getBody(), new DialogInterface.OnDismissListener() {
                                         public void onDismiss(DialogInterface dialog) {
                                             Intent data = new Intent();
                                             data.putExtra(BaseInterface.EXTRA_PRODUCT, product);
-                                            BaseEditActivity.this.setResult(101, data);
-                                            BaseEditActivity.this.close();
+											contextRef.get().setResult(101, data);
+											contextRef.get().close();
                                         }
                                     });
                                     break;
                                 }
                             }
                         } else {
-                            BaseEditActivity.this.setResult(102);
-                            BaseEditActivity.this.close();
+							contextRef.get().setResult(102);
+							contextRef.get().close();
                             break;
                         }
                         break;
                     case 500:
                     case 503:
-                        BaseEditActivity.this.dismissProgressDialog();
+						contextRef.get().dismissProgressDialog();
                         break;
                 }
             } catch (BarcodeKanojoException e) {
             } finally {
-                BaseEditActivity.this.dismissProgressDialog();
+				contextRef.get().dismissProgressDialog();
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
-            BaseEditActivity.this.dismissProgressDialog();
+        protected void onCancelled() {
+			contextRef.get().dismissProgressDialog();
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> process() throws BarcodeKanojoException, IllegalStateException, IOException {
-            BarcodeKanojoApp barcodeKanojoApp = (BarcodeKanojoApp) BaseEditActivity.this.getApplication();
+        Response<?> process() throws BarcodeKanojoException, IllegalStateException, IOException {
+            BarcodeKanojoApp barcodeKanojoApp = (BarcodeKanojoApp) contextRef.get().getApplication();
             BarcodeKanojo barcodeKanojo = barcodeKanojoApp.getBarcodeKanojo();
             if (this.mAction == 2) {
-                File iconFile = FileUtil.createIconCache(BaseEditActivity.this, (Kanojo) this.mOption);
+                File iconFile = FileUtil.createIconCache(contextRef.get(), (Kanojo) this.mOption);
                 Location loc = barcodeKanojoApp.getLastKnownLocation();
                 if (loc == null) {
                     try {
@@ -549,9 +529,9 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                     }
                     loc = barcodeKanojoApp.getLastKnownLocation();
                 }
-                return barcodeKanojo.scan_and_generate(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.COMPANY_NAME_TEXTID), this.mParam.get(GreeDefs.KANOJO_NAME), this.mParam.get(GreeDefs.KANOJO_NAME_TEXTID), iconFile, this.mParam.get(GreeDefs.PRODUCT_NAME), this.mParam.get(GreeDefs.PRODUCT_NAME_TEXTID), Integer.valueOf(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)).intValue(), this.mParam.get(GreeDefs.PRODUCT_COMMENT), this.mParam.get(GreeDefs.PRODUCT_COMMENT_TEXTID), BaseEditActivity.this.getFile(), GeoUtil.LocationToGeo(loc));
+                return barcodeKanojo.scan_and_generate(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.COMPANY_NAME_TEXTID), this.mParam.get(GreeDefs.KANOJO_NAME), this.mParam.get(GreeDefs.KANOJO_NAME_TEXTID), iconFile, this.mParam.get(GreeDefs.PRODUCT_NAME), this.mParam.get(GreeDefs.PRODUCT_NAME_TEXTID), Integer.parseInt(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)), this.mParam.get(GreeDefs.PRODUCT_COMMENT), this.mParam.get(GreeDefs.PRODUCT_COMMENT_TEXTID), contextRef.get().getFile(), GeoUtil.LocationToGeo(loc));
             } else if (this.mAction == 4) {
-                return barcodeKanojo.update(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.COMPANY_NAME_TEXTID), this.mParam.get(GreeDefs.PRODUCT_NAME), this.mParam.get(GreeDefs.PRODUCT_NAME_TEXTID), Integer.valueOf(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)).intValue(), this.mParam.get(GreeDefs.PRODUCT_COMMENT), this.mParam.get(GreeDefs.PRODUCT_COMMENT_TEXTID), BaseEditActivity.this.getFile(), GeoUtil.stringToGeo(this.mParam.get(GreeDefs.GEOPOINT)));
+                return barcodeKanojo.update(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.COMPANY_NAME_TEXTID), this.mParam.get(GreeDefs.PRODUCT_NAME), this.mParam.get(GreeDefs.PRODUCT_NAME_TEXTID), Integer.parseInt(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)), this.mParam.get(GreeDefs.PRODUCT_COMMENT), this.mParam.get(GreeDefs.PRODUCT_COMMENT_TEXTID), contextRef.get().getFile(), GeoUtil.stringToGeo(this.mParam.get(GreeDefs.GEOPOINT)));
             } else if (this.mAction == 3) {
                 Location loc2 = barcodeKanojoApp.getLastKnownLocation();
                 if (loc2 == null) {
@@ -570,12 +550,12 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                         if (task.barcode == null || task.product == null) {
                             return null;
                         }
-                        return barcodeKanojo.scan(task.barcode, task.product.getCompany_name(), task.companyNameTextId, task.product.getName(), task.productNameTextId, task.product.getCategory_id(), task.product.getComment(), task.productCommentTextId, BaseEditActivity.this.getFile(), GeoUtil.LocationToGeo(loc2));
+                        return barcodeKanojo.scan(task.barcode, task.product.getCompany_name(), task.companyNameTextId, task.product.getName(), task.productNameTextId, task.product.getCategory_id(), task.product.getComment(), task.productCommentTextId, contextRef.get().getFile(), GeoUtil.LocationToGeo(loc2));
                     case 2:
                         if (task.barcode == null || task.product == null) {
                             return null;
                         }
-                        return barcodeKanojo.update(task.barcode, task.product.getCompany_name(), task.companyNameTextId, task.product.getName(), task.productNameTextId, task.product.getCategory_id(), task.product.getComment(), task.productCommentTextId, BaseEditActivity.this.getFile(), GeoUtil.LocationToGeo(loc2));
+                        return barcodeKanojo.update(task.barcode, task.product.getCompany_name(), task.companyNameTextId, task.product.getName(), task.productNameTextId, task.product.getCategory_id(), task.product.getComment(), task.productCommentTextId, contextRef.get().getFile(), GeoUtil.LocationToGeo(loc2));
                     default:
                         return null;
                 }
@@ -587,23 +567,19 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
 
     protected class SignUpAndUpdateAccountTask extends AsyncTask<Void, Void, Response<?>> {
         private static final boolean DEBUG = false;
-        private static final String TAG = "SignUpAndUpdateAccountTask";
+        private static final String TAG = "SignUpUpdateAccountTask";
         private int mAction;
         private Exception mReason;
-        private HashMap<String, String> param;
 
-        public SignUpAndUpdateAccountTask(HashMap<String, String> param2, int action) {
-            this.param = param2;
-            this.mAction = action;
+		public SignUpAndUpdateAccountTask(HashMap<String, String> param2, int action) {
+			this.mAction = action;
         }
 
-        /* access modifiers changed from: protected */
-        public void onPreExecute() {
+        protected void onPreExecute() {
             BaseEditActivity.this.showProgressDialog();
         }
 
-        /* access modifiers changed from: protected */
-        public Response<?> doInBackground(Void... params) {
+        protected Response<?> doInBackground(Void... params) {
             try {
                 BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) BaseEditActivity.this.getApplication()).getBarcodeKanojo();
                 Log.e(TAG, "doInBackground() cunnot be used !!!");
@@ -615,8 +591,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onPostExecute(Response<?> response) {
+        protected void onPostExecute(Response<?> response) {
             try {
                 switch (BaseEditActivity.this.getCodeAndShowAlert(response, this.mReason)) {
                     case 200:
@@ -632,8 +607,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        protected void onCancelled() {
             BaseEditActivity.this.dismissProgressDialog();
         }
     }
@@ -641,7 +615,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
     public void executeSignUpTask(HashMap<String, String> param) {
         if (this.mSignUpAndUpdateTask == null || this.mSignUpAndUpdateTask.getStatus() == AsyncTask.Status.FINISHED) {
             this.mSignUpAndUpdateTask = new SignUpAndUpdateAccountTask(param, 0);
-            this.mSignUpAndUpdateTask.execute(new Void[0]);
+            this.mSignUpAndUpdateTask.execute();
         }
     }
 
@@ -651,9 +625,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void inspectionAndUpdateByAction(HashMap<String, String> param, int action, HashMap<String, Object> options) {
-        new HashMap();
+    protected void inspectionAndUpdateByAction(HashMap<String, String> param, int action, HashMap<String, Object> options) {
         switch (action) {
             case 0:
                 executeSignUpTask(param);
@@ -679,7 +651,6 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                 executeUpdateTask(param);
                 return;
             default:
-                return;
-        }
+		}
     }
 }

@@ -63,26 +63,26 @@ public class BarcodeKanojo {
         return this.mBCKApi.update(name, name_textid, profile_image_data);
     }
 
-    public Response<BarcodeKanojoModel> iphone_update(String name, String current_password, String new_password, String email, int birth_month, int birth_day, String sex, String description, File profile_image_data) throws BarcodeKanojoException, IOException {
-        Response<BarcodeKanojoModel> response = this.mBCKApi.iphone_update(name, current_password, new_password, email, birth_month, birth_day, sex, description, profile_image_data);
-        User user = (User) response.get(User.class);
-        if (user != null) {
-            setUser(user);
-        }
-        return response;
-    }
+//    public Response<BarcodeKanojoModel> iphone_update(String name, String current_password, String new_password, String email, int birth_month, int birth_day, String sex, String description, File profile_image_data) throws BarcodeKanojoException, IOException {
+//        Response<BarcodeKanojoModel> response = this.mBCKApi.iphone_update(name, current_password, new_password, email, birth_month, birth_day, sex, description, profile_image_data);
+//        User user = (User) response.get(User.class);
+//        if (user != null) {
+//            setUser(user);
+//        }
+//        return response;
+//    }
 
-    public Response<BarcodeKanojoModel> verify(int gree_id, String verify_key) throws BarcodeKanojoException {
-        try {
-            Response<BarcodeKanojoModel> response = this.mBCKApi.verify(gree_id, verify_key);
-            setUser((User) response.get(User.class));
-            if (this.mUser == null) {
-            }
-            return response;
-        } catch (IOException e) {
-            throw new BarcodeKanojoException(e.toString());
-        }
-    }
+//    public Response<BarcodeKanojoModel> verify(int gree_id, String verify_key) throws BarcodeKanojoException {
+//        try {
+//            Response<BarcodeKanojoModel> response = this.mBCKApi.verify(gree_id, verify_key);
+//            setUser((User) response.get(User.class));
+//            if (this.mUser == null) {
+//            }
+//            return response;
+//        } catch (IOException e) {
+//            throw new BarcodeKanojoException(e.toString());
+//        }
+//    }
 
     public Response<BarcodeKanojoModel> iphone_verify(String email, String password, String udid) throws BarcodeKanojoException {
         try {
@@ -116,7 +116,7 @@ public class BarcodeKanojo {
     public Response<BarcodeKanojoModel> android_register_fb(String facebookid, String facebookToken) throws BarcodeKanojoException {
         try {
             Response<BarcodeKanojoModel> response = this.mBCKApi.android_register_fb(facebookid, facebookToken);
-            if (((User) response.get(User.class)) != null) {
+            if (response.get(User.class) != null) {
                 return response;
             }
             throw new BarcodeKanojoException("user not found");
@@ -128,7 +128,7 @@ public class BarcodeKanojo {
     public Response<BarcodeKanojoModel> android_disconnect_fb() throws BarcodeKanojoException {
         try {
             Response<BarcodeKanojoModel> response = this.mBCKApi.android_disconnect_fb();
-            if (((User) response.get(User.class)) != null) {
+            if (response.get(User.class) != null) {
                 return response;
             }
             throw new BarcodeKanojoException("user not found");
@@ -140,7 +140,7 @@ public class BarcodeKanojo {
     public Response<BarcodeKanojoModel> android_register_twitter(String access_token, String access_secret) throws BarcodeKanojoException {
         try {
             Response<BarcodeKanojoModel> response = this.mBCKApi.android_register_twitter(access_token, access_secret);
-            if (((User) response.get(User.class)) != null) {
+            if (response.get(User.class) != null) {
                 return response;
             }
             throw new BarcodeKanojoException("user not found");
@@ -165,7 +165,7 @@ public class BarcodeKanojo {
         return current_kanojos(this.mUser.getId(), index, limit, search);
     }
 
-    public Response<BarcodeKanojoModel> current_kanojos(int user_id, int index, int limit, String search) throws IllegalStateException, BarcodeKanojoException, IOException {
+    private Response<BarcodeKanojoModel> current_kanojos(int user_id, int index, int limit, String search) throws IllegalStateException, BarcodeKanojoException, IOException {
         return this.mBCKApi.current_kanojos(user_id, index, limit, search);
     }
 
@@ -173,9 +173,9 @@ public class BarcodeKanojo {
         return this.mBCKApi.friend_kanojos(this.mUser.getId(), index, limit, search);
     }
 
-    public Response<BarcodeKanojoModel> friend_kanojos(int user_id, int index, int limit, String search) throws IllegalStateException, BarcodeKanojoException, IOException {
-        return this.mBCKApi.friend_kanojos(user_id, index, limit, search);
-    }
+//    public Response<BarcodeKanojoModel> friend_kanojos(int user_id, int index, int limit, String search) throws IllegalStateException, BarcodeKanojoException, IOException {
+//        return this.mBCKApi.friend_kanojos(user_id, index, limit, search);
+//    }
 
     public Response<BarcodeKanojoModel> account_show() throws IllegalStateException, BarcodeKanojoException {
         try {
@@ -218,9 +218,9 @@ public class BarcodeKanojo {
         return this.mBCKApi.scan(barcode, company_name, company_name_textid, product_name, product_name_textid, product_category_id, product_comment, product_comment_textid, product_image_data, product_geo);
     }
 
-    public Response<BarcodeKanojoModel> scan_and_generate(String barcode, String company_name, String kanojo_name, File kanojo_profile_image_data, String product_name, int product_category_id, String product_comment, File product_image_data, LatLng product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
-        return this.mBCKApi.scan_and_generate(barcode, company_name, kanojo_name, kanojo_profile_image_data, product_name, product_category_id, product_comment, product_image_data, product_geo);
-    }
+//    public Response<BarcodeKanojoModel> scan_and_generate(String barcode, String company_name, String kanojo_name, File kanojo_profile_image_data, String product_name, int product_category_id, String product_comment, File product_image_data, LatLng product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
+//        return this.mBCKApi.scan_and_generate(barcode, company_name, kanojo_name, kanojo_profile_image_data, product_name, product_category_id, product_comment, product_image_data, product_geo);
+//    }
 
     public Response<BarcodeKanojoModel> scan_and_generate(String barcode, String company_name, String company_name_textid, String kanojo_name, String kanojo_name_textid, File kanojo_profile_image_data, String product_name, String product_name_textid, int product_category_id, String product_comment, String product_comment_textid, File product_image_data, LatLng product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
         return this.mBCKApi.scan_and_generate(barcode, company_name, company_name_textid, kanojo_name, kanojo_name_textid, kanojo_profile_image_data, product_name, product_name_textid, product_category_id, product_comment, product_comment_textid, product_image_data, product_geo);
@@ -242,9 +242,9 @@ public class BarcodeKanojo {
         return this.mBCKApi.user_timeline(this.mUser.getId(), since_id, index, limit);
     }
 
-    public Response<BarcodeKanojoModel> user_timeline(int user_id, int since_id, int index, int limit) throws IllegalStateException, BarcodeKanojoException, IOException {
-        return this.mBCKApi.user_timeline(user_id, since_id, index, limit);
-    }
+//    public Response<BarcodeKanojoModel> user_timeline(int user_id, int since_id, int index, int limit) throws IllegalStateException, BarcodeKanojoException, IOException {
+//        return this.mBCKApi.user_timeline(user_id, since_id, index, limit);
+//    }
 
     public Response<BarcodeKanojoModel> scanned_timeline(String barcode, int since_id, int index, int limit) throws IllegalStateException, BarcodeKanojoException, IOException {
         return this.mBCKApi.scanned_timeline(barcode, since_id, index, limit);
@@ -266,9 +266,9 @@ public class BarcodeKanojo {
         return this.mBCKApi.permanent_sub_item_gift_menu(item_class, item_category_id);
     }
 
-    public Response<BarcodeKanojoModel> date_and_gift_menu(int kanojo_id) throws IllegalStateException, BarcodeKanojoException, IOException {
-        return this.mBCKApi.date_and_gift_menu(kanojo_id);
-    }
+//    public Response<BarcodeKanojoModel> date_and_gift_menu(int kanojo_id) throws IllegalStateException, BarcodeKanojoException, IOException {
+//        return this.mBCKApi.date_and_gift_menu(kanojo_id);
+//    }
 
     public Response<BarcodeKanojoModel> has_items(int item_class, int item_category_id) throws IllegalStateException, BarcodeKanojoException, IOException {
         return this.mBCKApi.has_items(item_class, item_category_id);
@@ -327,13 +327,13 @@ public class BarcodeKanojo {
         this.mPlayLive2d = new PlayLive2d();
     }
 
-    public String item_detail(int store_item_id) {
-        return this.mBCKApi.item_detail(store_item_id);
-    }
+//    public String item_detail(int store_item_id) {
+//        return this.mBCKApi.item_detail(store_item_id);
+//    }
 
-    public Response<BarcodeKanojoModel> payment_verify(String payment_id) throws IllegalStateException, BarcodeKanojoException, IOException {
-        return this.mBCKApi.payment_verify(payment_id);
-    }
+//    public Response<BarcodeKanojoModel> payment_verify(String payment_id) throws IllegalStateException, BarcodeKanojoException, IOException {
+//        return this.mBCKApi.payment_verify(payment_id);
+//    }
 
     public void init_product_category_list() throws BarcodeKanojoException, IOException {
         Response<BarcodeKanojoModel> product_category_list = this.mBCKApi.product_category_list();
@@ -353,7 +353,7 @@ public class BarcodeKanojo {
             case 503:
                 throw new BarcodeKanojoException("Error: Code: " + code + " Category list not initialized!");
             default:
-                return;
+
         }
     }
 
@@ -364,11 +364,11 @@ public class BarcodeKanojo {
         throw new BarcodeKanojoException("Categories is empty");
     }
 
-    public static final BarcodeKanojoHttpApi createHttpApi(String domain, String clientVersion, String clientLanguage) {
+    private static BarcodeKanojoHttpApi createHttpApi(String domain, String clientVersion, String clientLanguage) {
         return new BarcodeKanojoHttpApi(domain, clientVersion, clientLanguage);
     }
 
-    public static final BarcodeKanojoHttpApi createHttpApi(String clientVersion, String clientLanguage) {
+    public static BarcodeKanojoHttpApi createHttpApi(String clientVersion, String clientLanguage) {
         return createHttpApi(Defs.URL_BASE(), clientVersion, clientLanguage);
     }
 

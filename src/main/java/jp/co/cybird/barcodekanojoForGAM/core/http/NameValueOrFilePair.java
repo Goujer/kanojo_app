@@ -11,7 +11,7 @@ public class NameValueOrFilePair extends BasicNameValuePair {
     }
 
     public NameValueOrFilePair(String name, File file2) {
-        super(name, (String) null);
+        super(name, null);
         this.file = file2;
     }
 

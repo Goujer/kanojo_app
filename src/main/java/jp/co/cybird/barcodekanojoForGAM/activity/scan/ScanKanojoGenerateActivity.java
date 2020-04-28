@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import java.io.File;
@@ -34,6 +33,7 @@ public class ScanKanojoGenerateActivity extends BaseEditActivity implements View
     private Product mProduct;
     private ProductAndKanojoView mProductAndKanojo;
     private EditItemView mProductName;
+
 	//TODO make arrows include generated icons and perhaps barcode image.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,32 +97,28 @@ public class ScanKanojoGenerateActivity extends BaseEditActivity implements View
     }
 
     public View getClientView() {
-        View leyout = getLayoutInflater().inflate(R.layout.activity_scan_generate, (ViewGroup) null);
+        View leyout = getLayoutInflater().inflate(R.layout.activity_scan_generate, null);
         LinearLayout appLayoutRoot = new LinearLayout(this);
         appLayoutRoot.addView(leyout);
         return appLayoutRoot;
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         ((BarcodeKanojoApp) getApplication()).requestLocationUpdates(true);
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    protected void onPause() {
         ((BarcodeKanojoApp) getApplication()).removeLocationUpdates();
         super.onPause();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    protected void onDestroy() {
         this.mProductAndKanojo.clear();
         super.onDestroy();
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         File f = getFile();
         if (f != null && f.exists()) {

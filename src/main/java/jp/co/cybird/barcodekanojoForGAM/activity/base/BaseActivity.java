@@ -121,8 +121,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         registerReceiver(this.mWarningFullSpaceReceiver, new IntentFilter(BarcodeKanojoApp.INTENT_ACTION_FULL_STORAGE));
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         if (this.mAutoRefresh) {
             if (DEBUG) {
@@ -132,14 +131,12 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    protected void onPause() {
         super.onPause();
         dismissNoticeDialog();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    protected void onDestroy() {
         if (DEBUG) {
             mActivityCount--;
             Log.d("NguyenTT", "End Activity: " + getLocalClassName() + " Current: " + mActivityCount);
@@ -152,25 +149,22 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             unregisterReceiver(this.mWarningFullSpaceReceiver);
         } catch (Exception e2) {
         }
-        ViewGroup root = (ViewGroup) getWindow().getDecorView().findViewById(16908290);
+        ViewGroup root = (ViewGroup) getWindow().getDecorView().findViewById(R.id.common_top_menu_root);
         if (!(root == null || root.getChildCount() == 0)) {
             cleanupView(root.getChildAt(0));
         }
         super.onDestroy();
     }
 
-    /* access modifiers changed from: protected */
-    public Dialog onCreateDialog(int id) {
+    protected Dialog onCreateDialog(int id) {
         return null;
     }
 
-    /* access modifiers changed from: protected */
-    public void backupUser(User user) {
+    protected void backupUser(User user) {
         this.tmpUser = user;
     }
 
-    /* access modifiers changed from: protected */
-    public void checkAndCopyUser() {
+    protected void checkAndCopyUser() {
         User user = ((BarcodeKanojoApp) getApplication()).getUser();
         if (user.getName() == null) {
             if (DEBUG) {
@@ -210,12 +204,10 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onUserUpdated() {
+    protected void onUserUpdated() {
     }
 
-    /* access modifiers changed from: protected */
-    public void updateUser(Response<?> response) {
+    protected void updateUser(Response<?> response) {
         User user = (User) response.get(User.class);
         if (user != null) {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo();
@@ -237,13 +229,11 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         }
     }
 
-    /* access modifiers changed from: protected */
-    public int getCodeAndShowAlert(Response<?> response, Exception e) throws BarcodeKanojoException {
-        return getCodeAndShowAlert(response, e, (OnDialogDismissListener) null);
+    protected int getCodeAndShowAlert(Response<?> response, Exception e) throws BarcodeKanojoException {
+        return getCodeAndShowAlert(response, e, null);
     }
 
-    /* access modifiers changed from: protected */
-    public int getCodeAndShowAlert(Response<?> response, Exception e, final OnDialogDismissListener listener) throws BarcodeKanojoException {
+    protected int getCodeAndShowAlert(Response<?> response, Exception e, final OnDialogDismissListener listener) throws BarcodeKanojoException {
         if (response == null) {
             showToast(getResources().getString(R.string.error_internet));
             if (!DEBUG) {
@@ -274,39 +264,14 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
                 updateUser(response);
                 break;
             case Response.CODE_ERROR_NOT_ENOUGH_TICKET /*202*/:
-                if (DEBUG) {
-                    Toast.makeText(this, "code:" + this.code + " ", 1).show();
-                    break;
-                }
-                break;
             case 400:
-                if (DEBUG) {
-                    Toast.makeText(this, "code:" + this.code + " ", 1).show();
-                    break;
-                }
-                break;
             case 401:
-                if (DEBUG) {
-                    Toast.makeText(this, "code:" + this.code + " ", 1).show();
-                    break;
-                }
-                break;
             case 403:
-                if (DEBUG) {
-                    Toast.makeText(this, "code:" + this.code + " ", 1).show();
-                    break;
-                }
-                break;
             case 404:
-                if (DEBUG) {
-                    Toast.makeText(this, "code:" + this.code + " ", 1).show();
-                    break;
-                }
-                break;
             case 500:
             case 503:
                 if (DEBUG) {
-                    Toast.makeText(this, "code:" + this.code + " ", 1).show();
+                    Toast.makeText(this, "code:" + this.code + " ", Toast.LENGTH_LONG).show();
                     break;
                 }
                 break;
@@ -317,8 +282,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         return this.code;
     }
 
-    /* access modifiers changed from: protected */
-    public void showAlertDialog(Alert alert, DialogInterface.OnDismissListener listener) {
+    protected void showAlertDialog(Alert alert, DialogInterface.OnDismissListener listener) {
         AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.app_name).setMessage(alert.getBody()).setPositiveButton(R.string.common_dialog_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
             }
@@ -330,8 +294,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         }
     }
 
-    /* access modifiers changed from: protected */
-    public ProgressDialog showProgressDialog(DialogInterface.OnCancelListener listener) {
+    protected ProgressDialog showProgressDialog(DialogInterface.OnCancelListener listener) {
         if (this.mProgressDialog == null) {
             ProgressDialog dialog = new ProgressDialog(this);
             dialog.setTitle(R.string.app_name);
@@ -346,13 +309,11 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         return this.mProgressDialog;
     }
 
-    /* access modifiers changed from: protected */
-    public ProgressDialog showProgressDialog() {
-        return showProgressDialog((DialogInterface.OnCancelListener) null);
+    protected ProgressDialog showProgressDialog() {
+        return showProgressDialog(null);
     }
 
-    /* access modifiers changed from: protected */
-    public void dismissProgressDialog() {
+    protected void dismissProgressDialog() {
         try {
             this.mProgressDialog.dismiss();
         } catch (IllegalArgumentException e) {
@@ -406,7 +367,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             sb.setProgressDrawable(null);
             sb.setThumb(null);
         } else if (view instanceof TextView) {
-            ((TextView) view).setBackgroundDrawable((Drawable) null);
+            view.setBackgroundDrawable(null);
         } else if (view instanceof Button) {
             view.setBackgroundDrawable(null);
         }
@@ -484,15 +445,14 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     }
 
     private String getGeneralUrl(String url, String uuid) {
-        return String.valueOf(url) + "?id=" + Codec.encode(uuid);
+        return url + "?id=" + Codec.encode(uuid);
     }
 
     public void showKDDI() {
         startActivity(new Intent("android.intent.action.VIEW", Uri.parse(Defs.URL_KDDI_SERVICE)));
     }
 
-    /* access modifiers changed from: protected */
-    public void deleteUser() {
+    protected void deleteUser() {
         ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().resetUser();
         new ApplicationSetting(getApplicationContext()).reset();
     }
@@ -633,18 +593,15 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        protected void onCancelled() {
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> process() throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> process() throws BarcodeKanojoException, IllegalStateException, IOException {
             return ((BarcodeKanojoApp) BaseActivity.this.getApplication()).getBarcodeKanojo().account_show();
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void showAlertFullStorageDialog(String message) {
+    protected void showAlertFullStorageDialog(String message) {
         if (this.mFullStorageDialog == null) {
             this.mFullStorageDialog = new AlertDialog.Builder(this).setTitle(R.string.app_name).setMessage(message).setPositiveButton(R.string.common_dialog_ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
@@ -662,17 +619,14 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void startCheckSession() {
+    protected void startCheckSession() {
         executeCheckSession();
     }
 
-    /* access modifiers changed from: protected */
-    public void endCheckSession() {
+    protected void endCheckSession() {
     }
 
-    /* access modifiers changed from: protected */
-    public void setAutoRefreshSession(boolean autoRefresh) {
+    protected void setAutoRefreshSession(boolean autoRefresh) {
         this.mAutoRefresh = autoRefresh;
     }
 
