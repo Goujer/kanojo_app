@@ -153,11 +153,9 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     /* access modifiers changed from: private */
     public LinearLayout mStatusLayout;
     private Timer mTimerCallAPI;
-    /* access modifiers changed from: private */
-    public User mUser;
+    private User mUser;
     private LinearLayout statusBarLayout;
-    /* access modifiers changed from: private */
-    public WebView webview;
+    private WebView webview;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -73,10 +73,10 @@ public class KanojoAdapter extends BaseKanojoPairAdapter implements ObservableAd
         ViewHolder holder;
         View view = convertView;
         if (view == null) {
-            view = this.mInflater.inflate(R.layout.row_kanojos, (ViewGroup) null);
-            holder = new ViewHolder((ViewHolder) null);
-            holder.left = (KanojoView) view.findViewById(R.id.row_kanojos_left);
-            holder.right = (KanojoView) view.findViewById(R.id.row_kanojos_right);
+            view = this.mInflater.inflate(R.layout.row_kanojos, null);
+            holder = new ViewHolder(null);
+            holder.left = view.findViewById(R.id.row_kanojos_left);
+            holder.right = view.findViewById(R.id.row_kanojos_right);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -140,9 +140,9 @@ public class KanojoAdapter extends BaseKanojoPairAdapter implements ObservableAd
         int size = kanojos.size();
         for (int i = 0; i < size; i += 2) {
             if (i + 1 < size) {
-                pairList.add(new KanojoPair((Kanojo) kanojos.get(i), (Kanojo) kanojos.get(i + 1)));
+                pairList.add(new KanojoPair(kanojos.get(i), kanojos.get(i + 1)));
             } else {
-                pairList.add(new KanojoPair((Kanojo) kanojos.get(i), (Kanojo) null));
+                pairList.add(new KanojoPair(kanojos.get(i), null));
             }
         }
         return pairList;

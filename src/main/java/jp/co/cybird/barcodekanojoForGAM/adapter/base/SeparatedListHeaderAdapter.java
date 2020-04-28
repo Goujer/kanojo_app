@@ -174,7 +174,7 @@ public class SeparatedListHeaderAdapter extends BaseAdapter implements Observabl
     }
 
     public long getItemId(int position) {
-        return (long) position;
+        return position;
     }
 
     public boolean hasStableIds() {
