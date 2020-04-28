@@ -3,7 +3,14 @@
     <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
         <LinearLayout android:gravity="center_vertical" android:background="@drawable/common_title_bg" android:layout_width="match_parent" android:layout_height="@dimen/common_title_height">
             <Button android:id="@+id/kanojo_room_close" android:text="@string/kanojo_room_close" style="@style/btn_navi"/>
-            <TextView android:ellipsize="end" android:id="@+id/kanojo_room_name" android:singleLine="true" android:layout_weight="1" style="@style/txt_kanojo_room_name"/>
+            <TextView
+				android:id="@+id/kanojo_room_name"
+				style="@style/txt_kanojo_room_name"
+				android:layout_weight="1"
+				android:ellipsize="end"
+				android:singleLine="true"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"/>
             <ImageButton android:layout_gravity="center_vertical" android:id="@+id/kanojo_room_info" android:background="@color/transparent" android:layout_width="@dimen/row_setting_icon_height" android:layout_height="@dimen/row_setting_icon_height" android:src="@drawable/icon_info" style="@style/btn_navi"/>
         </LinearLayout>
         <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">
@@ -20,7 +27,13 @@
                 </RelativeLayout>
                 <WebView android:id="@+id/radar_webview" android:visibility="gone" android:scrollbars="none" android:layout_width="match_parent" android:layout_height="220dp"/>
                 <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
-                    <TextView android:id="@+id/kanojo_room_status_txt" android:paddingLeft="5dp" android:paddingRight="5dp" style="@style/txt_kanojo_room_status"/>
+                    <TextView
+						android:id="@+id/kanojo_room_status_txt"
+						style="@style/txt_kanojo_room_status"
+						android:paddingLeft="5dp"
+						android:paddingRight="5dp"
+						android:layout_height="wrap_content"
+						android:layout_width="match_parent"/>
                 </ScrollView>
             </LinearLayout>
             <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@+id/kanojo_room_status_bar_layout" android:background="@color/kanojo_room_status_bg" android:layout_width="match_parent" android:layout_height="24dp" android:layout_below="@+id/kanojo_room_status_txt_layout">

@@ -16,35 +16,43 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.ImageCache;
 import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 
 public class KanojoView extends RelativeLayout {
-    private ProgressBar barLoveGauge = ((ProgressBar) findViewById(R.id.view_kanojo_bar));
-    private ImageView imgBarCover = ((ImageView) findViewById(R.id.view_kanojo_bar_cover));
-    private ImageView imgKanojo = ((ImageView) findViewById(R.id.view_kanojo_img));
-    private ImageView imgKanojoCover = ((ImageView) findViewById(R.id.view_kanojo_img_cover));
-    private ImageView imgRate = ((ImageView) findViewById(R.id.view_kanojo_rate));
-    private TextView txtName = ((TextView) findViewById(R.id.view_kanojo_name));
-    private View viewCover = findViewById(R.id.view_kanojo_cover);
+    private ProgressBar barLoveGauge;
+    private ImageView imgBarCover;
+    private ImageView imgKanojo;
+    private ImageView imgKanojoCover;
+    private ImageView imgRate;
+    private TextView txtName;
+    private View viewCover;
 
     public KanojoView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setGravity(16);
         setBackgroundResource(R.drawable.row_kanojos_bg);
         LayoutInflater.from(context).inflate(R.layout.view_kanojo, this, true);
+
+		barLoveGauge = findViewById(R.id.view_kanojo_bar);
+		imgBarCover = findViewById(R.id.view_kanojo_bar_cover);
+		imgKanojo = findViewById(R.id.view_kanojo_img);
+		imgKanojoCover = findViewById(R.id.view_kanojo_img_cover);
+		imgRate = findViewById(R.id.view_kanojo_rate);
+		txtName = findViewById(R.id.view_kanojo_name);
+		viewCover = findViewById(R.id.view_kanojo_cover);
     }
 
     public void clear() {
-        this.imgKanojo.setImageDrawable((Drawable) null);
-        this.imgKanojo.setBackgroundDrawable((Drawable) null);
-        this.imgKanojoCover.setImageDrawable((Drawable) null);
-        this.imgKanojoCover.setBackgroundDrawable((Drawable) null);
-        this.imgRate.setImageDrawable((Drawable) null);
-        this.imgRate.setBackgroundDrawable((Drawable) null);
-        this.imgBarCover.setImageDrawable((Drawable) null);
-        this.imgBarCover.setBackgroundDrawable((Drawable) null);
-        this.barLoveGauge.setProgressDrawable((Drawable) null);
-        this.barLoveGauge.setBackgroundDrawable((Drawable) null);
-        this.txtName.setBackgroundDrawable((Drawable) null);
-        this.viewCover.setBackgroundDrawable((Drawable) null);
-        setBackgroundDrawable((Drawable) null);
+        this.imgKanojo.setImageDrawable(null);
+        this.imgKanojo.setBackgroundDrawable(null);
+        this.imgKanojoCover.setImageDrawable(null);
+        this.imgKanojoCover.setBackgroundDrawable(null);
+        this.imgRate.setImageDrawable(null);
+        this.imgRate.setBackgroundDrawable(null);
+        this.imgBarCover.setImageDrawable(null);
+        this.imgBarCover.setBackgroundDrawable(null);
+        this.barLoveGauge.setProgressDrawable(null);
+        this.barLoveGauge.setBackgroundDrawable(null);
+        this.txtName.setBackgroundDrawable(null);
+        this.viewCover.setBackgroundDrawable(null);
+        setBackgroundDrawable(null);
     }
 
     public void setPressed(boolean pressed) {
@@ -113,7 +121,6 @@ public class KanojoView extends RelativeLayout {
                     return;
                 default:
                     img.setImageResource(R.drawable.row_kanojos_star0);
-                    return;
             }
         }
     }
