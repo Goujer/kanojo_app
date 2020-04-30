@@ -35,30 +35,29 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
     private int backImage2;
     private boolean backImageIsCache = false;
     private String backImagePath;
-    boolean backImageUpdated;
-    LDRectF backSrcR = new LDRectF(0.0f, 0.0f, 1.0f, 1.0f);
-    int backingHeight;
-    int backingWidth;
-    GL10 gl;
-    KanojoLive2D kanojoLive2D;
+    private boolean backImageUpdated;
+    private LDRectF backSrcR = new LDRectF(0.0f, 0.0f, 1.0f, 1.0f);
+    private int backingHeight;
+    private int backingWidth;
+    private GL10 gl;
+    private KanojoLive2D kanojoLive2D;
     float[] lastAccel = new float[3];
-    float logicalH;
-    float logicalW;
+    private float logicalH;
+    private float logicalW;
     Live2DModelAndroid model;
-    int renderCount;
+    private int renderCount;
     float targetX;
     float targetY;
-    AndroidEAGLView view;
-    LDRect visibleRect = new LDRect();
+    private AndroidEAGLView view;
+    private LDRect visibleRect = new LDRect();
 
-    public AndroidES1Renderer(KanojoLive2D kanojoLive2D2, AndroidEAGLView view2) {
+    AndroidES1Renderer(KanojoLive2D kanojoLive2D2, AndroidEAGLView view2) {
         this.kanojoLive2D = kanojoLive2D2;
         this.view = view2;
-        setBackgroundImage((String) null, false, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
+        setBackgroundImage(null, false, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
     }
 
-    /* access modifiers changed from: package-private */
-    public float fabs(float v) {
+    private float fabs(float v) {
         return v > 0.0f ? v : -v;
     }
 

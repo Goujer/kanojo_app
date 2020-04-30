@@ -25,8 +25,7 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
         setResult(-1, (String) null, (Bundle) null);
     }
 
-    /* access modifiers changed from: protected */
-    public String getGCMIntentServiceClassName(Context context) {
+    protected String getGCMIntentServiceClassName(Context context) {
         return getDefaultIntentServiceClassName(context);
     }
 

@@ -1,12 +1,14 @@
 package jp.co.cybird.barcodekanojoForGAM.activity.setting;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import jp.co.cybird.barcodekanojoForGAM.R;
@@ -37,18 +39,18 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
                 this.encodedCurrentPassword = null;
             }
         }
-        this.btnClose = (Button) findViewById(R.id.kanojo_password_change_close);
+        this.btnClose = findViewById(R.id.kanojo_password_change_close);
         this.btnClose.setOnClickListener(this);
-        this.txtCurrent = (EditItemView) findViewById(R.id.kanojo_password_change_current);
+        this.txtCurrent = findViewById(R.id.kanojo_password_change_current);
         this.txtCurrent.setOnClickListener(this);
         this.txtCurrent.hideText();
-        this.txtPassword = (EditItemView) findViewById(R.id.kanojo_password_change_password);
+        this.txtPassword = findViewById(R.id.kanojo_password_change_password);
         this.txtPassword.setOnClickListener(this);
         this.txtPassword.hideText();
-        this.txtRePassword = (EditItemView) findViewById(R.id.kanojo_password_change_re_password);
+        this.txtRePassword = findViewById(R.id.kanojo_password_change_re_password);
         this.txtRePassword.setOnClickListener(this);
         this.txtRePassword.hideText();
-        this.btnSave = (Button) findViewById(R.id.kanojo_password_change_btn);
+        this.btnSave = findViewById(R.id.kanojo_password_change_btn);
         this.btnSave.setOnClickListener(this);
         if (this.isNewEmail) {
             this.txtCurrent.setVisibility(View.GONE);
@@ -59,13 +61,13 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
         this.txtPassword.setBackgroundResource(R.drawable.row_kanojo_edit_bg_middle);
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
-        this.btnClose.setOnClickListener((View.OnClickListener) null);
-        this.txtCurrent.setOnClickListener((View.OnClickListener) null);
-        this.txtPassword.setOnClickListener((View.OnClickListener) null);
-        this.txtRePassword.setOnClickListener((View.OnClickListener) null);
-        this.btnSave.setOnClickListener((View.OnClickListener) null);
+    @Override
+    protected void onDestroy() {
+        this.btnClose.setOnClickListener(null);
+        this.txtCurrent.setOnClickListener(null);
+        this.txtPassword.setOnClickListener(null);
+        this.txtRePassword.setOnClickListener(null);
+        this.btnSave.setOnClickListener(null);
         super.onDestroy();
     }
 
@@ -114,7 +116,6 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
                     return;
                 }
             default:
-                return;
         }
     }
 
@@ -135,7 +136,11 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
 
     public static String SHA1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance(Digest.SHA1);
-        md.update(text.getBytes("iso-8859-1"), 0, text.length());
+        if (Build.VERSION.SDK_INT < 19) {
+			md.update(text.getBytes("iso-8859-1"), 0, text.length());
+		} else {
+			md.update(text.getBytes(StandardCharsets.ISO_8859_1), 0, text.length());
+		}
         return convertToHex(md.digest());
     }
 

@@ -168,14 +168,12 @@ class SimpleNetworkDispatcher implements Dispatcher {
 		Log.v(httpHeaders.toString());
 	}
 
-	/* access modifiers changed from: package-private */
-	public String createUserAgentString(String product, String version, String release, String language, String model, String id) {
-		return String.format(USER_AGENT_TEMPLATE, new Object[]{product, version, release, language, model, id});
+	private String createUserAgentString(String product, String version, String release, String language, String model, String id) {
+		return String.format(USER_AGENT_TEMPLATE, product, version, release, language, model, id);
 	}
 
-	/* access modifiers changed from: package-private */
 	@VisibleForTesting
-	public URL getUrl(Hit hit) {
+	private URL getUrl(Hit hit) {
 		if (this.mOverrideHostUrl != null) {
 			return this.mOverrideHostUrl;
 		}

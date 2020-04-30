@@ -16,12 +16,9 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 public class ProductAndKanojoView extends RelativeLayout {
     private static final boolean DEBUG = false;
     private static final String TAG = "ProductAndKanojoView";
-    /* access modifiers changed from: private */
-    public ImageView imgLeft = ((ImageView) findViewById(R.id.product_and_kanojo_left));
-    /* access modifiers changed from: private */
-    public ImageView imgRight = ((ImageView) findViewById(R.id.product_and_kanojo_right));
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private ImageView imgLeft = findViewById(R.id.product_and_kanojo_left);
+    private ImageView imgRight = findViewById(R.id.product_and_kanojo_right);
+    private Context mContext;
     private LoadImgTask mLoadImgTask;
 
     public ProductAndKanojoView(Context context, AttributeSet attrs) {
@@ -99,8 +96,8 @@ public class ProductAndKanojoView extends RelativeLayout {
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        @Override
+        protected void onCancelled() {
         }
 
         private Void process() throws Exception {

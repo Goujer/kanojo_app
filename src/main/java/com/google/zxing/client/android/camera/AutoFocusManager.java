@@ -16,8 +16,7 @@ final class AutoFocusManager implements Camera.AutoFocusCallback {
     private static final long AUTO_FOCUS_INTERVAL_MS = 2000;
     private static final Collection<String> FOCUS_MODES_CALLING_AF = new ArrayList(2);
     private static final String TAG = AutoFocusManager.class.getSimpleName();
-    /* access modifiers changed from: private */
-    public boolean active;
+    private boolean active;
     private final Camera camera;
     private AutoFocusTask outstandingTask;
     private final AsyncTaskExecInterface taskExec = ((AsyncTaskExecInterface) new AsyncTaskExecManager().build());

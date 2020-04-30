@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
-import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import android.util.Log;
 import android.view.View;
 import com.google.zxing.Result;

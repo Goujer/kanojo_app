@@ -37,9 +37,9 @@ public class GCMTransfer {
                 Intent tempIntent = new Intent("android.intent.action.VIEW");
                 tempIntent.addCategory("android.intent.category.DEFAULT");
                 tempIntent.setData(uri);
-                if (activity.getPackageManager().queryIntentActivities(tempIntent, AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED).size() > 0) {
+                if (activity.getPackageManager().queryIntentActivities(tempIntent, 0x00010000).size() > 0) {
                     i = tempIntent;
-                    i.setFlags(268435456);
+                    i.setFlags(0x10000000);
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("push", true);
                     i.putExtras(bundle);
@@ -60,7 +60,7 @@ public class GCMTransfer {
             tempIntent2.addCategory("android.intent.category.DEFAULT");
             tempIntent2.setData(uri2);
             i = tempIntent2;
-            i.setFlags(268435456);
+            i.setFlags(0x10000000);
             Bundle bundle2 = new Bundle();
             bundle2.putBoolean("push", true);
             i.putExtra("data", extras);

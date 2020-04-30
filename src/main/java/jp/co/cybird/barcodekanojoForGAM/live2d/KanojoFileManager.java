@@ -9,10 +9,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class KanojoFileManager {
-    Context context;
-    File root = Environment.getExternalStorageDirectory();
+    private Context context;
+    private File root = Environment.getExternalStorageDirectory();
 
-    public KanojoFileManager(Context context2) {
+    KanojoFileManager(Context context2) {
         this.context = context2;
     }
 
@@ -33,7 +33,7 @@ public class KanojoFileManager {
         return new File(this.root, path).exists();
     }
 
-    public InputStream open_cache(String path) throws FileNotFoundException {
+    private InputStream open_cache(String path) throws FileNotFoundException {
         return new FileInputStream(new File(this.root, path));
     }
 
@@ -44,7 +44,7 @@ public class KanojoFileManager {
         return open_resource(path);
     }
 
-    public void release() {
+    void release() {
         this.context = null;
     }
 }

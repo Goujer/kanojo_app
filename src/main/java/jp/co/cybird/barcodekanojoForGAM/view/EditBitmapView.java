@@ -147,11 +147,12 @@ public class EditBitmapView extends View {
 		}
 	}
 
-    /* access modifiers changed from: protected */
-    public void onSizeChanged(int w, int h, int oldw, int oldh) {
+	@Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         this.frame = getSquareFrame(w, h - 40, w - 20);
     }
 
+    @Override
     public void onDraw(Canvas canvas) {
         int width = canvas.getWidth();
         int height = canvas.getHeight();
@@ -163,7 +164,7 @@ public class EditBitmapView extends View {
         }
         canvas.drawRect(0.0f, 0.0f, (float) width, (float) height, this.backgroundPaint);
         if (this.mBitmap != null) {
-            canvas.drawBitmap(this.mBitmap, this.srcRect, this.dstRect, (Paint) null);
+            canvas.drawBitmap(this.mBitmap, this.srcRect, this.dstRect, null);
         }
         this.paint.setColor(this.maskColor);
         canvas.drawRect(0.0f, 0.0f, (float) width, (float) this.frame.top, this.paint);
@@ -182,6 +183,7 @@ public class EditBitmapView extends View {
         return new Rect(diff, (height - length) / 2, diff + length, ((height - length) / 2) + width);
     }
 
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case 0:

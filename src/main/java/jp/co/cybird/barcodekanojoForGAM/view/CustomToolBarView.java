@@ -89,8 +89,7 @@ public class CustomToolBarView extends LinearLayout implements View.OnClickListe
         ((Activity) packageContext).overridePendingTransition(0, 0);
     }
 
-    /* access modifiers changed from: protected */
-    public void setActive() {
+    protected void setActive() {
         if (this.mContext.getClass().getSimpleName().equals("DashboardActivity")) {
             this.mDashboard.setSelected(true);
         } else if (this.mContext.getClass().getSimpleName().equals(KanojosActivity.TAG)) {

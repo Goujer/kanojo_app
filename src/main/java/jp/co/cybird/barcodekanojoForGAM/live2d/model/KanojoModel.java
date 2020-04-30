@@ -14,15 +14,15 @@ import jp.live2d.util.UtDebug;
 
 public class KanojoModel {
     public static final String COLOR_01_CLOTHES_A = "COLOR_01_CLOTHES_A";
-    int INSTANCE_COUNT = 0;
-    float[] accel = null;
-    KanojoLive2D kanojoLive2D;
-    Live2DModelAndroid live2DModel;
-    KanojoAnimation live2dAnimation;
-    boolean modelInitialized;
-    ArrayList<KanojoPartsItem> partsItemList = new ArrayList<>();
-    GL10 setupGl = null;
-    boolean textureBinded;
+    private int INSTANCE_COUNT = 0;
+    private float[] accel = null;
+    private KanojoLive2D kanojoLive2D;
+    private Live2DModelAndroid live2DModel;
+    private KanojoAnimation live2dAnimation;
+    private boolean modelInitialized;
+    private ArrayList<KanojoPartsItem> partsItemList = new ArrayList<>();
+    private GL10 setupGl = null;
+    private boolean textureBinded;
 
     public KanojoModel(KanojoLive2D ka) {
         this.INSTANCE_COUNT++;
@@ -34,8 +34,7 @@ public class KanojoModel {
         this.kanojoLive2D = ka;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean initBaseModel() throws Exception {
+   private boolean initBaseModel() throws Exception {
         InputStream in = this.kanojoLive2D.getFileManager().open_resource("avatar_data/kanojoBaseModel.moc");
         this.live2DModel = Live2DModelAndroid.loadModel(in);
         in.close();
@@ -56,7 +55,7 @@ public class KanojoModel {
                         while (true) {
                             if (j >= this.partsItemList.size()) {
                                 break;
-                            } else if (this.partsItemList.get(j).getPartsDataID() == id) {
+                            } else if (this.partsItemList.get(j).getPartsDataID().equals(id)) {
                                 partsIndex = j;
                                 break;
                             } else {

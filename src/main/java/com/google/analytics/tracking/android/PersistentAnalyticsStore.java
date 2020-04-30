@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import com.google.android.gms.analytics.internal.Command;
 import com.google.android.gms.common.util.VisibleForTesting;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -21,7 +22,6 @@ import java.util.Set;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 class PersistentAnalyticsStore implements AnalyticsStore {
-	/* access modifiers changed from: private */
     private static final String DATABASE_FILENAME = "google_analytics_v2.db";
     @VisibleForTesting
     static final String HITS_TABLE = "hits2";
@@ -35,13 +35,10 @@ class PersistentAnalyticsStore implements AnalyticsStore {
     static final String HIT_TIME = "hit_time";
     @VisibleForTesting
     static final String HIT_URL = "hit_url";
-    public static final String CREATE_HITS_TABLE = String.format("CREATE TABLE IF NOT EXISTS %s ( '%s' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, '%s' INTEGER NOT NULL, '%s' TEXT NOT NULL, '%s' TEXT NOT NULL, '%s' INTEGER);", new Object[]{HITS_TABLE, HIT_ID, HIT_TIME, HIT_URL, HIT_STRING, HIT_APP_ID});
-    /* access modifiers changed from: private */
-    public Clock mClock;
-    /* access modifiers changed from: private */
-    public final Context mContext;
-    /* access modifiers changed from: private */
-    public final String mDatabaseName;
+    private static final String CREATE_HITS_TABLE = String.format("CREATE TABLE IF NOT EXISTS %s ( '%s' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, '%s' INTEGER NOT NULL, '%s' TEXT NOT NULL, '%s' TEXT NOT NULL, '%s' INTEGER);", new Object[]{HITS_TABLE, HIT_ID, HIT_TIME, HIT_URL, HIT_STRING, HIT_APP_ID});
+    private Clock mClock;
+    private final Context mContext;
+    private final String mDatabaseName;
     private final AnalyticsDatabaseHelper mDbHelper;
     private volatile Dispatcher mDispatcher;
     private long mLastDeleteStaleHitsTime;
@@ -52,7 +49,7 @@ class PersistentAnalyticsStore implements AnalyticsStore {
     }
 
     @VisibleForTesting
-    PersistentAnalyticsStore(AnalyticsStoreStateListener listener, Context ctx, String databaseName) {
+	private PersistentAnalyticsStore(AnalyticsStoreStateListener listener, Context ctx, String databaseName) {
         this.mContext = ctx.getApplicationContext();
         this.mDatabaseName = databaseName;
         this.mListener = listener;
@@ -66,40 +63,38 @@ class PersistentAnalyticsStore implements AnalyticsStore {
         this.mLastDeleteStaleHitsTime = 0;
     }
 
-    @VisibleForTesting
-    public void setClock(Clock clock) {
-        this.mClock = clock;
-    }
+//    @VisibleForTesting
+//    public void setClock(Clock clock) {
+//        this.mClock = clock;
+//    }
 
-    @VisibleForTesting
-    public AnalyticsDatabaseHelper getDbHelper() {
-        return this.mDbHelper;
-    }
+//    @VisibleForTesting
+//    public AnalyticsDatabaseHelper getDbHelper() {
+//        return this.mDbHelper;
+//    }
 
     public void setDispatch(boolean dispatch) {
         this.mDispatcher = dispatch ? new SimpleNetworkDispatcher(new DefaultHttpClient(), this.mContext) : new NoopDispatcher();
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
-    public void setDispatcher(Dispatcher dispatcher) {
-        this.mDispatcher = dispatcher;
-    }
+//    @VisibleForTesting
+//    void setDispatcher(Dispatcher dispatcher) {
+//        this.mDispatcher = dispatcher;
+//    }
 
     public void clearHits(long appId) {
         boolean z = true;
         SQLiteDatabase db = getWritableDatabase("Error opening database for clearHits");
         if (db != null) {
             if (appId == 0) {
-                db.delete(HITS_TABLE, (String) null, (String[]) null);
+                db.delete(HITS_TABLE, null, null);
             } else {
                 db.delete(HITS_TABLE, "hit_app_id = ?", new String[]{Long.valueOf(appId).toString()});
             }
-            AnalyticsStoreStateListener analyticsStoreStateListener = this.mListener;
-            if (getNumStoredHits() != 0) {
+			if (getNumStoredHits() != 0) {
                 z = false;
             }
-            analyticsStoreStateListener.reportStoreIsEmpty(z);
+            this.mListener.reportStoreIsEmpty(z);
         }
     }
 
@@ -127,7 +122,7 @@ class PersistentAnalyticsStore implements AnalyticsStore {
         if (hitsOverLimit > 0) {
             List<String> hitsToDelete = peekHitIds(hitsOverLimit);
             Log.v("Store full, deleting " + hitsToDelete.size() + " hits to make room.");
-            deleteHits((String[]) hitsToDelete.toArray(new String[0]));
+            deleteHits(hitsToDelete.toArray(new String[0]));
         }
     }
 
@@ -136,7 +131,7 @@ class PersistentAnalyticsStore implements AnalyticsStore {
         if (db != null) {
             ContentValues content = new ContentValues();
             content.put(HIT_STRING, generateHitString(hit));
-            content.put(HIT_TIME, Long.valueOf(hitTimeInMilliseconds));
+            content.put(HIT_TIME, hitTimeInMilliseconds);
             long appSystemId = 0;
             if (hit.containsKey(Fields.ANDROID_APP_UID)) {
                 try {
@@ -144,7 +139,7 @@ class PersistentAnalyticsStore implements AnalyticsStore {
                 } catch (NumberFormatException e) {
                 }
             }
-            content.put(HIT_APP_ID, Long.valueOf(appSystemId));
+            content.put(HIT_APP_ID, appSystemId);
             if (path == null) {
                 path = "http://www.google-analytics.com/collect";
             }
@@ -154,7 +149,7 @@ class PersistentAnalyticsStore implements AnalyticsStore {
             }
             content.put(HIT_URL, path);
             try {
-                db.insert(HITS_TABLE, (String) null, content);
+                db.insert(HITS_TABLE, null, content);
                 this.mListener.reportStoreIsEmpty(false);
             } catch (SQLiteException e2) {
                 Log.w("Error storing hit");
@@ -162,7 +157,7 @@ class PersistentAnalyticsStore implements AnalyticsStore {
         }
     }
 
-    static String generateHitString(Map<String, String> urlParams) {
+    private static String generateHitString(Map<String, String> urlParams) {
         List<String> keyAndValues = new ArrayList<>(urlParams.size());
         for (Map.Entry<String, String> entry : urlParams.entrySet()) {
             keyAndValues.add(HitBuilder.encode(entry.getKey()) + "=" + HitBuilder.encode(entry.getValue()));
@@ -170,8 +165,7 @@ class PersistentAnalyticsStore implements AnalyticsStore {
         return TextUtils.join("&", keyAndValues);
     }
 
-    /* access modifiers changed from: package-private */
-    public List<String> peekHitIds(int maxHits) {
+    private List<String> peekHitIds(int maxHits) {
         List<String> hitIds = new ArrayList<>();
         if (maxHits <= 0) {
             Log.w("Invalid maxHits specified. Skipping");
@@ -180,7 +174,7 @@ class PersistentAnalyticsStore implements AnalyticsStore {
             if (db != null) {
                 Cursor cursor = null;
                 try {
-                    Cursor cursor2 = db.query(HITS_TABLE, new String[]{HIT_ID}, (String) null, (String[]) null, (String) null, (String) null, String.format("%s ASC", new Object[]{HIT_ID}), Integer.toString(maxHits));
+                    Cursor cursor2 = db.query(HITS_TABLE, new String[]{HIT_ID}, null, null, null, null, String.format("%s ASC", HIT_ID), Integer.toString(maxHits));
                     if (cursor2.moveToFirst()) {
                         do {
                             hitIds.add(String.valueOf(cursor2.getLong(0)));
@@ -302,14 +296,12 @@ class PersistentAnalyticsStore implements AnalyticsStore {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
-    public void setLastDeleteStaleHitsTime(long timeInMilliseconds) {
-        this.mLastDeleteStaleHitsTime = timeInMilliseconds;
-    }
+//    @VisibleForTesting
+//    void setLastDeleteStaleHitsTime(long timeInMilliseconds) {
+//        this.mLastDeleteStaleHitsTime = timeInMilliseconds;
+//    }
 
-    /* access modifiers changed from: package-private */
-    public int deleteStaleHits() {
+    private int deleteStaleHits() {
         boolean z = true;
         long now = this.mClock.currentTimeMillis();
         if (now <= this.mLastDeleteStaleHitsTime + 86400000) {
@@ -329,9 +321,8 @@ class PersistentAnalyticsStore implements AnalyticsStore {
         return rslt;
     }
 
-    /* access modifiers changed from: package-private */
     @Deprecated
-    public void deleteHits(Collection<Hit> hits) {
+    void deleteHits(Collection<Hit> hits) {
         if (hits == null || hits.isEmpty()) {
             Log.w("Empty/Null collection passed to deleteHits.");
             return;
@@ -345,8 +336,7 @@ class PersistentAnalyticsStore implements AnalyticsStore {
         deleteHits(hitIds);
     }
 
-    /* access modifiers changed from: package-private */
-    public void deleteHits(String[] hitIds) {
+    private void deleteHits(String[] hitIds) {
         boolean z = true;
         if (hitIds == null || hitIds.length == 0) {
             Log.w("Empty hitIds passed to deleteHits.");
@@ -355,20 +345,19 @@ class PersistentAnalyticsStore implements AnalyticsStore {
         SQLiteDatabase db = getWritableDatabase("Error opening database for deleteHits.");
         if (db != null) {
             try {
-                db.delete(HITS_TABLE, String.format("HIT_ID in (%s)", new Object[]{TextUtils.join(",", Collections.nCopies(hitIds.length, "?"))}), hitIds);
+                db.delete(HITS_TABLE, String.format("HIT_ID in (%s)", TextUtils.join(",", Collections.nCopies(hitIds.length, "?"))), hitIds);
                 AnalyticsStoreStateListener analyticsStoreStateListener = this.mListener;
                 if (getNumStoredHits() != 0) {
                     z = false;
                 }
                 analyticsStoreStateListener.reportStoreIsEmpty(z);
             } catch (SQLiteException e) {
-                Log.w("Error deleting hits " + hitIds);
+                Log.w("Error deleting hits " + Arrays.toString(hitIds));
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int getNumStoredHits() {
+    private int getNumStoredHits() {
         int numStoredHits = 0;
         SQLiteDatabase db = getWritableDatabase("Error opening database for getNumStoredHits.");
         if (db == null) {
@@ -433,11 +422,10 @@ class PersistentAnalyticsStore implements AnalyticsStore {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
-    public AnalyticsDatabaseHelper getHelper() {
-        return this.mDbHelper;
-    }
+//    @VisibleForTesting
+//    AnalyticsDatabaseHelper getHelper() {
+//        return this.mDbHelper;
+//    }
 
     private SQLiteDatabase getWritableDatabase(String errorMessage) {
         try {
@@ -453,15 +441,13 @@ class PersistentAnalyticsStore implements AnalyticsStore {
         private boolean mBadDatabase;
         private long mLastDatabaseCheckTime = 0;
 
-        /* access modifiers changed from: package-private */
-        public boolean isBadDatabase() {
-            return this.mBadDatabase;
-        }
-
-        /* access modifiers changed from: package-private */
-        public void setBadDatabase(boolean badDatabase) {
-            this.mBadDatabase = badDatabase;
-        }
+//        boolean isBadDatabase() {
+//            return this.mBadDatabase;
+//        }
+//
+//        void setBadDatabase(boolean badDatabase) {
+//            this.mBadDatabase = badDatabase;
+//        }
 
         AnalyticsDatabaseHelper(Context context, String databaseName) {
             super(context, databaseName, (SQLiteDatabase.CursorFactory) null, 1);

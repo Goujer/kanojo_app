@@ -25,8 +25,7 @@ public class EasyTracker extends Tracker {
     private Context mContext;
     private final GoogleAnalytics mGoogleAnalytics;
     private boolean mIsAutoActivityTracking;
-    /* access modifiers changed from: private */
-    public boolean mIsInForeground;
+    private boolean mIsInForeground;
     private boolean mIsReportUncaughtExceptionsEnabled;
     private long mLastOnStopTime;
     private ParameterLoader mParameterFetcher;
@@ -37,12 +36,12 @@ public class EasyTracker extends Tracker {
     private TimerTask mTimerTask;
 
     private EasyTracker(Context ctx) {
-        this(ctx, new ParameterLoaderImpl(ctx), GoogleAnalytics.getInstance(ctx), GAServiceManager.getInstance(), (TrackerHandler) null);
+        this(ctx, new ParameterLoaderImpl(ctx), GoogleAnalytics.getInstance(ctx), GAServiceManager.getInstance(), null);
     }
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     private EasyTracker(Context ctx, ParameterLoader parameterLoader, GoogleAnalytics ga, ServiceManager serviceManager, TrackerHandler handler) {
-        super(EASY_TRACKER_NAME, (String) null, handler == null ? ga : handler);
+        super(EASY_TRACKER_NAME, null, handler == null ? ga : handler);
         this.mIsAutoActivityTracking = false;
         this.mActivitiesActive = 0;
         this.mActivityNameMap = new HashMap();
@@ -67,16 +66,15 @@ public class EasyTracker extends Tracker {
         return sInstance;
     }
 
-    @VisibleForTesting
-    static EasyTracker getNewInstance(Context ctx, ParameterLoader parameterLoader, GoogleAnalytics ga, ServiceManager serviceManager, TrackerHandler handler) {
-        sInstance = new EasyTracker(ctx, parameterLoader, ga, serviceManager, handler);
-        return sInstance;
-    }
+//    @VisibleForTesting
+//    static EasyTracker getNewInstance(Context ctx, ParameterLoader parameterLoader, GoogleAnalytics ga, ServiceManager serviceManager, TrackerHandler handler) {
+//        sInstance = new EasyTracker(ctx, parameterLoader, ga, serviceManager, handler);
+//        return sInstance;
+//    }
 
-    /* access modifiers changed from: package-private */
-    public boolean checkForNewSession() {
-        return this.mSessionTimeout == 0 || (this.mSessionTimeout > 0 && this.mClock.currentTimeMillis() > this.mLastOnStopTime + this.mSessionTimeout);
-    }
+//    private boolean checkForNewSession() {
+//        return this.mSessionTimeout == 0 || (this.mSessionTimeout > 0 && this.mClock.currentTimeMillis() > this.mLastOnStopTime + this.mSessionTimeout);
+//    }
 
     private void loadParameters() {
         Logger.LogLevel logLevel;
@@ -104,10 +102,10 @@ public class EasyTracker extends Tracker {
         }
         Double sampleRate = this.mParameterFetcher.getDoubleFromString("ga_sampleFrequency");
         if (sampleRate == null) {
-            sampleRate = new Double((double) this.mParameterFetcher.getInt("ga_sampleRate", 100));
+            sampleRate = (double) this.mParameterFetcher.getInt("ga_sampleRate", 100);
         }
-        if (sampleRate.doubleValue() != 100.0d) {
-            set(Fields.SAMPLE_RATE, Double.toString(sampleRate.doubleValue()));
+        if (sampleRate != 100.0d) {
+            set(Fields.SAMPLE_RATE, Double.toString(sampleRate));
         }
         Log.v("[EasyTracker] sample rate loaded: " + sampleRate);
         int dispatchPeriod = this.mParameterFetcher.getInt("ga_dispatchPeriod", 1800);
@@ -138,13 +136,12 @@ public class EasyTracker extends Tracker {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
-    public void overrideUncaughtExceptionHandler(Thread.UncaughtExceptionHandler handler) {
-        if (this.mIsReportUncaughtExceptionsEnabled) {
-            Thread.setDefaultUncaughtExceptionHandler(handler);
-        }
-    }
+//    @VisibleForTesting
+//    void overrideUncaughtExceptionHandler(Thread.UncaughtExceptionHandler handler) {
+//        if (this.mIsReportUncaughtExceptionsEnabled) {
+//            Thread.setDefaultUncaughtExceptionHandler(handler);
+//        }
+//    }
 
     private void setContext(Context ctx, ParameterLoader parameterLoader, ServiceManager serviceManager) {
         if (ctx == null) {
@@ -156,73 +153,71 @@ public class EasyTracker extends Tracker {
         loadParameters();
     }
 
-    public void activityStart(Activity activity) {
-        GAUsage.getInstance().setUsage(GAUsage.Field.EASY_TRACKER_ACTIVITY_START);
-        clearExistingTimer();
-        if (!this.mIsInForeground && this.mActivitiesActive == 0 && checkForNewSession()) {
-            this.mStartSessionOnNextSend = true;
-        }
-        this.mIsInForeground = true;
-        this.mActivitiesActive++;
-        if (this.mIsAutoActivityTracking) {
-            Map<String, String> params = new HashMap<>();
-            params.put(Fields.HIT_TYPE, HitTypes.APP_VIEW);
-            GAUsage.getInstance().setDisableUsage(true);
-            set("&cd", getActivityName(activity));
-            send(params);
-            GAUsage.getInstance().setDisableUsage(false);
-        }
-    }
+//    public void activityStart(Activity activity) {
+//        GAUsage.getInstance().setUsage(GAUsage.Field.EASY_TRACKER_ACTIVITY_START);
+//        clearExistingTimer();
+//        if (!this.mIsInForeground && this.mActivitiesActive == 0 && checkForNewSession()) {
+//            this.mStartSessionOnNextSend = true;
+//        }
+//        this.mIsInForeground = true;
+//        this.mActivitiesActive++;
+//        if (this.mIsAutoActivityTracking) {
+//            Map<String, String> params = new HashMap<>();
+//            params.put(Fields.HIT_TYPE, HitTypes.APP_VIEW);
+//            GAUsage.getInstance().setDisableUsage(true);
+//            set("&cd", getActivityName(activity));
+//            send(params);
+//            GAUsage.getInstance().setDisableUsage(false);
+//        }
+//    }
 
-    public void activityStop(Activity activity) {
-        GAUsage.getInstance().setUsage(GAUsage.Field.EASY_TRACKER_ACTIVITY_STOP);
-        this.mActivitiesActive--;
-        this.mActivitiesActive = Math.max(0, this.mActivitiesActive);
-        this.mLastOnStopTime = this.mClock.currentTimeMillis();
-        if (this.mActivitiesActive == 0) {
-            clearExistingTimer();
-            this.mTimerTask = new NotInForegroundTimerTask();
-            this.mTimer = new Timer("waitForActivityStart");
-            this.mTimer.schedule(this.mTimerTask, 1000);
-        }
-    }
+//    public void activityStop(Activity activity) {
+//        GAUsage.getInstance().setUsage(GAUsage.Field.EASY_TRACKER_ACTIVITY_STOP);
+//        this.mActivitiesActive--;
+//        this.mActivitiesActive = Math.max(0, this.mActivitiesActive);
+//        this.mLastOnStopTime = this.mClock.currentTimeMillis();
+//        if (this.mActivitiesActive == 0) {
+//            clearExistingTimer();
+//            this.mTimerTask = new NotInForegroundTimerTask();
+//            this.mTimer = new Timer("waitForActivityStart");
+//            this.mTimer.schedule(this.mTimerTask, 1000);
+//        }
+//    }
 
     @Deprecated
     public void dispatchLocalHits() {
         this.mServiceManager.dispatchLocalHits();
     }
 
-    private synchronized void clearExistingTimer() {
-        if (this.mTimer != null) {
-            this.mTimer.cancel();
-            this.mTimer = null;
-        }
-    }
+//    private synchronized void clearExistingTimer() {
+//        if (this.mTimer != null) {
+//            this.mTimer.cancel();
+//            this.mTimer = null;
+//        }
+//    }
 
-    private String getActivityName(Activity activity) {
-        String canonicalName = activity.getClass().getCanonicalName();
-        if (this.mActivityNameMap.containsKey(canonicalName)) {
-            return this.mActivityNameMap.get(canonicalName);
-        }
-        String name = this.mParameterFetcher.getString(canonicalName);
-        if (name == null) {
-            name = canonicalName;
-        }
-        this.mActivityNameMap.put(canonicalName, name);
-        return name;
-    }
-
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
-    public void setClock(Clock clock) {
-        this.mClock = clock;
-    }
-
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
-    public int getActivitiesActive() {
-        return this.mActivitiesActive;
-    }
+//    private String getActivityName(Activity activity) {
+//        String canonicalName = activity.getClass().getCanonicalName();
+//        if (this.mActivityNameMap.containsKey(canonicalName)) {
+//            return this.mActivityNameMap.get(canonicalName);
+//        }
+//        String name = this.mParameterFetcher.getString(canonicalName);
+//        if (name == null) {
+//            name = canonicalName;
+//        }
+//        this.mActivityNameMap.put(canonicalName, name);
+//        return name;
+//    }
+//
+//    @VisibleForTesting
+//    void setClock(Clock clock) {
+//        this.mClock = clock;
+//    }
+//
+//    @VisibleForTesting
+//    public int getActivitiesActive() {
+//        return this.mActivitiesActive;
+//    }
 
     public void send(Map<String, String> params) {
         if (this.mStartSessionOnNextSend) {
@@ -232,16 +227,16 @@ public class EasyTracker extends Tracker {
         super.send(params);
     }
 
-    public static void setResourcePackageName(String resourcePackageName) {
-        sResourcePackageName = resourcePackageName;
-    }
-
-    private class NotInForegroundTimerTask extends TimerTask {
-        private NotInForegroundTimerTask() {
-        }
-
-        public void run() {
-            boolean unused = EasyTracker.this.mIsInForeground = false;
-        }
-    }
+//    public static void setResourcePackageName(String resourcePackageName) {
+//        sResourcePackageName = resourcePackageName;
+//    }
+//
+//    private class NotInForegroundTimerTask extends TimerTask {
+//        private NotInForegroundTimerTask() {
+//        }
+//
+//        public void run() {
+//            boolean unused = EasyTracker.this.mIsInForeground = false;
+//        }
+//    }
 }

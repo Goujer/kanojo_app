@@ -42,16 +42,14 @@ public class AppLauncher implements DialogInterface.OnCancelListener, DialogInte
 	private static final int SCHEME_DATA_OLD = -1;
 	private static boolean isShown = false;
 	private String mCategory;
-	/* access modifiers changed from: private */
-	public Context mContext;
-	AppLauncherAdapter mCyAdapter = null;
+	private Context mContext;
+	private AppLauncherAdapter mCyAdapter = null;
 	private Dialog mDialog;
-	List<Scheme> mSchemeList = null;
-	/* access modifiers changed from: private */
-	public SlidingDrawer mSlidingDrawer;
+	private List<Scheme> mSchemeList = null;
+	private SlidingDrawer mSlidingDrawer;
 	private AppLauncherConsts.LAUNCHER_TYPE mType;
 
-	public AppLauncher(Context context, AppLauncherConsts.LAUNCHER_TYPE type, String category) {
+	AppLauncher(Context context, AppLauncherConsts.LAUNCHER_TYPE type, String category) {
 		this.mContext = context;
 		this.mType = type;
 		this.mCategory = category;
@@ -60,7 +58,7 @@ public class AppLauncher implements DialogInterface.OnCancelListener, DialogInte
 		TrackerWrapper.init(context);
 	}
 
-	public static void setUserAgent(Context context) {
+	static void setUserAgent(Context context) {
 		if (AppLauncherConsts.getUserAgent() == null) {
 			AppLauncherConsts.setUserAgent(new WebView(context.getApplicationContext()).getSettings().getUserAgentString());
 		}
@@ -257,15 +255,14 @@ public class AppLauncher implements DialogInterface.OnCancelListener, DialogInte
 		}
 	}
 
-	/* access modifiers changed from: private */
-	public void track(Context context, String product_id, String param) {
+	private void track(Context context, String product_id, String param) {
 		RequestParams params = new RequestParams();
 		params.put("v", GreeDefs.KANOJO_NAME);
 		params.put(AppLauncherConsts.REQUEST_PARAM_GENERAL, AppLauncherCommons.getGeneralParamsString(context, this.mType, this.mCategory, product_id));
 		AsyncHttpClient httpClient = new AsyncHttpClient();
 		httpClient.setUserAgent(AppLauncherConsts.getUserAgent());
 		DLog.d(AppLauncherConsts.TAG, "ua:" + AppLauncherConsts.getUserAgent());
-		httpClient.get("http://app.sf.cybird.ne.jp/track", params, (AsyncHttpResponseHandler) new AsyncHttpResponseHandler() {
+		httpClient.get("http://app.sf.cybird.ne.jp/track", params, new AsyncHttpResponseHandler() {
 		});
 	}
 }

@@ -9,8 +9,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.view.accessibility.AccessibilityEventCompat;
+
 import java.lang.ref.WeakReference;
+
 import jp.co.cybird.android.lib.gcm.GCMTransfer;
 import jp.co.cybird.android.lib.gcm.GCMUtilities;
 
@@ -31,24 +32,23 @@ public class GCMProxyActivity extends Activity {
                     } else {
                         unityClass = Class.forName(GCMProxyActivity.customActivityArray[i]);
                     }
-                    Intent unityIntent = new Intent(((Activity) GCMProxyActivity.mThisActivity.get()).getApplication(), unityClass);
+                    Intent unityIntent = new Intent(GCMProxyActivity.mThisActivity.get().getApplication(), unityClass);
                     unityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    ((Activity) GCMProxyActivity.mThisActivity.get()).startActivity(unityIntent);
-                    ((Activity) GCMProxyActivity.mThisActivity.get()).finish();
+                    GCMProxyActivity.mThisActivity.get().startActivity(unityIntent);
+                    GCMProxyActivity.mThisActivity.get().finish();
                 } catch (ClassNotFoundException e) {
-                    ((Activity) GCMProxyActivity.mThisActivity.get()).finish();
+                    GCMProxyActivity.mThisActivity.get().finish();
                 } catch (Throwable th) {
-                    ((Activity) GCMProxyActivity.mThisActivity.get()).finish();
+                    GCMProxyActivity.mThisActivity.get().finish();
                     throw th;
                 }
             }
         }
     };
-    /* access modifiers changed from: private */
-    public static WeakReference<Activity> mThisActivity;
+    private static WeakReference<GCMProxyActivity> mThisActivity;
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle paramBundle) {
+    @Override
+    protected void onCreate(Bundle paramBundle) {
         super.onCreate(paramBundle);
         Context context = getApplicationContext();
         SharedPreferences.Editor editor = context.getSharedPreferences(context.getPackageName(), 0).edit();
@@ -67,7 +67,7 @@ public class GCMProxyActivity extends Activity {
             editor.putString(GCMUtilities.CYLIB_GCM_PARAM_DATA, param);
         }
         editor.commit();
-        mThisActivity = new WeakReference(this);
+        mThisActivity = new WeakReference<>(this);
         mHandler.sendEmptyMessage(0);
     }
 

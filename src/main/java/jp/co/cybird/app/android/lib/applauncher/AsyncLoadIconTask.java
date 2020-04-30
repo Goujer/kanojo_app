@@ -22,12 +22,11 @@ public class AsyncLoadIconTask extends AsyncTask<String, Void, Drawable> {
     private HashMap<String, Boolean> mInstalled;
     private boolean mIsInstalled;
     private Drawable mLoading;
-    private String mPackageName;
-    private Drawable mRunImage;
+	private Drawable mRunImage;
     private String mTag;
     private TextView mTextView;
 
-    public AsyncLoadIconTask(Context context, TextView textView, Drawable downloadImage, Drawable runImage, HashMap<String, Drawable> iconMap, HashMap<String, Boolean> installed, Drawable loading) {
+    AsyncLoadIconTask(Context context, TextView textView, Drawable downloadImage, Drawable runImage, HashMap<String, Drawable> iconMap, HashMap<String, Boolean> installed, Drawable loading) {
         this.mTextView = textView;
         this.mContext = context;
         this.mTag = textView.getTag(ParamLoader.getResourceIdForType("lib_launcher_row_item", "id", this.mContext)).toString();
@@ -38,12 +37,12 @@ public class AsyncLoadIconTask extends AsyncTask<String, Void, Drawable> {
         this.mLoading = loading;
     }
 
-    /* access modifiers changed from: protected */
-    public Drawable doInBackground(String... params) {
-        this.mPackageName = params[0];
+    @Override
+    protected Drawable doInBackground(String... params) {
+		String mPackageName = params[0];
         String iconFileUrl = params[1];
-        this.mIsInstalled = PackageUtil.isInstalled(this.mContext, this.mPackageName);
-        this.mInstalled.put(this.mPackageName, Boolean.valueOf(this.mIsInstalled));
+        this.mIsInstalled = PackageUtil.isInstalled(this.mContext, mPackageName);
+        this.mInstalled.put(mPackageName, this.mIsInstalled);
         DLog.i(AppLauncherConsts.TAG, "iconFileUrl: " + iconFileUrl);
         if (iconFileUrl == null) {
             return null;
@@ -89,19 +88,19 @@ public class AsyncLoadIconTask extends AsyncTask<String, Void, Drawable> {
         if (iconDrawable == null) {
             return iconDrawable;
         }
-        this.mIconMap.put(this.mPackageName, iconDrawable);
+        this.mIconMap.put(mPackageName, iconDrawable);
         return iconDrawable;
     }
 
-    /* access modifiers changed from: protected */
-    public void onPostExecute(Drawable iconDrawable) {
+    @Override
+    protected void onPostExecute(Drawable iconDrawable) {
         if (!this.mTag.equals(this.mTextView.getTag(ParamLoader.getResourceIdForType("lib_launcher_row_item", "id", this.mContext)).toString())) {
             return;
         }
         if (iconDrawable != null) {
-            this.mTextView.setCompoundDrawables(iconDrawable, (Drawable) null, this.mIsInstalled ? this.mRunImage : this.mDownloadImage, (Drawable) null);
+            this.mTextView.setCompoundDrawables(iconDrawable, null, this.mIsInstalled ? this.mRunImage : this.mDownloadImage, null);
         } else {
-            this.mTextView.setCompoundDrawables(this.mLoading, (Drawable) null, this.mIsInstalled ? this.mRunImage : this.mDownloadImage, (Drawable) null);
+            this.mTextView.setCompoundDrawables(this.mLoading, null, this.mIsInstalled ? this.mRunImage : this.mDownloadImage, null);
         }
     }
 }

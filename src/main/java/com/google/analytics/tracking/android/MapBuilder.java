@@ -19,13 +19,13 @@ public class MapBuilder {
         return this;
     }
 
-    public MapBuilder setAll(Map<String, String> params) {
-        GAUsage.getInstance().setUsage(GAUsage.Field.MAP_BUILDER_SET_ALL);
-        if (params != null) {
-            this.map.putAll(new HashMap(params));
-        }
-        return this;
-    }
+//    public MapBuilder setAll(Map<String, String> params) {
+//        GAUsage.getInstance().setUsage(GAUsage.Field.MAP_BUILDER_SET_ALL);
+//        if (params != null) {
+//            this.map.putAll(new HashMap(params));
+//        }
+//        return this;
+//    }
 
     public String get(String paramName) {
         GAUsage.getInstance().setUsage(GAUsage.Field.MAP_BUILDER_GET);
@@ -36,12 +36,12 @@ public class MapBuilder {
         return new HashMap(this.map);
     }
 
-    public static MapBuilder createAppView() {
-        GAUsage.getInstance().setUsage(GAUsage.Field.CONSTRUCT_APP_VIEW);
-        MapBuilder builder = new MapBuilder();
-        builder.set(Fields.HIT_TYPE, HitTypes.APP_VIEW);
-        return builder;
-    }
+//    public static MapBuilder createAppView() {
+//        GAUsage.getInstance().setUsage(GAUsage.Field.CONSTRUCT_APP_VIEW);
+//        MapBuilder builder = new MapBuilder();
+//        builder.set(Fields.HIT_TYPE, HitTypes.APP_VIEW);
+//        return builder;
+//    }
 
     public static MapBuilder createEvent(String category, String action, String label, Long value) {
         GAUsage.getInstance().setUsage(GAUsage.Field.CONSTRUCT_EVENT);
@@ -54,40 +54,40 @@ public class MapBuilder {
         return builder;
     }
 
-    public static MapBuilder createTransaction(String transactionId, String affiliation, Double revenue, Double tax, Double shipping, String currencyCode) {
-        String str = null;
-        GAUsage.getInstance().setUsage(GAUsage.Field.CONSTRUCT_TRANSACTION);
-        MapBuilder builder = new MapBuilder();
-        builder.set(Fields.HIT_TYPE, HitTypes.TRANSACTION);
-        builder.set(Fields.TRANSACTION_ID, transactionId);
-        builder.set(Fields.TRANSACTION_AFFILIATION, affiliation);
-        builder.set(Fields.TRANSACTION_REVENUE, revenue == null ? null : Double.toString(revenue.doubleValue()));
-        builder.set(Fields.TRANSACTION_TAX, tax == null ? null : Double.toString(tax.doubleValue()));
-        if (shipping != null) {
-            str = Double.toString(shipping.doubleValue());
-        }
-        builder.set(Fields.TRANSACTION_SHIPPING, str);
-        builder.set(Fields.CURRENCY_CODE, currencyCode);
-        return builder;
-    }
+//    public static MapBuilder createTransaction(String transactionId, String affiliation, Double revenue, Double tax, Double shipping, String currencyCode) {
+//        String str = null;
+//        GAUsage.getInstance().setUsage(GAUsage.Field.CONSTRUCT_TRANSACTION);
+//        MapBuilder builder = new MapBuilder();
+//        builder.set(Fields.HIT_TYPE, HitTypes.TRANSACTION);
+//        builder.set(Fields.TRANSACTION_ID, transactionId);
+//        builder.set(Fields.TRANSACTION_AFFILIATION, affiliation);
+//        builder.set(Fields.TRANSACTION_REVENUE, revenue == null ? null : Double.toString(revenue.doubleValue()));
+//        builder.set(Fields.TRANSACTION_TAX, tax == null ? null : Double.toString(tax.doubleValue()));
+//        if (shipping != null) {
+//            str = Double.toString(shipping.doubleValue());
+//        }
+//        builder.set(Fields.TRANSACTION_SHIPPING, str);
+//        builder.set(Fields.CURRENCY_CODE, currencyCode);
+//        return builder;
+//    }
 
-    public static MapBuilder createItem(String transactionId, String name, String sku, String category, Double price, Long quantity, String currencyCode) {
-        String str = null;
-        GAUsage.getInstance().setUsage(GAUsage.Field.CONSTRUCT_ITEM);
-        MapBuilder builder = new MapBuilder();
-        builder.set(Fields.HIT_TYPE, HitTypes.ITEM);
-        builder.set(Fields.TRANSACTION_ID, transactionId);
-        builder.set(Fields.ITEM_SKU, sku);
-        builder.set(Fields.ITEM_NAME, name);
-        builder.set(Fields.ITEM_CATEGORY, category);
-        builder.set(Fields.ITEM_PRICE, price == null ? null : Double.toString(price.doubleValue()));
-        if (quantity != null) {
-            str = Long.toString(quantity.longValue());
-        }
-        builder.set(Fields.ITEM_QUANTITY, str);
-        builder.set(Fields.CURRENCY_CODE, currencyCode);
-        return builder;
-    }
+//    public static MapBuilder createItem(String transactionId, String name, String sku, String category, Double price, Long quantity, String currencyCode) {
+//        String str = null;
+//        GAUsage.getInstance().setUsage(GAUsage.Field.CONSTRUCT_ITEM);
+//        MapBuilder builder = new MapBuilder();
+//        builder.set(Fields.HIT_TYPE, HitTypes.ITEM);
+//        builder.set(Fields.TRANSACTION_ID, transactionId);
+//        builder.set(Fields.ITEM_SKU, sku);
+//        builder.set(Fields.ITEM_NAME, name);
+//        builder.set(Fields.ITEM_CATEGORY, category);
+//        builder.set(Fields.ITEM_PRICE, price == null ? null : Double.toString(price.doubleValue()));
+//        if (quantity != null) {
+//            str = Long.toString(quantity.longValue());
+//        }
+//        builder.set(Fields.ITEM_QUANTITY, str);
+//        builder.set(Fields.CURRENCY_CODE, currencyCode);
+//        return builder;
+//    }
 
     public static MapBuilder createException(String exceptionDescription, Boolean fatal) {
         GAUsage.getInstance().setUsage(GAUsage.Field.CONSTRUCT_EXCEPTION);

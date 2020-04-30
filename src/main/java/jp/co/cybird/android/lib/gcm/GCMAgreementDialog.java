@@ -6,11 +6,10 @@ import jp.co.cybird.app.android.lib.commons.dialog.BaseAgreementDialog;
 
 public class GCMAgreementDialog extends BaseAgreementDialog {
     public GCMAgreementDialog(Context context, int eulaVersion, String eulaUrl, String prefKey) {
-        super(context, eulaVersion, eulaUrl, prefKey, (String) null, (String) null, (String) null);
+        super(context, eulaVersion, eulaUrl, prefKey, null, null, null);
     }
 
-    /* access modifiers changed from: protected */
-    public void handleDecline() {
+    protected void handleDecline() {
         super.handleDecline();
         SharedPreferences.Editor e = this.mPref.edit();
         e.putBoolean("lib_gcm_willSendNotification", false);
@@ -18,8 +17,7 @@ public class GCMAgreementDialog extends BaseAgreementDialog {
         super.saveAgreement();
     }
 
-    /* access modifiers changed from: protected */
-    public void handleAgree() {
+    protected void handleAgree() {
         super.handleAgree();
         SharedPreferences.Editor e = this.mPref.edit();
         e.putBoolean("lib_gcm_willSendNotification", true);

@@ -5,18 +5,17 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class StandardExceptionParser implements ExceptionParser {
     private final TreeSet<String> includedPackages = new TreeSet<>();
 
-    public StandardExceptionParser(Context context, Collection<String> additionalPackages) {
+    StandardExceptionParser(Context context, Collection<String> additionalPackages) {
         setIncludedPackages(context, additionalPackages);
     }
 
-    public void setIncludedPackages(Context context, Collection<String> additionalPackages) {
+    private void setIncludedPackages(Context context, Collection<String> additionalPackages) {
         this.includedPackages.clear();
         Set<String> packages = new HashSet<>();
         if (additionalPackages != null) {
@@ -38,26 +37,20 @@ public class StandardExceptionParser implements ExceptionParser {
         }
         for (String packageName : packages) {
             boolean needToAdd = true;
-            Iterator i$ = this.includedPackages.iterator();
-            while (true) {
-                if (!i$.hasNext()) {
-                    break;
-                }
-                String oldName = (String) i$.next();
-                if (packageName.startsWith(oldName)) {
-                    needToAdd = false;
-                } else if (oldName.startsWith(packageName)) {
-                    this.includedPackages.remove(oldName);
-                }
-            }
+			for (String oldName : this.includedPackages) {
+				if (packageName.startsWith(oldName)) {
+					needToAdd = false;
+				} else if (oldName.startsWith(packageName)) {
+					this.includedPackages.remove(oldName);
+				}
+			}
             if (needToAdd) {
                 this.includedPackages.add(packageName);
             }
         }
     }
 
-    /* access modifiers changed from: protected */
-    public Throwable getCause(Throwable t) {
+    private Throwable getCause(Throwable t) {
         Throwable result = t;
         while (result.getCause() != null) {
             result = result.getCause();
@@ -65,26 +58,23 @@ public class StandardExceptionParser implements ExceptionParser {
         return result;
     }
 
-    /* access modifiers changed from: protected */
-    public StackTraceElement getBestStackTraceElement(Throwable t) {
+	private StackTraceElement getBestStackTraceElement(Throwable t) {
         StackTraceElement[] elements = t.getStackTrace();
         if (elements == null || elements.length == 0) {
             return null;
         }
         for (StackTraceElement e : elements) {
             String className = e.getClassName();
-            Iterator i$ = this.includedPackages.iterator();
-            while (i$.hasNext()) {
-                if (className.startsWith((String) i$.next())) {
-                    return e;
-                }
-            }
+			for (String includedPackage : this.includedPackages) {
+				if (className.startsWith(includedPackage)) {
+					return e;
+				}
+			}
         }
         return elements[0];
     }
 
-    /* access modifiers changed from: protected */
-    public String getDescription(Throwable cause, StackTraceElement element, String threadName) {
+    protected String getDescription(Throwable cause, StackTraceElement element, String threadName) {
         StringBuilder descriptionBuilder = new StringBuilder();
         descriptionBuilder.append(cause.getClass().getSimpleName());
         if (element != null) {
@@ -93,10 +83,10 @@ public class StandardExceptionParser implements ExceptionParser {
             if (classNameParts != null && classNameParts.length > 0) {
                 className = classNameParts[classNameParts.length - 1];
             }
-            descriptionBuilder.append(String.format(" (@%s:%s:%s)", new Object[]{className, element.getMethodName(), Integer.valueOf(element.getLineNumber())}));
+            descriptionBuilder.append(String.format(" (@%s:%s:%s)", className, element.getMethodName(), element.getLineNumber()));
         }
         if (threadName != null) {
-            descriptionBuilder.append(String.format(" {%s}", new Object[]{threadName}));
+            descriptionBuilder.append(String.format(" {%s}", threadName));
         }
         return descriptionBuilder.toString();
     }

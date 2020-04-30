@@ -10,7 +10,6 @@ import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import android.util.Log;
 import com.google.analytics.tracking.android.Tracker;
 import jp.co.cybird.android.lib.gcm.Const;
@@ -21,8 +20,7 @@ import jp.co.cybird.barcodekanojoForGAM.R;
 public class BarcodeService extends GCMIntentService {
     private Tracker tracker;
 
-    /* access modifiers changed from: protected */
-    public void onMessage(Context context, Intent intent) {
+    protected void onMessage(Context context, Intent intent) {
         Bundle extra = intent.getExtras();
         if (extra != null) {
             for (String entry : extra.keySet()) {
@@ -33,8 +31,7 @@ public class BarcodeService extends GCMIntentService {
         generateNotifications(context, intent.getExtras());
     }
 
-    /* access modifiers changed from: protected */
-    public void onRegistered(Context context, String registrationId) {
+    protected void onRegistered(Context context, String registrationId) {
 		super.onRegistered(context, registrationId);
 		Intent i = new Intent(context, BarcodePushActivity.class);
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -16,24 +16,18 @@ import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 class GAThread extends Thread implements AnalyticsThread {
-    static final String API_VERSION = "1";
     private static final String CLIENT_VERSION = "ma3.0.1";
     private static final int MAX_SAMPLE_RATE = 100;
     private static final int SAMPLE_RATE_MODULO = 10000;
     private static final int SAMPLE_RATE_MULTIPLIER = 100;
     private static GAThread sInstance;
-    /* access modifiers changed from: private */
-    public volatile String mClientId;
+    private volatile String mClientId;
     private volatile boolean mClosed = false;
-    /* access modifiers changed from: private */
-    public volatile List<Command> mCommands;
-    /* access modifiers changed from: private */
-    public final Context mContext;
+    private volatile ArrayList<Command> mCommands;
+    private final Context mContext;
     private volatile boolean mDisabled = false;
-    /* access modifiers changed from: private */
-    public volatile String mInstallCampaign;
-    /* access modifiers changed from: private */
-    public volatile ServiceProxy mServiceProxy;
+    private volatile String mInstallCampaign;
+    private volatile ServiceProxy mServiceProxy;
     private final LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
 
     static GAThread getInstance(Context ctx) {
@@ -53,21 +47,20 @@ class GAThread extends Thread implements AnalyticsThread {
         start();
     }
 
-    @VisibleForTesting
-    GAThread(Context ctx, ServiceProxy proxy) {
-        super("GAThread");
-        if (ctx != null) {
-            this.mContext = ctx.getApplicationContext();
-        } else {
-            this.mContext = ctx;
-        }
-        this.mServiceProxy = proxy;
-        start();
-    }
+//    @VisibleForTesting
+//    GAThread(Context ctx, ServiceProxy proxy) {
+//        super("GAThread");
+//        if (ctx != null) {
+//            this.mContext = ctx.getApplicationContext();
+//        } else {
+//            this.mContext = ctx;
+//        }
+//        this.mServiceProxy = proxy;
+//        start();
+//    }
 
-    /* access modifiers changed from: protected */
     @VisibleForTesting
-    public void init() {
+    protected void init() {
         this.mServiceProxy.createService();
         this.mCommands = new ArrayList();
         this.mCommands.add(new Command(Command.APPEND_VERSION, "&_v".substring(1), CLIENT_VERSION));
@@ -80,7 +73,7 @@ class GAThread extends Thread implements AnalyticsThread {
         String hitTime = hit.get("&ht");
         if (hitTime != null) {
             try {
-                Long.valueOf(hitTime).longValue();
+				Long.valueOf(hitTime);
             } catch (NumberFormatException e) {
                 hitTime = null;
             }
@@ -90,7 +83,7 @@ class GAThread extends Thread implements AnalyticsThread {
         }
         queueToThread(new Runnable() {
             public void run() {
-                if (TextUtils.isEmpty((CharSequence) hitCopy.get(Fields.CLIENT_ID))) {
+                if (TextUtils.isEmpty(hitCopy.get(Fields.CLIENT_ID))) {
                     hitCopy.put(Fields.CLIENT_ID, GAThread.this.mClientId);
                 }
                 if (!GoogleAnalytics.getInstance(GAThread.this.mContext).getAppOptOut() && !GAThread.this.isSampledOut(hitCopy)) {
@@ -101,35 +94,33 @@ class GAThread extends Thread implements AnalyticsThread {
                         String unused = GAThread.this.mInstallCampaign = null;
                     }
                     GAThread.this.fillAppParameters(hitCopy);
-                    GAThread.this.mServiceProxy.putHit(HitBuilder.generateHitParams(hitCopy), Long.valueOf((String) hitCopy.get("&ht")).longValue(), GAThread.this.getUrlScheme(hitCopy), GAThread.this.mCommands);
+                    GAThread.this.mServiceProxy.putHit(HitBuilder.generateHitParams(hitCopy), Long.parseLong(hitCopy.get("&ht")), GAThread.this.getUrlScheme(hitCopy), GAThread.this.mCommands);
                 }
             }
         });
     }
 
-    /* access modifiers changed from: private */
-    public String getUrlScheme(Map<String, String> hit) {
+    private String getUrlScheme(Map<String, String> hit) {
         return (!hit.containsKey(Fields.USE_SECURE) || Utils.safeParseBoolean(hit.get(Fields.USE_SECURE), true)) ? "https:" : "http:";
     }
 
-    /* access modifiers changed from: private */
-    public boolean isSampledOut(Map<String, String> hit) {
+    private boolean isSampledOut(Map<String, String> hit) {
         if (hit.get(Fields.SAMPLE_RATE) == null) {
             return false;
         }
-        double sampleRate = Utils.safeParseDouble(hit.get(Fields.SAMPLE_RATE), 100.0d);
-        if (sampleRate >= 100.0d) {
+        double sampleRate = Utils.safeParseDouble(hit.get(Fields.SAMPLE_RATE), MAX_SAMPLE_RATE);
+        if (sampleRate >= MAX_SAMPLE_RATE) {
             return false;
         }
-        if (((double) (hashClientIdForSampling(hit.get(Fields.CLIENT_ID)) % SAMPLE_RATE_MODULO)) < 100.0d * sampleRate) {
+        if (((double) (hashClientIdForSampling(hit.get(Fields.CLIENT_ID)) % SAMPLE_RATE_MODULO)) < SAMPLE_RATE_MULTIPLIER * sampleRate) {
             return false;
         }
-        Log.v(String.format("%s hit sampled out", new Object[]{hit.get(Fields.HIT_TYPE) == null ? "unknown" : hit.get(Fields.HIT_TYPE)}));
+        Log.v(String.format("%s hit sampled out", hit.get(Fields.HIT_TYPE) == null ? "unknown" : hit.get(Fields.HIT_TYPE)));
         return true;
     }
 
     @VisibleForTesting
-    static int hashClientIdForSampling(String clientId) {
+	private static int hashClientIdForSampling(String clientId) {
         int hashVal = 1;
         if (!TextUtils.isEmpty(clientId)) {
             hashVal = 0;
@@ -145,8 +136,7 @@ class GAThread extends Thread implements AnalyticsThread {
         return hashVal;
     }
 
-    /* access modifiers changed from: private */
-    public void fillAppParameters(Map<String, String> hit) {
+    private void fillAppParameters(Map<String, String> hit) {
         DefaultProvider appFieldsProvider = AppFieldsDefaultProvider.getProvider();
         Utils.putIfAbsent(hit, Fields.APP_NAME, appFieldsProvider.getValue(Fields.APP_NAME));
         Utils.putIfAbsent(hit, Fields.APP_VERSION, appFieldsProvider.getValue(Fields.APP_VERSION));
@@ -179,14 +169,13 @@ class GAThread extends Thread implements AnalyticsThread {
         });
     }
 
-    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    public void queueToThread(Runnable r) {
+	private void queueToThread(Runnable r) {
         this.queue.add(r);
     }
 
     @VisibleForTesting
-    static String getAndClearCampaign(Context context) {
+	private static String getAndClearCampaign(Context context) {
         try {
             FileInputStream input = context.openFileInput("gaInstallData");
             byte[] inputBytes = new byte[8192];
@@ -266,16 +255,14 @@ class GAThread extends Thread implements AnalyticsThread {
         return this;
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
-    public void close() {
-        this.mClosed = true;
-        interrupt();
-    }
+//    @VisibleForTesting
+//    void close() {
+//        this.mClosed = true;
+//        interrupt();
+//    }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
-    public boolean isDisabled() {
-        return this.mDisabled;
-    }
+//    @VisibleForTesting
+//    boolean isDisabled() {
+//        return this.mDisabled;
+//    }
 }

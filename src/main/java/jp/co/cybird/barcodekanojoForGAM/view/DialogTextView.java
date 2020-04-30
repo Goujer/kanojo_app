@@ -11,11 +11,9 @@ import android.widget.TextView;
 import jp.co.cybird.barcodekanojoForGAM.R;
 
 public class DialogTextView extends RelativeLayout {
-    /* access modifiers changed from: private */
-    public OnDismissListener listener;
+    private OnDismissListener listener;
     private ImageButton mCloseButton;
-    private Context mContext;
-    private Button mSiteButton;
+	private Button mSiteButton;
     private String mTextString;
     private TextView mTextView;
     private Boolean needMask = false;
@@ -28,8 +26,7 @@ public class DialogTextView extends RelativeLayout {
 
     public DialogTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.mContext = context;
-        setGravity(16);
+		setGravity(16);
         setPadding(10, 0, 10, 0);
         LayoutInflater.from(context).inflate(R.layout.view_dialog_frame, this, true);
         getControls();
@@ -38,9 +35,9 @@ public class DialogTextView extends RelativeLayout {
     }
 
     public void getControls() {
-        this.mTextView = (TextView) findViewById(R.id.dialog_view_message);
-        this.mCloseButton = (ImageButton) findViewById(R.id.dialog_close_btn);
-        this.mSiteButton = (Button) findViewById(R.id.dialog_site_btn);
+        this.mTextView = findViewById(R.id.dialog_view_message);
+        this.mCloseButton = findViewById(R.id.dialog_close_btn);
+        this.mSiteButton = findViewById(R.id.dialog_site_btn);
     }
 
     public void setListener(OnDismissListener listener2) {
@@ -77,9 +74,6 @@ public class DialogTextView extends RelativeLayout {
     }
 
     public boolean isEmpty() {
-        if (this.mTextView == null || this.mTextView.getText() == null || this.mTextView.getText().equals("")) {
-            return true;
-        }
-        return false;
-    }
+		return this.mTextView == null || this.mTextView.getText() == null || this.mTextView.getText().equals("");
+	}
 }

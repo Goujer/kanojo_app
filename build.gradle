@@ -23,12 +23,32 @@ android {
 
 	defaultConfig {
 		applicationId 'jp.co.cybird.barcodekanojoForGAM'
-		minSdkVersion 14
-		targetSdkVersion 22
 		versionCode 1
 		versionName "2.4.3"
 		ndk {
 			abiFilters "armeabi", "armeabi-v7a", "mips", "x86"
+		}
+	}
+	buildTypes {
+		release {
+			minifyEnabled true
+			shrinkResources true
+		}
+		debug {
+			debuggable true
+			applicationIdSuffix ".debug"
+		}
+	}
+
+	flavorDimensions "default"
+	productFlavors {
+		modern {
+			minSdkVersion 14
+			targetSdkVersion 23
+		}
+		minApi9 {
+			minSdkVersion 9
+			targetSdkVersion 13
 		}
 	}
 
@@ -49,25 +69,25 @@ android {
 }
 
 dependencies {
-	//implementation project(':facebook')
-	implementation 'com.android.support:support-v4:22.2.1'
 	//Maps
 	//implementation 'com.google.android.maps:maps:7_r1'
-	implementation 'com.google.android.gms:play-services-maps:6.5.87'
+	modernImplementation 'com.google.android.gms:play-services-maps:8.4.0'
+	minApi9Implementation 'com.google.android.gms:play-services-maps:8.4.0'
 	//implementation 'com.google.android.maps:maps:15_r2'
 	//Analytics
 	//implementation files('libs/libGoogleAnalyticsV2.jar')
-	//implementation 'com.google.android.gms:play-services:3.2.65'	//Need to migrate to Jetpack WorkManager
+	//implementation 'com.google.android.gms:play-services-base:6.5.87'	//Need to migrate to Jetpack WorkManager
 	//Billing
-	implementation 'com.android.billingclient:billing:1.2'
+	modernImplementation 'com.android.billingclient:billing:2.0.3'
+	minApi9Implementation 'com.android.billingclient:billing:2.0.3'
 	//Twitter4j
 	implementation 'org.twitter4j:twitter4j-core:4.0.7'
-	implementation 'com.facebook.android:facebook-android-sdk:3.23.1'
+	modernImplementation 'com.facebook.android:facebook-android-sdk:3.23.1'
+	minApi9Implementation 'com.facebook.android:facebook-android-sdk:3.23.1'
 	//ZXing
 	implementation 'com.google.zxing:core:3.2.1'
 	//implementation 'com.google.zxing:android-core:3.2.1'
 	//implementation 'com.google.zxing:android-integration:3.2.1'
-	//implementation 'com.google.protobuf:protobuf-java:2.6.1'
 	//Other
     implementation('org.apache.httpcomponents:httpmime:4.3.6') {
 	    exclude module: 'httpclient'

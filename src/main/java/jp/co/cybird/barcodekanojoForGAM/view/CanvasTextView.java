@@ -35,8 +35,7 @@ public class CanvasTextView extends TextView {
         setDefaultText();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDraw(Canvas canvas) {
+    protected void onDraw(Canvas canvas) {
         canvas.rotate(-90.0f);
         Paint paint = new Paint();
         paint.setColor(-1);
@@ -50,10 +49,10 @@ public class CanvasTextView extends TextView {
         canvas.rotate(90.0f);
     }
 
-    public void setFoundText() {
-        this.mText1 = "";
-        this.mText2 = "";
-    }
+//    public void setFoundText() {
+//        this.mText1 = "";
+//        this.mText2 = "";
+//    }
 
     public void setDefaultText() {
         this.mText1 = this.r.getString(R.string.scan_notice_1);

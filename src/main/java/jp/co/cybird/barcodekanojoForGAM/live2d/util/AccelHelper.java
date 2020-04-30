@@ -8,9 +8,8 @@ import android.hardware.SensorManager;
 
 public class AccelHelper {
     private final Sensor accelerometer;
-    /* access modifiers changed from: private */
-    public AccelListener listener;
-    private MySensorListener sensorListener = new MySensorListener(this, (MySensorListener) null);
+    private AccelListener listener;
+    private MySensorListener sensorListener = new MySensorListener(this, null);
     private SensorManager sensorManager;
 
     public interface AccelListener {
@@ -18,7 +17,7 @@ public class AccelHelper {
     }
 
     public AccelHelper(Context a) {
-        this.sensorManager = (SensorManager) a.getSystemService("sensor");
+        this.sensorManager = (SensorManager) a.getSystemService(Context.SENSOR_SERVICE);
         this.accelerometer = this.sensorManager.getDefaultSensor(1);
     }
 

@@ -23,17 +23,13 @@ public abstract class GCMBaseIntentService extends IntentService {
     private static PowerManager.WakeLock sWakeLock;
     private final String[] mSenderIds;
 
-    /* access modifiers changed from: protected */
-    public abstract void onError(Context context, String str);
+    protected abstract void onError(Context context, String str);
 
-    /* access modifiers changed from: protected */
-    public abstract void onMessage(Context context, Intent intent);
+    protected abstract void onMessage(Context context, Intent intent);
 
-    /* access modifiers changed from: protected */
-    public abstract void onRegistered(Context context, String str);
+    protected abstract void onRegistered(Context context, String str);
 
-    /* access modifiers changed from: protected */
-    public abstract void onUnregistered(Context context, String str);
+    protected abstract void onUnregistered(Context context, String str);
 
     protected GCMBaseIntentService() {
         this(getName("DynamicSenderIds"), (String[]) null);
@@ -61,20 +57,17 @@ public abstract class GCMBaseIntentService extends IntentService {
         return getName(GCMRegistrar.getFlatSenderIds(senderIds));
     }
 
-    /* access modifiers changed from: protected */
-    public String[] getSenderIds(Context context) {
+    protected String[] getSenderIds(Context context) {
         if (this.mSenderIds != null) {
             return this.mSenderIds;
         }
         throw new IllegalStateException("sender id not set on constructor");
     }
 
-    /* access modifiers changed from: protected */
-    public void onDeletedMessages(Context context, int total) {
+    protected void onDeletedMessages(Context context, int total) {
     }
 
-    /* access modifiers changed from: protected */
-    public boolean onRecoverableError(Context context, String errorId) {
+    protected boolean onRecoverableError(Context context, String errorId) {
         return true;
     }
 

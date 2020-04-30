@@ -50,7 +50,7 @@ public final class HistoryManager {
 		Cursor cursor = null;
 		try {
 			db = new DBHelper(this.activity).getReadableDatabase();
-			cursor = db.query("history", COUNT_COLUMN, (String) null, (String[]) null, (String) null, (String) null, (String) null);
+			cursor = db.query("history", COUNT_COLUMN, null, null, (String) null, (String) null, (String) null);
 			cursor.moveToFirst();
 			return cursor.getInt(0) > 0;
 		} finally {

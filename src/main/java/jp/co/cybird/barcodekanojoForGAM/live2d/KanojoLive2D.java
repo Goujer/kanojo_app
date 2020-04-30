@@ -26,19 +26,17 @@ public class KanojoLive2D implements KanojoResource {
     public static final int USER_ACTION_TSUTSUKU = 12;
     private AccelHelper accelHelper;
     private int curUserActionNo = -1;
-    boolean dirtyFlag = true;
+    private boolean dirtyFlag = true;
     private KanojoFileManager fileManager;
-    /* access modifiers changed from: private */
-    public AndroidEAGLView glView = null;
+    private AndroidEAGLView glView = null;
     private boolean inRoom = true;
-    /* access modifiers changed from: private */
-    public KanojoModel kanojoModel = null;
+    private KanojoModel kanojoModel = null;
     private KanojoRoomActivity kanojoRoomActivity;
-    private KanojoSetting kanojoSetting = null;
+    private KanojoSetting kanojoSetting;
     private boolean modelAvailable = false;
     private boolean modelUpdating = false;
     private String partsCacheDir = null;
-    boolean process1Finished = false;
+    private boolean process1Finished = false;
     private int textureSize = 512;
     private int[] userActions = new int[20];
 
@@ -54,7 +52,7 @@ public class KanojoLive2D implements KanojoResource {
             this.userActions[i] = -1;
         }
         if (!Live2D.L2D_RANGE_CHECK_POINT) {
-            UtDebug.error("RANGE_CHECK_POINTをオンにしない場合 BarcodeKanojoのモデルは崩れる場合があります", new Object[0]);
+            UtDebug.error("RANGE_CHECK_POINTをオンにしない場合 BarcodeKanojoのモデルは崩れる場合があります");
         }
     }
 
@@ -187,7 +185,7 @@ public class KanojoLive2D implements KanojoResource {
         t.start();
     }
 
-    public boolean setupModel_withGL(GL10 gl) throws Exception {
+    private boolean setupModel_withGL(GL10 gl) throws Exception {
         if (!this.dirtyFlag) {
             return true;
         }
@@ -231,7 +229,7 @@ public class KanojoLive2D implements KanojoResource {
             return true;
         }
         if (this.partsCacheDir == null) {
-            UtDebug.error("PartsCacheDir が設定されていませんsetPartsCacheDirectory()でフォルダを設定して下さい", new Object[0]);
+            UtDebug.error("PartsCacheDir が設定されていませんsetPartsCacheDirectory()でフォルダを設定して下さい");
         } else {
             String bkPartsData2 = KanojoPartsItem.getBkPartsData_cache(KanojoPartsItem.getPartsDir(this.partsCacheDir, partsID, partsItemNo));
             if (bkPartsData2 != null && this.fileManager.exists_cache(bkPartsData2)) {
@@ -245,7 +243,7 @@ public class KanojoLive2D implements KanojoResource {
         return setBackgroundImage(filepath, isCache, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f);
     }
 
-    public boolean setBackgroundImage(String filepath, boolean isCache, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh) {
+    private boolean setBackgroundImage(String filepath, boolean isCache, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh) {
         return this.glView.getMyRenderer().setBackgroundImage(filepath, isCache, sx, sy, sw, sh, dx, dy, dw, dh);
     }
 

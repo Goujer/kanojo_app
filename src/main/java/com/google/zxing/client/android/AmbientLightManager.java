@@ -20,11 +20,10 @@ final class AmbientLightManager implements SensorEventListener {
         this.context = context2;
     }
 
-    /* access modifiers changed from: package-private */
-    public void start(CameraManager cameraManager2) {
+    void start(CameraManager cameraManager2) {
         this.cameraManager = cameraManager2;
         if (FrontLightMode.readPref(PreferenceManager.getDefaultSharedPreferences(this.context)) == FrontLightMode.AUTO) {
-            SensorManager sensorManager = (SensorManager) this.context.getSystemService("sensor");
+            SensorManager sensorManager = (SensorManager) this.context.getSystemService(Context.SENSOR_SERVICE);
             this.lightSensor = sensorManager.getDefaultSensor(5);
             if (this.lightSensor != null) {
                 sensorManager.registerListener(this, this.lightSensor, 3);
@@ -32,10 +31,9 @@ final class AmbientLightManager implements SensorEventListener {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void stop() {
+    void stop() {
         if (this.lightSensor != null) {
-            ((SensorManager) this.context.getSystemService("sensor")).unregisterListener(this);
+            ((SensorManager) this.context.getSystemService(Context.SENSOR_SERVICE)).unregisterListener(this);
             this.cameraManager = null;
             this.lightSensor = null;
         }

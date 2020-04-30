@@ -14,20 +14,15 @@ import java.util.Map;
 class AnalyticsGmsCoreClient implements AnalyticsClient {
     private static final int BIND_ADJUST_WITH_ACTIVITY = 128;
     public static final int BIND_FAILED = 1;
-    public static final String KEY_APP_PACKAGE_NAME = "app_package_name";
+    private static final String KEY_APP_PACKAGE_NAME = "app_package_name";
     public static final int REMOTE_EXECUTION_FAILED = 2;
-    static final String SERVICE_ACTION = "com.google.android.gms.analytics.service.START";
+    private static final String SERVICE_ACTION = "com.google.android.gms.analytics.service.START";
     private static final String SERVICE_DESCRIPTOR = "com.google.android.gms.analytics.internal.IAnalyticsService";
-    /* access modifiers changed from: private */
-    public ServiceConnection mConnection;
-    /* access modifiers changed from: private */
-    public Context mContext;
-    /* access modifiers changed from: private */
-    public OnConnectedListener mOnConnectedListener;
-    /* access modifiers changed from: private */
-    public OnConnectionFailedListener mOnConnectionFailedListener;
-    /* access modifiers changed from: private */
-    public IAnalyticsService mService;
+    private ServiceConnection mConnection;
+    private Context mContext;
+    private OnConnectedListener mOnConnectedListener;
+    private OnConnectionFailedListener mOnConnectionFailedListener;
+    private IAnalyticsService mService;
 
     public interface OnConnectedListener {
         void onConnected();
@@ -39,7 +34,7 @@ class AnalyticsGmsCoreClient implements AnalyticsClient {
         void onConnectionFailed(int i, Intent intent);
     }
 
-    public AnalyticsGmsCoreClient(Context context, OnConnectedListener onConnectedListener, OnConnectionFailedListener onConnectionFailedListener) {
+    AnalyticsGmsCoreClient(Context context, OnConnectedListener onConnectedListener, OnConnectionFailedListener onConnectionFailedListener) {
         this.mContext = context;
         if (onConnectedListener == null) {
             throw new IllegalArgumentException("onConnectedListener cannot be null");
@@ -60,7 +55,7 @@ class AnalyticsGmsCoreClient implements AnalyticsClient {
             return;
         }
         this.mConnection = new AnalyticsServiceConnection();
-        boolean result = this.mContext.bindService(intent, this.mConnection, 129);
+        boolean result = this.mContext.bindService(intent, this.mConnection, Context.BIND_ADJUST_WITH_ACTIVITY|Context.BIND_AUTO_CREATE);
         Log.v("connect: bindService returned " + result + " for " + intent);
         if (!result) {
             this.mConnection = null;
@@ -101,8 +96,7 @@ class AnalyticsGmsCoreClient implements AnalyticsClient {
         return this.mService;
     }
 
-    /* access modifiers changed from: protected */
-    public void checkConnected() {
+    protected void checkConnected() {
         if (!isConnected()) {
             throw new IllegalStateException("Not connected. Call connect() and wait for onConnected() to be called.");
         }
@@ -139,8 +133,7 @@ class AnalyticsGmsCoreClient implements AnalyticsClient {
         }
     }
 
-    /* access modifiers changed from: private */
-    public void onServiceBound() {
+    private void onServiceBound() {
         onConnectionSuccess();
     }
 

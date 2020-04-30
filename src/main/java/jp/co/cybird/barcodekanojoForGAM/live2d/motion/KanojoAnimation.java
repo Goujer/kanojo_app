@@ -14,8 +14,8 @@ import jp.live2d.util.UtFile;
 import jp.live2d.util.UtSystem;
 
 public class KanojoAnimation {
-    public static final int EYE_INTERVAL_NORMAL = 4000;
-    public static final int EYE_INTERVAL_TOUCHING = 1500;
+    private static final int EYE_INTERVAL_NORMAL = 4000;
+    private static final int EYE_INTERVAL_TOUCHING = 1500;
     public static final int FLIP_LENGTH = 500;
     public static final int FLIP_START_BODY_H = 600;
     public static final int FLIP_START_BODY_W = 600;
@@ -37,43 +37,43 @@ public class KanojoAnimation {
     public static final int MAX_LOVE_C_MOTION = 7;
     public static final int MAX_TOUCH_MOTION = 2;
     public static final float MOUSE_TO_FACE_TARGET_SCALE = 1.5f;
-    static long lastShakeEvent = 0;
+    private static long lastShakeEvent = 0;
     private static int no = 0;
-    static Random rand = new Random();
-    boolean _flipAvailable;
-    float _flipStartX;
-    float _flipStartY;
-    float _lastX;
-    float _lastY;
-    float _totalD;
-    boolean _touchSingle;
-    EyeBlinkMotion eyeMotion;
-    float faceTargetX = 0.0f;
-    float faceTargetY = 0.0f;
-    float faceVX = 0.0f;
-    float faceVY = 0.0f;
-    float faceX = 0.0f;
-    float faceY = 0.0f;
-    MotionQueueManager hintMotionMgr = new MotionQueueManager();
-    KanojoLive2D kanojoLive2D;
-    KanojoTouchMotion kanojoTouch = null;
-    MotionQueueManager kigenMotionMgr = new MotionQueueManager();
-    MotionQueueManager mainMotionMgr = new MotionQueueManager();
-    ArrayList<Live2DMotion> motionDoubleTapList = new ArrayList<>();
-    ArrayList<Live2DMotion> motionKurakuraList = new ArrayList<>();
-    ArrayList<Live2DMotion> motionLoveAList = new ArrayList<>();
-    ArrayList<Live2DMotion> motionLoveBList = new ArrayList<>();
-    ArrayList<Live2DMotion> motionLoveCList = new ArrayList<>();
-    ArrayList<Live2DMotion> motionTouchList = new ArrayList<>();
-    float mouseX = 0.0f;
-    float mouseY = 0.0f;
-    float mouthOpen;
-    boolean setupMotionDataFinished = false;
-    long startTimeMSec;
-    double timeDoubleSec;
-    long timeMSec;
-    MotionQueueManager touchMotionMgr = new MotionQueueManager();
-    boolean touching;
+    private static Random rand = new Random();
+    private boolean _flipAvailable;
+    private float _flipStartX;
+    private float _flipStartY;
+    private float _lastX;
+    private float _lastY;
+    private float _totalD;
+    private boolean _touchSingle;
+    private EyeBlinkMotion eyeMotion;
+    private float faceTargetX = 0.0f;
+    private float faceTargetY = 0.0f;
+    private float faceVX = 0.0f;
+    private float faceVY = 0.0f;
+    private float faceX = 0.0f;
+    private float faceY = 0.0f;
+    private MotionQueueManager hintMotionMgr = new MotionQueueManager();
+    private KanojoLive2D kanojoLive2D;
+    private KanojoTouchMotion kanojoTouch = null;
+    private MotionQueueManager kigenMotionMgr = new MotionQueueManager();
+    private MotionQueueManager mainMotionMgr = new MotionQueueManager();
+    private ArrayList<Live2DMotion> motionDoubleTapList = new ArrayList<>();
+    private ArrayList<Live2DMotion> motionKurakuraList = new ArrayList<>();
+    private ArrayList<Live2DMotion> motionLoveAList = new ArrayList<>();
+    private ArrayList<Live2DMotion> motionLoveBList = new ArrayList<>();
+    private ArrayList<Live2DMotion> motionLoveCList = new ArrayList<>();
+    private ArrayList<Live2DMotion> motionTouchList = new ArrayList<>();
+    private float mouseX = 0.0f;
+    private float mouseY = 0.0f;
+    private float mouthOpen;
+    private boolean setupMotionDataFinished = false;
+    private long startTimeMSec;
+    private double timeDoubleSec;
+    private long timeMSec;
+    private MotionQueueManager touchMotionMgr = new MotionQueueManager();
+    private boolean touching;
 
     public KanojoAnimation(KanojoLive2D k) {
         this.kanojoLive2D = k;
@@ -121,7 +121,7 @@ public class KanojoAnimation {
             this.motionLoveBList.get(i2).setFadeIn(EYE_INTERVAL_NORMAL);
             this.motionLoveBList.get(i2).setFadeOut(EYE_INTERVAL_NORMAL);
         }
-        this.motionLoveCList.add(loadMotion(String.format("%s/%s", new Object[]{dir, "love_c"}), "love_c01"));
+        this.motionLoveCList.add(loadMotion(String.format("%s/%s", dir, "love_c"), "love_c01"));
         for (int i3 = 0; i3 < this.motionLoveCList.size(); i3++) {
             this.motionLoveCList.get(i3).setFadeIn(EYE_INTERVAL_NORMAL);
             this.motionLoveCList.get(i3).setFadeOut(EYE_INTERVAL_NORMAL);
@@ -129,12 +129,11 @@ public class KanojoAnimation {
         this.setupMotionDataFinished = true;
     }
 
-    /* access modifiers changed from: package-private */
-    public Live2DMotion loadMotion(String dir, String filename) {
+	private Live2DMotion loadMotion(String dir, String filename) {
         try {
-            return Live2DMotion.loadMotion(UtFile.load(this.kanojoLive2D.getFileManager().open_resource(String.valueOf(dir) + "/" + filename + ".mtn")));
+            return Live2DMotion.loadMotion(UtFile.load(this.kanojoLive2D.getFileManager().open_resource(dir + "/" + filename + ".mtn")));
         } catch (Exception e) {
-            System.err.printf("failed to load motion :: %s\n", new Object[]{filename});
+            System.err.printf("failed to load motion :: %s\n", filename);
             return new Live2DMotion();
         }
     }
@@ -144,7 +143,7 @@ public class KanojoAnimation {
             try {
                 tapEvent_exe(tapCount, x, y);
             } catch (Throwable e) {
-                System.err.printf("error @KanojoAnimation#tapEvent :: %s\n", new Object[]{e.toString()});
+                System.err.printf("error @KanojoAnimation#tapEvent :: %s\n", e.toString());
             }
         }
     }
@@ -177,8 +176,7 @@ public class KanojoAnimation {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setMainMotion(Live2DMotion motion) {
+	private void setMainMotion(Live2DMotion motion) {
         motion.reinit();
         this.mainMotionMgr.startMotion(motion, false);
     }
@@ -306,8 +304,7 @@ public class KanojoAnimation {
         return rand.nextInt(Integer.MAX_VALUE);
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateDragMotion(ALive2DModel model) {
+	private void updateDragMotion(ALive2DModel model) {
         float dx = this.faceTargetX - this.faceX;
         float dy = this.faceTargetY - this.faceY;
         if (dx != 0.0f || dy != 0.0f) {
@@ -342,8 +339,7 @@ public class KanojoAnimation {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateAuto(ALive2DModel model) {
+	private void updateAuto(ALive2DModel model) {
         float loop4x;
         float loop4y;
         int t4 = (int) ((this.timeMSec / 2) % 4000);
@@ -364,16 +360,14 @@ public class KanojoAnimation {
         model.setParamFloat("PARAM_LOOP_4_SEC_Y", loop4y);
     }
 
-    /* access modifiers changed from: package-private */
-    public float g(float love, float badV, float normalV, float goodV) {
+	private float g(float love, float badV, float normalV, float goodV) {
         if (((double) love) < 0.5d) {
             return ((normalV - badV) * love * 2.0f) + badV;
         }
         return ((goodV - normalV) * ((love * 2.0f) - 1.0f)) + normalV;
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateEmotion(ALive2DModel model, KanojoSetting setting) {
+	private void updateEmotion(ALive2DModel model, KanojoSetting setting) {
         if (setting != null) {
             float love = ((float) setting.getLoveGage()) / 100.0f;
             model.addToParamFloat("PARAM_BROW_L_Y", g(love, -0.5f, 0.0f, 0.1f), 1.0f);
@@ -396,8 +390,7 @@ public class KanojoAnimation {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public float range(float v, float min, float max) {
+    private float range(float v, float min, float max) {
         if (v < min) {
             v = min;
         }

@@ -8,16 +8,13 @@ import com.google.android.gms.common.util.VisibleForTesting;
 
 public class GAServiceManager extends ServiceManager {
     private static final int MSG_KEY = 1;
-    /* access modifiers changed from: private */
-    public static final Object MSG_OBJECT = new Object();
+    private static final Object MSG_OBJECT = new Object();
+    //TODO: Fis this
     private static GAServiceManager instance;
-    /* access modifiers changed from: private */
-    public boolean connected = true;
+    private boolean connected = true;
     private Context ctx;
-    /* access modifiers changed from: private */
-    public int dispatchPeriodInSeconds = 1800;
-    /* access modifiers changed from: private */
-    public Handler handler;
+    private int dispatchPeriodInSeconds = 1800;
+    private Handler handler;
     private boolean listenForNetwork = true;
     private AnalyticsStoreStateListener listener = new AnalyticsStoreStateListener() {
         public void reportStoreIsEmpty(boolean isEmpty) {
@@ -29,8 +26,7 @@ public class GAServiceManager extends ServiceManager {
     private boolean pendingForceLocalDispatch;
     private String pendingHostOverride;
     private AnalyticsStore store;
-    /* access modifiers changed from: private */
-    public boolean storeIsEmpty = false;
+    private boolean storeIsEmpty = false;
     private volatile AnalyticsThread thread;
 
     public static GAServiceManager getInstance() {
@@ -64,24 +60,23 @@ public class GAServiceManager extends ServiceManager {
     private void initializeHandler() {
         this.handler = new Handler(this.ctx.getMainLooper(), new Handler.Callback() {
             public boolean handleMessage(Message msg) {
-                if (1 == msg.what && GAServiceManager.MSG_OBJECT.equals(msg.obj)) {
+                if (MSG_KEY == msg.what && GAServiceManager.MSG_OBJECT.equals(msg.obj)) {
                     GAUsage.getInstance().setDisableUsage(true);
                     GAServiceManager.this.dispatchLocalHits();
                     GAUsage.getInstance().setDisableUsage(false);
                     if (GAServiceManager.this.dispatchPeriodInSeconds > 0 && !GAServiceManager.this.storeIsEmpty) {
-                        GAServiceManager.this.handler.sendMessageDelayed(GAServiceManager.this.handler.obtainMessage(1, GAServiceManager.MSG_OBJECT), (long) (GAServiceManager.this.dispatchPeriodInSeconds * 1000));
+                        GAServiceManager.this.handler.sendMessageDelayed(GAServiceManager.this.handler.obtainMessage(MSG_KEY, GAServiceManager.MSG_OBJECT), (long) (GAServiceManager.this.dispatchPeriodInSeconds * 1000));
                     }
                 }
                 return true;
             }
         });
         if (this.dispatchPeriodInSeconds > 0) {
-            this.handler.sendMessageDelayed(this.handler.obtainMessage(1, MSG_OBJECT), (long) (this.dispatchPeriodInSeconds * 1000));
+            this.handler.sendMessageDelayed(this.handler.obtainMessage(MSG_KEY, MSG_OBJECT), (long) (this.dispatchPeriodInSeconds * 1000));
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public synchronized void initialize(Context ctx2, AnalyticsThread thread2) {
+    synchronized void initialize(Context ctx2, AnalyticsThread thread2) {
         if (this.ctx == null) {
             this.ctx = ctx2.getApplicationContext();
             if (this.thread == null) {
@@ -98,14 +93,12 @@ public class GAServiceManager extends ServiceManager {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    public AnalyticsStoreStateListener getListener() {
+    AnalyticsStoreStateListener getListener() {
         return this.listener;
     }
 
-    /* access modifiers changed from: package-private */
-    public synchronized AnalyticsStore getStore() {
+    synchronized AnalyticsStore getStore() {
         if (this.store == null) {
             if (this.ctx == null) {
                 throw new IllegalStateException("Cant get a store unless we have a context");
@@ -125,15 +118,14 @@ public class GAServiceManager extends ServiceManager {
         return this.store;
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
-    public synchronized void overrideHostUrl(String hostOverride) {
-        if (this.store == null) {
-            this.pendingHostOverride = hostOverride;
-        } else {
-            this.store.getDispatcher().overrideHostUrl(hostOverride);
-        }
-    }
+//    @VisibleForTesting
+//    synchronized void overrideHostUrl(String hostOverride) {
+//        if (this.store == null) {
+//            this.pendingHostOverride = hostOverride;
+//        } else {
+//            this.store.getDispatcher().overrideHostUrl(hostOverride);
+//        }
+//    }
 
     @Deprecated
     public synchronized void dispatchLocalHits() {
@@ -154,11 +146,11 @@ public class GAServiceManager extends ServiceManager {
         } else {
             GAUsage.getInstance().setUsage(GAUsage.Field.SET_DISPATCH_PERIOD);
             if (!this.storeIsEmpty && this.connected && this.dispatchPeriodInSeconds > 0) {
-                this.handler.removeMessages(1, MSG_OBJECT);
+                this.handler.removeMessages(MSG_KEY, MSG_OBJECT);
             }
             this.dispatchPeriodInSeconds = dispatchPeriodInSeconds2;
             if (dispatchPeriodInSeconds2 > 0 && !this.storeIsEmpty && this.connected) {
-                this.handler.sendMessageDelayed(this.handler.obtainMessage(1, MSG_OBJECT), (long) (dispatchPeriodInSeconds2 * 1000));
+                this.handler.sendMessageDelayed(this.handler.obtainMessage(MSG_KEY, MSG_OBJECT), (long) (dispatchPeriodInSeconds2 * 1000));
             }
         }
     }
@@ -174,17 +166,16 @@ public class GAServiceManager extends ServiceManager {
         this.thread.setForceLocalDispatch();
     }
 
-    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    public synchronized void updatePowerSaveMode(boolean storeIsEmpty2, boolean connected2) {
+	private synchronized void updatePowerSaveMode(boolean storeIsEmpty2, boolean connected2) {
         if (!(this.storeIsEmpty == storeIsEmpty2 && this.connected == connected2)) {
             if (storeIsEmpty2 || !connected2) {
                 if (this.dispatchPeriodInSeconds > 0) {
-                    this.handler.removeMessages(1, MSG_OBJECT);
+                    this.handler.removeMessages(MSG_KEY, MSG_OBJECT);
                 }
             }
             if (!storeIsEmpty2 && connected2 && this.dispatchPeriodInSeconds > 0) {
-                this.handler.sendMessageDelayed(this.handler.obtainMessage(1, MSG_OBJECT), (long) (this.dispatchPeriodInSeconds * 1000));
+                this.handler.sendMessageDelayed(this.handler.obtainMessage(MSG_KEY, MSG_OBJECT), this.dispatchPeriodInSeconds * 1000);
             }
             Log.v("PowerSaveMode " + ((storeIsEmpty2 || !connected2) ? "initiated." : "terminated."));
             this.storeIsEmpty = storeIsEmpty2;
@@ -192,16 +183,14 @@ public class GAServiceManager extends ServiceManager {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public synchronized void updateConnectivityStatus(boolean connected2) {
+    synchronized void updateConnectivityStatus(boolean connected2) {
         updatePowerSaveMode(this.storeIsEmpty, connected2);
     }
 
-    /* access modifiers changed from: package-private */
-    public synchronized void onRadioPowered() {
+    synchronized void onRadioPowered() {
         if (!this.storeIsEmpty && this.connected && this.dispatchPeriodInSeconds > 0) {
-            this.handler.removeMessages(1, MSG_OBJECT);
-            this.handler.sendMessage(this.handler.obtainMessage(1, MSG_OBJECT));
+            this.handler.removeMessages(MSG_KEY, MSG_OBJECT);
+            this.handler.sendMessage(this.handler.obtainMessage(MSG_KEY, MSG_OBJECT));
         }
     }
 }

@@ -10,17 +10,15 @@ import java.util.UUID;
 import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs;
 
 class ClientIdDefaultProvider implements DefaultProvider {
+	//TODO: Fix this.
     private static ClientIdDefaultProvider sInstance;
     private static final Object sInstanceLock = new Object();
-    /* access modifiers changed from: private */
-    public String mClientId;
-    /* access modifiers changed from: private */
-    public boolean mClientIdLoaded = false;
-    /* access modifiers changed from: private */
-    public final Object mClientIdLock = new Object();
+	private String mClientId;
+    private boolean mClientIdLoaded = false;
+    private final Object mClientIdLock = new Object();
     private final Context mContext;
 
-    public static void initializeProvider(Context c) {
+    static void initializeProvider(Context c) {
         synchronized (sInstanceLock) {
             if (sInstance == null) {
                 sInstance = new ClientIdDefaultProvider(c);
@@ -43,7 +41,7 @@ class ClientIdDefaultProvider implements DefaultProvider {
         return clientIdDefaultProvider;
     }
 
-    protected ClientIdDefaultProvider(Context c) {
+    private ClientIdDefaultProvider(Context c) {
         this.mContext = c;
         asyncInitializeClientId();
     }
@@ -94,8 +92,7 @@ class ClientIdDefaultProvider implements DefaultProvider {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public String generateClientId() {
+    private String generateClientId() {
         String result = UUID.randomUUID().toString().toLowerCase();
         if (!storeClientId(result)) {
             return GreeDefs.BARCODE;
@@ -115,9 +112,8 @@ class ClientIdDefaultProvider implements DefaultProvider {
         }.start();
     }
 
-    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    public String initializeClientId() {
+	private String initializeClientId() {
         String rslt = null;
         try {
             FileInputStream input = this.mContext.openFileInput("gaClientId");

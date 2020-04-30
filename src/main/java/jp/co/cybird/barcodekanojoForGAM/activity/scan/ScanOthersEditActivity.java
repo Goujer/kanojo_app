@@ -39,25 +39,25 @@ public class ScanOthersEditActivity extends BaseEditActivity implements View.OnC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_others);
-        ((Button) findViewById(R.id.edit_close)).setOnClickListener(this);
-        this.mProductAndKanojo = (ProductAndKanojoView) findViewById(R.id.scan_others_photo);
-        this.mKanojoName = (EditItemView) findViewById(R.id.scan_others_1_kanojo_name);
+        findViewById(R.id.edit_close).setOnClickListener(this);
+        this.mProductAndKanojo = findViewById(R.id.scan_others_photo);
+        this.mKanojoName = findViewById(R.id.scan_others_1_kanojo_name);
         this.mKanojoName.setOnClickListener(this);
-        this.mCompanyName = (EditItemView) findViewById(R.id.scan_others_2_company_name);
+        this.mCompanyName = findViewById(R.id.scan_others_2_company_name);
         this.mCompanyName.setOnClickListener(this);
-        this.mProductName = (EditItemView) findViewById(R.id.scan_others_3_product_name);
+        this.mProductName = findViewById(R.id.scan_others_3_product_name);
         this.mProductName.setOnClickListener(this);
-        this.mCategoryName = (EditItemView) findViewById(R.id.scan_others_4_category);
+        this.mCategoryName = findViewById(R.id.scan_others_4_category);
         this.mCategoryName.setOnClickListener(this);
-        ((EditItemView) findViewById(R.id.scan_others_5_barcode)).setOnClickListener(this);
-        EditItemView mCountry = (EditItemView) findViewById(R.id.scan_others_6_country);
+        findViewById(R.id.scan_others_5_barcode).setOnClickListener(this);
+        EditItemView mCountry = findViewById(R.id.scan_others_6_country);
         mCountry.setOnClickListener(this);
-        EditItemView mLocation = (EditItemView) findViewById(R.id.scan_others_7_location);
+        EditItemView mLocation = findViewById(R.id.scan_others_7_location);
         mLocation.setOnClickListener(this);
-        ((EditItemView) findViewById(R.id.scan_others_8_photo)).setOnClickListener(this);
-        this.mComment = (EditItemView) findViewById(R.id.scan_others_9_comment);
+        findViewById(R.id.scan_others_8_photo).setOnClickListener(this);
+        this.mComment = findViewById(R.id.scan_others_9_comment);
         this.mComment.setOnClickListener(this);
-        this.btnSave = (Button) findViewById(R.id.scan_others_btn_save);
+        this.btnSave = findViewById(R.id.scan_others_btn_save);
         this.btnSave.setOnClickListener(this);
         this.btnSave.setEnabled(false);
         Bundle bundle = getIntent().getExtras();
@@ -85,14 +85,14 @@ public class ScanOthersEditActivity extends BaseEditActivity implements View.OnC
     }
 
     public View getClientView() {
-        View leyout = getLayoutInflater().inflate(R.layout.activity_scan_others, (ViewGroup) null);
+        View leyout = getLayoutInflater().inflate(R.layout.activity_scan_others, null);
         LinearLayout appLayoutRoot = new LinearLayout(this);
         appLayoutRoot.addView(leyout);
         return appLayoutRoot;
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         ((BarcodeKanojoApp) getApplication()).requestLocationUpdates(true);
         if (this.mMessage != null) {
@@ -100,20 +100,20 @@ public class ScanOthersEditActivity extends BaseEditActivity implements View.OnC
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    @Override
+    protected void onPause() {
         ((BarcodeKanojoApp) getApplication()).removeLocationUpdates();
         super.onPause();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    @Override
+    protected void onDestroy() {
         this.mProductAndKanojo.clear();
         super.onDestroy();
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         File f = getFile();
         if (f != null && f.exists()) {
@@ -121,6 +121,7 @@ public class ScanOthersEditActivity extends BaseEditActivity implements View.OnC
         }
     }
 
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.edit_close:
@@ -154,34 +155,27 @@ public class ScanOthersEditActivity extends BaseEditActivity implements View.OnC
                 executeInspectionAndScanOthersTask(this.mApiTask);
                 return;
             default:
-                return;
-        }
+		}
     }
 
+    @Override
     public void onDismiss(DialogInterface dialog, int code) {
         if (this.mCompanyName.isEmpty() || this.mProductName.isEmpty()) {
             this.btnSave.setEnabled(false);
         } else {
             this.btnSave.setEnabled(true);
         }
-        switch (code) {
-            case 200:
-                if (this.mApiTask == null) {
-                    return;
-                }
-                if (this.mApiTask.what == 2) {
-                    setResult(101);
-                    close();
-                    return;
-                } else if (this.mApiTask.what == 1) {
-                    setResult(103);
-                    close();
-                    return;
-                } else {
-                    return;
-                }
-            default:
-                return;
-        }
-    }
+		if (code == 200) {
+			if (this.mApiTask == null) {
+				return;
+			}
+			if (this.mApiTask.what == 2) {
+				setResult(101);
+				close();
+			} else if (this.mApiTask.what == 1) {
+				setResult(103);
+				close();
+			}
+		}
+	}
 }

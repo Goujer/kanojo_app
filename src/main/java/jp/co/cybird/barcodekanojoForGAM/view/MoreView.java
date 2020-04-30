@@ -13,18 +13,12 @@ import jp.co.cybird.barcodekanojoForGAM.R;
 
 public class MoreView extends FrameLayout {
     public static final String TAG = "MoreView";
-    /* access modifiers changed from: private */
-    public int Id;
-    /* access modifiers changed from: private */
-    public OnMoreClickListener listener;
-    /* access modifiers changed from: private */
-    public ProgressBar progress;
-    /* access modifiers changed from: private */
-    public Resources r;
-    /* access modifiers changed from: private */
-    public TextView txt;
-    /* access modifiers changed from: private */
-    public ImageView ya;
+    private int Id;
+    private OnMoreClickListener listener;
+    private ProgressBar progress;
+    private Resources r;
+    private TextView txt;
+    private ImageView ya;
 
     public interface OnMoreClickListener {
         void onMoreClick(int i);
@@ -40,25 +34,25 @@ public class MoreView extends FrameLayout {
         initView(context);
     }
 
-    /* access modifiers changed from: protected */
-    public void onFinishInflate() {
+    @Override
+    protected void onFinishInflate() {
         super.onFinishInflate();
         this.r = getResources();
-        this.txt = (TextView) findViewById(R.id.row_more_txt);
-        this.progress = (ProgressBar) findViewById(R.id.row_more_progressbar);
-        this.ya = (ImageView) findViewById(R.id.row_more_ya);
+        this.txt = findViewById(R.id.row_more_txt);
+        this.progress = findViewById(R.id.row_more_progressbar);
+        this.ya = findViewById(R.id.row_more_ya);
         Log.d(TAG, "IDs : " + this.txt.getId() + "," + this.progress.getId() + "," + this.ya.getId());
     }
 
     private void initView(Context context) {
     }
 
-    public void initView(View root) {
-        this.r = getResources();
-        this.txt = (TextView) root.findViewById(R.id.row_more_txt);
-        this.progress = (ProgressBar) root.findViewById(R.id.row_more_progressbar);
-        this.ya = (ImageView) root.findViewById(R.id.row_more_ya);
-    }
+//    public void initView(View root) {
+//        this.r = getResources();
+//        this.txt = (TextView) root.findViewById(R.id.row_more_txt);
+//        this.progress = (ProgressBar) root.findViewById(R.id.row_more_progressbar);
+//        this.ya = (ImageView) root.findViewById(R.id.row_more_ya);
+//    }
 
     public void setId(int id, OnMoreClickListener l) {
         this.Id = id;

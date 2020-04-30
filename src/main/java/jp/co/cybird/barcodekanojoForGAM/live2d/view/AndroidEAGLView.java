@@ -19,49 +19,47 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
     private float last_p1y;
     private float last_p2x;
     private float last_p2y;
-    /* access modifiers changed from: private */
-    public float lastx;
-    /* access modifiers changed from: private */
-    public float lasty;
+    private float lastx;
+    private float lasty;
     private boolean multitouch = false;
     AndroidES1Renderer renderer;
-    private final GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
-        public boolean onDoubleTap(MotionEvent event) {
-            return tapEvent(2) | super.onDoubleTap(event);
-        }
 
-        public boolean onDown(MotionEvent event) {
-            super.onDown(event);
-            return true;
-        }
-
-        public boolean onSingleTapConfirmed(MotionEvent event) {
-            return tapEvent(1) | super.onSingleTapUp(event);
-        }
-
-        public boolean onSingleTapUp(MotionEvent event) {
-            return super.onSingleTapUp(event);
-        }
-
-        private boolean tapEvent(int tapCount) {
-            float logicalX = AndroidEAGLView.this.renderer.viewToLogicalX(AndroidEAGLView.this.lastx);
-            float logicalY = AndroidEAGLView.this.renderer.viewToLogicalY(AndroidEAGLView.this.lasty);
-            KanojoAnimation kanim = AndroidEAGLView.this.getKanojoAnimation();
-            if (kanim == null) {
-                return false;
-            }
-            kanim.tapEvent(tapCount, logicalX, logicalY);
-            return true;
-        }
-    };
-
-    public AndroidEAGLView(KanojoLive2D kanojoLive2D2, Context context) {
+	public AndroidEAGLView(KanojoLive2D kanojoLive2D2, Context context) {
         super(context);
         setFocusable(true);
         this.kanojoLive2D = kanojoLive2D2;
         this.renderer = new AndroidES1Renderer(kanojoLive2D2, this);
         setRenderer(this);
-        this.gestureDetector = new GestureDetector(getContext(), this.simpleOnGestureListener);
+		GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
+			public boolean onDoubleTap(MotionEvent event) {
+				return tapEvent(2) | super.onDoubleTap(event);
+			}
+
+			public boolean onDown(MotionEvent event) {
+				super.onDown(event);
+				return true;
+			}
+
+			public boolean onSingleTapConfirmed(MotionEvent event) {
+				return tapEvent(1) | super.onSingleTapUp(event);
+			}
+
+			public boolean onSingleTapUp(MotionEvent event) {
+				return super.onSingleTapUp(event);
+			}
+
+			private boolean tapEvent(int tapCount) {
+				float logicalX = AndroidEAGLView.this.renderer.viewToLogicalX(AndroidEAGLView.this.lastx);
+				float logicalY = AndroidEAGLView.this.renderer.viewToLogicalY(AndroidEAGLView.this.lasty);
+				KanojoAnimation kanim = AndroidEAGLView.this.getKanojoAnimation();
+				if (kanim == null) {
+					return false;
+				}
+				kanim.tapEvent(tapCount, logicalX, logicalY);
+				return true;
+			}
+		};
+		this.gestureDetector = new GestureDetector(getContext(), simpleOnGestureListener);
     }
 
     public AndroidES1Renderer getMyRenderer() {
@@ -112,8 +110,7 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
         return ret | this.gestureDetector.onTouchEvent(event);
     }
 
-    /* access modifiers changed from: package-private */
-    public void touchesBegan(MotionEvent event) {
+    void touchesBegan(MotionEvent event) {
         int touchNum = event.getPointerCount();
         if (touchNum == 1) {
             this.lastx = event.getX();
@@ -125,7 +122,7 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
             this.last_p1y = event.getY(0);
             this.last_p2x = event.getX(1);
             this.last_p2y = event.getY(1);
-            float dist = (float) Math.sqrt((double) (((this.last_p1x - this.last_p2x) * (this.last_p1x - this.last_p2x)) + ((this.last_p1y - this.last_p2y) * (this.last_p1y - this.last_p2y))));
+            float dist = (float) Math.sqrt(((this.last_p1x - this.last_p2x) * (this.last_p1x - this.last_p2x)) + ((this.last_p1y - this.last_p2y) * (this.last_p1y - this.last_p2y)));
             this.lastx = (this.last_p1x + this.last_p2x) * 0.5f;
             this.lasty = (this.last_p1y + this.last_p2y) * 0.5f;
             this.lastD = dist;
@@ -137,8 +134,7 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public float calcShift(float v1, float v2) {
+    float calcShift(float v1, float v2) {
         boolean z = false;
         int i = 1;
         boolean z2 = v1 > 0.0f;
@@ -188,7 +184,7 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
             if (minDist2 <= 9800 || touchNum <= 2) {
 				LDPointF lDPointF = new LDPointF(event.getX(index1), event.getY(index1));
 				LDPointF lDPointF2 = new LDPointF(event.getX(index2), event.getY(index2));
-				float dist = (float) Math.sqrt((double) (((lDPointF.a/*getX()*/ - lDPointF2.a/*getX()*/) * (lDPointF.a/*getX()*/ - lDPointF2.a/*getX()*/)) + ((lDPointF.b/*getY()*/ - lDPointF2.b/*getY()*/) * (lDPointF.b/*getY()*/ - lDPointF2.b/*getY()*/))));
+				float dist = (float) Math.sqrt(((lDPointF.a/*getX()*/ - lDPointF2.a/*getX()*/) * (lDPointF.a/*getX()*/ - lDPointF2.a/*getX()*/)) + ((lDPointF.b/*getY()*/ - lDPointF2.b/*getY()*/) * (lDPointF.b/*getY()*/ - lDPointF2.b/*getY()*/)));
 				float cy = (lDPointF.b/*getY()*/ + lDPointF2.b/*getY()*/) * 0.5f;
 				this.lastx = (lDPointF.a/*getX()*/ + lDPointF2.a/*getX()*/) * 0.5f;
 				this.lasty = cy;
@@ -208,16 +204,14 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void touchesEnded(MotionEvent event) {
+    void touchesEnded(MotionEvent event) {
         KanojoAnimation kanim = getKanojoAnimation();
         if (kanim != null) {
             kanim.touchesEnded();
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public KanojoAnimation getKanojoAnimation() {
+    KanojoAnimation getKanojoAnimation() {
         if (this.kanojoLive2D == null) {
             return null;
         }

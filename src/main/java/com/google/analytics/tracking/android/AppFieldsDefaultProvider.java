@@ -8,12 +8,12 @@ import com.google.android.gms.common.util.VisibleForTesting;
 class AppFieldsDefaultProvider implements DefaultProvider {
     private static AppFieldsDefaultProvider sInstance;
     private static Object sInstanceLock = new Object();
-    protected String mAppId;
-    protected String mAppInstallerId;
-    protected String mAppName;
-    protected String mAppVersion;
+    private String mAppId;
+    private String mAppInstallerId;
+    private String mAppName;
+    private String mAppVersion;
 
-    public static void initializeProvider(Context c) {
+    static void initializeProvider(Context c) {
         synchronized (sInstanceLock) {
             if (sInstance == null) {
                 sInstance = new AppFieldsDefaultProvider(c);
@@ -51,9 +51,9 @@ class AppFieldsDefaultProvider implements DefaultProvider {
         this.mAppVersion = appVersion;
     }
 
-    @VisibleForTesting
-    protected AppFieldsDefaultProvider() {
-    }
+//    @VisibleForTesting
+//    protected AppFieldsDefaultProvider() {
+//    }
 
     public boolean providesField(String field) {
         return Fields.APP_NAME.equals(field) || Fields.APP_VERSION.equals(field) || Fields.APP_ID.equals(field) || Fields.APP_INSTALLER_ID.equals(field);

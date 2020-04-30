@@ -4,8 +4,7 @@ public abstract class ServiceManager {
     @Deprecated
     public abstract void dispatchLocalHits();
 
-    /* access modifiers changed from: package-private */
-    public abstract void onRadioPowered();
+    abstract void onRadioPowered();
 
     @Deprecated
     public abstract void setForceLocalDispatch();
@@ -13,6 +12,5 @@ public abstract class ServiceManager {
     @Deprecated
     public abstract void setLocalDispatchPeriod(int i);
 
-    /* access modifiers changed from: package-private */
-    public abstract void updateConnectivityStatus(boolean z);
+    abstract void updateConnectivityStatus(boolean z);
 }

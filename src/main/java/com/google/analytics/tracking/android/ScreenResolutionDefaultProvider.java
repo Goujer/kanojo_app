@@ -33,7 +33,7 @@ class ScreenResolutionDefaultProvider implements DefaultProvider {
     }
 
     @VisibleForTesting
-    protected ScreenResolutionDefaultProvider(Context c) {
+	private ScreenResolutionDefaultProvider(Context c) {
         this.mContext = c;
     }
 
@@ -48,8 +48,7 @@ class ScreenResolutionDefaultProvider implements DefaultProvider {
         return null;
     }
 
-    /* access modifiers changed from: protected */
-    public String getScreenResolutionString() {
+    private String getScreenResolutionString() {
         DisplayMetrics dm = this.mContext.getResources().getDisplayMetrics();
         return dm.widthPixels + "x" + dm.heightPixels;
     }

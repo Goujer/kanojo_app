@@ -8,23 +8,19 @@ class Hit {
     private final long mHitTime;
     private String mHitUrlScheme = "https:";
 
-    /* access modifiers changed from: package-private */
-    public String getHitParams() {
+    String getHitParams() {
         return this.mHitString;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setHitString(String hitString) {
+	void setHitString(String hitString) {
         this.mHitString = hitString;
     }
 
-    /* access modifiers changed from: package-private */
-    public long getHitId() {
+	long getHitId() {
         return this.mHitId;
     }
 
-    /* access modifiers changed from: package-private */
-    public long getHitTime() {
+    long getHitTime() {
         return this.mHitTime;
     }
 
@@ -34,13 +30,11 @@ class Hit {
         this.mHitTime = hitTime;
     }
 
-    /* access modifiers changed from: package-private */
-    public String getHitUrlScheme() {
+    String getHitUrlScheme() {
         return this.mHitUrlScheme;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setHitUrl(String hitUrl) {
+    void setHitUrl(String hitUrl) {
         if (hitUrl != null && !TextUtils.isEmpty(hitUrl.trim()) && hitUrl.toLowerCase().startsWith("http:")) {
             this.mHitUrlScheme = "http:";
         }

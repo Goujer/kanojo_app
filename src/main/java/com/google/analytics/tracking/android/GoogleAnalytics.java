@@ -19,13 +19,13 @@ public class GoogleAnalytics extends TrackerHandler {
     private final Map<String, Tracker> mTrackers;
 
     @VisibleForTesting
-    protected GoogleAnalytics(Context context) {
+	private GoogleAnalytics(Context context) {
         this(context, GAThread.getInstance(context));
     }
 
     private GoogleAnalytics(Context context, AnalyticsThread thread) {
         this.mAppOptOut = false;
-        this.mTrackers = new HashMap();
+        this.mTrackers = new HashMap<>();
         if (context == null) {
             throw new IllegalArgumentException("context cannot be null");
         }
@@ -56,26 +56,26 @@ public class GoogleAnalytics extends TrackerHandler {
         return googleAnalytics;
     }
 
-    @VisibleForTesting
-    static GoogleAnalytics getNewInstance(Context context, AnalyticsThread thread) {
-        GoogleAnalytics googleAnalytics;
-        synchronized (GoogleAnalytics.class) {
-            if (sInstance != null) {
-                sInstance.close();
-            }
-            sInstance = new GoogleAnalytics(context, thread);
-            googleAnalytics = sInstance;
-        }
-        return googleAnalytics;
-    }
+//    @VisibleForTesting
+//    static GoogleAnalytics getNewInstance(Context context, AnalyticsThread thread) {
+//        GoogleAnalytics googleAnalytics;
+//        synchronized (GoogleAnalytics.class) {
+//            if (sInstance != null) {
+//                sInstance.close();
+//            }
+//            sInstance = new GoogleAnalytics(context, thread);
+//            googleAnalytics = sInstance;
+//        }
+//        return googleAnalytics;
+//    }
 
-    @VisibleForTesting
-    static void clearInstance() {
-        synchronized (GoogleAnalytics.class) {
-            sInstance = null;
-            clearDefaultProviders();
-        }
-    }
+//    @VisibleForTesting
+//    static void clearInstance() {
+//        synchronized (GoogleAnalytics.class) {
+//            sInstance = null;
+//            clearDefaultProviders();
+//        }
+//    }
 
     @VisibleForTesting
     static void clearDefaultProviders() {
@@ -94,59 +94,59 @@ public class GoogleAnalytics extends TrackerHandler {
         return this.mDryRun;
     }
 
-    public Tracker getTracker(String name, String trackingId) {
-        Tracker tracker;
-        synchronized (this) {
-            if (TextUtils.isEmpty(name)) {
-                throw new IllegalArgumentException("Tracker name cannot be empty");
-            }
-            tracker = this.mTrackers.get(name);
-            if (tracker == null) {
-                tracker = new Tracker(name, trackingId, this);
-                this.mTrackers.put(name, tracker);
-                if (this.mDefaultTracker == null) {
-                    this.mDefaultTracker = tracker;
-                }
-            }
-            if (!TextUtils.isEmpty(trackingId)) {
-                tracker.set(Fields.TRACKING_ID, trackingId);
-            }
-            GAUsage.getInstance().setUsage(GAUsage.Field.GET_TRACKER);
-        }
-        return tracker;
-    }
+//    public Tracker getTracker(String name, String trackingId) {
+//        Tracker tracker;
+//        synchronized (this) {
+//            if (TextUtils.isEmpty(name)) {
+//                throw new IllegalArgumentException("Tracker name cannot be empty");
+//            }
+//            tracker = this.mTrackers.get(name);
+//            if (tracker == null) {
+//                tracker = new Tracker(name, trackingId, this);
+//                this.mTrackers.put(name, tracker);
+//                if (this.mDefaultTracker == null) {
+//                    this.mDefaultTracker = tracker;
+//                }
+//            }
+//            if (!TextUtils.isEmpty(trackingId)) {
+//                tracker.set(Fields.TRACKING_ID, trackingId);
+//            }
+//            GAUsage.getInstance().setUsage(GAUsage.Field.GET_TRACKER);
+//        }
+//        return tracker;
+//    }
 
-    public Tracker getTracker(String trackingId) {
-        return getTracker(trackingId, trackingId);
-    }
+//    public Tracker getTracker(String trackingId) {
+//        return getTracker(trackingId, trackingId);
+//    }
+//
+//    public Tracker getDefaultTracker() {
+//        Tracker tracker;
+//        synchronized (this) {
+//            GAUsage.getInstance().setUsage(GAUsage.Field.GET_DEFAULT_TRACKER);
+//            tracker = this.mDefaultTracker;
+//        }
+//        return tracker;
+//    }
+//
+//    public void setDefaultTracker(Tracker tracker) {
+//        synchronized (this) {
+//            GAUsage.getInstance().setUsage(GAUsage.Field.SET_DEFAULT_TRACKER);
+//            this.mDefaultTracker = tracker;
+//        }
+//    }
+//
+//    public void closeTracker(String name) {
+//        synchronized (this) {
+//            GAUsage.getInstance().setUsage(GAUsage.Field.CLOSE_TRACKER);
+//            if (this.mTrackers.remove(name) == this.mDefaultTracker) {
+//                this.mDefaultTracker = null;
+//            }
+//        }
+//    }
 
-    public Tracker getDefaultTracker() {
-        Tracker tracker;
-        synchronized (this) {
-            GAUsage.getInstance().setUsage(GAUsage.Field.GET_DEFAULT_TRACKER);
-            tracker = this.mDefaultTracker;
-        }
-        return tracker;
-    }
-
-    public void setDefaultTracker(Tracker tracker) {
-        synchronized (this) {
-            GAUsage.getInstance().setUsage(GAUsage.Field.SET_DEFAULT_TRACKER);
-            this.mDefaultTracker = tracker;
-        }
-    }
-
-    public void closeTracker(String name) {
-        synchronized (this) {
-            GAUsage.getInstance().setUsage(GAUsage.Field.CLOSE_TRACKER);
-            if (this.mTrackers.remove(name) == this.mDefaultTracker) {
-                this.mDefaultTracker = null;
-            }
-        }
-    }
-
-    /* access modifiers changed from: package-private */
-    public void sendHit(Map<String, String> hit) {
+	@Override
+    void sendHit(Map<String, String> hit) {
         synchronized (this) {
             if (hit == null) {
                 throw new IllegalArgumentException("hit cannot be null");
@@ -159,30 +159,29 @@ public class GoogleAnalytics extends TrackerHandler {
         }
     }
 
-    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    public void close() {
+	public void close() {
     }
 
-    public void setAppOptOut(boolean optOut) {
-        GAUsage.getInstance().setUsage(GAUsage.Field.SET_APP_OPT_OUT);
-        this.mAppOptOut = Boolean.valueOf(optOut);
-        if (this.mAppOptOut.booleanValue()) {
-            this.mThread.clearHits();
-        }
-    }
+//    public void setAppOptOut(boolean optOut) {
+//        GAUsage.getInstance().setUsage(GAUsage.Field.SET_APP_OPT_OUT);
+//        this.mAppOptOut = Boolean.valueOf(optOut);
+//        if (this.mAppOptOut.booleanValue()) {
+//            this.mThread.clearHits();
+//        }
+//    }
 
-    public boolean getAppOptOut() {
+    boolean getAppOptOut() {
         GAUsage.getInstance().setUsage(GAUsage.Field.GET_APP_OPT_OUT);
-        return this.mAppOptOut.booleanValue();
+        return this.mAppOptOut;
     }
 
-    public Logger getLogger() {
+    Logger getLogger() {
         return this.mLogger;
     }
 
-    public void setLogger(Logger logger) {
-        GAUsage.getInstance().setUsage(GAUsage.Field.SET_LOGGER);
-        this.mLogger = logger;
-    }
+//    public void setLogger(Logger logger) {
+//        GAUsage.getInstance().setUsage(GAUsage.Field.SET_LOGGER);
+//        this.mLogger = logger;
+//    }
 }

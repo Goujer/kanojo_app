@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -23,11 +24,9 @@ import jp.co.cybird.barcodekanojoForGAM.R;
 public final class HistoryActivity extends ListActivity {
     private static final String TAG = HistoryActivity.class.getSimpleName();
     private HistoryItemAdapter adapter;
-    /* access modifiers changed from: private */
-    public HistoryManager historyManager;
+    private HistoryManager historyManager;
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle icicle) {
+    protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         this.historyManager = new HistoryManager(this);
         this.adapter = new HistoryItemAdapter(this);
@@ -35,8 +34,7 @@ public final class HistoryActivity extends ListActivity {
         registerForContextMenu(getListView());
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         reloadHistoryItems();
     }
@@ -82,47 +80,50 @@ public final class HistoryActivity extends ListActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_history_send:
-                Uri historyFile = HistoryManager.saveHistory(this.historyManager.buildHistory().toString());
-                if (historyFile == null) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage(R.string.msg_unmount_usb);
-                    builder.setPositiveButton(R.string.button_ok, (DialogInterface.OnClickListener) null);
-                    builder.show();
-                    return true;
-                }
-                Intent intent = new Intent("android.intent.action.SEND", Uri.parse("mailto:"));
-                intent.addFlags(524288);
-                String subject = getResources().getString(R.string.history_email_title);
-                intent.putExtra("android.intent.extra.SUBJECT", subject);
-                intent.putExtra("android.intent.extra.TEXT", subject);
-                intent.putExtra("android.intent.extra.STREAM", historyFile);
-                intent.setType("text/csv");
-                try {
-                    startActivity(intent);
-                    return true;
-                } catch (ActivityNotFoundException anfe) {
-                    Log.w(TAG, anfe.toString());
-                    return true;
-                }
-            case R.id.menu_history_clear_text:
-                AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
-                builder2.setMessage(R.string.msg_sure);
-                builder2.setCancelable(true);
-                builder2.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int i2) {
-                        HistoryActivity.this.historyManager.clearHistory();
-                        dialog.dismiss();
-                        HistoryActivity.this.finish();
-                    }
-                });
-                builder2.setNegativeButton(R.string.button_cancel, (DialogInterface.OnClickListener) null);
-                builder2.show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.menu_history_send:
+				CharSequence history = historyManager.buildHistory();
+				Parcelable historyFile = HistoryManager.saveHistory(history.toString());
+				if (historyFile == null) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setMessage(R.string.msg_unmount_usb);
+					builder.setPositiveButton(R.string.button_ok, null);
+					builder.show();
+				} else {
+					Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("mailto:"));
+					intent.addFlags(Intents.FLAG_NEW_DOC);
+					String subject = getResources().getString(R.string.history_email_title);
+					intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+					intent.putExtra(Intent.EXTRA_TEXT, subject);
+					intent.putExtra(Intent.EXTRA_STREAM, historyFile);
+					intent.setType("text/csv");
+					try {
+						startActivity(intent);
+					} catch (ActivityNotFoundException anfe) {
+						Log.w(TAG, anfe.toString());
+					}
+				}
+				break;
+			case R.id.menu_history_clear_text:
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage(R.string.msg_sure);
+				builder.setCancelable(true);
+				builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int i2) {
+						historyManager.clearHistory();
+						dialog.dismiss();
+						finish();
+					}
+				});
+				builder.setNegativeButton(R.string.button_cancel, null);
+				builder.show();
+				break;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+		return true;
+	}
 }

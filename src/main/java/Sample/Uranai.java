@@ -10,7 +10,7 @@ public class Uranai {
     }
 
     public static int getUranai(int key, int uranaiNo, Date today, int itemCount) {
-        int v = new Random((long) (new Random((long) (today.hashCode() * 154)).nextInt() + new Random((long) (154064 * uranaiNo)).nextInt() + new Random((long) (678464065 * key)).nextInt())).nextInt();
+        int v = new Random(new Random(today.hashCode() * 154).nextInt() + new Random(154064 * uranaiNo).nextInt() + new Random((long) (678464065 * key)).nextInt()).nextInt();
         if (v < 0) {
             v = -v;
         }

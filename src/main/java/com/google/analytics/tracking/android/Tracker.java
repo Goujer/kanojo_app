@@ -99,21 +99,18 @@ public class Tracker {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
-    public void setLastTrackTime(long lastTrackTime) {
-        this.mLastTrackTime = lastTrackTime;
-    }
+//    @VisibleForTesting
+//    void setLastTrackTime(long lastTrackTime) {
+//        this.mLastTrackTime = lastTrackTime;
+//    }
+//
+//    @VisibleForTesting
+//    void setTokens(long tokens) {
+//        this.mTokens = tokens;
+//    }
 
-    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    public void setTokens(long tokens) {
-        this.mTokens = tokens;
-    }
-
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
-    public synchronized boolean tokensAvailable() {
+	private synchronized boolean tokensAvailable() {
         boolean z;
         long timeNow = System.currentTimeMillis();
         if (this.mTokens < MAX_TOKENS) {

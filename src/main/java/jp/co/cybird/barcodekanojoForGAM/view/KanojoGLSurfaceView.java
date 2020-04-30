@@ -16,12 +16,13 @@ public abstract class KanojoGLSurfaceView extends GLSurfaceView implements GLSur
         super(context, attrs);
     }
 
+    @Override
     public void onDrawFrame(GL10 gl) {
         KanojoScreenShot.GLSurface.drawFrame(this, gl);
     }
 
-    /* access modifiers changed from: protected */
-    public void dispatchDraw(Canvas canvas) {
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
         KanojoScreenShot.GLSurface.dispatchDraw(canvas, new KanojoScreenShot.GLSurface.OnDispatchDrawListener() {
             public void onDispatchDraw(Canvas canvas) {
                 KanojoGLSurfaceView.super.dispatchDraw(canvas);

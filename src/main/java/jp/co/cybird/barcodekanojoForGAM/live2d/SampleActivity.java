@@ -34,9 +34,8 @@ public class SampleActivity extends BaseActivity {
         return new RelativeLayout(this);
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
-        System.out.printf("onResume\t\t\t\t\t@@SampleActivity\n", new Object[0]);
+    protected void onResume() {
+		System.out.println("onResume\t\t\t\t\t@@SampleActivity");
         KanojoLive2D kanojoLive2D = getLive2D();
         if (kanojoLive2D != null) {
             kanojoLive2D.startAnimation();
@@ -44,9 +43,9 @@ public class SampleActivity extends BaseActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
-        System.out.printf("onPause\t\t\t\t\t@@SampleActivity\n", new Object[0]);
+    @Override
+    protected void onPause() {
+        System.out.println("onPause\t\t\t\t\t@@SampleActivity");
         KanojoLive2D kanojoLive2D = getLive2D();
         if (kanojoLive2D != null) {
             kanojoLive2D.stopAnimation();
@@ -54,8 +53,7 @@ public class SampleActivity extends BaseActivity {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public KanojoLive2D getLive2D() {
+    KanojoLive2D getLive2D() {
         if (this.mKanojoLive2D == null) {
             this.mKanojoLive2D = new KanojoLive2D(this);
         }
@@ -76,15 +74,14 @@ public class SampleActivity extends BaseActivity {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void mainSample() {
+    void mainSample() {
         final KanojoLive2D kanojoLive2D = getLive2D();
         if (kanojoLive2D != null) {
             AndroidEAGLView view = kanojoLive2D.createView(this, new Rect(0, 0, 320, 320));
             LinearLayout p1 = new LinearLayout(this);
-            p1.setOrientation(1);
+            p1.setOrientation(LinearLayout.VERTICAL);
             LinearLayout center = new LinearLayout(this);
-            center.setOrientation(0);
+            center.setOrientation(LinearLayout.HORIZONTAL);
             center.addView(view, new LinearLayout.LayoutParams(-1, -2, 1.0f));
             p1.addView(center, new LinearLayout.LayoutParams(-1, -2, 1.0f));
             LinearLayout btns = new LinearLayout(this);
@@ -123,9 +120,9 @@ public class SampleActivity extends BaseActivity {
                     int[] actions = kanojoLive2D.getUserActions();
                     String s = "actions[" + actions.length + "] = { ";
                     for (int i = 0; i < actions.length; i++) {
-                        s = String.valueOf(s) + actions[i] + " ,";
+                        s = s + actions[i] + " ,";
                     }
-                    System.out.printf(String.valueOf(s) + " } \n", new Object[0]);
+                    System.out.printf(s + " } \n", new Object[0]);
                 }
             }, 10000, 10000);
         }
@@ -133,7 +130,7 @@ public class SampleActivity extends BaseActivity {
 
     private void setLive2DKanojoParts(KanojoSetting setting) {
         int no = this.partsClothNo;
-        System.out.printf("cloth no :: %d\t\t\t\t\t@@SampleActivity\n", new Object[]{Integer.valueOf(no)});
+        System.out.printf("cloth no :: %d\t\t\t\t\t@@SampleActivity\n", no);
         setting.setParts(KanojoSetting.PARTS_01_HAIR, 11);
         setting.setParts(KanojoSetting.PARTS_01_CLOTHES, no);
         setting.setColor(KanojoSetting.COLOR_01_HAIR, 19);
@@ -143,14 +140,13 @@ public class SampleActivity extends BaseActivity {
         setting.setColor(KanojoSetting.COLOR_01_CLOTHES_B, 5);
     }
 
-    /* access modifiers changed from: private */
-    public void change(int no) {
+    private void change(int no) {
         KanojoLive2D kanojoLive2D = getLive2D();
         if (kanojoLive2D != null) {
             kanojoLive2D.getKanojoSetting().setColor(KanojoSetting.COLOR_01_EYE, no);
             kanojoLive2D.releaseModel();
             kanojoLive2D.setupModel(true);
-            System.out.printf("change cloth no :: %d\t\t\t\t\t@@SampleActivity\n", new Object[]{Integer.valueOf(no)});
+            System.out.printf("change cloth no :: %d\t\t\t\t\t@@SampleActivity\n", no);
         }
     }
 }

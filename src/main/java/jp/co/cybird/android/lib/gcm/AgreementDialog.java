@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -19,24 +20,21 @@ import android.widget.ProgressBar;
 public class AgreementDialog implements DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
     private static boolean isShown = false;
     private final String PREF_KEY_AGREEMENT = "lib_gcm_agreement_version";
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     private Dialog mDialog;
-    /* access modifiers changed from: private */
-    public int mDisplayHeight;
-    /* access modifiers changed from: private */
-    public String mEulaUrl;
+    private int mDisplayHeight;
+    private String mEulaUrl;
     private int mEulaVer;
     private SharedPreferences mPref;
-    /* access modifiers changed from: private */
-    public WebView mWebview;
+    private WebView mWebview;
 
     @SuppressLint({"WorldReadableFiles", "WorldWriteableFiles"})
     public AgreementDialog(Context context, int eulaVersion, String eulaUrl) {
         this.mContext = context;
         this.mEulaVer = eulaVersion;
         this.mEulaUrl = eulaUrl;
-        this.mPref = context.getSharedPreferences(Const.PREF_FILE_NAME, 3);
+        //TODO: These modes will throw an error, this needs to be fixed
+        this.mPref = context.getSharedPreferences(Const.PREF_FILE_NAME, Context.MODE_WORLD_READABLE|Context.MODE_WORLD_WRITEABLE);
         this.mDisplayHeight = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getHeight();
         createDialog(context);
     }
@@ -45,24 +43,23 @@ public class AgreementDialog implements DialogInterface.OnCancelListener, Dialog
         this.mDialog = new Dialog(context) {
             private ProgressBar mProgress;
 
-            /* access modifiers changed from: protected */
-            public void onCreate(Bundle savedInstanceState) {
+            protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 setTitle(ParameterLoader.getString("LIB_GCM_DIALOG_TITLE", AgreementDialog.this.mContext));
                 setContentView(ParameterLoader.getResourceIdForType("lib_gcm_agreement_dialog", "layout", AgreementDialog.this.mContext));
-                ((FrameLayout) findViewById(ParameterLoader.getResourceIdForType("lib_gcm_agreement_webview_frame", "id", AgreementDialog.this.mContext))).setLayoutParams(new LinearLayout.LayoutParams(-1, AgreementDialog.this.mDisplayHeight / 2));
-                this.mProgress = (ProgressBar) findViewById(ParameterLoader.getResourceIdForType("lib_gcm_agreement_progress", "id", AgreementDialog.this.mContext));
-                AgreementDialog.this.mWebview = (WebView) findViewById(ParameterLoader.getResourceIdForType("lib_gcm_agreement_webview_agreement", "id", AgreementDialog.this.mContext));
-                AgreementDialog.this.mWebview.getSettings().setCacheMode(2);
+                findViewById(ParameterLoader.getResourceIdForType("lib_gcm_agreement_webview_frame", "id", AgreementDialog.this.mContext)).setLayoutParams(new LinearLayout.LayoutParams(-1, AgreementDialog.this.mDisplayHeight / 2));
+                this.mProgress = findViewById(ParameterLoader.getResourceIdForType("lib_gcm_agreement_progress", "id", AgreementDialog.this.mContext));
+                AgreementDialog.this.mWebview = findViewById(ParameterLoader.getResourceIdForType("lib_gcm_agreement_webview_agreement", "id", AgreementDialog.this.mContext));
+                AgreementDialog.this.mWebview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
                 AgreementDialog.this.mWebview.setWebViewClient(new LocalClient(this.mProgress));
                 AgreementDialog.this.mWebview.loadUrl(AgreementDialog.this.mEulaUrl);
-                ((Button) findViewById(ParameterLoader.getResourceIdForType("lib_gcm_agreement_decline_button", "id", AgreementDialog.this.mContext))).setOnClickListener(new View.OnClickListener() {
+                findViewById(ParameterLoader.getResourceIdForType("lib_gcm_agreement_decline_button", "id", AgreementDialog.this.mContext)).setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         AgreementDialog.this.saveDecline();
                         dismiss();
                     }
                 });
-                ((Button) findViewById(ParameterLoader.getResourceIdForType("lib_gcm_agreement_agree_button", "id", AgreementDialog.this.mContext))).setOnClickListener(new View.OnClickListener() {
+                findViewById(ParameterLoader.getResourceIdForType("lib_gcm_agreement_agree_button", "id", AgreementDialog.this.mContext)).setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         AgreementDialog.this.saveAgreement();
                        dismiss();
@@ -87,22 +84,20 @@ public class AgreementDialog implements DialogInterface.OnCancelListener, Dialog
         }
     }
 
-    public void showAgreement() {
-        if (this.mDialog != null && !isAgreed()) {
-            this.mDialog.show();
-        }
-    }
+//    public void showAgreement() {
+//        if (this.mDialog != null && !isAgreed()) {
+//            this.mDialog.show();
+//        }
+//    }
 
-    /* access modifiers changed from: private */
-    public void saveDecline() {
+    private void saveDecline() {
         SharedPreferences.Editor e = this.mPref.edit();
         e.putInt("lib_gcm_agreement_version", this.mEulaVer);
         e.putBoolean("lib_gcm_willSendNotification", false);
         e.commit();
     }
 
-    /* access modifiers changed from: private */
-    public void saveAgreement() {
+    private void saveAgreement() {
         SharedPreferences.Editor e = this.mPref.edit();
         e.putInt("lib_gcm_agreement_version", this.mEulaVer);
         e.putBoolean("lib_gcm_willSendNotification", true);
@@ -111,9 +106,9 @@ public class AgreementDialog implements DialogInterface.OnCancelListener, Dialog
         e.commit();
     }
 
-    private boolean isAgreed() {
-        return this.mEulaVer <= this.mPref.getInt("lib_gcm_agreement_version", 0);
-    }
+//    private boolean isAgreed() {
+//        return this.mEulaVer <= this.mPref.getInt("lib_gcm_agreement_version", 0);
+//    }
 
     public void onCancel(DialogInterface dialog) {
         isShown = false;
@@ -123,10 +118,10 @@ public class AgreementDialog implements DialogInterface.OnCancelListener, Dialog
         isShown = false;
     }
 
-    private class LocalClient extends WebViewClient {
+    private static class LocalClient extends WebViewClient {
         private ProgressBar mProgress;
 
-        public LocalClient(ProgressBar progress) {
+        LocalClient(ProgressBar progress) {
             this.mProgress = progress;
         }
 

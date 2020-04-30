@@ -2,12 +2,10 @@ package com.google.analytics.tracking.android;
 
 import android.content.Context;
 import android.content.Intent;
-import com.google.analytics.tracking.android.AnalyticsGmsCoreClient;
 import com.google.android.gms.analytics.internal.Command;
 import com.google.android.gms.common.util.VisibleForTesting;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -18,27 +16,21 @@ class GAServiceProxy implements ServiceProxy, AnalyticsGmsCoreClient.OnConnected
     private static final long RECONNECT_WAIT_TIME = 5000;
     private static final long SERVICE_CONNECTION_TIMEOUT = 300000;
     private volatile AnalyticsClient client;
-    /* access modifiers changed from: private */
-    public Clock clock;
+    private Clock clock;
     private volatile int connectTries;
     private final Context ctx;
-    /* access modifiers changed from: private */
-    public volatile Timer disconnectCheckTimer;
+    private volatile Timer disconnectCheckTimer;
     private volatile Timer failedConnectTimer;
     private boolean forceLocalDispatch;
     private final GoogleAnalytics gaInstance;
-    /* access modifiers changed from: private */
-    public long idleTimeout;
-    /* access modifiers changed from: private */
-    public volatile long lastRequestTime;
+    private long idleTimeout;
+    private volatile long lastRequestTime;
     private boolean pendingClearHits;
     private boolean pendingDispatch;
     private boolean pendingServiceDisconnect;
-    /* access modifiers changed from: private */
-    public final Queue<HitParams> queue;
+    private final ConcurrentLinkedQueue<HitParams> queue;
     private volatile Timer reConnectTimer;
-    /* access modifiers changed from: private */
-    public volatile ConnectState state;
+    private volatile ConnectState state;
     private AnalyticsStore store;
     private AnalyticsStore testStore;
     private final AnalyticsThread thread;
@@ -54,8 +46,8 @@ class GAServiceProxy implements ServiceProxy, AnalyticsGmsCoreClient.OnConnected
     }
 
     @VisibleForTesting
-    GAServiceProxy(Context ctx2, AnalyticsThread thread2, AnalyticsStore store2, GoogleAnalytics gaInstance2) {
-        this.queue = new ConcurrentLinkedQueue();
+	private GAServiceProxy(Context ctx2, AnalyticsThread thread2, AnalyticsStore store2, GoogleAnalytics gaInstance2) {
+        this.queue = new ConcurrentLinkedQueue<>();
         this.idleTimeout = 300000;
         this.testStore = store2;
         this.ctx = ctx2;
@@ -71,13 +63,12 @@ class GAServiceProxy implements ServiceProxy, AnalyticsGmsCoreClient.OnConnected
     }
 
     GAServiceProxy(Context ctx2, AnalyticsThread thread2) {
-        this(ctx2, thread2, (AnalyticsStore) null, GoogleAnalytics.getInstance(ctx2));
+        this(ctx2, thread2, null, GoogleAnalytics.getInstance(ctx2));
     }
 
-    /* access modifiers changed from: package-private */
-    public void setClock(Clock clock2) {
-        this.clock = clock2;
-    }
+//    void setClock(Clock clock2) {
+//        this.clock = clock2;
+//    }
 
     public void putHit(Map<String, String> wireFormatParams, long hitTimeInMilliseconds, String path, List<Command> commands) {
         Log.v("putHit called");
@@ -94,8 +85,7 @@ class GAServiceProxy implements ServiceProxy, AnalyticsGmsCoreClient.OnConnected
                 return;
             default:
                 this.pendingDispatch = true;
-                return;
-        }
+		}
     }
 
     public void clearHits() {
@@ -112,8 +102,7 @@ class GAServiceProxy implements ServiceProxy, AnalyticsGmsCoreClient.OnConnected
                 return;
             default:
                 this.pendingClearHits = true;
-                return;
-        }
+		}
     }
 
     public synchronized void setForceLocalDispatch() {
@@ -157,19 +146,17 @@ class GAServiceProxy implements ServiceProxy, AnalyticsGmsCoreClient.OnConnected
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void createService(AnalyticsClient client2) {
-        if (this.client == null) {
-            this.client = client2;
-            connectToService();
-        }
-    }
+//    void createService(AnalyticsClient client2) {
+//        if (this.client == null) {
+//            this.client = client2;
+//            connectToService();
+//        }
+//    }
 
-    public void setIdleTimeout(long idleTimeout2) {
-        this.idleTimeout = idleTimeout2;
-    }
+//    public void setIdleTimeout(long idleTimeout2) {
+//        this.idleTimeout = idleTimeout2;
+//    }
 
-    /* access modifiers changed from: private */
     /* JADX WARNING: Can't fix incorrect switch cases order */
     /* JADX WARNING: Code restructure failed: missing block: B:15:0x003c, code lost:
         if (r7.queue.isEmpty() != false) goto L_0x0075;
@@ -188,7 +175,7 @@ class GAServiceProxy implements ServiceProxy, AnalyticsGmsCoreClient.OnConnected
     /* JADX WARNING: Code restructure failed: missing block: B:31:0x00cc, code lost:
         r7.lastRequestTime = r7.clock.currentTimeMillis();
      */
-    public synchronized void sendQueue() {
+    private synchronized void sendQueue() {
         if (Thread.currentThread().equals(this.thread.getThread())) {
             if (this.pendingClearHits) {
                 clearHits();
@@ -230,8 +217,7 @@ class GAServiceProxy implements ServiceProxy, AnalyticsGmsCoreClient.OnConnected
         this.pendingDispatch = false;
     }
 
-    /* access modifiers changed from: private */
-    public synchronized void useStore() {
+    private synchronized void useStore() {
         if (this.state != ConnectState.CONNECTED_LOCAL) {
             clearAllTimers();
             Log.v("falling back to local store");
@@ -247,8 +233,7 @@ class GAServiceProxy implements ServiceProxy, AnalyticsGmsCoreClient.OnConnected
         }
     }
 
-    /* access modifiers changed from: private */
-    public synchronized void connectToService() {
+    private synchronized void connectToService() {
         if (this.forceLocalDispatch || this.client == null || this.state == ConnectState.CONNECTED_LOCAL) {
             Log.w("client not initialized.");
             useStore();
@@ -266,17 +251,16 @@ class GAServiceProxy implements ServiceProxy, AnalyticsGmsCoreClient.OnConnected
                 useStore();
             }
         }
-        return;
-    }
+	}
 
-    /* access modifiers changed from: private */
-    public synchronized void disconnectFromService() {
+    private synchronized void disconnectFromService() {
         if (this.client != null && this.state == ConnectState.CONNECTED_SERVICE) {
             this.state = ConnectState.PENDING_DISCONNECT;
             this.client.disconnect();
         }
     }
 
+    @Override
     public synchronized void onConnected() {
         this.failedConnectTimer = cancelTimer(this.failedConnectTimer);
         this.connectTries = 0;
@@ -366,18 +350,18 @@ class GAServiceProxy implements ServiceProxy, AnalyticsGmsCoreClient.OnConnected
         private final String path;
         private final Map<String, String> wireFormatParams;
 
-        public HitParams(Map<String, String> wireFormatParams2, long hitTimeInMilliseconds2, String path2, List<Command> commands2) {
+        HitParams(Map<String, String> wireFormatParams2, long hitTimeInMilliseconds2, String path2, List<Command> commands2) {
             this.wireFormatParams = wireFormatParams2;
             this.hitTimeInMilliseconds = hitTimeInMilliseconds2;
             this.path = path2;
             this.commands = commands2;
         }
 
-        public Map<String, String> getWireFormatParams() {
+        Map<String, String> getWireFormatParams() {
             return this.wireFormatParams;
         }
 
-        public long getHitTimeInMilliseconds() {
+        long getHitTimeInMilliseconds() {
             return this.hitTimeInMilliseconds;
         }
 
@@ -385,10 +369,11 @@ class GAServiceProxy implements ServiceProxy, AnalyticsGmsCoreClient.OnConnected
             return this.path;
         }
 
-        public List<Command> getCommands() {
+        List<Command> getCommands() {
             return this.commands;
         }
 
+        @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
             sb.append("PATH: ");
