@@ -26,6 +26,7 @@ public class BarcodeKanojoApp extends Application {
     private BaseDiskCache.BaseDiskCallBack mSaveListener;
     private String[] mUserGenderList;
 
+    @Override
     public void onCreate() {
         super.onCreate();
         this.mBarcodeKanojo = new BarcodeKanojo(BarcodeKanojo.createHttpApi(Defs.USER_AGENT(), Defs.USER_LANGUAGE()));

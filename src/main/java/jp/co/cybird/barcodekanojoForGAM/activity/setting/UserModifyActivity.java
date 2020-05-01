@@ -601,14 +601,13 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        @Override
+        protected void onCancelled() {
             UserModifyActivity.this.dismissProgressDialog();
             UserModifyActivity.this.bindEvent();
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
             String cPassword;
             String cPassword2;
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) UserModifyActivity.this.getApplication()).getBarcodeKanojo();
