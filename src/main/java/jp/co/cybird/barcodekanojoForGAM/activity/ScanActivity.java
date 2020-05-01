@@ -208,7 +208,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
 					executeScanQueryTask(contents);
 					break;
 				default:
-					showAlertDialog(new Alert(getResources().getString(R.string.error_barcode_format)+" Found: "+format), new DialogInterface.OnDismissListener() {
+					showNoticeDialog(getResources().getString(R.string.error_barcode_format)+" Found: "+format, new DialogInterface.OnDismissListener() {
 						public void onDismiss(DialogInterface dialog) {
 							startCaptureActivity();
 						}});
