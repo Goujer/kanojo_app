@@ -78,8 +78,8 @@ public class KanojoItemAdapter extends BaseKanojoItemAdapter implements Observab
         ViewHolder holder;
         View view = convertView;
         if (view == null) {
-            view = this.mInflater.inflate(R.layout.row_kanojo_items, (ViewGroup) null);
-            holder = new ViewHolder((ViewHolder) null);
+            view = this.mInflater.inflate(R.layout.row_kanojo_items, null);
+            holder = new ViewHolder(null);
             holder.img = (ImageView) view.findViewById(R.id.row_kanojo_items_img);
             holder.title = (TextView) view.findViewById(R.id.row_kanojo_items_title);
             holder.description = (TextView) view.findViewById(R.id.row_kanojo_items_description);

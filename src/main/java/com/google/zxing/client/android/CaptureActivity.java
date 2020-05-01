@@ -104,8 +104,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         return iArr;
     }
 
-    /* access modifiers changed from: package-private */
-    public ViewfinderView getViewfinderView() {
+    ViewfinderView getViewfinderView() {
         return this.viewfinderView;
     }
 
@@ -113,11 +112,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         return this.handler;
     }
 
-    /* access modifiers changed from: package-private */
-    public CameraManager getCameraManager() {
+    CameraManager getCameraManager() {
         return this.cameraManager;
     }
 
+    @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         getWindow().addFlags(128);
@@ -131,8 +130,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    @Override
+    protected void onResume() {
         boolean z;
         super.onResume();
         this.cameraManager = new CameraManager(getApplication());
@@ -260,8 +259,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent("android.intent.action.VIEW");
-        intent.addFlags(524288);
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		intent.addFlags(Intents.FLAG_NEW_DOC);
         switch (item.getItemId()) {
             case R.id.menu_share:
                 intent.setClassName(this, ShareActivity.class.getName());
@@ -288,7 +287,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         int itemNumber;
         if (resultCode == -1 && requestCode == 47820 && (itemNumber = intent.getIntExtra(Intents.History.ITEM_NUMBER, -1)) >= 0) {
-            decodeOrStoreSavedBitmap((Bitmap) null, this.historyManager.buildHistoryItem(itemNumber).getResult());
+            decodeOrStoreSavedBitmap(null, this.historyManager.buildHistoryItem(itemNumber).getResult());
         }
     }
 
@@ -357,34 +356,45 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                     handleDecodeInternally(rawResult, resultHandler, barcode);
                     return;
                 }
-                Toast.makeText(getApplicationContext(), String.valueOf(getResources().getString(R.string.msg_bulk_mode_scanned)) + " (" + rawResult.getText() + ')', 0).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.msg_bulk_mode_scanned) + " (" + rawResult.getText() + ')', Toast.LENGTH_SHORT).show();
                 restartPreviewAfterDelay(BULK_MODE_SCAN_DELAY_MS);
                 return;
             default:
-                return;
-        }
+		}
     }
 
-    private void drawResultPoints(Bitmap barcode, float scaleFactor, Result rawResult) {
-        ResultPoint[] points = rawResult.getResultPoints();
-        if (points != null && points.length > 0) {
-            Canvas canvas = new Canvas(barcode);
-            Paint paint = new Paint();
-            paint.setColor(getResources().getColor(R.color.result_points));
-            if (points.length == 2) {
-                paint.setStrokeWidth(4.0f);
-                drawLine(canvas, paint, points[0], points[1], scaleFactor);
-            } else if (points.length == 4 && (rawResult.getBarcodeFormat() == BarcodeFormat.UPC_A || rawResult.getBarcodeFormat() == BarcodeFormat.EAN_13)) {
-                drawLine(canvas, paint, points[0], points[1], scaleFactor);
-                drawLine(canvas, paint, points[2], points[3], scaleFactor);
-            } else {
-                paint.setStrokeWidth(10.0f);
-                for (ResultPoint point : points) {
-                    canvas.drawPoint(point.getX() * scaleFactor, point.getY() * scaleFactor, paint);
-                }
-            }
-        }
-    }
+	/**
+	 * Superimpose a line for 1D or dots for 2D to highlight the key features of the barcode.
+	 *
+	 * @param barcode   A bitmap of the captured image.
+	 * @param scaleFactor amount by which thumbnail was scaled
+	 * @param rawResult The decoded results which contains the points to draw.
+	 */
+	private void drawResultPoints(Bitmap barcode, float scaleFactor, Result rawResult) {
+		ResultPoint[] points = rawResult.getResultPoints();
+		if (points != null && points.length > 0) {
+			Canvas canvas = new Canvas(barcode);
+			Paint paint = new Paint();
+			paint.setColor(getResources().getColor(R.color.result_points));
+			if (points.length == 2) {
+				paint.setStrokeWidth(4.0f);
+				drawLine(canvas, paint, points[0], points[1], scaleFactor);
+			} else if (points.length == 4 &&
+					(rawResult.getBarcodeFormat() == BarcodeFormat.UPC_A ||
+							rawResult.getBarcodeFormat() == BarcodeFormat.EAN_13)) {
+				// Hacky special case -- draw two lines, for the barcode and metadata
+				drawLine(canvas, paint, points[0], points[1], scaleFactor);
+				drawLine(canvas, paint, points[2], points[3], scaleFactor);
+			} else {
+				paint.setStrokeWidth(10.0f);
+				for (ResultPoint point : points) {
+					if (point != null) {
+						canvas.drawPoint(scaleFactor * point.getX(), scaleFactor * point.getY(), paint);
+					}
+				}
+			}
+		}
+	}
 
     private static void drawLine(Canvas canvas, Paint paint, ResultPoint a, ResultPoint b, float scaleFactor) {
         if (a != null && b != null) {
@@ -396,7 +406,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         this.statusView.setVisibility(View.GONE);
         this.viewfinderView.setVisibility(View.GONE);
         this.resultView.setVisibility(View.VISIBLE);
-        ImageView barcodeImageView = (ImageView) findViewById(R.id.barcode_image_view);
+        ImageView barcodeImageView = findViewById(R.id.barcode_image_view);
         if (barcode == null) {
             barcodeImageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.launcher_icon));
         } else {
@@ -405,7 +415,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         ((TextView) findViewById(R.id.format_text_view)).setText(rawResult.getBarcodeFormat().toString());
         ((TextView) findViewById(R.id.type_text_view)).setText(resultHandler.getType().toString());
         ((TextView) findViewById(R.id.time_text_view)).setText(DateFormat.getDateTimeInstance(3, 3).format(new Date(rawResult.getTimestamp())));
-        TextView metaTextView = (TextView) findViewById(R.id.meta_text_view);
+        TextView metaTextView = findViewById(R.id.meta_text_view);
         View metaTextViewLabel = findViewById(R.id.meta_text_view_label);
         metaTextView.setVisibility(View.GONE);
         metaTextViewLabel.setVisibility(View.GONE);
@@ -424,18 +434,18 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                 metaTextViewLabel.setVisibility(View.VISIBLE);
             }
         }
-        TextView contentsTextView = (TextView) findViewById(R.id.contents_text_view);
+        TextView contentsTextView = findViewById(R.id.contents_text_view);
         CharSequence displayContents = resultHandler.getDisplayContents();
         contentsTextView.setText(displayContents);
         contentsTextView.setTextSize(2, (float) Math.max(22, 32 - (displayContents.length() / 4)));
-        TextView supplementTextView = (TextView) findViewById(R.id.contents_supplement_text_view);
+        TextView supplementTextView = findViewById(R.id.contents_supplement_text_view);
         supplementTextView.setText("");
-        supplementTextView.setOnClickListener((View.OnClickListener) null);
+        supplementTextView.setOnClickListener(null);
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PreferencesActivity.KEY_SUPPLEMENTAL, true)) {
             SupplementalInfoRetriever.maybeInvokeRetrieval(supplementTextView, resultHandler.getResult(), this.historyManager, this);
         }
         int buttonCount = resultHandler.getButtonCount();
-        ViewGroup buttonView = (ViewGroup) findViewById(R.id.result_button_view);
+        ViewGroup buttonView = findViewById(R.id.result_button_view);
         buttonView.requestFocus();
         for (int x = 0; x < 4; x++) {
             TextView button = (TextView) buttonView.getChildAt(x);
@@ -448,7 +458,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             }
         }
         if (this.copyToClipboard && !resultHandler.areContentsSecure()) {
-            ClipboardManager clipboard = (ClipboardManager) getSystemService("clipboard");
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
             if (displayContents != null) {
                 try {
                     clipboard.setText(displayContents);
@@ -472,12 +482,12 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         if (resultDurationMS > 0) {
             String rawResultString = String.valueOf(rawResult);
             if (rawResultString.length() > 32) {
-                rawResultString = String.valueOf(rawResultString.substring(0, 32)) + " ...";
+                rawResultString = rawResultString.substring(0, 32) + " ...";
             }
-            this.statusView.setText(String.valueOf(getString(resultHandler.getDisplayTitle())) + " : " + rawResultString);
+            this.statusView.setText(getString(resultHandler.getDisplayTitle()) + " : " + rawResultString);
         }
         if (this.copyToClipboard && !resultHandler.areContentsSecure()) {
-            ClipboardManager clipboard = (ClipboardManager) getSystemService("clipboard");
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
             CharSequence text = resultHandler.getDisplayContents();
             if (text != null) {
                 try {
@@ -488,15 +498,17 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             }
         }
         if (this.source == IntentSource.NATIVE_APP_INTENT) {
-            Intent intent = new Intent(getIntent().getAction());
-            intent.addFlags(524288);
+			// Hand back whatever action they requested - this can be changed to Intents.Scan.ACTION when
+			// the deprecated intent is retired.
+			Intent intent = new Intent(getIntent().getAction());
+			intent.addFlags(Intents.FLAG_NEW_DOC);
             intent.putExtra(Intents.Scan.RESULT, rawResult.toString());
             intent.putExtra(Intents.Scan.RESULT_FORMAT, rawResult.getBarcodeFormat().toString());
             byte[] rawBytes = rawResult.getRawBytes();
             if (rawBytes != null && rawBytes.length > 0) {
                 intent.putExtra(Intents.Scan.RESULT_BYTES, rawBytes);
             }
-            Map<ResultMetadataType, Object> resultMetadata = rawResult.getResultMetadata();
+            Map<ResultMetadataType, ?> resultMetadata = rawResult.getResultMetadata();
             if (resultMetadata != null) {
                 if (resultMetadata.containsKey(ResultMetadataType.UPC_EAN_EXTENSION)) {
                     intent.putExtra(Intents.Scan.RESULT_UPC_EAN_EXTENSION, resultMetadata.get(ResultMetadataType.UPC_EAN_EXTENSION).toString());
@@ -509,7 +521,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                 if (ecLevel != null) {
                     intent.putExtra(Intents.Scan.RESULT_ERROR_CORRECTION_LEVEL, ecLevel);
                 }
-                Iterable<byte[]> byteSegments = (Iterable) resultMetadata.get(ResultMetadataType.BYTE_SEGMENTS);
+                Iterable<byte[]> byteSegments = (Iterable<byte[]>) resultMetadata.get(ResultMetadataType.BYTE_SEGMENTS);
                 if (byteSegments != null) {
                     int i = 0;
                     for (byte[] byteSegment : byteSegments) {
@@ -520,7 +532,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             }
             sendReplyMessage(R.id.return_scan_result, intent, resultDurationMS);
         } else if (this.source == IntentSource.PRODUCT_SEARCH_LINK) {
-            sendReplyMessage(R.id.launch_product_query, String.valueOf(this.sourceUrl.substring(0, this.sourceUrl.lastIndexOf("/scan"))) + "?q=" + resultHandler.getDisplayContents() + "&source=zxing", resultDurationMS);
+            sendReplyMessage(R.id.launch_product_query, this.sourceUrl.substring(0, this.sourceUrl.lastIndexOf("/scan")) + "?q=" + resultHandler.getDisplayContents() + "&source=zxing", resultDurationMS);
         } else if (this.source == IntentSource.ZXING_LINK && this.scanFromWebPageManager != null && this.scanFromWebPageManager.isScanFromWebPage()) {
             sendReplyMessage(R.id.launch_product_query, this.scanFromWebPageManager.buildReplyURL(rawResult, resultHandler), resultDurationMS);
         }
@@ -532,26 +544,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             this.handler.sendMessageDelayed(message, delayMS);
         } else {
             this.handler.sendMessage(message);
-        }
-    }
-
-    private boolean showHelpOnFirstLaunch() {
-        try {
-            int currentVersion = getPackageManager().getPackageInfo(PACKAGE_NAME, 0).versionCode;
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            int lastVersion = prefs.getInt(PreferencesActivity.KEY_HELP_VERSION_SHOWN, 0);
-            if (currentVersion <= lastVersion) {
-                return false;
-            }
-            prefs.edit().putInt(PreferencesActivity.KEY_HELP_VERSION_SHOWN, currentVersion).commit();
-            Intent intent = new Intent(this, HelpActivity.class);
-            intent.addFlags(524288);
-            intent.putExtra(HelpActivity.REQUESTED_PAGE_KEY, lastVersion == 0 ? HelpActivity.DEFAULT_PAGE : HelpActivity.WHATS_NEW_PAGE);
-            startActivity(intent);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.w(TAG, e);
-            return false;
         }
     }
 

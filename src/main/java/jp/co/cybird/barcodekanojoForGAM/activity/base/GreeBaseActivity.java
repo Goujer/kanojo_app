@@ -28,6 +28,7 @@ public abstract class GreeBaseActivity extends Activity {
     private int layoutResID;
     private Bundle savedInstanceState;
 
+    @Override
     protected void onStop() {
         ViewGroup root = getWindow().getDecorView().findViewById(R.id.common_top_menu_root);
         if (!(this.isReUsed || root == null || root.getChildCount() == 0)) {
@@ -36,6 +37,7 @@ public abstract class GreeBaseActivity extends Activity {
         super.onStop();
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (!this.isReUsed) {

@@ -372,4 +372,5 @@
     <string name="msg_sure">Are you sure?</string>
     <string name="menu_encode_mecard">Use MECARD</string>
     <string name="msg_sbc_results">Results</string>
+	<string name="error_barcode_format">Barcode KANOJO is only able to scan EAN/UPC codes.</string>
 </resources>

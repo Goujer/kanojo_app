@@ -324,12 +324,11 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void executeLogInTask() {
+    protected void executeLogInTask() {
         if (this.mLogInTask == null || this.mLogInTask.getStatus() == AsyncTask.Status.FINISHED || this.mLogInTask.cancel(true) || this.mLogInTask.isCancelled()) {
             this.mLogInTask = (LogInTask) new LogInTask().execute(new Void[0]);
         } else {
-            Toast.makeText(this, "ttttttt", 0);
+            Toast.makeText(this, "ttttttt", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -339,7 +338,8 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         LogInTask() {
         }
 
-        public void onPreExecute() {
+        @Override
+        protected void onPreExecute() {
             ProgressDialog unused = DashboardActivity.this.showProgressDialog(new DialogInterface.OnCancelListener() {
                 public void onCancel(DialogInterface dialog) {
                     DashboardActivity.this.clearHistory();
@@ -348,7 +348,8 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
             });
         }
 
-        public Response<?> doInBackground(Void... params) {
+        @Override
+        protected Response<?> doInBackground(Void... params) {
             try {
                 return login();
             } catch (Exception e) {
@@ -357,7 +358,8 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
             }
         }
 
-        public void onPostExecute(Response<?> response) {
+        @Override
+        protected void onPostExecute(Response<?> response) {
             if (response == null) {
                 try {
                     throw new BarcodeKanojoException("response is null! \n" + this.mReason);
@@ -378,13 +380,12 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        @Override
+        protected void onCancelled() {
             DashboardActivity.this.dismissProgressDialog();
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> login() throws BarcodeKanojoException, IllegalStateException, IOException {
+		Response<?> login() throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) DashboardActivity.this.getApplication()).getBarcodeKanojo();
             Log.d(DashboardActivity.TAG, "login() cannot be used !!!");
             User user = barcodeKanojo.getUser();

@@ -45,6 +45,7 @@ public class CustomToolBarView extends LinearLayout implements View.OnClickListe
         setActive();
     }
 
+    @Override
     public void onClick(View v) {
         lock();
         switch (v.getId()) {

@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,16 +11,16 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.android.CaptureActivity;
 import com.google.zxing.client.android.Intents;
-import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,6 +32,7 @@ import jp.co.cybird.barcodekanojoForGAM.activity.scan.ScanKanojoGenerateActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.scan.ScanOthersEditActivity;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
+import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Barcode;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel;
@@ -201,8 +201,19 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1010 && resultCode == -1) {
             String contents = data.getStringExtra(Intents.Scan.RESULT);
-            String stringExtra = data.getStringExtra(Intents.Scan.RESULT_FORMAT);
-            executeScanQueryTask(contents);
+            String format = data.getStringExtra(Intents.Scan.RESULT_FORMAT);
+            switch (format) {
+				case "UPC_A":
+				case "EAN_13":
+					executeScanQueryTask(contents);
+					break;
+				default:
+					showAlertDialog(new Alert(getResources().getString(R.string.error_barcode_format)+" Found: "+format), new DialogInterface.OnDismissListener() {
+						public void onDismiss(DialogInterface dialog) {
+							startCaptureActivity();
+						}});
+			}
+
         } else if (requestCode == 1020) {
 			if (resultCode == 102) {
 				setResult(102);
@@ -449,15 +460,17 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         ScanApiTask() {
         }
 
-        public void setTask(ApiTask task) {
+        void setTask(ApiTask task) {
             this.mTask = task;
         }
 
-        public void onPreExecute() {
+        @Override
+        protected void onPreExecute() {
             ScanActivity.this.showProgressDialog();
         }
 
-        public Response<?> doInBackground(Void... params) {
+        @Override
+        protected Response<?> doInBackground(Void... params) {
             try {
                 return process(this.mTask);
             } catch (Exception e) {
@@ -466,7 +479,8 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
             }
         }
 
-        public void onPostExecute(Response<?> response) {
+        @Override
+        protected void onPostExecute(Response<?> response) {
             try {
                 Log.d(ScanActivity.TAG, String.valueOf(response.getCode()));
                 Log.d(ScanActivity.TAG, String.valueOf(response.getAlert()));
