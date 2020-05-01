@@ -101,8 +101,8 @@ public class TopActivity extends BaseActivity {
         super.onPause();
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 805 && resultCode == 106) {
             backupUser(((BarcodeKanojoApp) getApplication()).getUser());
@@ -121,33 +121,28 @@ public class TopActivity extends BaseActivity {
         }
     }
 
-    /* access modifiers changed from: private */
-    public void showAlertDialog(Alert alert) {
+    private void showAlertDialog(Alert alert) {
         super.showAlertDialog(alert, new DialogInterface.OnDismissListener() {
             public void onDismiss(DialogInterface dialog) {
             }
         });
     }
 
-    /* access modifiers changed from: private */
-    public void startDashboard() {
+    private void startDashboard() {
         checkAndCopyUser();
         finish();
         startActivityForResult(new Intent().setClass(this, DashboardActivity.class), BaseInterface.REQUEST_DASHBOARD);
     }
 
-    /* access modifiers changed from: private */
-    public void startShowPrivacy() {
+    private void startShowPrivacy() {
         startActivityForResult(new Intent().setClass(this, PrivacyInfoActivity.class), BaseInterface.REQUEST_SHOW_PRIVACY);
     }
 
-    /* access modifiers changed from: private */
-    public void startSignUp() {
+    private void startSignUp() {
         startActivityForResult(new Intent().setClass(this, UserEntryActivity.class), BaseInterface.REQUEST_SIGN_UP);
     }
 
-    /* access modifiers changed from: private */
-    public void startLogin() {
+    private void startLogin() {
         startActivityForResult(new Intent().setClass(this, LoginActivity.class), BaseInterface.REQUEST_LOG_IN);
     }
 
@@ -155,7 +150,7 @@ public class TopActivity extends BaseActivity {
         if (this.mTopLogInTask == null || this.mTopLogInTask.getStatus() == AsyncTask.Status.FINISHED || this.mTopLogInTask.cancel(true) || this.mTopLogInTask.isCancelled()) {
             this.mTopLogInTask = (TopLogInTask) new TopLogInTask().execute(new Void[0]);
         } else {
-            Toast.makeText(this, "ttttttt", 0);
+            Toast.makeText(this, "ttttttt", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -168,7 +163,7 @@ public class TopActivity extends BaseActivity {
         if (this.mTopSignUpTask == null || this.mTopSignUpTask.getStatus() == AsyncTask.Status.FINISHED || this.mTopSignUpTask.cancel(true) || this.mTopSignUpTask.isCancelled()) {
             this.mTopSignUpTask = (TopSignUpTask) new TopSignUpTask().execute(new Void[0]);
         } else {
-            Toast.makeText(this, "ttttttt", 0);
+            Toast.makeText(this, "ttttttt", Toast.LENGTH_SHORT).show();
         }
     }
 

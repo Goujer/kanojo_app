@@ -56,64 +56,58 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
     private Button btn01;
     private Button btn02;
     private Button btnClose;
-    /* access modifiers changed from: private */
-    public int code;
+    private int code;
     private LayoutInflater inflater;
-    /* access modifiers changed from: private */
-    public Barcode mBarcode;
+    private Barcode mBarcode;
     private Bitmap mBitmap;
     private ImageView mBitmapView;
-    /* access modifiers changed from: private */
-    public Kanojo mKanojo;
+    private Kanojo mKanojo;
     private RelativeLayout mLayoutThumb;
     private CustomLoadingView mLoadingView;
-    /* access modifiers changed from: private */
-    public MessageModel mMessages;
-    /* access modifiers changed from: private */
-    public Product mProduct;
+    private MessageModel mMessages;
+    private Product mProduct;
     private ProgressBar mProgressBar;
     private ScanApiTask mScanApiTask;
     private ScanQueryTask mScanQueryTask;
-    /* access modifiers changed from: private */
-    public Scanned mScanned;
-    /* access modifiers changed from: private */
-    public String mStringMessage = "";
-    /* access modifiers changed from: private */
-    public int result = 0;
+    private Scanned mScanned;
+    private String mStringMessage = "";
+    private int result = 0;
     private TextView txtMessage;
 
-    public void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_result);
-        this.mLayoutThumb = (RelativeLayout) findViewById(R.id.scan_result_layout_thumb);
-        this.txtMessage = (TextView) findViewById(R.id.scan_result_message);
-        this.mProgressBar = (ProgressBar) findViewById(R.id.scan_result_progressbar);
-        this.btnClose = (Button) findViewById(R.id.scan_result_close);
+        this.mLayoutThumb = findViewById(R.id.scan_result_layout_thumb);
+        this.txtMessage = findViewById(R.id.scan_result_message);
+        this.mProgressBar = findViewById(R.id.scan_result_progressbar);
+        this.btnClose = findViewById(R.id.scan_result_close);
         this.btnClose.setOnClickListener(this);
-        this.btn01 = (Button) findViewById(R.id.scan_result_btn_01);
+        this.btn01 = findViewById(R.id.scan_result_btn_01);
         this.btn01.setOnClickListener(this);
-        this.btn02 = (Button) findViewById(R.id.scan_result_btn_02);
+        this.btn02 = findViewById(R.id.scan_result_btn_02);
         this.btn02.setOnClickListener(this);
-        this.inflater = (LayoutInflater) getSystemService("layout_inflater");
-        this.mLoadingView = (CustomLoadingView) findViewById(R.id.loadingView);
+        this.inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        this.mLoadingView = findViewById(R.id.loadingView);
         startCaptureActivity();
     }
 
-    public View getClientView() {
-        View leyout = getLayoutInflater().inflate(R.layout.activity_scan_result, (ViewGroup) null);
+    @Override
+    protected View getClientView() {
+        View leyout = getLayoutInflater().inflate(R.layout.activity_scan_result, null);
         LinearLayout appLayoutRoot = new LinearLayout(this);
         appLayoutRoot.addView(leyout);
         return appLayoutRoot;
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         ((BarcodeKanojoApp) getApplication()).requestLocationUpdates(true);
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    @Override
+    protected void onPause() {
         ((BarcodeKanojoApp) getApplication()).removeLocationUpdates();
         if (this.mScanQueryTask != null) {
             this.mScanQueryTask.cancel(true);
@@ -124,8 +118,8 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
             this.mScanApiTask = null;
         }
         if (this.mBitmapView != null && isFinishing()) {
-            this.mBitmapView.setImageDrawable((Drawable) null);
-            this.mBitmapView.setBackgroundDrawable((Drawable) null);
+            this.mBitmapView.setImageDrawable(null);
+            this.mBitmapView.setBackgroundDrawable(null);
         }
         if (this.mBitmap != null && isFinishing()) {
             this.mBitmap.recycle();
@@ -134,15 +128,16 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         super.onPause();
     }
 
+    @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.scan_result_close) {
             startCaptureActivity();
         }
         switch (this.result) {
-            case 1:
+            case SCAN_RESULT_GENERATE:
                 if (id == R.id.scan_result_btn_01) {
-                    executeScanApiTask(new ApiTask(2, this.mBarcode.getBarcode(), (Product) null));
+                    executeScanApiTask(new ApiTask(2, this.mBarcode.getBarcode(), null));
                     return;
                 } else if (id == R.id.scan_result_btn_02) {
                     startCaptureActivity();
@@ -150,8 +145,8 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                 } else {
                     return;
                 }
-            case 2:
-            case 3:
+            case SCAN_RESULT_KANOJO:
+            case SCAN_RESULT_FRIEND:
                 if (id == R.id.scan_result_btn_01) {
                     startCaptureActivity();
                     return;
@@ -167,14 +162,14 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                         intent.putExtra(BaseInterface.EXTRA_SCANNED, this.mScanned);
                     }
                     if (this.mMessages != null) {
-                        intent.putExtra(MessageModel.NOTIFY_AMENDMENT_INFORMATION, (String) this.mMessages.get(MessageModel.NOTIFY_AMENDMENT_INFORMATION));
+                        intent.putExtra(MessageModel.NOTIFY_AMENDMENT_INFORMATION, this.mMessages.get(MessageModel.NOTIFY_AMENDMENT_INFORMATION));
                     }
                     startActivityForResult(intent, BaseInterface.REQUEST_SCAN_OTHERS_EDIT);
                     return;
                 } else {
                     return;
                 }
-            case 4:
+            case SCAN_RESULT_OTHERS:
                 if (id == R.id.scan_result_btn_01) {
                     executeScanApiTask(new ApiTask(1, this.mBarcode.getBarcode(), this.mProduct));
                     return;
@@ -190,7 +185,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                         intent2.putExtra(BaseInterface.EXTRA_SCANNED, this.mScanned);
                     }
                     if (this.mMessages != null) {
-                        intent2.putExtra(MessageModel.NOTIFY_AMENDMENT_INFORMATION, (String) this.mMessages.get(MessageModel.NOTIFY_AMENDMENT_INFORMATION));
+                        intent2.putExtra(MessageModel.NOTIFY_AMENDMENT_INFORMATION, this.mMessages.get(MessageModel.NOTIFY_AMENDMENT_INFORMATION));
                     }
                     startActivityForResult(intent2, BaseInterface.REQUEST_SCAN_OTHERS_EDIT);
                     return;
@@ -198,28 +193,24 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                     return;
                 }
             default:
-                return;
-        }
+		}
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1010 && resultCode == -1) {
             String contents = data.getStringExtra(Intents.Scan.RESULT);
             String stringExtra = data.getStringExtra(Intents.Scan.RESULT_FORMAT);
             executeScanQueryTask(contents);
         } else if (requestCode == 1020) {
-            switch (resultCode) {
-                case 102:
-                    setResult(102);
-                    close();
-                    return;
-                default:
-                    startCaptureActivity();
-                    return;
-            }
-        } else if (requestCode == 1014) {
+			if (resultCode == 102) {
+				setResult(102);
+				close();
+			} else {
+				startCaptureActivity();
+			}
+		} else if (requestCode == 1014) {
             switch (resultCode) {
                 case 101:
                     setResult(101);
@@ -231,26 +222,25 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                     return;
                 default:
                     startCaptureActivity();
-                    return;
-            }
+			}
         } else {
             close();
         }
     }
 
+    @Override
     public void onDismiss(DialogInterface dialog, int code2) {
         startCaptureActivity();
     }
 
-    /* access modifiers changed from: private */
-    public void updateViews() {
+    private void updateViews() {
         switch (this.result) {
-            case 1:
+            case SCAN_RESULT_GENERATE:
                 this.mLayoutThumb.setVisibility(View.VISIBLE);
                 this.mProgressBar.setVisibility(View.GONE);
                 this.txtMessage.setText(this.mStringMessage);
-                View viewNewKanojo = this.inflater.inflate(R.layout.scan_result_new_kanojo, (ViewGroup) null);
-                this.mBitmapView = (ImageView) viewNewKanojo.findViewById(R.id.scan_result_photo);
+                View viewNewKanojo = this.inflater.inflate(R.layout.scan_result_new_kanojo, null);
+                this.mBitmapView = viewNewKanojo.findViewById(R.id.scan_result_photo);
                 if (this.mBitmapView != null) {
                     this.mBitmap = Live2dUtil.createSilhouette(getApplicationContext(), this.mKanojo, 75);
                     if (this.mBitmap != null) {
@@ -259,29 +249,29 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                 }
                 this.mLayoutThumb.addView(viewNewKanojo);
                 break;
-            case 2:
-            case 3:
-            case 4:
+            case SCAN_RESULT_KANOJO:
+            case SCAN_RESULT_FRIEND:
+            case SCAN_RESULT_OTHERS:
                 this.mLayoutThumb.setVisibility(View.VISIBLE);
                 this.mProgressBar.setVisibility(View.GONE);
                 this.txtMessage.setText(this.mStringMessage);
-                View view = this.inflater.inflate(R.layout.scan_result_others, (ViewGroup) null);
-                this.mBitmapView = (ImageView) view.findViewById(R.id.scan_result_others_photo);
+                View view = this.inflater.inflate(R.layout.scan_result_others, null);
+                this.mBitmapView = view.findViewById(R.id.scan_result_others_photo);
                 if (this.mBitmapView != null) {
                     this.mBitmap = Live2dUtil.createNormalIcon(getApplicationContext(), this.mKanojo, this.mKanojo.getEmotion_status());
                     if (this.mBitmap != null) {
                         this.mBitmapView.setImageBitmap(this.mBitmap);
                     }
                 }
-                TextView txtName = (TextView) view.findViewById(R.id.scan_result_name);
+                TextView txtName = view.findViewById(R.id.scan_result_name);
                 if (!(txtName == null || this.mKanojo == null)) {
                     txtName.setText(this.mKanojo.getName());
                 }
-                TextView txtProduct = (TextView) view.findViewById(R.id.scan_result_product_name);
+                TextView txtProduct = view.findViewById(R.id.scan_result_product_name);
                 if (!(txtProduct == null || this.mProduct == null)) {
                     txtProduct.setText(this.mProduct.getName());
                 }
-                TextView txtBarcode = (TextView) view.findViewById(R.id.scan_result_barcode);
+                TextView txtBarcode = view.findViewById(R.id.scan_result_barcode);
                 if (!(txtBarcode == null || this.mBarcode == null)) {
                     txtBarcode.setText(this.mBarcode.getBarcode());
                 }
@@ -297,21 +287,21 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                 break;
         }
         switch (this.result) {
-            case 1:
+            case SCAN_RESULT_GENERATE:
                 this.btnClose.setVisibility(View.GONE);
                 this.btn01.setVisibility(View.VISIBLE);
                 this.btn02.setVisibility(View.VISIBLE);
                 this.btn01.setText(R.string.scan_result_yes);
                 this.btn02.setText(R.string.scan_result_cancel);
                 return;
-            case 2:
-            case 3:
+            case SCAN_RESULT_KANOJO:
+            case SCAN_RESULT_FRIEND:
                 this.btn01.setVisibility(View.VISIBLE);
                 this.btn02.setVisibility(View.VISIBLE);
                 this.btn01.setText(R.string.scan_result_ok);
                 this.btn02.setText(R.string.scan_result_edit_productinfo);
                 return;
-            case 4:
+            case SCAN_RESULT_OTHERS:
                 this.btn01.setVisibility(View.VISIBLE);
                 this.btn02.setVisibility(View.VISIBLE);
                 this.btn01.setText(R.string.scan_result_add_friend);
@@ -321,8 +311,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                 this.btnClose.setVisibility(View.GONE);
                 this.btn01.setVisibility(View.GONE);
                 this.btn02.setVisibility(View.GONE);
-                return;
-        }
+		}
     }
 
     private void startCaptureActivity() {
@@ -352,7 +341,8 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
             ScanActivity.this.showProgressDialog();
         }
 
-        public Response<?> doInBackground(String... params) {
+        @Override
+        protected Response<?> doInBackground(String... params) {
             if (params == null || params.length == 0) {
                 return null;
             }
@@ -364,10 +354,11 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
             }
         }
 
-        public void onPostExecute(Response<?> response) {
+        @Override
+        protected void onPostExecute(Response<?> response) {
             try {
                 switch (ScanActivity.this.getCodeAndShowDialog(response, this.mReason)) {
-                    case 200:
+                    case Response.CODE_SUCCESS:
                         ScanActivity.this.mKanojo = (Kanojo) response.get(Kanojo.class);
                         ScanActivity.this.mBarcode = (Barcode) response.get(Barcode.class);
                         ScanActivity.this.mProduct = (Product) response.get(Product.class);
@@ -379,7 +370,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                                 ScanActivity.this.mKanojo.setLove_gauge(85);
                                 ScanActivity.this.mProduct = new Product();
                                 ScanActivity.this.result = 1;
-                                ScanActivity.this.mStringMessage = (String) ScanActivity.this.mMessages.get(MessageModel.DO_GENERATE_KANOJO);
+                                ScanActivity.this.mStringMessage = ScanActivity.this.mMessages.get(MessageModel.DO_GENERATE_KANOJO);
                                 break;
                             } else {
                                 throw new BarcodeKanojoException("Barcode Model is null");
@@ -388,22 +379,23 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                             switch (ScanActivity.this.mKanojo.getRelation_status()) {
                                 case 1:
                                     ScanActivity.this.result = 4;
-                                    ScanActivity.this.mStringMessage = (String) ScanActivity.this.mMessages.get(MessageModel.DO_ADD_FRIEND);
+                                    ScanActivity.this.mStringMessage = ScanActivity.this.mMessages.get(MessageModel.DO_ADD_FRIEND);
                                     break;
                                 case 2:
                                     ScanActivity.this.result = 2;
-                                    ScanActivity.this.mStringMessage = (String) ScanActivity.this.mMessages.get(MessageModel.INFORM_GIRLFRIEND);
+                                    ScanActivity.this.mStringMessage = ScanActivity.this.mMessages.get(MessageModel.INFORM_GIRLFRIEND);
                                     break;
                                 case 3:
                                     ScanActivity.this.result = 3;
-                                    ScanActivity.this.mStringMessage = (String) ScanActivity.this.mMessages.get(MessageModel.INFORM_FRIEND);
+                                    ScanActivity.this.mStringMessage = ScanActivity.this.mMessages.get(MessageModel.INFORM_FRIEND);
                                     break;
                                 default:
                                     ScanActivity.this.result = 0;
                                     break;
                             }
                         }
-                    case 502:
+                        break;
+                    case Response.CODE_ERROR_NETWORK:
                         ScanActivity.this.showToast(ScanActivity.this.getResources().getString(R.string.error_internet));
                         TimerTask task = new TimerTask() {
                             public void run() {
@@ -422,13 +414,12 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        @Override
+        protected void onCancelled() {
             ScanActivity.this.dismissProgressDialog();
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> process(String barcode) throws BarcodeKanojoException, IllegalStateException, IOException {
+        private Response<?> process(String barcode) throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojoApp barcodeKanojoApp = (BarcodeKanojoApp) ScanActivity.this.getApplication();
             BarcodeKanojo barcodeKanojo = barcodeKanojoApp.getBarcodeKanojo();
             Location loc = barcodeKanojoApp.getLastKnownLocation();
@@ -447,7 +438,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         if (this.mScanApiTask == null || this.mScanApiTask.getStatus() == AsyncTask.Status.FINISHED) {
             this.mScanApiTask = new ScanApiTask();
             this.mScanApiTask.setTask(task);
-            this.mScanApiTask.execute(new Void[0]);
+            this.mScanApiTask.execute();
         }
     }
 
@@ -477,8 +468,8 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
 
         public void onPostExecute(Response<?> response) {
             try {
-                Log.d(ScanActivity.TAG, new StringBuilder().append(response.getCode()).toString());
-                Log.d(ScanActivity.TAG, new StringBuilder().append(response.getAlert()).toString());
+                Log.d(ScanActivity.TAG, String.valueOf(response.getCode()));
+                Log.d(ScanActivity.TAG, String.valueOf(response.getAlert()));
                 if (response.getCode() != 200 || response.getAlert() == null) {
                     ScanActivity.this.code = ScanActivity.this.getCodeAndShowAlert(response, this.mReason);
                 } else {
@@ -535,13 +526,12 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        @Override
+        protected void onCancelled() {
             ScanActivity.this.dismissProgressDialog();
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> process(ApiTask task) throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> process(ApiTask task) throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojoApp barcodeKanojoApp = (BarcodeKanojoApp) ScanActivity.this.getApplication();
             BarcodeKanojo barcodeKanojo = barcodeKanojoApp.getBarcodeKanojo();
             Location loc = barcodeKanojoApp.getLastKnownLocation();
@@ -560,7 +550,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                     if (task.barcode == null || task.product == null) {
                         return null;
                     }
-                    return barcodeKanojo.scan(task.barcode, task.product.getCompany_name(), task.product.getName(), task.product.getCategory_id(), (String) null, (File) null, GeoUtil.LocationToGeo(loc));
+                    return barcodeKanojo.scan(task.barcode, task.product.getCompany_name(), task.product.getName(), task.product.getCategory_id(), null, null, GeoUtil.LocationToGeo(loc));
                 case 2:
                     if (task.barcode != null) {
                         return barcodeKanojo.decrease_generating(task.barcode);
@@ -579,23 +569,23 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         Product product;
         int what;
 
-        public ApiTask(int what2, String barcode2, Product product2) {
+        ApiTask(int what2, String barcode2, Product product2) {
             this.what = what2;
             this.barcode = barcode2;
             this.product = product2;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public int getCodeAndShowDialog(Response<?> response, Exception e) throws BarcodeKanojoException {
+    private int getCodeAndShowDialog(Response<?> response, Exception e) throws BarcodeKanojoException {
         if (response != null) {
             return getCodeAndShowAlert(response, e);
         }
-        this.code = 502;
+        this.code = Response.CODE_ERROR_NETWORK;
         return this.code;
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    @Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode != 4 || !this.mLoadingView.isShow()) {
             return super.onKeyDown(keyCode, event);
         }
@@ -608,8 +598,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         return new ProgressDialog(this);
     }
 
-    /* access modifiers changed from: protected */
-    public void dismissProgressDialog() {
+    protected void dismissProgressDialog() {
         this.mLoadingView.dismiss();
     }
 }

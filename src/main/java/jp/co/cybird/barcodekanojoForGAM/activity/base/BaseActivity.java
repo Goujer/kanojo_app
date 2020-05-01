@@ -153,7 +153,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             unregisterReceiver(this.mWarningFullSpaceReceiver);
         } catch (Exception e2) {
         }
-        ViewGroup root = (ViewGroup) getWindow().getDecorView().findViewById(R.id.common_top_menu_root);
+        ViewGroup root = getWindow().getDecorView().findViewById(R.id.common_top_menu_root);
         if (!(root == null || root.getChildCount() == 0)) {
             cleanupView(root.getChildAt(0));
         }
@@ -267,7 +267,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             case 200:
                 updateUser(response);
                 break;
-            case Response.CODE_ERROR_NOT_ENOUGH_TICKET /*202*/:
+            case Response.CODE_ERROR_NOT_ENOUGH_TICKET:
             case 400:
             case 401:
             case 403:
@@ -275,7 +275,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             case 500:
             case 503:
                 if (DEBUG) {
-                    Toast.makeText(this, "code:" + this.code + " ", Toast.LENGTH_LONG).show();
+                    showToast("code:" + this.code + " ");
                     break;
                 }
                 break;
@@ -324,6 +324,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         }
     }
 
+    @Override
     public void onDismiss(DialogInterface dialog) {
         onDismiss(dialog, this.code);
     }

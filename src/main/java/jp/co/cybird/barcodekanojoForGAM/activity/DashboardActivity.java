@@ -300,7 +300,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
                             DashboardActivity.this.isFinishedLoading = true;
                             break;
                         }
-                    case 502:
+                    case Response.CODE_ERROR_NETWORK:
                         DashboardActivity.this.showToast(DashboardActivity.this.getResources().getString(R.string.error_internet));
                         DashboardActivity.this.invisibleFooter();
                         break;
@@ -413,7 +413,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         if (response != null) {
             return getCodeAndShowAlert(response, e);
         }
-        this.code = 502;
+        this.code = Response.CODE_ERROR_NETWORK;
         return this.code;
     }
 }

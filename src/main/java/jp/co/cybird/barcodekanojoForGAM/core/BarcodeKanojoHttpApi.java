@@ -1,5 +1,7 @@
 package jp.co.cybird.barcodekanojoForGAM.core;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
@@ -166,14 +168,15 @@ public class BarcodeKanojoHttpApi {
         return (Response) this.mHttpApi.executeHttpRequest(httpApi.createHttpGet(fullUrl, nameValuePairArr), new ResponseParser(new AlertParser(), new MessageParser(MessageModel.NOTIFY_AMENDMENT_INFORMATION), new ModelParser("kanojo", new KanojoParser()), new ModelParser("owner_user", new UserParser()), new ModelParser("product", new ProductParser()), new ModelParser("scanned", new ScannedParser())));
     }
 
-    public Response<BarcodeKanojoModel> vote_like(int kanojo_id, boolean like) throws IllegalStateException, BarcodeKanojoException, IOException {
+    Response<BarcodeKanojoModel> vote_like(int kanojo_id, boolean like) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpPost httpPost = this.mHttpApi.createHttpPost(fullUrl(URL_API_KANOJO_VOTE_LIKE), new BasicNameValuePair("kanojo_id", String.valueOf(kanojo_id)), new BasicNameValuePair("like", String.valueOf(like)));
         return (Response) this.mHttpApi.executeHttpRequest(httpPost, new ResponseParser(new AlertParser(), new ModelParser("kanojo", new KanojoParser())));
     }
 
     public Response<BarcodeKanojoModel> query(String barcode, LatLng geo) throws IllegalStateException, BarcodeKanojoException, IOException {
         HttpGet httpGet = this.mHttpApi.createHttpGet(fullUrl(URL_API_BARCODE_QUERY), new BasicNameValuePair("barcode", barcode), new BasicNameValuePair("geo", GeoUtil.geoToString(geo)));
-        return (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelParser("owner_user", new UserParser()), new ModelParser("kanojo", new KanojoParser()), new ModelParser("barcode", new BarcodeParser()), new ModelParser("product", new ProductParser()), new ModelParser("scanned", new ScannedParser()), new ModelParser("scan_history", new ScanHistoryParser()), new MessageParser(MessageModel.NOTIFY_AMENDMENT_INFORMATION, MessageModel.DO_GENERATE_KANOJO, MessageModel.DO_ADD_FRIEND, MessageModel.INFORM_GIRLFRIEND, MessageModel.INFORM_FRIEND)));
+		Response<BarcodeKanojoModel> returning = (Response) this.mHttpApi.executeHttpRequest(httpGet, new ResponseParser(new AlertParser(), new ModelParser("owner_user", new UserParser()), new ModelParser("kanojo", new KanojoParser()), new ModelParser("barcode", new BarcodeParser()), new ModelParser("product", new ProductParser()), new ModelParser("scanned", new ScannedParser()), new ModelParser("scan_history", new ScanHistoryParser()), new MessageParser(MessageModel.NOTIFY_AMENDMENT_INFORMATION, MessageModel.DO_GENERATE_KANOJO, MessageModel.DO_ADD_FRIEND, MessageModel.INFORM_GIRLFRIEND, MessageModel.INFORM_FRIEND)));
+		return returning;
     }
 
     public Response<BarcodeKanojoModel> scan(String barcode, String company_name, String product_name, int product_category_id, String product_comment, File product_image_data, LatLng product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {

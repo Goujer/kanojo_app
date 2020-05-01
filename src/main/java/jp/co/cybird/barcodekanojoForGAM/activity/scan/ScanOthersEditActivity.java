@@ -36,6 +36,7 @@ public class ScanOthersEditActivity extends BaseEditActivity implements View.OnC
     private EditItemView mProductName;
     private Scanned mScanned;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_others);

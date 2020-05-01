@@ -8,8 +8,7 @@ import org.json.JSONObject;
 import twitter4j.conf.PropertyConfiguration;
 
 public class UserParser extends AbstractJSONParser<User> {
-    /* access modifiers changed from: protected */
-    public User parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected User parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         User res = new User();
         try {
             if (object.has("id")) {
