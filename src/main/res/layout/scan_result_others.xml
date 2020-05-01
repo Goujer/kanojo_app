@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:gravity="center_vertical" android:orientation="horizontal" android:padding="6dp" android:layout_width="match_parent" android:layout_height="wrap_content">
-    <ImageView android:id="@+id/scan_result_others_photo" android:layout_width="@dimen/scan_result_photo_width" android:layout_height="@dimen/scan_result_photo_height" android:src="@drawable/test_dummy_kanojo" android:layout_centerInParent="true"/>
-    <LinearLayout android:orientation="vertical" android:paddingLeft="6dp" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_weight="1">
-        <TextView android:id="@+id/scan_result_name" style="@style/txt_scan_result_name"/>
-        <TextView android:id="@+id/scan_result_product_name" style="@style/txt_scan_result_default"/>
-        <TextView android:id="@+id/scan_result_barcode" style="@style/txt_scan_result_default"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:gravity="center_vertical"
+	android:orientation="horizontal"
+	android:padding="6dp"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+    <ImageView android:id="@+id/scan_result_others_photo" android:layout_width="@dimen/scan_result_photo_width" android:layout_height="@dimen/scan_result_photo_height" android:src="@drawable/test_dummy_kanojo" android:layout_gravity="center"/>
+    <LinearLayout android:orientation="vertical" android:paddingLeft="6dp" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
+        <TextView
+			android:id="@+id/scan_result_name"
+			style="@style/txt_scan_result_name"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content" />
+        <TextView
+			android:id="@+id/scan_result_product_name"
+			style="@style/txt_scan_result_default"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content" />
+        <TextView
+			android:id="@+id/scan_result_barcode"
+			style="@style/txt_scan_result_default"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content" />
     </LinearLayout>
 </LinearLayout>

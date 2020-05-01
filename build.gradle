@@ -36,7 +36,6 @@ android {
 		}
 		debug {
 			debuggable true
-			applicationIdSuffix ".debug"
 		}
 	}
 
@@ -44,7 +43,7 @@ android {
 	productFlavors {
 		modern {
 			minSdkVersion 14
-			targetSdkVersion 23
+			targetSdkVersion 22
 		}
 		minApi9 {
 			minSdkVersion 9

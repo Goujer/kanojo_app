@@ -88,18 +88,18 @@ public class BarcodeKanojoApp extends Application {
     }
 
     public BestLocationListener requestLocationUpdates(boolean gps) {
-        this.mBestLocationListener.register((LocationManager) getSystemService("location"), gps);
+        this.mBestLocationListener.register((LocationManager) getSystemService(LOCATION_SERVICE), gps);
         return this.mBestLocationListener;
     }
 
     public BestLocationListener requestLocationUpdates(Observer observer) {
         this.mBestLocationListener.addObserver(observer);
-        this.mBestLocationListener.register((LocationManager) getSystemService("location"), true);
+        this.mBestLocationListener.register((LocationManager) getSystemService(LOCATION_SERVICE), true);
         return this.mBestLocationListener;
     }
 
     public void removeLocationUpdates() {
-        this.mBestLocationListener.unregister((LocationManager) getSystemService("location"));
+        this.mBestLocationListener.unregister((LocationManager) getSystemService(LOCATION_SERVICE));
     }
 
     public void removeLocationUpdates(Observer observer) {

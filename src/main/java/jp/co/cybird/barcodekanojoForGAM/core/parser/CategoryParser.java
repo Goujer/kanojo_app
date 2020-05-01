@@ -10,7 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class CategoryParser extends AbstractJSONParser<ModelList<Category>> {
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
     public static final String TAG = "CategoryParser";
 
     /* access modifiers changed from: protected */

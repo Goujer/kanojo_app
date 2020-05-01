@@ -111,7 +111,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityCount++;
         String name = getLocalClassName();

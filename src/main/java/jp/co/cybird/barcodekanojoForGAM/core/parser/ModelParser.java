@@ -17,8 +17,7 @@ public class ModelParser extends AbstractJSONParser<BarcodeKanojoModel> {
         this.mSubParser = subParser;
     }
 
-    /* access modifiers changed from: protected */
-    public BarcodeKanojoModel parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected BarcodeKanojoModel parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         try {
             if (!object.has(this.mName) || object.isNull(this.mName) || object.getString(this.mName).equals("")) {
                 return null;

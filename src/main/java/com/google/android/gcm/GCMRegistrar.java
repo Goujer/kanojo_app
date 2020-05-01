@@ -50,7 +50,7 @@ public final class GCMRegistrar {
         try {
             packageManager.getPermissionInfo(permissionName, 4096);
             try {
-                ActivityInfo[] receivers = packageManager.getPackageInfo(packageName, 2).receivers;
+                ActivityInfo[] receivers = packageManager.getPackageInfo(packageName, PackageManager.GET_RECEIVERS).receivers;
                 if (receivers == null || receivers.length == 0) {
                     throw new IllegalStateException("No receiver for package " + packageName);
                 }

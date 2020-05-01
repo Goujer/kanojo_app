@@ -86,7 +86,8 @@ public abstract class GreeBaseActivity extends Activity {
         super.onDestroy();
     }
 
-    public void onCreate(Bundle savedInstanceState2) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState2) {
         this.savedInstanceState = savedInstanceState2;
         super.onCreate(savedInstanceState2);
     }

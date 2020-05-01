@@ -17,7 +17,7 @@ public class Response<T extends BarcodeKanojoModel> extends ModelList<T> impleme
     public static final int CODE_ERROR_UNAUTHORIZED = 401;
     public static final int CODE_FINISHED_CONSUME_TICKET = 600;
     public static final int CODE_SUCCESS = 200;
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
     public static final String TAG = "Response";
     private static final long serialVersionUID = 1;
     private int code;
@@ -51,22 +51,20 @@ public class Response<T extends BarcodeKanojoModel> extends ModelList<T> impleme
         if (list == null || list.isEmpty()) {
             return null;
         }
-        return (Alert) list.get(0);
+        return list.get(0);
     }
 
-    public ModelList<Alert> getAlertList() {
+    private ModelList<Alert> getAlertList() {
         ModelList<?> list = (ModelList) get(ModelList.class);
         if (list == null) {
             return null;
         }
         ModelList<Alert> alertList = new ModelList<>();
-        Iterator it = list.iterator();
-        while (it.hasNext()) {
-            BarcodeKanojoModel item = (BarcodeKanojoModel) it.next();
-            if (item instanceof Alert) {
-                alertList.add((Alert) item);
-            }
-        }
+		for (BarcodeKanojoModel item : list) {
+			if (item instanceof Alert) {
+				alertList.add((Alert) item);
+			}
+		}
         return alertList;
     }
 
@@ -76,13 +74,11 @@ public class Response<T extends BarcodeKanojoModel> extends ModelList<T> impleme
             return null;
         }
         ModelList<Kanojo> kanojoList = new ModelList<>();
-        Iterator it = list.iterator();
-        while (it.hasNext()) {
-            BarcodeKanojoModel item = (BarcodeKanojoModel) it.next();
-            if (item instanceof Kanojo) {
-                kanojoList.add((Kanojo) item);
-            }
-        }
+		for (BarcodeKanojoModel item : list) {
+			if (item instanceof Kanojo) {
+				kanojoList.add((Kanojo) item);
+			}
+		}
         return kanojoList;
     }
 
@@ -92,13 +88,11 @@ public class Response<T extends BarcodeKanojoModel> extends ModelList<T> impleme
             return null;
         }
         ModelList<ActivityModel> activityList = new ModelList<>();
-        Iterator it = list.iterator();
-        while (it.hasNext()) {
-            BarcodeKanojoModel item = (BarcodeKanojoModel) it.next();
-            if (item instanceof ActivityModel) {
-                activityList.add((ActivityModel) item);
-            }
-        }
+		for (BarcodeKanojoModel item : list) {
+			if (item instanceof ActivityModel) {
+				activityList.add((ActivityModel) item);
+			}
+		}
         return activityList;
     }
 
@@ -108,13 +102,11 @@ public class Response<T extends BarcodeKanojoModel> extends ModelList<T> impleme
             return null;
         }
         ModelList<Category> categoryList = new ModelList<>();
-        Iterator it = list.iterator();
-        while (it.hasNext()) {
-            BarcodeKanojoModel item = (BarcodeKanojoModel) it.next();
-            if (item instanceof Category) {
-                categoryList.add((Category) item);
-            }
-        }
+		for (BarcodeKanojoModel item : list) {
+			if (item instanceof Category) {
+				categoryList.add((Category) item);
+			}
+		}
         return categoryList;
     }
 
@@ -127,26 +119,24 @@ public class Response<T extends BarcodeKanojoModel> extends ModelList<T> impleme
             return null;
         }
         ModelList<KanojoItemCategory> categoryList = new ModelList<>();
-        Iterator it = list.iterator();
-        while (it.hasNext()) {
-            BarcodeKanojoModel item = (BarcodeKanojoModel) it.next();
-            if (item instanceof KanojoItemCategory) {
-                KanojoItemCategory act = (KanojoItemCategory) item;
-                if (act.getTitle().equalsIgnoreCase("Wardrobe") && isFirstItem) {
-                    act.setTitle(String.valueOf(act.getTitle()) + "   ");
-                    isFirstItem = false;
-                }
-                if (act.getTitle().equalsIgnoreCase("Other") && isOtherFirstItem) {
-                    act.setTitle(String.valueOf(act.getTitle()) + "   ");
-                    isOtherFirstItem = false;
-                }
-                if (act.getTitle().equalsIgnoreCase("Portion") && isPortionFirstItem) {
-                    act.setTitle(String.valueOf(act.getTitle()) + "   ");
-                    isPortionFirstItem = false;
-                }
-                categoryList.add(act);
-            }
-        }
+		for (BarcodeKanojoModel item : list) {
+			if (item instanceof KanojoItemCategory) {
+				KanojoItemCategory act = (KanojoItemCategory) item;
+				if (act.getTitle().equalsIgnoreCase("Wardrobe") && isFirstItem) {
+					act.setTitle(act.getTitle() + "   ");
+					isFirstItem = false;
+				}
+				if (act.getTitle().equalsIgnoreCase("Other") && isOtherFirstItem) {
+					act.setTitle(act.getTitle() + "   ");
+					isOtherFirstItem = false;
+				}
+				if (act.getTitle().equalsIgnoreCase("Portion") && isPortionFirstItem) {
+					act.setTitle(act.getTitle() + "   ");
+					isPortionFirstItem = false;
+				}
+				categoryList.add(act);
+			}
+		}
         return categoryList;
     }
 
@@ -157,13 +147,11 @@ public class Response<T extends BarcodeKanojoModel> extends ModelList<T> impleme
         }
         new ModelList();
         ModelList<KanojoItemCategory> mCategoryList = getKanojoItemCategoryModelList();
-        Iterator it = list.iterator();
-        while (it.hasNext()) {
-            BarcodeKanojoModel item = (BarcodeKanojoModel) it.next();
-            if (item instanceof KanojoItemCategory) {
-                mCategoryList.add((KanojoItemCategory) item);
-            }
-        }
+		for (BarcodeKanojoModel item : list) {
+			if (item instanceof KanojoItemCategory) {
+				mCategoryList.add((KanojoItemCategory) item);
+			}
+		}
         return mCategoryList;
     }
 
@@ -173,7 +161,7 @@ public class Response<T extends BarcodeKanojoModel> extends ModelList<T> impleme
             Log.v(TAG, "[Response]\n code:" + res.getCode());
             int size = res.size();
             for (int i = 0; i < size; i++) {
-                checkResponse((BarcodeKanojoModel) res.get(i));
+                checkResponse(res.get(i));
             }
         }
         if (item instanceof ModelList) {
@@ -181,7 +169,7 @@ public class Response<T extends BarcodeKanojoModel> extends ModelList<T> impleme
             int size2 = list.size();
             Log.v(TAG, "[ModelList]");
             for (int i2 = 0; i2 < size2; i2++) {
-                checkResponse((BarcodeKanojoModel) list.get(i2));
+                checkResponse(list.get(i2));
             }
         }
         if (item instanceof MessageModel) {

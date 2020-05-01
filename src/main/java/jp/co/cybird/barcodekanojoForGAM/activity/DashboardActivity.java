@@ -404,13 +404,12 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
 
     private void init() {
         if (this.test) {
-            this.mListView = (ListView) findViewById(R.id.list_activities);
+            this.mListView = findViewById(R.id.list_activities);
             this.mListView.setAdapter(this.mDashboardAdapter);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public int getCodeAndShowDialog(Response<?> response, Exception e) throws BarcodeKanojoException {
+    protected int getCodeAndShowDialog(Response<?> response, Exception e) throws BarcodeKanojoException {
         if (response != null) {
             return getCodeAndShowAlert(response, e);
         }
