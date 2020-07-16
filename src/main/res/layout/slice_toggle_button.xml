@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
     <FrameLayout android:layout_gravity="center_horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="100dp">
         <SlidingDrawer android:orientation="horizontal" android:id="@+id/slidingDrawer1" android:background="@drawable/ios_retina_toggle_on_full" android:layout_width="154dp" android:layout_height="54dp" android:handle="@+id/handle" android:content="@+id/content">
             <ImageButton android:id="@+id/handle" android:background="#00000000" android:layout_width="54dp" android:layout_height="54dp" android:src="@drawable/ios_retina_toggle_button"/>

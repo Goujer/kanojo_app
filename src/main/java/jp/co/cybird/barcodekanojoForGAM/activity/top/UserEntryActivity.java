@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,51 +35,51 @@ public class UserEntryActivity extends BaseEditActivity implements View.OnClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_entry);
-        this.btnClose = (Button) findViewById(R.id.kanojo_sign_up_close);
+        this.btnClose = findViewById(R.id.kanojo_sign_up_close);
         this.btnClose.setOnClickListener(this);
-        this.imgPhoto = (ImageView) findViewById(R.id.kanojo_user_entry_photo);
-        this.txtName = (EditItemView) findViewById(R.id.kanojo_user_entry_name);
+        this.imgPhoto = findViewById(R.id.kanojo_user_entry_photo);
+        this.txtName = findViewById(R.id.kanojo_user_entry_name);
         this.txtName.setOnClickListener(this);
-        this.txtPassword = (EditItemView) findViewById(R.id.kanojo_user_entry_password);
+        this.txtPassword = findViewById(R.id.kanojo_user_entry_password);
         this.txtPassword.setOnClickListener(this);
         this.txtPassword.hideText();
-        this.txtRePassword = (EditItemView) findViewById(R.id.kanojo_user_entry_re_password);
+        this.txtRePassword = findViewById(R.id.kanojo_user_entry_re_password);
         this.txtRePassword.setOnClickListener(this);
         this.txtRePassword.hideText();
-        this.txtEmail = (EditItemView) findViewById(R.id.kanojo_user_entry_email);
+        this.txtEmail = findViewById(R.id.kanojo_user_entry_email);
         this.txtEmail.setOnClickListener(this);
-        this.txtGender = (EditItemView) findViewById(R.id.kanojo_user_entry_gender);
+        this.txtGender = findViewById(R.id.kanojo_user_entry_gender);
         this.txtGender.setOnClickListener(this);
-        this.txtBirthday = (EditItemView) findViewById(R.id.kanojo_user_entry_birthday);
+        this.txtBirthday = findViewById(R.id.kanojo_user_entry_birthday);
         this.txtBirthday.setOnClickListener(this);
-        this.txtIcon = (EditItemView) findViewById(R.id.kanojo_user_entry_icon);
+        this.txtIcon = findViewById(R.id.kanojo_user_entry_icon);
         this.txtIcon.setOnClickListener(this);
-        this.privacy_btn = (EditItemView) findViewById(R.id.kanojo_user_entry_privacy);
+        this.privacy_btn = findViewById(R.id.kanojo_user_entry_privacy);
         this.privacy_btn.setOnClickListener(this);
-        this.terms_btn = (EditItemView) findViewById(R.id.kanojo_user_entry_terms);
+        this.terms_btn = findViewById(R.id.kanojo_user_entry_terms);
         this.terms_btn.setOnClickListener(this);
-        this.btnSave = (Button) findViewById(R.id.kanojo_sign_up_btn);
+        this.btnSave = findViewById(R.id.kanojo_sign_up_btn);
         this.btnSave.setOnClickListener(this);
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
-        this.btnClose.setOnClickListener((View.OnClickListener) null);
-        this.txtName.setOnClickListener((View.OnClickListener) null);
-        this.txtPassword.setOnClickListener((View.OnClickListener) null);
-        this.txtRePassword.setOnClickListener((View.OnClickListener) null);
-        this.txtEmail.setOnClickListener((View.OnClickListener) null);
-        this.txtGender.setOnClickListener((View.OnClickListener) null);
-        this.txtBirthday.setOnClickListener((View.OnClickListener) null);
-        this.txtIcon.setOnClickListener((View.OnClickListener) null);
-        this.privacy_btn.setOnClickListener((View.OnClickListener) null);
-        this.terms_btn.setOnClickListener((View.OnClickListener) null);
-        this.btnSave.setOnClickListener((View.OnClickListener) null);
+    @Override
+    protected void onDestroy() {
+        this.btnClose.setOnClickListener(null);
+        this.txtName.setOnClickListener(null);
+        this.txtPassword.setOnClickListener(null);
+        this.txtRePassword.setOnClickListener(null);
+        this.txtEmail.setOnClickListener(null);
+        this.txtGender.setOnClickListener(null);
+        this.txtBirthday.setOnClickListener(null);
+        this.txtIcon.setOnClickListener(null);
+        this.privacy_btn.setOnClickListener(null);
+        this.terms_btn.setOnClickListener(null);
+        this.btnSave.setOnClickListener(null);
         super.onDestroy();
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         File f = getFile();
         if (f != null && f.exists()) {
@@ -96,11 +97,11 @@ public class UserEntryActivity extends BaseEditActivity implements View.OnClickL
                 showEditTextDialog(this.r.getString(R.string.user_account_name), this.txtName);
                 return;
             case R.id.kanojo_user_entry_password:
-                input.setInputType(129);
+                input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD|InputType.TYPE_CLASS_TEXT);
                 showEditTextDialog(this.r.getString(R.string.user_account_password), this.txtPassword, input);
                 return;
             case R.id.kanojo_user_entry_re_password:
-                input.setInputType(129);
+                input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD|InputType.TYPE_CLASS_TEXT);
                 showEditTextDialog(this.r.getString(R.string.user_account_re_password), this.txtRePassword, input);
                 return;
             case R.id.kanojo_user_entry_email:
@@ -162,8 +163,7 @@ public class UserEntryActivity extends BaseEditActivity implements View.OnClickL
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void setBitmapFromFile(ImageView view, File file) {
+    protected void setBitmapFromFile(ImageView view, File file) {
         Bitmap setBitmap;
         Bitmap bitmap = loadBitmap(file, 200, 200);
         if (bitmap != null) {

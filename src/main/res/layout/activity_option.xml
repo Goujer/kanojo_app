@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:EditItemView="http://schemas.android.com/apk/res-auto" android:orientation="vertical" android:background="@color/edit_bg" android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:EditItemView="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/edit_bg"
+	android:orientation="vertical">
     <include layout="@layout/titlebar_with_option2"/>
     <jp.co.cybird.barcodekanojoForGAM.view.CustomToolBarView android:layout_width="match_parent" android:layout_height="wrap_content"/>
     <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
@@ -37,7 +42,12 @@
 				android:gravity="start"
 				android:text="@string/setting_about" />
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_rules" android:background="@drawable/row_kanojo_edit_bg_top" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/setting_about_rules"/>
-            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_barcodekanojo" android:background="@drawable/row_kanojo_edit_bg_middle" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/setting_about_barcodekanojo"/>
+			<jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+				android:id="@+id/kanojo_option_barcodekanojo"
+				android:background="@drawable/row_kanojo_edit_bg_middle"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/row_kanojo_edit_txt_height"
+				EditItemView:key="@string/setting_about_barcodekanojo"/>
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_team" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/setting_about_team"/>
 			<TextView
 				style="@style/txt_notice_input"

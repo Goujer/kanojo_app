@@ -120,31 +120,31 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         } else {
             this.txtName.setHoverDescription(getString(R.string.blank_name));
         }
-        this.txtPassword = (EditItemView) findViewById(R.id.kanojo_user_modify_password);
+        this.txtPassword = findViewById(R.id.kanojo_user_modify_password);
         this.txtPassword.setOnClickListener(this);
         this.txtPassword.setTextChangeListner(this.mTextChangeListener);
         this.txtPassword.hideText();
-        this.txtEmail = (EditItemView) findViewById(R.id.kanojo_user_modify_email);
+        this.txtEmail = findViewById(R.id.kanojo_user_modify_email);
         this.txtEmail.setOnClickListener(this);
         this.txtEmail.setTextChangeListner(this.mTextChangeListener);
         this.txtEmail.setValue(this.user.getEmail());
-        this.txtGender = (EditItemView) findViewById(R.id.kanojo_user_modify_gender);
+        this.txtGender = findViewById(R.id.kanojo_user_modify_gender);
         this.txtGender.setOnClickListener(this);
         this.txtGender.setTextChangeListner(this.mTextChangeListener);
         if (this.user.getSex() != null) {
             this.txtGender.setValue(this.user.getSexText(this.app.getUserGenderList()));
         }
-        this.txtBirthday = (EditItemView) findViewById(R.id.kanojo_user_modify_birthday);
+        this.txtBirthday = findViewById(R.id.kanojo_user_modify_birthday);
         this.txtBirthday.setOnClickListener(this);
         this.txtBirthday.setTextChangeListner(this.mTextChangeListener);
         this.txtBirthday.setValue(this.user.getBirthText());
-        this.txtIcon = (EditItemView) findViewById(R.id.kanojo_user_modify_icon);
+        this.txtIcon = findViewById(R.id.kanojo_user_modify_icon);
         this.txtIcon.setOnClickListener(this);
-        this.btnDelete = (Button) findViewById(R.id.kanojo_user_delete_btn);
+        this.btnDelete = findViewById(R.id.kanojo_user_delete_btn);
         this.btnDelete.setOnClickListener(this);
         this.imgAvarta = this.txtIcon.getAvarta();
         this.imgAvarta.setVisibility(View.VISIBLE);
-        this.mChangeDeviceLayout = (LinearLayout) findViewById(R.id.kanojo_user_account_device_layout);
+        this.mChangeDeviceLayout = findViewById(R.id.kanojo_user_account_device_layout);
         if (this.user.getProfile_image_url() != null) {
             ImageCache.setImageAndRequest(this, this.imgAvarta, this.user.getProfile_image_url(), this.mRrm, R.drawable.common_noimage);
         }
@@ -174,11 +174,11 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
             }
         };
         switchLayout();
-        this.mLoadingView = (CustomLoadingView) findViewById(R.id.loadingView);
+        this.mLoadingView = findViewById(R.id.loadingView);
     }
 
-    /* access modifiers changed from: protected */
-    public void onSaveInstanceState(Bundle outState) {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(BaseInterface.EXTRA_REQUEST_CODE, this.mRequestCode);
         this.user.setName(this.txtName.getValue());
         this.user.setBirthFromText(this.txtBirthday.getValue());
@@ -208,26 +208,21 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         bindEvent();
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
-        super.onPause();
-    }
-
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
-        this.btnClose.setOnClickListener((View.OnClickListener) null);
-        this.txtName.setOnClickListener((View.OnClickListener) null);
-        this.txtPassword.setOnClickListener((View.OnClickListener) null);
-        this.txtEmail.setOnClickListener((View.OnClickListener) null);
-        this.txtGender.setOnClickListener((View.OnClickListener) null);
-        this.txtBirthday.setOnClickListener((View.OnClickListener) null);
-        this.txtIcon.setOnClickListener((View.OnClickListener) null);
-        this.btnSave.setOnClickListener((View.OnClickListener) null);
+    @Override
+    protected void onDestroy() {
+        this.btnClose.setOnClickListener(null);
+        this.txtName.setOnClickListener(null);
+        this.txtPassword.setOnClickListener(null);
+        this.txtEmail.setOnClickListener(null);
+        this.txtGender.setOnClickListener(null);
+        this.txtBirthday.setOnClickListener(null);
+        this.txtIcon.setOnClickListener(null);
+        this.btnSave.setOnClickListener(null);
         super.onDestroy();
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         bindEvent();
     }
