@@ -59,9 +59,7 @@
     <string name="edit_photo_ok">Select</string>
     <string name="edit_photo_cancel">Cancel</string>
     <string name="top_log_in">Log In</string>
-    <string name="top_sign_up">Sign Up</string>
-    <string name="sign_up_title">Sign Up</string>
-    <string name="sign_up_name">Name</string>
+	<string name="sign_up_name">Name</string>
     <string name="sign_up_photo">Icon</string>
     <string name="sign_up_btn">Sign Up</string>
     <string name="log_in">Log In</string>
@@ -85,8 +83,7 @@
     <string name="kanojos_search_hint">Input Keyword</string>
     <string name="kanojos_search_toast">Search by</string>
     <string name="menu_kanojos_search">Search</string>
-    <string name="kanojo_edit_save">Save</string>
-    <string name="kanojo_info_title">Product Info</string>
+	<string name="kanojo_info_title">Product Info</string>
     <string name="kanojo_info_close">Back</string>
     <string name="kanojo_info_edit">Edit</string>
     <string name="kanojo_info_country">Country  :  </string>
@@ -373,4 +370,9 @@
     <string name="menu_encode_mecard">Use MECARD</string>
     <string name="msg_sbc_results">Results</string>
 	<string name="error_barcode_format">Barcode KANOJO is only able to scan EAN/UPC codes.</string>
+	<string name="server_url">Server URL</string>
+	<string name="server_port">Server Port</string>
+	<string name="sign_up">Sign Up</string>
+	<string name="save">Save</string>
+	<string name="server_settings">Server Settings</string>
 </resources>

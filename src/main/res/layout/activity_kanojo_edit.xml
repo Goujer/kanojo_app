@@ -16,7 +16,7 @@
                 <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_edit_6_photo" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/common_product_photo"/>
                 <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_edit_7_comment" android:background="@drawable/row_kanojo_edit_bg_name" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/common_product_comment" EditItemView:textColor="@color/editable_color"/>
                 <TextView android:layout_marginTop="8dp" android:text="@string/notice_input" style="@style/txt_notice_input"/>
-                <Button android:id="@+id/kanojo_edit_btn_save" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" android:layout_marginBottom="@dimen/row_kanojo_edit_separator_height" android:text="@string/kanojo_edit_save" style="@style/btn_default"/>
+                <Button android:id="@+id/kanojo_edit_btn_save" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" android:layout_marginBottom="@dimen/row_kanojo_edit_separator_height" android:text="@string/save" style="@style/btn_default"/>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

@@ -6,7 +6,8 @@
     </RelativeLayout>
     <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
         <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/edit_bg" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="match_parent">
-            <TextView android:layout_marginTop="8dp" android:text="@string/sign_up_title" style="@style/txt_notice_input"/>
+            <TextView android:layout_marginTop="8dp"
+				android:text="@string/sign_up" style="@style/txt_notice_input"/>
             <FrameLayout android:layout_width="@dimen/kanojo_info_img_width" android:layout_height="@dimen/kanojo_info_img_width">
                 <ImageView android:id="@+id/kanojo_user_entry_photo" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/common_noimage_product" android:scaleType="fitXY" android:adjustViewBounds="true"/>
                 <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/product_info_cover" android:scaleType="fitXY" android:adjustViewBounds="true"/>
@@ -22,7 +23,11 @@
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_user_entry_privacy" android:background="@drawable/row_kanojo_edit_bg_top" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/setting_legal_privacy"/>
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_user_entry_terms" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/setting_legal_terms"/>
             <TextView android:layout_marginTop="8dp" android:text="@string/notice_terms" style="@style/txt_notice_input"/>
-            <Button android:id="@+id/kanojo_sign_up_btn" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" android:layout_marginBottom="@dimen/row_kanojo_edit_separator_height" android:text="@string/sign_up_btn" style="@style/btn_default"/>
+            <Button android:id="@+id/kanojo_sign_up_btn"
+				android:layout_marginTop="@dimen/row_kanojo_edit_separator_height"
+				android:layout_marginBottom="@dimen/row_kanojo_edit_separator_height"
+				android:text="@string/sign_up"
+				style="@style/btn_default"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

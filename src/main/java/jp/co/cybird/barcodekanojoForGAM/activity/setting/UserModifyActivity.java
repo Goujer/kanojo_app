@@ -40,7 +40,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
 import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
-import twitter4j.conf.PropertyConfiguration;
 
 public class UserModifyActivity extends BaseEditActivity implements View.OnClickListener {
     private static final boolean DEBUG = false;
@@ -240,15 +239,15 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
     }
 
     public void unBindEvent() {
-        this.btnClose.setOnClickListener((View.OnClickListener) null);
-        this.txtName.setOnClickListener((View.OnClickListener) null);
-        this.txtPassword.setOnClickListener((View.OnClickListener) null);
-        this.txtEmail.setOnClickListener((View.OnClickListener) null);
-        this.txtGender.setOnClickListener((View.OnClickListener) null);
-        this.txtBirthday.setOnClickListener((View.OnClickListener) null);
-        this.txtIcon.setOnClickListener((View.OnClickListener) null);
-        this.btnSave.setOnClickListener((View.OnClickListener) null);
-        this.btnDelete.setOnClickListener((View.OnClickListener) null);
+        this.btnClose.setOnClickListener(null);
+        this.txtName.setOnClickListener(null);
+        this.txtPassword.setOnClickListener(null);
+        this.txtEmail.setOnClickListener(null);
+        this.txtGender.setOnClickListener(null);
+        this.txtBirthday.setOnClickListener(null);
+        this.txtIcon.setOnClickListener(null);
+        this.btnSave.setOnClickListener(null);
+        this.btnDelete.setOnClickListener(null);
     }
 
     public void onClick(View v) {
@@ -305,8 +304,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         File f = getFile();
         if (f != null && f.exists()) {
@@ -319,8 +317,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void setBitmapFromFile(ImageView view, File file, int width, int height) {
+    protected void setBitmapFromFile(ImageView view, File file, int width, int height) {
         Bitmap setBitmap;
         Bitmap bitmap = loadBitmap(file, width, height);
         if (bitmap != null) {
@@ -363,8 +360,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void showConfirmDeleteDialog(String message) {
+    protected void showConfirmDeleteDialog(String message) {
         AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.app_name).setMessage(message).setPositiveButton(R.string.common_dialog_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 UserModifyActivity.this.processData();
@@ -413,14 +409,12 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         this.mTaskEndHandler.sendEmptyMessage(0);
     }
 
-    /* access modifiers changed from: protected */
-    public void updateAndClose() {
+    protected void updateAndClose() {
         setResult(BaseInterface.RESULT_MODIFIED);
         close();
     }
 
-    /* access modifiers changed from: private */
-    public void logout() {
+    private void logout() {
         ((BarcodeKanojoApp) getApplication()).logged_out();
     }
 
@@ -449,26 +443,22 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         }
     }
 
-    /* access modifiers changed from: private */
-    public Queue<StatusHolder> getQueue() {
+    private Queue<StatusHolder> getQueue() {
         if (this.mTaskQueue == null) {
             this.mTaskQueue = new LinkedList();
         }
         return this.mTaskQueue;
     }
 
-    /* access modifiers changed from: private */
-    public synchronized void clearQueue() {
+    private synchronized void clearQueue() {
         getQueue().clear();
     }
 
-    /* access modifiers changed from: private */
-    public synchronized boolean isQueueEmpty() {
+    private synchronized boolean isQueueEmpty() {
         return this.mTaskQueue.isEmpty();
     }
 
-    /* access modifiers changed from: protected */
-    public void startDashboard() {
+    protected void startDashboard() {
         finish();
         startActivity(new Intent().setClass(this, KanojosActivity.class));
     }
@@ -509,8 +499,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         }
     }
 
-    /* access modifiers changed from: private */
-    public void executeAutoLoginTask(StatusHolder list) {
+    private void executeAutoLoginTask(StatusHolder list) {
         if (isLoading(list)) {
             Log.d("NguyenTT", "task " + list.key + " is running ");
             return;
@@ -518,7 +507,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         this.mAutoLoginTask = new AutoLoginTask();
         this.mAutoLoginTask.setList(list);
         showProgressDialog();
-        this.mAutoLoginTask.execute(new Void[0]);
+        this.mAutoLoginTask.execute();
     }
 
     class AutoLoginTask extends AsyncTask<Void, Void, Response<?>> {
@@ -660,28 +649,27 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void nextScreen(StatusHolder list) {
-        setResult(BaseInterface.RESULT_MODIFIED);
-        close();
-        dismissProgressDialog();
-    }
+//    void nextScreen(StatusHolder list) {
+//        setResult(BaseInterface.RESULT_MODIFIED);
+//        close();
+//        dismissProgressDialog();
+//    }
 
     public boolean isReadyForUpdate() {
         int mCount = 0;
-        if (this.txtName.getValue() != "" && this.txtName.getValue().equalsIgnoreCase(this.user.getName())) {
-            mCount = 0 + 1;
-        }
-        if (this.txtGender.getValue() != "" && this.txtGender.getValue().equalsIgnoreCase(this.user.getSex())) {
+        if (!this.txtName.getValue().equals("") && this.txtName.getValue().equalsIgnoreCase(this.user.getName())) {
             mCount++;
         }
-        if (this.txtBirthday.getValue() != "" && this.txtBirthday.getValue().equalsIgnoreCase(this.user.getBirthText())) {
+        if (!this.txtGender.getValue().equals("") && this.txtGender.getValue().equalsIgnoreCase(this.user.getSex())) {
+            mCount++;
+        }
+        if (!this.txtBirthday.getValue().equals("") && this.txtBirthday.getValue().equalsIgnoreCase(this.user.getBirthText())) {
             mCount++;
         }
         if (this.imgAvarta.getDrawable() != null) {
             mCount++;
         }
-        if (this.txtEmail.getValue() != "" && this.txtEmail.getValue().equalsIgnoreCase(this.user.getEmail()) && this.txtPassword.getValue() != "" && this.txtPassword.getValue().equalsIgnoreCase(this.user.getPassword())) {
+        if (!this.txtEmail.getValue().equals("") && this.txtEmail.getValue().equalsIgnoreCase(this.user.getEmail()) && !this.txtPassword.getValue().equals("") && this.txtPassword.getValue().equalsIgnoreCase(this.user.getPassword())) {
             mCount++;
         }
         if (this.mRequestCode == 1102) {
@@ -703,23 +691,20 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         return new ProgressDialog(this);
     }
 
-    /* access modifiers changed from: protected */
-    public void dismissProgressDialog() {
+    protected void dismissProgressDialog() {
         if (this.mLoadingView != null) {
             this.mLoadingView.dismiss();
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void startCheckSession() {
+    protected void startCheckSession() {
         if (this.mRequestCode != 1102) {
             super.startCheckSession();
             showProgressDialog();
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void endCheckSession() {
+    protected void endCheckSession() {
         dismissProgressDialog();
     }
 }

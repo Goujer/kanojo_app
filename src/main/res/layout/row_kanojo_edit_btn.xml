@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:layout_width="match_parent" android:layout_height="wrap_content">
     <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/edit_bg" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_btn_height">
-        <Button android:id="@+id/row_kanojo_edit_btn_save" android:text="@string/kanojo_edit_save" style="@style/btn_default"/>
+        <Button android:id="@+id/row_kanojo_edit_btn_save" android:text="@string/save" style="@style/btn_default"/>
     </LinearLayout>
 </RelativeLayout>

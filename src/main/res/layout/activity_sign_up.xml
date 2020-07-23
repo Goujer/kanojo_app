@@ -6,7 +6,7 @@
             <ImageView android:layout_width="wrap_content" android:layout_height="@dimen/common_title_logo_height" android:src="@drawable/common_logo" android:scaleType="fitCenter" android:adjustViewBounds="true" android:layout_centerInParent="true"/>
         </RelativeLayout>
         <ScrollView android:background="@color/edit_bg" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
-            <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="match_parent">
+            <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="wrap_content">
                 <LinearLayout android:orientation="vertical" android:id="@+id/social_setting_layout" android:layout_width="match_parent" android:layout_height="match_parent">
                     <TextView android:id="@+id/social_setting_title" android:layout_marginTop="@dimen/row_setting_margin" android:layout_marginBottom="@dimen/row_setting_margin" android:text="@string/social_setting_singup" style="@style/social_setting_title"/>
                     <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:layout_gravity="center_vertical" android:id="@+id/social_setting_facebook" android:background="@drawable/row_kanojo_edit_bg_top" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/social_setting_facebook" EditItemView:iconDrawable="@drawable/icon_fb" EditItemView:addDrawable="@drawable/blue_check"/>

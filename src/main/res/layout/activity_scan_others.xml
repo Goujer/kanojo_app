@@ -22,7 +22,7 @@
 				android:text="@string/notice_input"
 				android:layout_height="wrap_content"
 				android:layout_width="match_parent"/>
-            <Button android:id="@+id/scan_others_btn_save" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" android:layout_marginBottom="@dimen/row_kanojo_edit_separator_height" android:text="@string/kanojo_edit_save" style="@style/btn_default"/>
+            <Button android:id="@+id/scan_others_btn_save" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" android:layout_marginBottom="@dimen/row_kanojo_edit_separator_height" android:text="@string/save" style="@style/btn_default"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

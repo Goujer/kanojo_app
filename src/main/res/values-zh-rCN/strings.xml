@@ -28,9 +28,7 @@
     <string name="edit_photo_ok">选择</string>
     <string name="edit_photo_cancel">取消</string>
     <string name="top_log_in">Log In</string>
-    <string name="top_sign_up">Sign Up</string>
-    <string name="sign_up_title">Sign Up</string>
-    <string name="sign_up_name">游戏内昵称</string>
+	<string name="sign_up_name">游戏内昵称</string>
     <string name="sign_up_photo">游戏内图标</string>
     <string name="sign_up_btn">Sign Up</string>
     <string name="log_in">Log In</string>
@@ -54,8 +52,7 @@
     <string name="kanojos_search_hint">输入关键词</string>
     <string name="kanojos_search_toast">Search by</string>
     <string name="menu_kanojos_search">Search</string>
-    <string name="kanojo_edit_save">保存</string>
-    <string name="kanojo_info_title">Product Info</string>
+	<string name="kanojo_info_title">Product Info</string>
     <string name="kanojo_info_close">Back</string>
     <string name="kanojo_info_edit">Edit</string>
     <string name="kanojo_info_country">Country  :  </string>
@@ -205,4 +202,6 @@
     <string name="preferences_disable_continuous_focus_summary">Use only standard focus mode</string>
     <string name="preferences_try_bsplus">Try Barcode Scanner+</string>
     <string name="preferences_try_bsplus_summary">Enhanced with new features and interface</string>
+	<string name="sign_up">Sign Up</string>
+	<string name="save">保存</string>
 </resources>
