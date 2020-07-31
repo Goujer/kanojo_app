@@ -62,14 +62,14 @@ public class Live2dUtil {
             setting.setParts(partsID, partsItemNo);
             return true;
         }
-        String partsUrl = Defs.URL_BASE_LIVE2D_EXTPARTS + File.separator + partsID + File.separator + partsID + "_" + String.format("%03d", new Object[]{Integer.valueOf(partsItemNo)}) + ".zip";
+        String partsUrl = Defs.URL_BASE_LIVE2D_EXTPARTS + File.separator + partsID + File.separator + partsID + "_" + String.format("%03d", partsItemNo) + ".zip";
         if (this.map.containsKey(partsUrl)) {
-            int count = this.map.get(partsUrl).intValue();
+            int count = this.map.get(partsUrl);
             if (count > 5) {
                 setting.setParts(partsID, 0);
                 return true;
             }
-            this.map.put(partsUrl, Integer.valueOf(count + 1));
+            this.map.put(partsUrl, count + 1);
         } else {
             this.map.put(partsUrl, 0);
         }

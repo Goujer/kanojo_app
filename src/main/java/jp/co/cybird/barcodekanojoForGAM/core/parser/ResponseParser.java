@@ -16,8 +16,7 @@ public class ResponseParser extends AbstractJSONParser<Response<BarcodeKanojoMod
         this.mSubParser = subParser;
     }
 
-    /* access modifiers changed from: protected */
-    public Response<BarcodeKanojoModel> parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected Response<BarcodeKanojoModel> parseInner(JSONObject object) throws BarcodeKanojoException {
         Response<BarcodeKanojoModel> response = new Response<>();
         try {
             if (!object.has("code") || object.isNull("code")) {

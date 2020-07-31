@@ -5,7 +5,8 @@
 		android:id="@+id/edit_item_key"
 		style="@style/txt_kanojo_edit_key"
 		android:layout_marginLeft="@dimen/row_setting_icon_margin"
-		android:singleLine="true"/>
+		android:singleLine="true"
+		android:layout_marginStart="@dimen/row_setting_icon_margin" />
     <TextView
 		android:id="@+id/edit_item_value"
 		style="@style/txt_kanojo_edit_value"
@@ -13,7 +14,8 @@
 		android:layout_weight="1"
 		android:ellipsize="end"
 		android:gravity="right"
-		android:singleLine="true" />
+		android:singleLine="true"
+		android:layout_marginStart="10dp" />
     <ImageView android:layout_gravity="center_vertical" android:id="@+id/edit_item_avartar" android:background="@drawable/common_noimage" android:visibility="gone" android:layout_width="@dimen/row_setting_icon_height" android:layout_height="@dimen/row_setting_icon_height" android:layout_marginLeft="@dimen/row_setting_icon_margin" android:layout_marginRight="@dimen/row_setting_icon_margin" android:scaleType="fitCenter" android:adjustViewBounds="true"/>
     <ImageView android:layout_gravity="center_vertical" android:id="@+id/edit_item_add" android:background="@drawable/icon_add" android:visibility="gone" android:layout_width="@dimen/signup_setting_skip_icon_width" android:layout_height="@dimen/signup_setting_skip_icon_height" android:layout_marginLeft="@dimen/row_setting_icon_margin" android:layout_marginRight="@dimen/row_setting_icon_margin" android:scaleType="fitCenter" android:adjustViewBounds="true"/>
     <ImageView android:layout_gravity="right|center_vertical|center_horizontal|center" android:id="@+id/edit_item_arrow" android:background="@drawable/arrow_setting" android:visibility="invisible" android:layout_width="@dimen/signup_setting_arrow_icon_width" android:layout_height="@dimen/signup_setting_arrow_icon_height" android:layout_marginLeft="@dimen/signup_setting_arrow_icon_margin" android:layout_marginRight="@dimen/signup_setting_arrow_icon_margin" android:scaleType="fitCenter" android:adjustViewBounds="true"/>
