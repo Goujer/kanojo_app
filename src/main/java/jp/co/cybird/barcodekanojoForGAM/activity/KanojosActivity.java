@@ -46,7 +46,6 @@ import jp.co.cybird.barcodekanojoForGAM.view.MoreBtnView;
 import jp.co.cybird.barcodekanojoForGAM.view.UserProfileView;
 
 public class KanojosActivity extends BaseKanojosActivity implements View.OnClickListener, MoreBtnView.OnMoreClickListener, KanojoAdapter.OnKanojoClickListener {
-    private static final boolean DEBUG = false;
     private static final int DEFAULT_LIMIT = 6;
     private static final int FRIENDS_MAX = 100;
     private static final int RANKING_MAX = 100;

@@ -14,7 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Base64Util {
     private static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
-    private static final boolean DEBUG = false;
+
     private static String DEFAULT_KEY_ALGORITHM = "AES";
     static final String V1_DATE_FORMAT = "yyyyMMddHHmmss";
 

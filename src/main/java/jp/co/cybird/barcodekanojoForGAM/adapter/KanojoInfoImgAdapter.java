@@ -17,7 +17,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.ImageCache;
 import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 
 public class KanojoInfoImgAdapter extends BaseAdapter implements ObservableAdapter {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "KanojoInfoImgAdapter";
     private Context context;
     private int galleryIconSize;

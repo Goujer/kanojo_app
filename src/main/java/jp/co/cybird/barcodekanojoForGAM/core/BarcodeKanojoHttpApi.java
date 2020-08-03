@@ -43,7 +43,7 @@ import org.apache.http.message.BasicNameValuePair;
 import twitter4j.conf.PropertyConfiguration;
 
 public class BarcodeKanojoHttpApi {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "BarcodeKanojoHttpApi";
     private static final String URL_API_ACCOUNT_DELETE = "/api/account/delete.json";
     private static final String URL_API_ACCOUNT_SHOW = "/api/account/show.json";

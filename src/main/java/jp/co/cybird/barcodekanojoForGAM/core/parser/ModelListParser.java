@@ -9,7 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ModelListParser extends AbstractJSONParser<ModelList<BarcodeKanojoModel>> {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "ModelListParser";
     private String mName;
     private JSONParser<? extends BarcodeKanojoModel> mSubParser;

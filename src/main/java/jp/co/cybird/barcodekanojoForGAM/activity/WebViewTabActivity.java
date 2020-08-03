@@ -25,7 +25,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.WebViewData;
 import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
 
 public class WebViewTabActivity extends BaseKanojosActivity implements View.OnClickListener {
-    private final boolean DEBUG = false;
     private String extraWebViewURL;
     private RelativeLayout mProgressBar;
     private WebView webview;

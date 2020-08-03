@@ -14,7 +14,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.Live2dUtil;
 import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 
 public class ProductAndKanojoView extends RelativeLayout {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "ProductAndKanojoView";
     private ImageView imgLeft = findViewById(R.id.product_and_kanojo_left);
     private ImageView imgRight = findViewById(R.id.product_and_kanojo_right);

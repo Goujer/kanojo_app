@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ModelParser extends AbstractJSONParser<BarcodeKanojoModel> {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "ModelParser";
     private String mName;
     private JSONParser<? extends BarcodeKanojoModel> mSubParser;

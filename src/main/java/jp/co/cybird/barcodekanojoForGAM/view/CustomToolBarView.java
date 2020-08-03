@@ -17,7 +17,7 @@ import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.activity.setting.OptionActivity;
 
 public class CustomToolBarView extends LinearLayout implements View.OnClickListener {
-    private static final boolean DEBUG = false;
+
     private Context mContext;
     private LinearLayout mDashboard;
     private LinearLayout mKanojos;

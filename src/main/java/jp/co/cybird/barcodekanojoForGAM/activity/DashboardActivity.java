@@ -42,7 +42,6 @@ import jp.co.cybird.barcodekanojoForGAM.view.DashboardHeaderView;
 import jp.co.cybird.barcodekanojoForGAM.view.UserProfileView;
 
 public class DashboardActivity extends BaseKanojosActivity implements View.OnClickListener, AbsListView.OnScrollListener, DashboardAdapter.OnKanojoClickListener {
-    private static final boolean DEBUG = false;
     private static final int DEFAULT_LIMIT = 6;
     protected static final String TAG = "DashboardActivity";
     private int code;

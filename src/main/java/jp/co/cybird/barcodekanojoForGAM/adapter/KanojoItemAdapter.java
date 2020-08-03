@@ -21,7 +21,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.ImageCache;
 import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 
 public class KanojoItemAdapter extends BaseKanojoItemAdapter implements ObservableAdapter {
-    private static final boolean DEBUG = false;
+
     public static final int MODE_EXTEND_DATE = 4;
     public static final int MODE_EXTEND_GIFT = 5;
     private static final String TAG = "KanojoAdapter";

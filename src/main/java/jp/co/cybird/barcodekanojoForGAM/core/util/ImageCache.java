@@ -17,7 +17,7 @@ import java.util.Observable;
 import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 
 public class ImageCache {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "ImageCache";
     private static HashMap<String, SoftReference<Bitmap>> cache = new HashMap<>();
 

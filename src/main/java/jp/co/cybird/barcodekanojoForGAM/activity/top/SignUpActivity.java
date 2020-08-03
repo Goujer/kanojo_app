@@ -47,7 +47,6 @@ import twitter4j.auth.AccessToken;
 import twitter4j.conf.PropertyConfiguration;
 
 public class SignUpActivity extends BaseEditActivity implements View.OnClickListener, FaceBookUtil.OnFaceBoookListener, TwitterDialog.Listener {
-    public static final boolean DEBUG = false;
     public static final String TAG = "SignUpActivity";
     private Button btnBack;
     EditItemView btnFaceBook;

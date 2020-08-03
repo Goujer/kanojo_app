@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MessageParser extends AbstractJSONParser<MessageModel> {
-    public static final boolean DEBUG = false;
     private String[] mNames;
 
     public MessageParser(String... names) {

@@ -17,7 +17,6 @@ public class Response<T extends BarcodeKanojoModel> extends ModelList<T> impleme
     public static final int CODE_ERROR_UNAUTHORIZED = 401;
     public static final int CODE_FINISHED_CONSUME_TICKET = 600;
     public static final int CODE_SUCCESS = 200;
-    public static final boolean DEBUG = true;
     public static final String TAG = "Response";
     private static final long serialVersionUID = 1;
     private int code;

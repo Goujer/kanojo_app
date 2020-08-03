@@ -28,7 +28,6 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 class RemoteResourceFetcher extends Observable {
-    public static final boolean DEBUG = false;
     public static final String TAG = "RemoteResourceFetcher";
     /* access modifiers changed from: private */
     public ConcurrentHashMap<Request, Callable<Request>> mActiveRequestsMap = new ConcurrentHashMap<>();

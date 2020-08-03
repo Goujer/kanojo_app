@@ -45,7 +45,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.Live2dUtil;
 import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
 
 public class ScanActivity extends BaseActivity implements View.OnClickListener {
-    private static final boolean DEBUG = false;
     private static final int LONG_DELAY = 3500;
     private static final String TAG = "ScanActivity";
     private final int SCAN_RESULT_DEFAULT = 0;

@@ -14,7 +14,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 
 public abstract class BaseKanojosActivity extends BaseActivity {
-    private static final boolean DEBUG = false;
+
     public static final String TAG = "BaseKanojosActivity";
     private Live2dTask mLive2dTask;
 

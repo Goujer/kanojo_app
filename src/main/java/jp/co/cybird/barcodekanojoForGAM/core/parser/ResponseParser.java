@@ -8,7 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ResponseParser extends AbstractJSONParser<Response<BarcodeKanojoModel>> {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "ResponseParser";
     private JSONParser<? extends BarcodeKanojoModel>[] mSubParser;
 

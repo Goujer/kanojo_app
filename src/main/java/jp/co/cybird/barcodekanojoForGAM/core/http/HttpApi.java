@@ -46,7 +46,7 @@ public class HttpApi {
     private static final String BOUNDARY = "0xKhTmLbOuNdArY";
     private static final String CLIENT_LANGUAGE_HEADER = "Accept-Language";
     private static final String CLIENT_VERSION_HEADER = "User-Agent";
-    private static final boolean DEBUG = false;
+
     private static final String DEFAULT_CLIENT_LANGUAGE = "en";
     private static final String DEFAULT_CLIENT_VERSION = "jp.co.cybrid.barcodekanojo";
     private static final String TAG = "HttpApi";

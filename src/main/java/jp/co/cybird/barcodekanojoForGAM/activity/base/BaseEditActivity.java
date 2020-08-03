@@ -43,7 +43,6 @@ import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 import jp.co.cybird.barcodekanojoForGAM.view.ProductAndKanojoView;
 
 public abstract class BaseEditActivity extends BaseActivity implements BaseInterface {
-    protected static final boolean DEBUG = false;
     protected static final String TAG = "BaseEditActivity";
     private ModelList<Category> mCategories;
     protected String[] mCategoryList = {""};
@@ -566,7 +565,6 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
     }
 
     protected class SignUpAndUpdateAccountTask extends AsyncTask<Void, Void, Response<?>> {
-        private static final boolean DEBUG = false;
         private static final String TAG = "SignUpUpdateAccountTask";
         private int mAction;
         private Exception mReason;

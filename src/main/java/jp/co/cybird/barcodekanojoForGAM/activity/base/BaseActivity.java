@@ -41,7 +41,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.PhoneInfo;
 import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
 
 public abstract class BaseActivity extends GreeBaseActivity implements BaseInterface, DialogInterface.OnDismissListener {
-    private static boolean DEBUG = true;
     protected static final String TAG = "BaseActivity";
     public static int mActivityCount;
     private int code = 0;
@@ -50,7 +49,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     final OnAccountsUpdateListener mChangeAccountListener = new OnAccountsUpdateListener() {
         public void onAccountsUpdated(Account[] accounts) {
             if (!new ApplicationSetting(BaseActivity.this.getApplicationContext()).getUserGoogleAccount().equalsIgnoreCase(new PhoneInfo(BaseActivity.this.getApplicationContext()).getGoogleAccount())) {
-                if (BaseActivity.DEBUG) {
+                if (Defs.DEBUG) {
                     Log.d(BaseActivity.TAG, "Google Account has changed, will call verify api");
                 }
                 try {
@@ -63,17 +62,17 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     };
     public BroadcastReceiver mChangeGmailReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
-            if (BaseActivity.DEBUG) {
+            if (Defs.DEBUG) {
                 Log.d(BaseActivity.TAG, "mChangeGmailReceiver: " + intent + ", at " + this);
             }
             String saveGoogle = new ApplicationSetting(context).getUserGoogleAccount();
             String curGoogle = new PhoneInfo(context).getGoogleAccount();
-            if (BaseActivity.DEBUG) {
+            if (Defs.DEBUG) {
                 Log.d(BaseActivity.TAG, "saved Google Account: " + saveGoogle);
                 Log.d(BaseActivity.TAG, "current Google Account: " + curGoogle);
             }
             if (!saveGoogle.equalsIgnoreCase(curGoogle)) {
-                if (BaseActivity.DEBUG) {
+                if (Defs.DEBUG) {
                     Log.d(BaseActivity.TAG, "Google Account has changed, will call verify api");
                 }
                 BaseActivity.this.showAlertFullStorageDialog("gmail has changed....");
@@ -85,10 +84,10 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     private AlertDialog mFullStorageDialog;
     private BroadcastReceiver mLoggedOutReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
-            if (BaseActivity.DEBUG) {
+            if (Defs.DEBUG) {
                 Log.d("NguyenTT", "Current On Recieve: " + BaseActivity.mActivityCount);
             }
-            if (BaseActivity.DEBUG) {
+            if (Defs.DEBUG) {
                 Log.d(BaseActivity.TAG, "onReceive: " + intent + ", at " + this);
             }
             BaseActivity.this.finish();
@@ -98,7 +97,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     private RefreshTask mRefreshTask;
     public BroadcastReceiver mWarningFullSpaceReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
-            if (BaseActivity.DEBUG) {
+            if (Defs.DEBUG) {
                 Log.d(BaseActivity.TAG, "mWarningFullSpaceReceiver: " + intent + ", at " + this);
             }
             BaseActivity.this.showAlertFullStorageDialog(BaseActivity.this.getString(R.string.error_out_of_memory));
@@ -115,7 +114,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         super.onCreate(savedInstanceState);
         mActivityCount++;
         String name = getLocalClassName();
-        if (DEBUG) {
+        if (Defs.DEBUG) {
             Log.d("NguyenTT", "Start Activity: " + name + " Current: " + mActivityCount);
         }
         registerReceiver(this.mLoggedOutReceiver, new IntentFilter(BarcodeKanojoApp.INTENT_ACTION_LOGGED_OUT));
@@ -126,7 +125,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     protected void onResume() {
         super.onResume();
         if (this.mAutoRefresh) {
-            if (DEBUG) {
+            if (Defs.DEBUG) {
                 Log.d(TAG, "Check session for Activity " + getLocalClassName());
             }
             startCheckSession();
@@ -141,7 +140,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
 
     @Override
     protected void onDestroy() {
-        if (DEBUG) {
+        if (Defs.DEBUG) {
             mActivityCount--;
             Log.d("NguyenTT", "End Activity: " + getLocalClassName() + " Current: " + mActivityCount);
         }
@@ -171,37 +170,37 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     protected void checkAndCopyUser() {
         User user = ((BarcodeKanojoApp) getApplication()).getUser();
         if (user.getName() == null) {
-            if (DEBUG) {
+            if (Defs.DEBUG) {
                 Log.d("TAG", "Name copied:" + this.tmpUser.getName());
             }
             user.setName(this.tmpUser.getName());
         }
         if (user.getDescription() == null) {
-            if (DEBUG) {
+            if (Defs.DEBUG) {
                 Log.d("TAG", "Description copied:" + this.tmpUser.getDescription());
             }
             user.setDescription(this.tmpUser.getDescription());
         }
         if (user.getBirthText() == null) {
-            if (DEBUG) {
+            if (Defs.DEBUG) {
                 Log.d("TAG", "Birthday copied:" + this.tmpUser.getBirthText());
             }
             user.setBirthFromText(this.tmpUser.getBirthText());
         }
         if (user.getSex() == null) {
-            if (DEBUG) {
+            if (Defs.DEBUG) {
                 Log.d("TAG", "Sex copied:" + this.tmpUser.getSex());
             }
             user.setSex(this.tmpUser.getSex());
         }
         if (user.getEmail() == null) {
-            if (DEBUG) {
+            if (Defs.DEBUG) {
                 Log.d("TAG", "Email copied:" + this.tmpUser.getEmail());
             }
             user.setEmail(this.tmpUser.getEmail());
         }
         if (user.getPassword() == null) {
-            if (DEBUG) {
+            if (Defs.DEBUG) {
                 Log.d("TAG", "Password copied:" + this.tmpUser.getPassword());
             }
             user.setPassword(this.tmpUser.getPassword());
@@ -217,12 +216,12 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo();
             User old = barcodeKanojo.getUser();
             if (old == null) {
-                if (DEBUG) {
+                if (Defs.DEBUG) {
                     Log.d(TAG, "new user id: " + user.getId());
                 }
                 barcodeKanojo.setUser(user);
             } else if (user.getId() == old.getId()) {
-                if (DEBUG) {
+                if (Defs.DEBUG) {
                     Log.d(TAG, "update user id: " + user.getId() + " , stamina:" + user.getStamina());
                 }
                 backupUser(old);
@@ -240,7 +239,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     protected int getCodeAndShowAlert(Response<?> response, Exception e, final OnDialogDismissListener listener) throws BarcodeKanojoException {
         if (response == null) {
             showToast(getResources().getString(R.string.error_internet));
-            if (!DEBUG) {
+            if (!Defs.DEBUG) {
                 return 0;
             }
             if (e != null) {
@@ -274,7 +273,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             case 404:
             case 500:
             case 503:
-                if (DEBUG) {
+                if (Defs.DEBUG) {
                     showToast("code:" + this.code + " ");
                     break;
                 }
@@ -427,21 +426,21 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         Intent intent = new Intent(getApplicationContext(), CustomWebViewActivity.class);
         String locale = Locale.getDefault().getLanguage();
         String uuid = ((BarcodeKanojoApp) getApplicationContext()).getUUID();
-        if (DEBUG) {
+        if (Defs.DEBUG) {
             Log.e("lang", locale);
         }
         if (locale.equals(Locale.JAPANESE.toString())) {
-            if (DEBUG) {
+            if (Defs.DEBUG) {
                 Log.e("access lang JA", getGeneralUrl(Defs.URL_GENERAL_JA, uuid));
             }
             intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, getGeneralUrl(Defs.URL_GENERAL_JA, uuid));
         } else if (locale.equals(Locale.CHINESE.toString())) {
-            if (DEBUG) {
+            if (Defs.DEBUG) {
                 Log.e("access lang ZH", getGeneralUrl(Defs.URL_GENERAL_ZH, uuid));
             }
             intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, getGeneralUrl(Defs.URL_GENERAL_ZH, uuid));
         } else {
-            if (DEBUG) {
+            if (Defs.DEBUG) {
                 Log.e("access lang EN", getGeneralUrl(Defs.URL_GENERAL_EN, uuid));
             }
             intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, getGeneralUrl(Defs.URL_GENERAL_EN, uuid));
@@ -464,11 +463,11 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
 
     public void executeRefreshSession() {
         if (this.mRefreshTask == null || this.mRefreshTask.getStatus() == AsyncTask.Status.FINISHED) {
-            if (DEBUG) {
+            if (Defs.DEBUG) {
                 Log.e("NguyenTT", "Start Run " + this.mRefreshTask);
             }
             this.mRefreshTask = (RefreshTask) new RefreshTask().execute(new Void[0]);
-        } else if (DEBUG) {
+        } else if (Defs.DEBUG) {
             Log.e(TAG, "Query already running attempting to cancel: " + this.mRefreshTask);
         }
     }
@@ -493,13 +492,13 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
 
         public void onPostExecute(Response<?> response) {
             try {
-                if (this.mReason != null && BaseActivity.DEBUG) {
+                if (this.mReason != null && Defs.DEBUG) {
                     Log.d("NguyenTT", "Error message: " + this.mReason.getMessage());
                 }
                 if (response == null) {
                     throw new BarcodeKanojoException("response is null! \n" + this.mReason);
                 }
-                if (BaseActivity.DEBUG) {
+                if (Defs.DEBUG) {
                     Response.checkResponse(response);
                 }
                 switch (response.getCode()) {
@@ -518,7 +517,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
                         return;
                 }
             } catch (BarcodeKanojoException e) {
-                if (BaseActivity.DEBUG) {
+                if (Defs.DEBUG) {
                     e.printStackTrace();
                 }
                 BaseActivity.this.endCheckSession();
@@ -536,11 +535,11 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
 
     public void executeCheckSession() {
         if (this.mCheckSessionTask == null || this.mCheckSessionTask.getStatus() == AsyncTask.Status.FINISHED) {
-            if (DEBUG) {
+            if (Defs.DEBUG) {
                 Log.e("NguyenTT", "Start Run " + this.mCheckSessionTask);
             }
             this.mCheckSessionTask = (CheckSessionTask) new CheckSessionTask().execute(new Void[0]);
-        } else if (DEBUG) {
+        } else if (Defs.DEBUG) {
             Log.e(TAG, "Query already running attempting to cancel: " + this.mCheckSessionTask);
         }
     }
@@ -565,13 +564,13 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
 
         public void onPostExecute(Response<?> response) {
             try {
-                if (this.mReason != null && BaseActivity.DEBUG) {
+                if (this.mReason != null && Defs.DEBUG) {
                     Log.d("NguyenTT", "Error message: " + this.mReason.getMessage());
                 }
                 if (response == null) {
                     throw new BarcodeKanojoException("response is null! \n" + this.mReason);
                 }
-                if (BaseActivity.DEBUG) {
+                if (Defs.DEBUG) {
                     Response.checkResponse(response);
                 }
                 switch (response.getCode()) {
@@ -590,7 +589,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
                         return;
                 }
             } catch (BarcodeKanojoException e) {
-                if (BaseActivity.DEBUG) {
+                if (Defs.DEBUG) {
                     e.printStackTrace();
                 }
                 BaseActivity.this.endCheckSession();
@@ -638,7 +637,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         getBaseContext().getResources().updateConfiguration(newConfig, getBaseContext().getResources().getDisplayMetrics());
-        if (DEBUG) {
+        if (Defs.DEBUG) {
             Log.d(TAG, "locate changed, refresh http...");
         }
         ((BarcodeKanojoApp) getApplication()).changeLocate();

@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class Live2dDiskCache implements DiskCache {
-    private static final boolean DEBUG = false;
+
     private static final int MIN_FILE_SIZE_IN_BYTES = 100;
     private static final String NOMEDIA = ".nomedia";
     private static final String TAG = "Live2dDiskCache";

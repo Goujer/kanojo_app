@@ -9,7 +9,7 @@ import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 
 public class PrivacyInfoActivity extends BaseActivity implements View.OnClickListener {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "PrivacyInfoActivity";
     private Button btnNO;
     private Button btnOK;

@@ -18,7 +18,6 @@ public class Product implements BarcodeKanojoModel, Parcelable {
             return new Product[size];
         }
     };
-    public static final boolean DEBUG = false;
     public static final String TAG = "Product";
     private String barcode;
     private String category;

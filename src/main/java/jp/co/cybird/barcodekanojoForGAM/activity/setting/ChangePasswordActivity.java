@@ -18,7 +18,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.Digest;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 
 public class ChangePasswordActivity extends BaseEditActivity implements View.OnClickListener {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "ChangePasswordActivity";
     private Button btnClose;
     private Button btnSave;

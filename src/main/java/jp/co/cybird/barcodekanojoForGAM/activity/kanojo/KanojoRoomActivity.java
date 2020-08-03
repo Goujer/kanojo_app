@@ -74,7 +74,7 @@ import jp.co.cybird.barcodekanojoForGAM.view.DialogTextView;
 
 @SuppressLint({"SetJavaScriptEnabled", "NewApi"})
 public class KanojoRoomActivity extends BaseActivity implements View.OnClickListener, Observer {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "KanojoRoomActivity";
     private Button btnClose;
     private Button btnDate;

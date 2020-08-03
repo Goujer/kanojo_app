@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 
 public class WebViewActivity extends Activity {
-    public static final boolean DEBUG = false;
     public static final String INTENT_EXTRA_URL = "jp.co.cybird.barcodekanojoForGAM.WebViewActivity.INTENT_EXTRA_URL";
     private static final String TAG = "WebViewActivity";
     private BroadcastReceiver mLoggedOutReceiver = new BroadcastReceiver() {

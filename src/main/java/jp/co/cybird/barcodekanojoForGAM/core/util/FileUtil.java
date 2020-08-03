@@ -27,7 +27,6 @@ import jp.co.cybird.barcodekanojoForGAM.preferences.Preferences;
 public class FileUtil {
     public static final int AT_LEAST_AVAILABLE_SPACE = 10;
     private static final int CHUNK_SIZE = 32768;
-    public static final boolean DEBUG = false;
     public static final int ICON_QUALITY = 100;
     public static final String ICON_TEMP = "icon_temp.png";
     public static final String PRODUCT_TEMP = "";

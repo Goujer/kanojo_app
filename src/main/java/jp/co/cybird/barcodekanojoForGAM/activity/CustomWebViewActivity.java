@@ -17,7 +17,6 @@ import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseKanojosActivity;
 
 public class CustomWebViewActivity extends BaseKanojosActivity implements View.OnClickListener {
-    private final boolean DEBUG = false;
     private String extraWebViewURL;
     private RelativeLayout mProgressBar;
     private WebView mWebview;

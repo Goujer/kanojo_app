@@ -18,7 +18,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.ViewUtil;
 import jp.co.cybird.barcodekanojoForGAM.preferences.Preferences;
 
 public class SettingActivity extends PreferenceActivity implements BaseInterface {
-    private static final boolean DEBUG = false;
+
     public static final String KEY_PREF_ABOUT = "about_preference";
     public static final String KEY_PREF_TWITTER = "twitter_preference";
     public static final String KEY_PREF_WALLPAPER = "list_preference";

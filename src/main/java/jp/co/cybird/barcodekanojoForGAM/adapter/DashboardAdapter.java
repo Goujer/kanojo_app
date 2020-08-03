@@ -20,7 +20,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.ImageCache;
 import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 
 public class DashboardAdapter extends BaseActivityModelAdapter implements ObservableAdapter {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "DashboardAdapter";
     private boolean isFirst = false;
     private Handler mHandler;

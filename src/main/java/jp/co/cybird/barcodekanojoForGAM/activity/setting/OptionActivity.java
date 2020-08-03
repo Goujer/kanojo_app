@@ -27,7 +27,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.ImageCache;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 
 public class OptionActivity extends BaseActivity implements View.OnClickListener {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "OptionActivity";
     private EditItemView account_btn;
     private EditItemView bck_btn;

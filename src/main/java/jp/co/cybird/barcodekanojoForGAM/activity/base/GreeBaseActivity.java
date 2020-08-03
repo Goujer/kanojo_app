@@ -17,7 +17,7 @@ import android.widget.TextView;
 import jp.co.cybird.barcodekanojoForGAM.R;
 
 public abstract class GreeBaseActivity extends Activity {
-    private static final boolean DEBUG = false;
+
     public static final String FLG_NO_ANIMATION = "flg_no_animation";
     private static final String PREF_KEY = "BarcodeKanojoGree";
     private static final String PREF_KEY_GREE_ID = "GreeUserId";

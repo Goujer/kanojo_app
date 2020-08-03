@@ -8,9 +8,9 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import jp.co.cybird.barcodekanojoForGAM.Defs;
 
 public class CategoryParser extends AbstractJSONParser<ModelList<Category>> {
-    public static boolean DEBUG = true;
     public static final String TAG = "CategoryParser";
 
     /* access modifiers changed from: protected */
@@ -18,7 +18,7 @@ public class CategoryParser extends AbstractJSONParser<ModelList<Category>> {
         ModelList<Category> res = new ModelList<>();
         try {
             if (!object.has("categories") || object.isNull("categories")) {
-                if (DEBUG) {
+                if (Defs.DEBUG) {
                     Log.d(TAG, "Categories is null");
                 }
                 return null;

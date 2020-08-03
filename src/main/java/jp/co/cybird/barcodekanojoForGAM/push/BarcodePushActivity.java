@@ -28,7 +28,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
 
 public class BarcodePushActivity extends BaseKanojosActivity {
-    public static final boolean DEBUG = false;
     private static final String PUSH_NOTIFICATION_P1 = "webview";
     private static final String PUSH_NOTIFICATION_P2 = "dashboard";
     private static final String PUSH_NOTIFICATION_P3 = "kanojo";
