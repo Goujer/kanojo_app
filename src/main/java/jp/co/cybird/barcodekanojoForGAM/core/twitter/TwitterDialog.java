@@ -45,19 +45,15 @@ public class TwitterDialog extends Dialog {
     private static final String LOG_TAG = "FacebookSDK.WebDialog";
     private static final String TAG = "WebDialog";
     private static final String USER_AGENT = "user_agent";
-    /* access modifiers changed from: private */
-    public FrameLayout contentFrameLayout;
-    /* access modifiers changed from: private */
-    public ImageView crossImageView;
-    /* access modifiers changed from: private */
-    public boolean isDetached;
+    private FrameLayout contentFrameLayout;
+    private ImageView crossImageView;
+    private boolean isDetached;
     private boolean listenerCalled;
     private Context mContext;
     private ProgressDialog mProgressDialog;
     private OnCompleteListener onCompleteListener;
     private String url;
-    /* access modifiers changed from: private */
-    public WebView webView;
+    private WebView webView;
 
     public interface Listener {
         void onFailure(TwitterDialog twitterDialog, Result result);
@@ -131,8 +127,7 @@ public class TwitterDialog extends Dialog {
         super.onAttachedToWindow();
     }
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setOnCancelListener(new DialogInterface.OnCancelListener() {
             public void onCancel(DialogInterface dialogInterface) {
@@ -243,8 +238,7 @@ public class TwitterDialog extends Dialog {
         start(Defs.USER_TWITTER_CONSUMER_KEY(), Defs.USER_TWITTER_CONSUMER_SECRET(), CALLBACK_URL, false, listener);
     }
 
-    /* access modifiers changed from: protected */
-    public ProgressDialog showProgressDialog() {
+    protected ProgressDialog showProgressDialog() {
         if (this.mProgressDialog == null) {
             ProgressDialog dialog = new ProgressDialog(this.mContext);
             dialog.setTitle(R.string.app_name);
@@ -257,8 +251,7 @@ public class TwitterDialog extends Dialog {
         return this.mProgressDialog;
     }
 
-    /* access modifiers changed from: protected */
-    public void dismissProgressDialog() {
+    protected void dismissProgressDialog() {
         try {
             if (this.mProgressDialog != null) {
                 this.mProgressDialog.dismiss();
@@ -270,15 +263,12 @@ public class TwitterDialog extends Dialog {
     private class TwitterOAuthTask extends AsyncTask<Object, Void, Result> {
         private AccessToken accessToken;
         private volatile boolean authorizationDone;
-        /* access modifiers changed from: private */
-        public String callbackUrl;
-        /* access modifiers changed from: private */
-        public boolean dummyCallbackUrl;
+        private String callbackUrl;
+        private boolean dummyCallbackUrl;
         private Listener listener;
         private RequestToken requestToken;
         private Twitter twitter;
-        /* access modifiers changed from: private */
-        public volatile String verifier;
+        private volatile String verifier;
 
         private TwitterOAuthTask() {
         }
@@ -287,13 +277,11 @@ public class TwitterDialog extends Dialog {
             this();
         }
 
-        /* access modifiers changed from: protected */
-        public void onPreExecute() {
+        protected void onPreExecute() {
             TwitterDialog.this.webView.setWebViewClient(new LocalWebViewClient());
         }
 
-        /* access modifiers changed from: protected */
-        public Result doInBackground(Object... args) {
+        protected Result doInBackground(Object... args) {
             String consumerKey = (String) args[0];
             String consumerSecret = (String) args[1];
             this.callbackUrl = (String) args[2];

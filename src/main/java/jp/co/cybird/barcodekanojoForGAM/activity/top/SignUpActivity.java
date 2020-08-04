@@ -603,8 +603,7 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
             SignUpActivity.this.mBlockClick = false;
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) SignUpActivity.this.getApplication()).getBarcodeKanojo();
             User user = barcodeKanojo.getUser();
             if (list == null) {

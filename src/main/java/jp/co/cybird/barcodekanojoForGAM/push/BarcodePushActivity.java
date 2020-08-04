@@ -48,7 +48,8 @@ public class BarcodePushActivity extends BaseKanojosActivity {
     };
     private Queue<StatusHolder> mTaskQueue;
 
-    public void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
         ApplicationSetting mSetting = new ApplicationSetting(this);
@@ -74,8 +75,8 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         setAutoRefreshSession(false);
     }
 
-    /* access modifiers changed from: protected */
-    public void changeTab(Context packageContext, Class<?> cls) {
+    @Override
+    protected void changeTab(Context packageContext, Class<?> cls) {
         if (!packageContext.getClass().getName().equalsIgnoreCase(cls.getName())) {
             Intent intent = new Intent().setClass(packageContext, cls);
             intent.addFlags(AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
@@ -87,8 +88,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void startKanojoActivity(Kanojo kanojo) {
+    protected void startKanojoActivity(Kanojo kanojo) {
         if (kanojo != null) {
             Intent intent = new Intent().setClass(this, KanojosActivity.class);
             if (kanojo != null) {
@@ -253,8 +253,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         public void onCancelled() {
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) BarcodePushActivity.this.getApplication()).getBarcodeKanojo();
             ApplicationSetting setting = new ApplicationSetting(BarcodePushActivity.this);
             switch (list.key) {
@@ -298,11 +297,9 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void startCheckSession() {
+    protected void startCheckSession() {
     }
 
-    /* access modifiers changed from: protected */
-    public void endCheckSession() {
+    protected void endCheckSession() {
     }
 }
