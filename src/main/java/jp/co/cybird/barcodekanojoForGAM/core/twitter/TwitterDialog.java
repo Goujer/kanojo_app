@@ -38,7 +38,6 @@ import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterDialog extends Dialog {
     private static final String CALLBACK_URL = "http://www.barcodekanojo.com/dashboard/setting/twitter/callback";
-    private static final boolean DEBUG = true;
     public static final int DEFAULT_THEME = 16973840;
     private static final String DISPLAY_TOUCH = "touch";
     private static final boolean DUMMY_CALLBACK_URL = false;

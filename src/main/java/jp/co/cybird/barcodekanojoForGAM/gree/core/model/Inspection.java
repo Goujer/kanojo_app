@@ -10,7 +10,6 @@ public class Inspection implements BarcodeKanojoModel, Parcelable {
     public static final String AUTHOR_ID = "authorId";
     public static final String CTIME = "ctime";
     public static final String DATA = "data";
-    public static final boolean DEBUG = false;
     public static final String[] INSPECTION_EDIT_ACCOUNT_STRING = {GreeDefs.USER_NAME};
     public static final String[] INSPECTION_PRODUCT_EDIT_STRINGS = {GreeDefs.COMPANY_NAME, GreeDefs.PRODUCT_NAME, GreeDefs.PRODUCT_COMMENT};
     public static final String[] INSPECTION_SCAN_AND_GENERATE_STRINGS = {GreeDefs.KANOJO_NAME, GreeDefs.COMPANY_NAME, GreeDefs.PRODUCT_NAME, GreeDefs.PRODUCT_COMMENT};

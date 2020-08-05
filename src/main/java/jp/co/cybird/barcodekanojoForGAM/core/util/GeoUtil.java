@@ -5,7 +5,7 @@ import android.location.Location;
 import com.google.android.gms.maps.model.LatLng;
 
 public class GeoUtil {
-    private static final boolean DEBUG = false;
+
 
     public static String geoToString(LatLng gp) {
         if (gp == null) {

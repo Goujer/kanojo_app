@@ -40,7 +40,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
 
 public class KanojoItemDetailActivity extends BaseActivity implements View.OnClickListener {
-    private static final boolean DEBUG = false;
+
     private static final boolean DEBUG_PURCHASE = false;
     public static final int MODE_DATE = 1;
     public static final int MODE_EXTEND_DATE = 4;

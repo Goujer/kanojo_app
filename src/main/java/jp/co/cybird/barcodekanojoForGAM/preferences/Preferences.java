@@ -1,7 +1,7 @@
 package jp.co.cybird.barcodekanojoForGAM.preferences;
 
 public class Preferences {
-    private static final boolean DEBUG = false;
+
     public static final String PREFERENCE_ABOUT_BARCODEKANOJO = "about_barcodekanojo";
     public static final String PREFERENCE_ABOUT_RULES = "about_rules";
     public static final String PREFERENCE_ABOUT_TEAM = "about_team";

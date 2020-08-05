@@ -25,7 +25,6 @@ import org.json.JSONObject;
 
 public class FaceBookUtil {
     public static final int AUTHORIZE_ACTIVITY_RESULT_CODE = -100;
-    private static final boolean DEBUG = true;
     public static Facebook mFb;
     public static int mWaitCounter;
     /* access modifiers changed from: private */

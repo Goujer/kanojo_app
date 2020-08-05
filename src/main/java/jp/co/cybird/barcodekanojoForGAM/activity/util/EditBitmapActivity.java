@@ -34,7 +34,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.FileUtil;
 import jp.co.cybird.barcodekanojoForGAM.view.EditBitmapView;
 
 public class EditBitmapActivity extends Activity implements BaseInterface, View.OnClickListener {
-    private static final boolean DEBUG = false;
+
     private static final String FILENAME = "temp.jpg";
     private static final String NOMEDIA = ".nomedia";
     private static final String ROOT_DIR = (String.valueOf(Environment.getExternalStorageDirectory().getPath()) + "/barcodekanojo/");

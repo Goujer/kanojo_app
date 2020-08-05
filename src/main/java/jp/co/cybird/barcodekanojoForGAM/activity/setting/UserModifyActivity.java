@@ -42,7 +42,7 @@ import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 
 public class UserModifyActivity extends BaseEditActivity implements View.OnClickListener {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "UserModifyActivity";
     private BarcodeKanojoApp app;
     private Button btnClose;

@@ -6,7 +6,7 @@ import android.content.Intent;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 
 public class MediaMountReceiver extends BroadcastReceiver {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "MediaMountReceiver";
 
     public void onReceive(Context context, Intent intent) {

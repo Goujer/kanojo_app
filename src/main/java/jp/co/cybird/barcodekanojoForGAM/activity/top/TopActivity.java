@@ -25,7 +25,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 
 public class TopActivity extends BaseActivity {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "TopActivity";
     /* access modifiers changed from: private */
     public Button login_btn;

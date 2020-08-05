@@ -8,7 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class FaceBookProfileParser extends AbstractJSONParser<FaceBookProfile> {
-    public static final boolean DEBUG = false;
 
     /* access modifiers changed from: protected */
     public FaceBookProfile parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {

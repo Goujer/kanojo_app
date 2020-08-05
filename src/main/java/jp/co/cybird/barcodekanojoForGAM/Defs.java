@@ -3,7 +3,7 @@ package jp.co.cybird.barcodekanojoForGAM;
 import java.util.Locale;
 
 public class Defs {
-    public static final boolean DEBUG = false;
+	public static final boolean DEBUG = false; // refer here for DEBUG
     public static final String DEBUG_BIRTH = "0101";
     public static final String DEBUG_EMAIL = "mizuba@netspeed.jp";
     public static final boolean DEBUG_ENCRYPTED = false;
@@ -11,7 +11,7 @@ public class Defs {
     public static final String DEBUG_FACEBOOK_APP_ID = "475042289172677";
     public static final boolean DEBUG_GOOGLE_ADMOB = false;
     public static final boolean DEBUG_IPHONE = false;
-    public static final boolean DEBUG_LOACTION = false;
+    public static final boolean DEBUG_LOCATION = false;
     public static final boolean DEBUG_LOGIN = false;
     public static final String DEBUG_NAME = "MIZUBA";
     public static final boolean DEBUG_PARSER = false;

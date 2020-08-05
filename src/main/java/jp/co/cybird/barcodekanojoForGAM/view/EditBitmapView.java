@@ -18,7 +18,7 @@ import java.io.OutputStream;
 import jp.co.cybird.barcodekanojoForGAM.R;
 
 public class EditBitmapView extends View {
-    private static final boolean DEBUG = false;
+
     private static final float MAX_SCALE = 6.0f;
     private static final float MIN_SCALE = 0.2f;
     private static final String TAG = "EditBitmapView";

@@ -19,7 +19,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 
 public class BarcodeKanojo {
     private static final String TAG = "BarcodeKanojo";
-    public static final boolean DEBUG = true;
     private BarcodeKanojoHttpApi mBCKApi;
     //private jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojoHttpApi mBCKApi;
     private ModelList<Category> mCategories;

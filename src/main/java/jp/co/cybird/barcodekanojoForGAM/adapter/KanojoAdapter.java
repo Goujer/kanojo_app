@@ -20,7 +20,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 import jp.co.cybird.barcodekanojoForGAM.view.KanojoView;
 
 public class KanojoAdapter extends BaseKanojoPairAdapter implements ObservableAdapter {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "KanojoAdapter";
     /* access modifiers changed from: private */
     public Handler mHandler;

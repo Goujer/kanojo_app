@@ -12,7 +12,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 import jp.co.cybird.barcodekanojoForGAM.view.EditTextView;
 
 public class LoginActivity extends BaseEditActivity implements View.OnClickListener {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "LoginActivity";
     private Button btnClose;
     private Button btnLogin;

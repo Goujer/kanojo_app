@@ -14,7 +14,6 @@ import jp.co.cybird.barcodekanojoForGAM.live2d.KanojoSetting;
 public class Live2dUtil {
     public static final String AVATAR_DATA_CACHE_DIR = "avatar_data_cache";
     public static final String BACKGROUND_DIR = "background";
-    public static final boolean DEBUG = false;
     public static final int DEFAULT_LOVE_GAUGE = 85;
     public static final float ICON_OFFSET_Y = -0.3f;
     public static final float ICON_SCALE = 0.8f;

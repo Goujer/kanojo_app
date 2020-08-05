@@ -10,7 +10,7 @@ import java.util.Observer;
 import jp.co.cybird.barcodekanojoForGAM.core.util.BaseDiskCache;
 
 public class RemoteResourceManager extends Observable {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "RemoteResourceManager";
     private DiskCache mDiskCache;
     private FetcherObserver mFetcherObserver;

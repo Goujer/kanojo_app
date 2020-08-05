@@ -9,7 +9,7 @@ import android.widget.TextView;
 import jp.co.cybird.barcodekanojoForGAM.R;
 
 public class CustomLoadingView extends LinearLayout implements View.OnClickListener {
-    private static final boolean DEBUG = false;
+
     private final String HIDE_TAG = "hide";
     private final String SHOW_TAG = "show";
     private Context mContext;

@@ -44,7 +44,7 @@ import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs;
 import jp.co.cybird.barcodekanojoForGAM.view.MoreBtnView;
 
 public class KanojoInfoActivity extends BaseActivity implements View.OnClickListener, MoreBtnView.OnMoreClickListener {
-    private static final boolean DEBUG = false;
+
     private static final int DEFAULT_LIMIT = 6;
     private static final String TAG = "KanojoInfoActivity";
     private final int MORE_ACTIVITIES = 11;

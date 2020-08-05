@@ -31,7 +31,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
 
 public final class BootActivity extends BaseKanojosActivity {
-    private static final boolean DEBUG = false;
     private static final String TAG = BootActivity.class.getSimpleName();
     private volatile boolean authorizationDone;
     private RelativeLayout mProgressbar;

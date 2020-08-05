@@ -11,7 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implements JSONParser<T> {
-    private static final boolean DEBUG = false;
+
     protected static final String TAG = "AbstractJSONParser";
 
     protected abstract T parseInner(JSONObject jSONObject) throws IOException, BarcodeKanojoException, BarcodeKanojoParseException;

@@ -23,7 +23,6 @@ import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 import jp.co.cybird.barcodekanojoForGAM.view.ProductAndKanojoView;
 
 public class ScanKanojoGenerateActivity extends BaseKanojoEditActivity implements View.OnClickListener, DialogInterface.OnDismissListener {
-    private static final boolean DEBUG = false;
     private static final String TAG = "ScanKanojoGenerateActivity";
     private Button btnSave;
     private boolean isDetailByAmazon;

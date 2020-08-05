@@ -16,7 +16,7 @@ import java.io.OutputStream;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 
 public class BaseDiskCache implements DiskCache {
-    private static final boolean DEBUG = false;
+
     private static final int EXTERNAL_MEMORY_AVAILABLE = 1;
     private static final int INTERNAL_MEMORY_AVAILABLE = 2;
     private static final int MIN_FILE_SIZE_IN_BYTES = 100;

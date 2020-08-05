@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class FirstbootUtil {
-    private static final boolean DEBUG = false;
+
     private static final String PREF_KEY = "BarcodeKANOJO_firstboot";
 
     public static boolean isShowed(Context context, String key) {

@@ -22,7 +22,6 @@ import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 import jp.co.cybird.barcodekanojoForGAM.view.ProductAndKanojoView;
 
 public class ScanOthersEditActivity extends BaseKanojoEditActivity implements View.OnClickListener {
-    private static final boolean DEBUG = false;
     private static final String TAG = "ScanOthersEditActivity";
     private Button btnSave;
     private ApiTask mApiTask;

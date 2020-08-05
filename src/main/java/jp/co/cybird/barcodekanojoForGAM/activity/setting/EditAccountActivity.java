@@ -20,7 +20,6 @@ import jp.co.cybird.barcodekanojoForGAM.activity.util.EditBitmapActivity;
 import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs;
 
 public class EditAccountActivity extends BaseEditActivity implements BaseInterface, View.OnClickListener {
-    public static final boolean DEBUG = false;
     public static final String TAG = "LogInActivity";
     private Resources r;
     /* access modifiers changed from: private */

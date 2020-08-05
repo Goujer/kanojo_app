@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Observable;
 
 public class BestLocationListener extends Observable implements LocationListener {
-    private static final boolean DEBUG = false;
+
     public static final long LOCATION_UPDATE_MAX_DELTA_THRESHOLD = 300000;
     public static final long LOCATION_UPDATE_MIN_DISTANCE = 0;
     public static final long LOCATION_UPDATE_MIN_TIME = 0;

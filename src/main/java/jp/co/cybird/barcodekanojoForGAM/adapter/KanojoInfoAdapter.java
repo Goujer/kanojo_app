@@ -19,7 +19,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.ImageCache;
 import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 
 public class KanojoInfoAdapter extends BaseActivityModelAdapter {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "KanojoInfoAdapter";
     /* access modifiers changed from: private */
     public Handler mHandler;

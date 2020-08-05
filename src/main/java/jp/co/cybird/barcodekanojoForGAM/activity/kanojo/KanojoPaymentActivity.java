@@ -17,7 +17,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoItem;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 
 public class KanojoPaymentActivity extends BaseEditActivity implements View.OnClickListener {
-    private static final boolean DEBUG = false;
+
     private static final String TAG = "KanojoPaymentActivity";
     private Button btnClose;
     private KanojoItem mKanojoItem;

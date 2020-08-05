@@ -16,7 +16,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
 
 public class BarcodeKanojoApp extends Application {
-    private static final boolean DEBUG = false;
     public static final String INTENT_ACTION_FULL_STORAGE = "jp.co.cybird.barcodekanojoForGAM.intent.action.FULL_STORAGE";
     public static final String INTENT_ACTION_LOGGED_OUT = "jp.co.cybird.barcodekanojoForGAM.intent.action.LOGGED_OUT";
     public static final String PACKAGE_NAME = "jp.co.cybird.barcodekanojoForGAM";
