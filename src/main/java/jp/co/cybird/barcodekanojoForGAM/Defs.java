@@ -36,7 +36,6 @@ public class Defs {
     public static final String URL_ABOUT_TEAM = "/resource/about_cybird.html";
     private static final String URL_BASE_DEBUG = "http://api.test.barcodekanojo.com/2";
     public static final String URL_BASE_LIVE2D_EXTPARTS = "http://storage.barcodekanojo.com/avatar";
-    private static final String URL_BASE_RELEASE = "https://api.barcodekanojo.com/2";
     public static final String URL_GENERAL_EN = "https://my.cybird.ne.jp/sp-inq/BCK006";
     public static final String URL_GENERAL_JA = "https://my.cybird.ne.jp/sp-inq/BCK004";
     public static final String URL_GENERAL_ZH = "https://my.cybird.ne.jp/sp-inq/BCK005";
@@ -48,10 +47,6 @@ public class Defs {
     public static final String URL_SUPPORT = "http://www.barcodekanojo.com/contact";
     private static final String USER_AGENT_DEBUG = "BarcodeKanojo/2.4.2 CFNetwork/485.12.7 Darwin/10.4.0";
     private static final String USER_AGENT_PREFIX = "BarcodeKanojo/2.4.2 ";
-
-    public static String URL_BASE() {
-        return URL_BASE_RELEASE;
-    }
 
     public static String URL_PAYMENT() {
         return URL_PAYMENT_RELEASE;

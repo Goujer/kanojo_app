@@ -9,6 +9,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.goujer.barcodekanojo.activity.setting.ServerConfigurationActivity;
+
 import java.io.File;
 import java.io.IOException;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
@@ -55,6 +58,8 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         requestWindowFeature(1);
         setContentView(R.layout.activity_option);
+        this.account_btn = findViewById(R.id.kanojo_option_server_config);
+        this.account_btn.setOnClickListener(this);
         this.account_btn = findViewById(R.id.kanojo_option_account_modify);
         this.account_btn.setOnClickListener(this);
         this.common_btn = findViewById(R.id.kanojo_option_common);
@@ -121,6 +126,9 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         unBindEvent();
         switch (v.getId()) {
+            case R.id.kanojo_option_server_config:
+                startServerConfig();
+                return;
             case R.id.kanojo_option_account_modify:
                 startAccountModify();
                 return;
@@ -147,9 +155,6 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
                 return;
             case R.id.kanojo_option_kddi:
                 showKDDI();
-                return;
-            default:
-                return;
         }
     }
 
@@ -168,6 +173,10 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
     protected void fixUser() {
         checkAndCopyUser();
         showNoticeDialog(getString(R.string.edit_account_update_done));
+    }
+
+    private void startServerConfig() {
+        startActivity(new Intent(this, ServerConfigurationActivity.class));
     }
 
     private void startAccountModify() {
@@ -325,13 +334,12 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void deleteUser() {
+    @Override
+    protected void deleteUser() {
         showNoticeDialog(getString(R.string.delete_account_message));
     }
 
-    /* access modifiers changed from: protected */
-    public void startConfig() {
+    protected void startConfig() {
         Intent signUp = new Intent().setClass(this, SignUpActivity.class);
         signUp.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_SETTING);
         startActivityForResult(signUp, BaseInterface.REQUEST_SOCIAL_CONFIG_SETTING);

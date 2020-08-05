@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:EditItemView="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/edit_bg">
+	<RelativeLayout android:gravity="center_vertical" android:background="@drawable/common_title_bg" android:layout_width="match_parent" android:layout_height="@dimen/common_title_height">
+		<Button android:id="@+id/setting_server_close" android:text="@string/common_edit_close" style="@style/btn_navi"/>
+
+		<TextView
+			style="@style/txt_kanojo_room_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:ellipsize="end"
+			android:singleLine="true"
+			android:text="@string/server_settings"
+			android:layout_centerInParent="true" />
+
+	</RelativeLayout>
+	<LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/edit_bg" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="match_parent">
+
+		<Switch
+			android:id="@+id/setting_server_https"
+			style="@style/txt_kanojo_edit_key"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/row_kanojo_edit_txt_height"
+			android:layout_marginTop="@dimen/row_kanojo_edit_separator_height"
+			android:background="@drawable/row_kanojo_edit_bg_top"
+			android:text="@string/use_https" />
+		<jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+			android:id="@+id/setting_server_url"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/row_kanojo_edit_txt_height"
+			android:background="@drawable/row_kanojo_edit_bg_middle"
+			EditItemView:key="@string/server_url" />
+		<jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+			android:id="@+id/setting_server_port"
+			android:background="@drawable/row_kanojo_edit_bg_bottom"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/row_kanojo_edit_txt_height"
+			EditItemView:key="@string/server_port"/>
+	</LinearLayout>
+</LinearLayout>

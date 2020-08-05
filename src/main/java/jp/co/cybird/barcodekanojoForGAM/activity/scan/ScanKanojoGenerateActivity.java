@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
+import com.goujer.barcodekanojo.activity.base.BaseKanojoEditActivity;
+
 import java.io.File;
 import java.util.Arrays;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.R;
-import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Category;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
@@ -20,7 +22,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 import jp.co.cybird.barcodekanojoForGAM.view.ProductAndKanojoView;
 
-public class ScanKanojoGenerateActivity extends BaseEditActivity implements View.OnClickListener, DialogInterface.OnDismissListener {
+public class ScanKanojoGenerateActivity extends BaseKanojoEditActivity implements View.OnClickListener, DialogInterface.OnDismissListener {
     private static final boolean DEBUG = false;
     private static final String TAG = "ScanKanojoGenerateActivity";
     private Button btnSave;

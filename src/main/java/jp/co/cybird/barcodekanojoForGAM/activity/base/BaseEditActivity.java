@@ -45,45 +45,21 @@ import jp.co.cybird.barcodekanojoForGAM.view.ProductAndKanojoView;
 public abstract class BaseEditActivity extends BaseActivity implements BaseInterface {
     protected static final boolean DEBUG = false;
     protected static final String TAG = "BaseEditActivity";
-    private ModelList<Category> mCategories;
-    protected String[] mCategoryList = {""};
     protected File mFile;
     private KanojoGenerateAndUpdate mKanojoGenerateAndUpdateTask;
-    private DialogInterface.OnDismissListener mListener;
+    protected DialogInterface.OnDismissListener mListener;
     private ProgressDialog mProgressDialog;
     private SignUpAndUpdateAccountTask mSignUpAndUpdateTask;
     protected Resources r;
 
-    public void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mListener = this;
         this.r = getResources();
-        try {
-            this.mCategories = ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().getCategoryList();
-            int size = this.mCategories.size();
-            this.mCategoryList = new String[size];
-            for (int i = 0; i < size; i++) {
-                this.mCategoryList[i] = this.mCategories.get(i).getName();
-            }
-        } catch (BarcodeKanojoException e) {
-            new Thread(new Runnable() {
-                public void run() {
-                    try {
-                        BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) BaseEditActivity.this.getApplication()).getBarcodeKanojo();
-                        barcodeKanojo.init_product_category_list();
-                        BaseEditActivity.this.mCategories = barcodeKanojo.getCategoryList();
-                        int size = BaseEditActivity.this.mCategories.size();
-                        BaseEditActivity.this.mCategoryList = new String[size];
-                        for (int i = 0; i < size; i++) {
-                            BaseEditActivity.this.mCategoryList[i] = BaseEditActivity.this.mCategories.get(i).getName();
-                        }
-                    } catch (IOException | BarcodeKanojoException e) {
-                    }
-                }
-            }).start();
-        }
     }
 
+    @Override
     protected void onPause() {
         if (this.mKanojoGenerateAndUpdateTask != null) {
             this.mKanojoGenerateAndUpdateTask.cancel(true);
@@ -96,6 +72,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         super.onPause();
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == -1) {
@@ -177,44 +154,9 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         return this.mFile;
     }
 
-    protected void setOnDismissListener(DialogInterface.OnDismissListener listener) {
-        this.mListener = listener;
-    }
-
-   protected Category getDefaultCategory() {
-        if (this.mCategories == null || this.mCategories.size() == 0) {
-            return null;
-        }
-        return this.mCategories.get(0);
-    }
-
-    protected void showListDialog(String title, final Product product, final EditItemView value) {
-        int selected = 0;
-        if (this.mCategories != null) {
-            int size = this.mCategories.size();
-            for (int i = 0; i < size; i++) {
-                if (this.mCategories.get(i).getId() == product.getCategory_id()) {
-                    selected = i;
-                }
-            }
-        }
-        AlertDialog dialog = new AlertDialog.Builder(this).setTitle(title).setSingleChoiceItems(this.mCategoryList, selected, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int position) {
-                product.setCategory(BaseEditActivity.this.mCategoryList[position]);
-                if (BaseEditActivity.this.mCategories != null) {
-                    product.setCategory_id(BaseEditActivity.this.mCategories.get(position).getId());
-                    value.setValue(BaseEditActivity.this.mCategories.get(position).getName());
-                }
-            }
-        }).setPositiveButton(R.string.common_dialog_ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        }).create();
-        if (this.mListener != null) {
-            dialog.setOnDismissListener(this.mListener);
-        }
-        dialog.show();
-    }
+//    protected void setOnDismissListener(DialogInterface.OnDismissListener listener) {
+//		this.mListener = listener;
+//	}
 
     protected void showGenderDialog(String title, final EditItemView value) {
         final String[] genderList = getResources().getStringArray(R.array.user_account_gender_list);

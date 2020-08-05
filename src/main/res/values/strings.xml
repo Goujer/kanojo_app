@@ -375,4 +375,5 @@
 	<string name="sign_up">Sign Up</string>
 	<string name="save">Save</string>
 	<string name="server_settings">Server Settings</string>
+	<string name="use_https">Use HTTPS</string>
 </resources>

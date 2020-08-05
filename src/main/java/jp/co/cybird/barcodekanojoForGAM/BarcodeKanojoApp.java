@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
+
 import java.util.Observer;
 import jp.co.cybird.barcodekanojoForGAM.billing.util.PurchaseApi;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
@@ -29,15 +31,19 @@ public class BarcodeKanojoApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        this.mBarcodeKanojo = new BarcodeKanojo(BarcodeKanojo.createHttpApi(Defs.USER_AGENT(), Defs.USER_LANGUAGE()));
+        this.mBarcodeKanojo = new BarcodeKanojo();
         this.mBarcodeKanojo.setUser(new User());
         loadResourceManagers();
         this.mPurchaseApi = new PurchaseApi(getApplicationContext());
         this.mUserGenderList = getResources().getStringArray(R.array.user_account_gender_list);
+
+		if (Integer.parseInt(Build.VERSION.SDK) < Build.VERSION_CODES.FROYO) {
+			System.setProperty("http.keepAlive", "false");
+		}
     }
 
     public void changeLocate() {
-        this.mBarcodeKanojo = new BarcodeKanojo(BarcodeKanojo.createHttpApi(Defs.USER_AGENT(), Defs.USER_LANGUAGE()));
+        this.mBarcodeKanojo = new BarcodeKanojo();
         this.mUserGenderList = getResources().getStringArray(R.array.user_account_gender_list);
     }
 
@@ -93,49 +99,57 @@ public class BarcodeKanojoApp extends Application {
         return this.mBestLocationListener;
     }
 
-    public BestLocationListener requestLocationUpdates(Observer observer) {
-        this.mBestLocationListener.addObserver(observer);
-        this.mBestLocationListener.register((LocationManager) getSystemService(LOCATION_SERVICE), true);
-        return this.mBestLocationListener;
-    }
+//    public BestLocationListener requestLocationUpdates(Observer observer) {
+//        this.mBestLocationListener.addObserver(observer);
+//        this.mBestLocationListener.register((LocationManager) getSystemService(LOCATION_SERVICE), true);
+//        return this.mBestLocationListener;
+//    }
 
     public void removeLocationUpdates() {
         this.mBestLocationListener.unregister((LocationManager) getSystemService(LOCATION_SERVICE));
     }
 
-    public void removeLocationUpdates(Observer observer) {
-        this.mBestLocationListener.deleteObserver(observer);
-        removeLocationUpdates();
-    }
+//    public void removeLocationUpdates(Observer observer) {
+//        this.mBestLocationListener.deleteObserver(observer);
+//        removeLocationUpdates();
+//    }
 
     public Location getLastKnownLocation() {
         return this.mBestLocationListener.getLastKnownLocation();
     }
 
-    public Location getLastKnownLocationOrThrow() {
-        Location location = this.mBestLocationListener.getLastKnownLocation();
-        if (location == null) {
-            return null;
-        }
-        return location;
-    }
+//    public Location getLastKnownLocationOrThrow() {
+//        Location location = this.mBestLocationListener.getLastKnownLocation();
+//        if (location == null) {
+//            return null;
+//        }
+//        return location;
+//    }
 
-    public void clearLastKnownLocation() {
-        this.mBestLocationListener.clearLastKnownLocation();
-    }
+//    public void clearLastKnownLocation() {
+//        this.mBestLocationListener.clearLastKnownLocation();
+//    }
 
-    public void setSavingListener(BaseDiskCache.BaseDiskCallBack listener) {
-        this.mSaveListener = listener;
-        loadResourceManagers();
-    }
+//    public void setSavingListener(BaseDiskCache.BaseDiskCallBack listener) {
+//        this.mSaveListener = listener;
+//        loadResourceManagers();
+//    }
 
-    public void removeSaveListener() {
-        this.mSaveListener = null;
-        loadResourceManagers();
-    }
+//    public void removeSaveListener() {
+//        this.mSaveListener = null;
+//        loadResourceManagers();
+//    }
 
     public String[] getUserGenderList() {
         this.mUserGenderList = getResources().getStringArray(R.array.user_account_gender_list);
         return this.mUserGenderList;
     }
+
+    public void updateBCKApi(boolean useHttps, String newUrl, int port) {
+		mBarcodeKanojo.createHttpApi(useHttps, newUrl, port, Defs.USER_AGENT(), Defs.USER_LANGUAGE());
+	}
+
+	public String getmApiBaseUrl() {
+    	return mBarcodeKanojo.getmApiBaseUrl();
+	}
 }

@@ -1,10 +1,14 @@
 package jp.co.cybird.barcodekanojoForGAM.core;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
+
+import com.goujer.barcodekanojo.core.BarcodeKanojoHttpApi;
 
 import java.io.File;
 import java.io.IOException;
-import jp.co.cybird.barcodekanojoForGAM.Defs;
+
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Category;
@@ -15,15 +19,12 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 
 public class BarcodeKanojo {
     private static final String TAG = "BarcodeKanojo";
-    private final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
     private BarcodeKanojoHttpApi mBCKApi;
+    //private jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojoHttpApi mBCKApi;
     private ModelList<Category> mCategories;
     private PlayLive2d mPlayLive2d;
     private User mUser;
-
-    public BarcodeKanojo(BarcodeKanojoHttpApi barcodeKanojoHttpApi) {
-        this.mBCKApi = barcodeKanojoHttpApi;
-    }
 
     public void setUser(User user) {
         this.mUser = user;
@@ -162,7 +163,15 @@ public class BarcodeKanojo {
     }
 
     public Response<BarcodeKanojoModel> my_current_kanojos(int index, int limit, String search) throws IllegalStateException, BarcodeKanojoException, IOException {
-        return current_kanojos(this.mUser.getId(), index, limit, search);
+    	try {
+			return current_kanojos(this.mUser.getId(), index, limit, search);
+		} catch (Exception e) {
+    		if (DEBUG) {
+				Log.d(TAG, e.toString());
+				e.printStackTrace();
+			}
+			throw new BarcodeKanojoException(e.toString());
+		}
     }
 
     private Response<BarcodeKanojoModel> current_kanojos(int user_id, int index, int limit, String search) throws IllegalStateException, BarcodeKanojoException, IOException {
@@ -364,13 +373,20 @@ public class BarcodeKanojo {
         throw new BarcodeKanojoException("Categories is empty");
     }
 
-    private static BarcodeKanojoHttpApi createHttpApi(String domain, String clientVersion, String clientLanguage) {
-        return new BarcodeKanojoHttpApi(domain, clientVersion, clientLanguage);
+    public void createHttpApi(boolean useHttps, String domain, int port, String clientVersion, String clientLanguage) {
+    	if (mBCKApi == null) {
+    		mBCKApi = new BarcodeKanojoHttpApi(useHttps, domain, port, clientVersion, clientLanguage);
+            //mBCKApi = new jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojoHttpApi(domain, port, clientVersion, clientLanguage);
+		} else {
+			mBCKApi.updateApiBase(useHttps, domain, port, clientVersion, clientLanguage);
+            //mBCKApi.updateApiBase(domain, port, clientVersion, clientLanguage);
+		}
     }
 
-    public static BarcodeKanojoHttpApi createHttpApi(String clientVersion, String clientLanguage) {
-        return createHttpApi(Defs.URL_BASE(), clientVersion, clientLanguage);
-    }
+//    @Deprecated
+//    public static BarcodeKanojoHttpApi createHttpApi(String clientVersion, String clientLanguage) {
+//        return createHttpApi(Defs.URL_BASE(), clientVersion, clientLanguage);
+//    }
 
     static class PlayLive2d {
         String actions;
@@ -407,11 +423,8 @@ public class BarcodeKanojo {
     public Response<BarcodeKanojoModel> getURLRadarWebView(int kanojo_id) {
         try {
             return this.mBCKApi.getURLRadarWebView(kanojo_id);
-        } catch (BarcodeKanojoException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return null;
-        } catch (IOException e2) {
-            e2.printStackTrace();
             return null;
         }
     }
@@ -464,4 +477,8 @@ public class BarcodeKanojo {
     public Response<BarcodeKanojoModel> do_ticket(int store_item_id, int use_tickets) throws IllegalStateException, BarcodeKanojoException, IOException {
         return this.mBCKApi.do_ticket(store_item_id, use_tickets);
     }
+
+    public String getmApiBaseUrl() {
+    	return mBCKApi.getApiBaseUrl();
+	}
 }

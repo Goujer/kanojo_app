@@ -208,4 +208,5 @@
 	<string name="save">Save</string>
 	<string name="server_port">Server Port</string>
 	<string name="server_settings">Server Settings</string>
+	<string name="use_https">Use HTTPS</string>
 </resources>

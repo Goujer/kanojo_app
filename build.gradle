@@ -19,7 +19,6 @@ repositories {
 }
 
 android {
-	useLibrary 'org.apache.http.legacy'	//Legacy swap classes that use with HttpURLConnection instead.
 
 	compileSdkVersion 28
 	buildToolsVersion '29.0.2'
@@ -91,10 +90,7 @@ dependencies {
 	//implementation 'com.google.zxing:android-core:3.2.1'
 	//implementation 'com.google.zxing:android-integration:3.2.1'
 	//Other
-    implementation('org.apache.httpcomponents:httpmime:4.3.6') {
-	    exclude module: 'httpclient'
-	}
-	implementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+    implementation('org.apache.httpcomponents:httpmime:4.3.6')
     implementation files('libs/live2d_android.jar')
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

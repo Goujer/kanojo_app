@@ -95,7 +95,12 @@
         </receiver>
         <activity android:name="jp.co.cybird.android.lib.gcm.GCMIntermediateActivity" android:launchMode="singleInstance"/>
         <activity android:name="jp.co.cybird.android.lib.gcm.PrefsActivity" android:launchMode="singleTask"/>
-        <receiver android:name="jp.co.cybird.barcodekanojoForGAM.push.BarcodeGCMReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+		<activity
+			android:name="com.goujer.barcodekanojo.activity.setting.ServerConfigurationActivity"
+			android:label="@string/setting_name"
+			android:screenOrientation="sensorPortrait"
+			android:theme="@android:style/Theme.Black.NoTitleBar" />
+		<receiver android:name="jp.co.cybird.barcodekanojoForGAM.push.BarcodeGCMReceiver" android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>

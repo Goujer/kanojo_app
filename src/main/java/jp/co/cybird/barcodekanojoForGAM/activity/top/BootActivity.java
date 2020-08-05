@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import com.google.android.gcm.GCMRegistrar;
+import com.goujer.barcodekanojo.activity.setting.ServerConfigurationActivity;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -28,7 +30,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
 
-public class BootActivity extends BaseKanojosActivity {
+public final class BootActivity extends BaseKanojosActivity {
     private static final boolean DEBUG = false;
     private static final String TAG = BootActivity.class.getSimpleName();
     private volatile boolean authorizationDone;
@@ -42,20 +44,25 @@ public class BootActivity extends BaseKanojosActivity {
             }
         }
     };
-    private Queue<StatusHolder> mTaskQueue;
+    private LinkedList<StatusHolder> mTaskQueue;
     private boolean mTest = true;
     private long splashDelay = 1500;
 
-    public void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         this.mBaseLoadingFinished = true;
         setAutoRefreshSession(false);
         super.onCreate(savedInstanceState);
         unregisterReceiver(this.mWarningFullSpaceReceiver);
         setContentView(R.layout.boot);
         this.mProgressbar = findViewById(R.id.progressbar);
+		if (new ApplicationSetting(this).getServerURL().equals("")) {
+			startActivity(new Intent(this, ServerConfigurationActivity.class));
+		}
     }
 
-    public void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         Log.d("NguyenTT", "parametersString: " + GCMUtilities.parseParametersString(getIntent()));
         ApplicationSetting setting = new ApplicationSetting(this);
@@ -71,12 +78,12 @@ public class BootActivity extends BaseKanojosActivity {
         Log.d("NguyenTT", "reg_id: " + GCMRegistrar.getRegistrationId(this));
         Log.d("NguyenTT", "facebook_token: " + setting.getFaceBookToken());
         Log.d("NguyenTT", "facebook_id: " + setting.getFaceBookID());
-        try {
-            executeBootListTask();
-        } catch (Exception e) {
-            e.printStackTrace();
-            showNoticeDialog(e.getMessage());
-        }
+		try {
+			executeBootListTask();
+		} catch (Exception e) {
+			e.printStackTrace();
+			showNoticeDialog(e.getMessage());
+		}
     }
 
     protected void startDashboard() {
@@ -96,8 +103,8 @@ public class BootActivity extends BaseKanojosActivity {
         startActivityForResult(new Intent().setClass(this, PrivacyInfoActivity.class), BaseInterface.REQUEST_SHOW_PRIVACY);
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 809 && resultCode == 110) {
             startConfig();
@@ -111,19 +118,16 @@ public class BootActivity extends BaseKanojosActivity {
 	}
 
     static class StatusHolder {
-        public static final int LOGIN_TASK = 0;
-        public static final int SIGNUP_TASK = 2;
-        public static final int UUIDVERIFY_TASK = 1;
+        static final int LOGIN_TASK = 0;
+        static final int SIGNUP_TASK = 2;
+        static final int UUIDVERIFY_TASK = 1;
         int key;
         boolean loading = false;
-
-        StatusHolder() {
-        }
     }
 
     private Queue<StatusHolder> getQueue() {
         if (this.mTaskQueue == null) {
-            this.mTaskQueue = new LinkedList();
+            this.mTaskQueue = new LinkedList<>();
         }
         return this.mTaskQueue;
     }
@@ -137,42 +141,44 @@ public class BootActivity extends BaseKanojosActivity {
     }
 
     private synchronized void executeBootListTask() {
+		ApplicationSetting setting = new ApplicationSetting(this);
+		((BarcodeKanojoApp) getApplication()).updateBCKApi(setting.getServerHttps(), setting.getServerURL(), setting.getServerPort());
         clearQueue();
         StatusHolder mLoginHolder = new StatusHolder();
-        mLoginHolder.key = 0;
+        mLoginHolder.key = StatusHolder.LOGIN_TASK;
         getQueue().offer(mLoginHolder);
         this.mTaskEndHandler.sendEmptyMessage(0);
     }
 
-    private void executeBootTask(StatusHolder list) {
-        if (isLoading(list)) {
-            Log.d("NguyenTT", "task " + list.key + " is running ");
+    private void executeBootTask(StatusHolder status) {
+        if (isLoading(status)) {
+            Log.d("NguyenTT", "task " + status.key + " is running ");
             return;
         }
 		BootTask mBootTask = new BootTask();
-        mBootTask.setList(list);
+        mBootTask.setList(status);
         this.mProgressbar.setVisibility(View.VISIBLE);
         mBootTask.execute();
     }
 
     class BootTask extends AsyncTask<Void, Void, Response<?>> {
-        private StatusHolder mList;
+        private StatusHolder mStatus;
         private Exception mReason = null;
 
         BootTask() {
         }
 
-        public void setList(StatusHolder list) {
-            this.mList = list;
+        public void setList(StatusHolder status) {
+            this.mStatus = status;
         }
 
         public void onPreExecute() {
-            this.mList.loading = true;
+            this.mStatus.loading = true;
         }
 
         public Response<?> doInBackground(Void... params) {
             try {
-                return process(this.mList);
+                return process(this.mStatus);
             } catch (Exception e) {
                 this.mReason = e;
                 e.printStackTrace();
@@ -192,12 +198,12 @@ public class BootActivity extends BaseKanojosActivity {
                             BootActivity.this.mTaskEndHandler.sendEmptyMessage(0);
                             return;
                         } else {
-                            BootActivity.this.nextScreen(this.mList);
+                            BootActivity.this.nextScreen(this.mStatus);
                             return;
                         }
                     case Response.CODE_ERROR_FORBIDDEN:
-                        this.mList.key = StatusHolder.SIGNUP_TASK;
-                        BootActivity.this.nextScreen(this.mList);
+                        this.mStatus.key = StatusHolder.SIGNUP_TASK;
+                        BootActivity.this.nextScreen(this.mStatus);
                         return;
                     default:
                         return;
@@ -205,17 +211,18 @@ public class BootActivity extends BaseKanojosActivity {
             } catch (Exception e) {
             	e.printStackTrace();
 			}
-            if (this.mList.key != StatusHolder.LOGIN_TASK || !this.mReason.getMessage().equalsIgnoreCase("user not found")) {
+            if (this.mStatus.key != StatusHolder.LOGIN_TASK || !this.mReason.getMessage().equalsIgnoreCase("user not found")) {
                 BootActivity.this.mProgressbar.setVisibility(View.INVISIBLE);
                 BootActivity.this.showAlertDialog(new Alert(BootActivity.this.getResources().getString(R.string.error_internet)), new DialogInterface.OnDismissListener() {
                     public void onDismiss(DialogInterface dialog) {
-                        BootActivity.this.logout();
+						startActivity(new Intent(BootActivity.this, ServerConfigurationActivity.class));
+                    	//BootActivity.this.logout();
                     }
                 });
                 return;
             }
-            this.mList.key = StatusHolder.SIGNUP_TASK;
-            BootActivity.this.nextScreen(this.mList);
+            this.mStatus.key = StatusHolder.SIGNUP_TASK;
+            BootActivity.this.nextScreen(this.mStatus);
         }
 
         protected void onCancelled() {
@@ -233,7 +240,7 @@ public class BootActivity extends BaseKanojosActivity {
                 case StatusHolder.LOGIN_TASK:
                     Response<BarcodeKanojoModel> android_verify = barcodeKanojo.android_verify(((BarcodeKanojoApp) BootActivity.this.getApplication()).getUUID());
                     if (android_verify == null) {
-                        return android_verify;
+                        return null;
                     }
                     barcodeKanojo.init_product_category_list();
                     return android_verify;
@@ -261,11 +268,9 @@ public class BootActivity extends BaseKanojosActivity {
         finish();
     }
 
-    /* access modifiers changed from: protected */
-    public void startCheckSession() {
+    protected void startCheckSession() {
     }
 
-    /* access modifiers changed from: protected */
-    public void endCheckSession() {
+    protected void endCheckSession() {
     }
 }

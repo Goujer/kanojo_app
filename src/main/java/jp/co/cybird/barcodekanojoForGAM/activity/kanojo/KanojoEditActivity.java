@@ -6,13 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
+import com.goujer.barcodekanojo.activity.base.BaseKanojoEditActivity;
+
 import java.io.File;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.R;
-import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel;
@@ -22,7 +23,7 @@ import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 import jp.co.cybird.barcodekanojoForGAM.view.ProductAndKanojoView;
 
-public class KanojoEditActivity extends BaseEditActivity implements View.OnClickListener {
+public class KanojoEditActivity extends BaseKanojoEditActivity implements View.OnClickListener {
     private static final String TAG = "KanojoEditActivity";
     private Button btnClose;
     private Button btnSave;
@@ -33,8 +34,7 @@ public class KanojoEditActivity extends BaseEditActivity implements View.OnClick
     private EditItemView mKanojoName;
     private CustomLoadingView mLoadingView;
     private EditItemView mLocation;
-    /* access modifiers changed from: private */
-    public String mMessage;
+    private String mMessage;
     private EditItemView mPhoto;
     private Product mProduct;
     private ProductAndKanojoView mProductAndKanojo;
@@ -45,24 +45,24 @@ public class KanojoEditActivity extends BaseEditActivity implements View.OnClick
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kanojo_edit);
-        this.btnClose = (Button) findViewById(R.id.edit_close);
+        this.btnClose = findViewById(R.id.edit_close);
         this.btnClose.setOnClickListener(this);
-        this.mProductAndKanojo = (ProductAndKanojoView) findViewById(R.id.kanojo_edit_photo);
-        this.mKanojoName = (EditItemView) findViewById(R.id.kanojo_edit_1_kanojo_name);
+        this.mProductAndKanojo = findViewById(R.id.kanojo_edit_photo);
+        this.mKanojoName = findViewById(R.id.kanojo_edit_1_kanojo_name);
         this.mKanojoName.setOnClickListener(this);
-        this.mCompanyName = (EditItemView) findViewById(R.id.kanojo_edit_2_company_name);
+        this.mCompanyName = findViewById(R.id.kanojo_edit_2_company_name);
         this.mCompanyName.setOnClickListener(this);
-        this.mProductName = (EditItemView) findViewById(R.id.kanojo_edit_3_product_name);
+        this.mProductName = findViewById(R.id.kanojo_edit_3_product_name);
         this.mProductName.setOnClickListener(this);
-        this.mCategoryName = (EditItemView) findViewById(R.id.kanojo_edit_4_category);
+        this.mCategoryName = findViewById(R.id.kanojo_edit_4_category);
         this.mCategoryName.setOnClickListener(this);
-        this.mLocation = (EditItemView) findViewById(R.id.kanojo_edit_5_location);
+        this.mLocation = findViewById(R.id.kanojo_edit_5_location);
         this.mLocation.setOnClickListener(this);
-        this.mPhoto = (EditItemView) findViewById(R.id.kanojo_edit_6_photo);
+        this.mPhoto = findViewById(R.id.kanojo_edit_6_photo);
         this.mPhoto.setOnClickListener(this);
-        this.mComment = (EditItemView) findViewById(R.id.kanojo_edit_7_comment);
+        this.mComment = findViewById(R.id.kanojo_edit_7_comment);
         this.mComment.setOnClickListener(this);
-        this.btnSave = (Button) findViewById(R.id.kanojo_edit_btn_save);
+        this.btnSave = findViewById(R.id.kanojo_edit_btn_save);
         this.btnSave.setOnClickListener(this);
         this.btnSave.setEnabled(false);
         Bundle bundle = getIntent().getExtras();
@@ -93,14 +93,14 @@ public class KanojoEditActivity extends BaseEditActivity implements View.OnClick
     }
 
     public View getClientView() {
-        View leyout = getLayoutInflater().inflate(R.layout.activity_kanojo_edit, (ViewGroup) null);
+        View leyout = getLayoutInflater().inflate(R.layout.activity_kanojo_edit, null);
         LinearLayout appLayoutRoot = new LinearLayout(this);
         appLayoutRoot.addView(leyout);
         return appLayoutRoot;
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         bindEvent();
     }
@@ -118,39 +118,26 @@ public class KanojoEditActivity extends BaseEditActivity implements View.OnClick
     }
 
     public void unBindEvent() {
-        this.btnClose.setOnClickListener((View.OnClickListener) null);
-        this.mKanojoName.setOnClickListener((View.OnClickListener) null);
-        this.mCompanyName.setOnClickListener((View.OnClickListener) null);
-        this.mProductName.setOnClickListener((View.OnClickListener) null);
-        this.mCategoryName.setOnClickListener((View.OnClickListener) null);
-        this.mLocation.setOnClickListener((View.OnClickListener) null);
-        this.mPhoto.setOnClickListener((View.OnClickListener) null);
-        this.mComment.setOnClickListener((View.OnClickListener) null);
-        this.btnSave.setOnClickListener((View.OnClickListener) null);
+        this.btnClose.setOnClickListener(null);
+        this.mKanojoName.setOnClickListener(null);
+        this.mCompanyName.setOnClickListener(null);
+        this.mProductName.setOnClickListener(null);
+        this.mCategoryName.setOnClickListener(null);
+        this.mLocation.setOnClickListener(null);
+        this.mPhoto.setOnClickListener(null);
+        this.mComment.setOnClickListener(null);
+        this.btnSave.setOnClickListener(null);
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
-        super.onPause();
-    }
-
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
-        this.btnClose.setOnClickListener((View.OnClickListener) null);
-        this.mKanojoName.setOnClickListener((View.OnClickListener) null);
-        this.mCompanyName.setOnClickListener((View.OnClickListener) null);
-        this.mProductName.setOnClickListener((View.OnClickListener) null);
-        this.mCategoryName.setOnClickListener((View.OnClickListener) null);
-        this.mLocation.setOnClickListener((View.OnClickListener) null);
-        this.mPhoto.setOnClickListener((View.OnClickListener) null);
-        this.mComment.setOnClickListener((View.OnClickListener) null);
-        this.btnSave.setOnClickListener((View.OnClickListener) null);
+    @Override
+    protected void onDestroy() {
+        unBindEvent();
         this.mProductAndKanojo.clear();
         super.onDestroy();
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         File f = getFile();
         if (f != null && f.exists()) {
@@ -213,8 +200,7 @@ public class KanojoEditActivity extends BaseEditActivity implements View.OnClick
         return new ProgressDialog(this);
     }
 
-    /* access modifiers changed from: protected */
-    public void dismissProgressDialog() {
+    protected void dismissProgressDialog() {
         this.mLoadingView.dismiss();
     }
 }

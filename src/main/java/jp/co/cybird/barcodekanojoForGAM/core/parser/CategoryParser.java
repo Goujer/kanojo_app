@@ -1,6 +1,8 @@
 package jp.co.cybird.barcodekanojoForGAM.core.parser;
 
 import android.util.Log;
+
+import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoParseException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Category;
@@ -10,15 +12,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class CategoryParser extends AbstractJSONParser<ModelList<Category>> {
-    public static boolean DEBUG = true;
     public static final String TAG = "CategoryParser";
 
-    /* access modifiers changed from: protected */
-    public ModelList<Category> parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected ModelList<Category> parseInner(JSONObject object) throws BarcodeKanojoException {
         ModelList<Category> res = new ModelList<>();
         try {
             if (!object.has("categories") || object.isNull("categories")) {
-                if (DEBUG) {
+                if (BarcodeKanojo.DEBUG) {
                     Log.d(TAG, "Categories is null");
                 }
                 return null;

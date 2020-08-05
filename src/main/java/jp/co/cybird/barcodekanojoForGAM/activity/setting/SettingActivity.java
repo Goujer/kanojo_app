@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -31,28 +32,24 @@ public class SettingActivity extends PreferenceActivity implements BaseInterface
         }
     };
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle icicle) {
-        setTheme(16973836);
+    @Override
+    protected void onCreate(Bundle icicle) {
+    	if (Build.VERSION.SDK_INT <= 10) {
+			setTheme(android.R.style.Theme_Light);
+		} else if (Build.VERSION.SDK_INT <= 13) {
+			setTheme(android.R.style.Theme_Holo_Light);
+		} else {
+			setTheme(android.R.style.Theme_DeviceDefault_Light);
+		}
         super.onCreate(icicle);
         addPreferencesFromResource(R.xml.preferences);
         registerReceiver(this.mLoggedOutReceiver, new IntentFilter(BarcodeKanojoApp.INTENT_ACTION_LOGGED_OUT));
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
-        super.onResume();
-    }
-
-    /* access modifiers changed from: protected */
-    public void onPause() {
-        super.onPause();
-    }
-
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    @Override
+    protected void onDestroy() {
         unregisterReceiver(this.mLoggedOutReceiver);
-        ViewGroup root = (ViewGroup) getWindow().getDecorView().findViewById(16908290);
+        ViewGroup root = (ViewGroup) getWindow().getDecorView().findViewById(android.R.id.content);
         if (!(root == null || root.getChildCount() == 0)) {
             ViewUtil.cleanupView(root.getChildAt(0));
         }
@@ -80,13 +77,13 @@ public class SettingActivity extends PreferenceActivity implements BaseInterface
 
     private void startWebViewActivity(String url) {
         Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra(WebViewActivity.INTENT_EXTRA_URL, String.valueOf(Defs.URL_BASE()) + url);
+        intent.putExtra(WebViewActivity.INTENT_EXTRA_URL, ((BarcodeKanojoApp) getApplication()).getmApiBaseUrl() + url);
         startActivity(intent);
     }
 
-    private void startMailClient(String email) {
-        Intent intent = new Intent("android.intent.action.SENDTO", Uri.parse("mailto:" + email));
-        intent.setFlags(268435456);
-        startActivity(intent);
-    }
+//    private void startMailClient(String email) {
+//        Intent intent = new Intent("android.intent.action.SENDTO", Uri.parse("mailto:" + email));
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
+//    }
 }

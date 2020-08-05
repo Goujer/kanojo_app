@@ -58,8 +58,7 @@ public class AsyncHttpClient {
     private static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
     private static int maxConnections = 10;
     private static int socketTimeout = DEFAULT_SOCKET_TIMEOUT;
-    /* access modifiers changed from: private */
-    public final Map<String, String> clientHeaderMap;
+    private final Map<String, String> clientHeaderMap;
     private final DefaultHttpClient httpClient;
     private final HttpContext httpContext = new SyncBasicHttpContext(new BasicHttpContext());
     private final Map<Context, List<WeakReference<Future<?>>>> requestMap;

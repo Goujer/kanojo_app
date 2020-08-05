@@ -4,13 +4,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
+import com.goujer.barcodekanojo.activity.base.BaseKanojoEditActivity;
+
 import java.io.File;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.R;
-import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.activity.util.ApiTask;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
@@ -20,7 +21,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.Scanned;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 import jp.co.cybird.barcodekanojoForGAM.view.ProductAndKanojoView;
 
-public class ScanOthersEditActivity extends BaseEditActivity implements View.OnClickListener {
+public class ScanOthersEditActivity extends BaseKanojoEditActivity implements View.OnClickListener {
     private static final boolean DEBUG = false;
     private static final String TAG = "ScanOthersEditActivity";
     private Button btnSave;

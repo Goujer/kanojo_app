@@ -17,12 +17,18 @@
 				android:layout_marginTop="28dp"
 				android:gravity="start"
 				android:text="@string/setting_account" />
-            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView
-				android:id="@+id/kanojo_option_account_modify"
+			<jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+				android:id="@+id/kanojo_option_server_config"
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/row_kanojo_edit_txt_height"
 				android:layout_marginTop="@dimen/row_kanojo_edit_separator_height"
 				android:background="@drawable/row_kanojo_edit_bg_top"
+				EditItemView:key="@string/server_settings" />
+            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+				android:id="@+id/kanojo_option_account_modify"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/row_kanojo_edit_txt_height"
+				android:background="@drawable/row_kanojo_edit_bg_middle"
 				EditItemView:key="@string/setting_account_change" />
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_common" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/setting_common"/>
             <TextView

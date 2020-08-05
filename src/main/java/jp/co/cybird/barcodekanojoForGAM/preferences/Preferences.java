@@ -30,5 +30,8 @@ public class Preferences {
     public static final String PREFERENCE_USER_IMEI = "user_imei";
     public static final String PREFERENCE_VERSION = "version_id";
     public static final String SHARED_PREFS_NAME = "barcode_kanojo_shared_prefs";
+    static final String SERVER_HTTPS = "server_https";
+    static final String SERVER_URL = "server_url";
+    static final String SERVER_PORT = "server_port";
     private static final String TAG = "Preferences";
 }
