@@ -1,6 +1,7 @@
 package jp.co.cybird.barcodekanojoForGAM.core;
 
 import android.util.Log;
+import jp.co.cybird.barcodekanojoForGAM.Defs;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -165,7 +166,7 @@ public class BarcodeKanojo {
     	try {
 			return current_kanojos(this.mUser.getId(), index, limit, search);
 		} catch (Exception e) {
-    		if (DEBUG) {
+    		if (Defs.DEBUG) {
 				Log.d(TAG, e.toString());
 				e.printStackTrace();
 			}
