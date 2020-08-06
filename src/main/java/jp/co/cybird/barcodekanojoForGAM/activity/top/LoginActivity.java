@@ -41,8 +41,7 @@ public class LoginActivity extends BaseEditActivity implements View.OnClickListe
         setAutoRefreshSession(false);
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    protected void onDestroy() {
         this.btnClose.setOnClickListener((View.OnClickListener) null);
         this.txtEmail.setOnClickListener((View.OnClickListener) null);
         this.txtPassword.setOnClickListener((View.OnClickListener) null);

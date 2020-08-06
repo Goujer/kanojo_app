@@ -252,8 +252,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
         return appLayoutRoot;
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    protected void onPause() {
         super.onPause();
         if (this.mLoadItemsTask != null) {
             this.mLoadItemsTask.cancel(true);
@@ -274,8 +273,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "Destroying helper.");
         if (this.mPurchaseAPI.getHelper() != null) {
@@ -348,8 +346,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    /* access modifiers changed from: private */
-    public void updateListItem(ModelList<KanojoItemCategory> list) {
+    private void updateListItem(ModelList<KanojoItemCategory> list) {
         boolean flag;
         showLayoutNoitemView(list);
         if (list != null) {
@@ -388,8 +385,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
         updateListItem(response.getKanojoItemCategoryModelList());
     }
 
-    /* access modifiers changed from: private */
-    public void addSection(String title, boolean flag, ModelList<KanojoItem> list) {
+    private void addSection(String title, boolean flag, ModelList<KanojoItem> list) {
         KanojoItemAdapter adapter = new KanojoItemAdapter(this, this.mRrm);
         adapter.setUserLevel(this.mUserLevel);
         adapter.setModelList(list);
@@ -435,8 +431,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 204) {
             setResult(BaseInterface.RESULT_KANOJO_ITEM_USED, data);
@@ -572,8 +567,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
         return this.lstProductId;
     }
 
-    /* access modifiers changed from: protected */
-    public void showCustomNoticeDialog(String message) {
+    protected void showCustomNoticeDialog(String message) {
         AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.app_name).setIcon(R.drawable.icon_72).setMessage(message).setPositiveButton(R.string.common_dialog_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 KanojoItemsActivity.this.startActivityForResult(new Intent("android.settings.SYNC_SETTINGS"), BaseInterface.REQUEST_SYNC_SETTING);
@@ -589,8 +583,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
         dialog.show();
     }
 
-    /* access modifiers changed from: private */
-    public void executeConsumeTicketTask(TicketHolder list) {
+    private void executeConsumeTicketTask(TicketHolder list) {
         if (isLoading(list)) {
             Log.d("NguyenTT", "task " + list.key + " is running ");
         } else if (list.what == 1) {
@@ -640,21 +633,18 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    /* access modifiers changed from: private */
-    public Queue<TicketHolder> getQueue() {
+    private Queue<TicketHolder> getQueue() {
         if (this.mTaskQueue == null) {
             this.mTaskQueue = new LinkedList();
         }
         return this.mTaskQueue;
     }
 
-    /* access modifiers changed from: private */
-    public synchronized void clearQueue() {
+    private synchronized void clearQueue() {
         getQueue().clear();
     }
 
-    /* access modifiers changed from: private */
-    public synchronized boolean isQueueEmpty() {
+    private synchronized boolean isQueueEmpty() {
         return this.mTaskQueue.isEmpty();
     }
 
@@ -724,12 +714,10 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
             });
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        protected void onCancelled() {
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> process(TicketHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> process(TicketHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) KanojoItemsActivity.this.getApplication()).getBarcodeKanojo();
             User user = barcodeKanojo.getUser();
             new ApplicationSetting(KanojoItemsActivity.this);
@@ -761,8 +749,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
         return new ProgressDialog(this);
     }
 
-    /* access modifiers changed from: protected */
-    public void dismissProgressDialog() {
+    protected void dismissProgressDialog() {
         this.mLoadingView.dismiss();
     }
 }

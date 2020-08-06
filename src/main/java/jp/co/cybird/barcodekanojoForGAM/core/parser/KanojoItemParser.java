@@ -14,8 +14,7 @@ public class KanojoItemParser extends AbstractJSONParser<KanojoItem> {
         this.item_class = item_class2;
     }
 
-    /* access modifiers changed from: protected */
-    public KanojoItem parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected KanojoItem parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         KanojoItem res = new KanojoItem(this.item_class);
         try {
             if (object.has("item_category_id") && !object.isNull("item_category_id")) {

@@ -29,13 +29,10 @@ import org.apache.http.params.HttpParams;
 
 class RemoteResourceFetcher extends Observable {
     public static final String TAG = "RemoteResourceFetcher";
-    /* access modifiers changed from: private */
-    public ConcurrentHashMap<Request, Callable<Request>> mActiveRequestsMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Request, Callable<Request>> mActiveRequestsMap = new ConcurrentHashMap<>();
     private ExecutorService mExecutor;
-    /* access modifiers changed from: private */
-    public HttpClient mHttpClient;
-    /* access modifiers changed from: private */
-    public DiskCache mResourceCache;
+    private HttpClient mHttpClient;
+    private DiskCache mResourceCache;
 
     public RemoteResourceFetcher(DiskCache cache) {
         this.mResourceCache = cache;

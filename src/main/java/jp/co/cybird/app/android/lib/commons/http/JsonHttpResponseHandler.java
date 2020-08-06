@@ -29,8 +29,7 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
     public void onFailure(Throwable e, JSONArray errorResponse) {
     }
 
-    /* access modifiers changed from: protected */
-    public void sendSuccessMessage(int statusCode, String responseBody) {
+    protected void sendSuccessMessage(int statusCode, String responseBody) {
         try {
             sendMessage(obtainMessage(100, new Object[]{Integer.valueOf(statusCode), parseResponse(responseBody)}));
         } catch (JSONException e) {
@@ -38,8 +37,7 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void handleMessage(Message msg) {
+    protected void handleMessage(Message msg) {
         switch (msg.what) {
             case 100:
                 Object[] response = (Object[]) msg.obj;
@@ -51,8 +49,7 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void handleSuccessJsonMessage(int statusCode, Object jsonResponse) {
+    protected void handleSuccessJsonMessage(int statusCode, Object jsonResponse) {
         if (jsonResponse instanceof JSONObject) {
             onSuccess(statusCode, (JSONObject) jsonResponse);
         } else if (jsonResponse instanceof JSONArray) {
@@ -62,8 +59,7 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public Object parseResponse(String responseBody) throws JSONException {
+    protected Object parseResponse(String responseBody) throws JSONException {
         Object result = null;
         String responseBody2 = responseBody.trim();
         if (responseBody2.startsWith("{") || responseBody2.startsWith("[")) {
@@ -75,8 +71,7 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
         return result;
     }
 
-    /* access modifiers changed from: protected */
-    public void handleFailureMessage(Throwable e, String responseBody) {
+    protected void handleFailureMessage(Throwable e, String responseBody) {
         if (responseBody != null) {
             try {
                 Object jsonResponse = parseResponse(responseBody);

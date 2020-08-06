@@ -11,8 +11,7 @@ import org.json.JSONObject;
 import twitter4j.conf.PropertyConfiguration;
 
 public class ActivityParser extends AbstractJSONParser<ActivityModel> {
-    /* access modifiers changed from: protected */
-    public ActivityModel parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected ActivityModel parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         JSONObject scannedObj;
         JSONObject kanojoObj;
         JSONObject userObj;

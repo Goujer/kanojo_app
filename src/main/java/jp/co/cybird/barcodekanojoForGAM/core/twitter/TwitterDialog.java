@@ -309,15 +309,13 @@ public class TwitterDialog extends Dialog {
             return Result.SUCCESS;
         }
 
-        /* access modifiers changed from: protected */
-        public void onProgressUpdate(Void... values) {
+        protected void onProgressUpdate(Void... values) {
             String url = this.requestToken.getAuthorizationURL();
             Log.d(TwitterDialog.TAG, "Loading the authorization URL: " + url);
             TwitterDialog.this.webView.loadUrl(url);
         }
 
-        /* access modifiers changed from: protected */
-        public void onPostExecute(Result result) {
+        protected void onPostExecute(Result result) {
             Log.d(TwitterDialog.TAG, "onPostExecute: result = " + result);
             if (result == null) {
                 result = Result.CANCELLATION;

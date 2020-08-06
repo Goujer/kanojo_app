@@ -36,8 +36,7 @@ public class CustomWebViewActivity extends BaseKanojosActivity implements View.O
         showProgressDialog();
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         Log.d("NguyenTT", "CustomWebViewActivity onResume " + this.extraWebViewURL);
         if (this.extraWebViewURL != null) {
@@ -103,8 +102,7 @@ public class CustomWebViewActivity extends BaseKanojosActivity implements View.O
         return this.mProgressDialog;
     }
 
-    /* access modifiers changed from: protected */
-    public void dismissProgressDialog() {
+    protected void dismissProgressDialog() {
         if (this.mProgressBar != null) {
             this.mProgressBar.setVisibility(View.INVISIBLE);
         }

@@ -43,8 +43,7 @@ final class AutoFocusManager implements Camera.AutoFocusCallback {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public synchronized void start() {
+    synchronized void start() {
         if (this.useAutoFocus) {
             this.active = true;
             try {
@@ -56,8 +55,7 @@ final class AutoFocusManager implements Camera.AutoFocusCallback {
         return;
     }
 
-    /* access modifiers changed from: package-private */
-    public synchronized void stop() {
+    synchronized void stop() {
         if (this.useAutoFocus) {
             try {
                 this.camera.cancelAutoFocus();
@@ -81,8 +79,7 @@ final class AutoFocusManager implements Camera.AutoFocusCallback {
             this();
         }
 
-        /* access modifiers changed from: protected */
-        public Object doInBackground(Object... voids) {
+        protected Object doInBackground(Object... voids) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {

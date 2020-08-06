@@ -30,8 +30,7 @@ public final class PreferencesActivity extends PreferenceActivity implements Sha
     private CheckBoxPreference decodeDataMatrix;
     private CheckBoxPreference decodeQR;
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle icicle) {
+    protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         addPreferencesFromResource(R.xml.preferences);
         PreferenceScreen preferences = getPreferenceScreen();

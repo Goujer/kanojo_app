@@ -208,8 +208,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    protected void onPause() {
         if (this.handler != null) {
             this.handler.quitSynchronously();
             this.handler = null;
@@ -223,8 +222,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         super.onPause();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    protected void onDestroy() {
         this.inactivityTimer.shutdown();
         super.onDestroy();
     }

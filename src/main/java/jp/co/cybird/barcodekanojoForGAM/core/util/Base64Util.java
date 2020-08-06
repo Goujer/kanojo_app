@@ -75,8 +75,7 @@ public class Base64Util {
     }
 
     static class Encrypted {
-        /* access modifiers changed from: private */
-        public String encriptedId;
+        private String encriptedId;
         private String encriptedIv;
 
         public Encrypted(String id, String iv) {

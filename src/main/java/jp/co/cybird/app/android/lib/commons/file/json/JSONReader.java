@@ -142,8 +142,7 @@ public class JSONReader {
         return (Boolean) this.parser.getValue();
     }
 
-    /* access modifiers changed from: package-private */
-    public Object getValue() throws IOException {
+    Object getValue() throws IOException {
         int i;
         JSONEventType next;
         if (this.type == null) {

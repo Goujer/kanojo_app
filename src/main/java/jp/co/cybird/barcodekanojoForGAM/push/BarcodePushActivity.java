@@ -127,8 +127,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         StatusHolder() {
         }
 
-        /* access modifiers changed from: package-private */
-        public void updatePushType() {
+        void updatePushType() {
             if (this.type.equalsIgnoreCase(BarcodePushActivity.PUSH_NOTIFICATION_P1)) {
                 this.mPushType = 1;
             } else if (this.type.equalsIgnoreCase(BarcodePushActivity.PUSH_NOTIFICATION_P2)) {
@@ -143,8 +142,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         }
     }
 
-    /* access modifiers changed from: private */
-    public Queue<StatusHolder> getQueue() {
+    private Queue<StatusHolder> getQueue() {
         if (this.mTaskQueue == null) {
             this.mTaskQueue = new LinkedList();
         }
@@ -155,8 +153,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         getQueue().clear();
     }
 
-    /* access modifiers changed from: private */
-    public synchronized boolean isQueueEmpty() {
+    private synchronized boolean isQueueEmpty() {
         return this.mTaskQueue.isEmpty();
     }
 
@@ -183,8 +180,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         this.mTaskEndHandler.sendEmptyMessage(0);
     }
 
-    /* access modifiers changed from: private */
-    public void executePushTask(StatusHolder list) {
+    private void executePushTask(StatusHolder list) {
         if (!isLoading(list)) {
             this.mAutoLoginTask = new AutoLoginTask();
             this.mAutoLoginTask.setList(list);
@@ -248,8 +244,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        protected void onCancelled() {
         }
 
         Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {

@@ -31,8 +31,7 @@ final class AmazonInfoRetriever extends SupplementalInfoRetriever {
         this.country = country2;
     }
 
-    /* access modifiers changed from: package-private */
-    public void retrieveSupplementalInfo() throws IOException {
+    void retrieveSupplementalInfo() throws IOException {
         CharSequence contents = HttpHelper.downloadViaHttp("https://bsplus.srowen.com/ss?c=" + this.country + "&t=" + this.type + "&i=" + this.productID, HttpHelper.ContentType.XML);
         String detailPageURL = null;
         Collection<String> authors = new ArrayList<>();

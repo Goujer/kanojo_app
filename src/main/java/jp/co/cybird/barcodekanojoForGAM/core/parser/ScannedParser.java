@@ -7,8 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ScannedParser extends AbstractJSONParser<Scanned> {
-    /* access modifiers changed from: protected */
-    public Scanned parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected Scanned parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         Scanned res = new Scanned();
         try {
             if (object.has("id")) {

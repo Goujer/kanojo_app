@@ -4,18 +4,16 @@ import android.telephony.PhoneNumberUtils;
 import java.util.regex.Pattern;
 
 final class MECARDContactEncoder extends ContactEncoder {
-    /* access modifiers changed from: private */
-    public static final Pattern COMMA = Pattern.compile(",");
+
+    private static final Pattern COMMA = Pattern.compile(",");
     private static final Formatter MECARD_FIELD_FORMATTER = new Formatter() {
         public String format(String source) {
             return MECARDContactEncoder.NEWLINE.matcher(MECARDContactEncoder.RESERVED_MECARD_CHARS.matcher(source).replaceAll("\\\\$1")).replaceAll("");
         }
     };
-    /* access modifiers changed from: private */
-    public static final Pattern NEWLINE = Pattern.compile("\\n");
+    private static final Pattern NEWLINE = Pattern.compile("\\n");
     private static final Pattern NOT_DIGITS = Pattern.compile("[^0-9]+");
-    /* access modifiers changed from: private */
-    public static final Pattern RESERVED_MECARD_CHARS = Pattern.compile("([\\\\:;])");
+    private static final Pattern RESERVED_MECARD_CHARS = Pattern.compile("([\\\\:;])");
     private static final char TERMINATOR = ';';
 
     MECARDContactEncoder() {
@@ -47,8 +45,7 @@ final class MECARDContactEncoder extends ContactEncoder {
         return new String[]{newContents.toString(), newDisplayContents.toString()};
     }
 
-    /* access modifiers changed from: private */
-    public static String keepOnlyDigits(CharSequence s) {
+    private static String keepOnlyDigits(CharSequence s) {
         if (s == null) {
             return null;
         }

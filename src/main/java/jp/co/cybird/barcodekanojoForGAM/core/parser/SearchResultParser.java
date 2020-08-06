@@ -7,8 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SearchResultParser extends AbstractJSONParser<SearchResult> {
-    /* access modifiers changed from: protected */
-    public SearchResult parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected SearchResult parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         SearchResult res = new SearchResult();
         try {
             if (object.has("hit_count")) {

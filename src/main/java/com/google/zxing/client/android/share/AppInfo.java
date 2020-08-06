@@ -13,18 +13,15 @@ final class AppInfo implements Comparable<AppInfo> {
         this.icon = icon2;
     }
 
-    /* access modifiers changed from: package-private */
-    public String getPackageName() {
+    String getPackageName() {
         return this.packageName;
     }
 
-    /* access modifiers changed from: package-private */
-    public String getLabel() {
+    String getLabel() {
         return this.label;
     }
 
-    /* access modifiers changed from: package-private */
-    public Drawable getIcon() {
+    Drawable getIcon() {
         return this.icon;
     }
 

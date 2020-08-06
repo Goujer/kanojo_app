@@ -50,13 +50,10 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
     private final int MORE_ACTIVITIES = 11;
     private Button btnClose;
     private Button btnEdit;
-    /* access modifiers changed from: private */
-    public ModelList<ActivityModel> mActivities;
-    /* access modifiers changed from: private */
-    public int mActivityCount = 0;
+    private ModelList<ActivityModel> mActivities;
+    private int mActivityCount = 0;
     private KanojoInfoAdapter mAdapter;
-    /* access modifiers changed from: private */
-    public MoreBtnView mFooter;
+    private MoreBtnView mFooter;
     private Gallery mGallery;
     private KanojoInfoImgAdapter mImgAdapter;
     private Kanojo mKanojo;
@@ -116,8 +113,7 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
         return appLayoutRoot;
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         bindEvent();
     }
@@ -191,8 +187,7 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 101) {
             switch (requestCode) {
@@ -257,8 +252,7 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
         });
     }
 
-    /* access modifiers changed from: private */
-    public void updateListItem() {
+    private void updateListItem() {
         this.mAdapter.setModelList(this.mActivities);
         if (this.readAllFlg) {
             this.mListView.removeFooterView(this.mFooter);
@@ -324,13 +318,11 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        protected void onCancelled() {
             KanojoInfoActivity.this.mFooter.setLoading(false);
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> process() throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> process() throws BarcodeKanojoException, IllegalStateException, IOException {
             return ((BarcodeKanojoApp) KanojoInfoActivity.this.getApplication()).getBarcodeKanojo().scanned_timeline(KanojoInfoActivity.this.mProduct.getBarcode(), 0, KanojoInfoActivity.this.mActivityCount, KanojoInfoActivity.this.mLimit);
         }
     }

@@ -32,28 +32,23 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
         onFailure(error);
     }
 
-    /* access modifiers changed from: protected */
-    public void sendSuccessMessage(int statusCode, byte[] responseBody) {
+    protected void sendSuccessMessage(int statusCode, byte[] responseBody) {
         sendMessage(obtainMessage(0, new Object[]{Integer.valueOf(statusCode), responseBody}));
     }
 
-    /* access modifiers changed from: protected */
-    public void sendFailureMessage(Throwable e, byte[] responseBody) {
+    protected void sendFailureMessage(Throwable e, byte[] responseBody) {
         sendMessage(obtainMessage(1, new Object[]{e, responseBody}));
     }
 
-    /* access modifiers changed from: protected */
-    public void handleSuccessMessage(int statusCode, byte[] responseBody) {
+    protected void handleSuccessMessage(int statusCode, byte[] responseBody) {
         onSuccess(statusCode, responseBody);
     }
 
-    /* access modifiers changed from: protected */
-    public void handleFailureMessage(Throwable e, byte[] responseBody) {
+    protected void handleFailureMessage(Throwable e, byte[] responseBody) {
         onFailure(e, responseBody);
     }
 
-    /* access modifiers changed from: protected */
-    public void handleMessage(Message msg) {
+    protected void handleMessage(Message msg) {
         switch (msg.what) {
             case 0:
                 Object[] response = (Object[]) msg.obj;
@@ -69,8 +64,7 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void sendResponseMessage(HttpResponse response) {
+    void sendResponseMessage(HttpResponse response) {
         StatusLine status = response.getStatusLine();
         Header[] contentTypeHeaders = response.getHeaders("Content-Type");
         byte[] responseBody = null;

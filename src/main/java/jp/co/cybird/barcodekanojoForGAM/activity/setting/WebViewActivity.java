@@ -39,8 +39,7 @@ public class WebViewActivity extends Activity {
         finish();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    protected void onDestroy() {
         unregisterReceiver(this.mLoggedOutReceiver);
         super.onDestroy();
     }

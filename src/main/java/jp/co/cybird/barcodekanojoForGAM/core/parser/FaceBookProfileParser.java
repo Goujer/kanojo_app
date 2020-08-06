@@ -9,8 +9,7 @@ import org.json.JSONObject;
 
 public class FaceBookProfileParser extends AbstractJSONParser<FaceBookProfile> {
 
-    /* access modifiers changed from: protected */
-    public FaceBookProfile parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected FaceBookProfile parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         FaceBookProfile res = new FaceBookProfile();
         try {
             if (object.has(GCMConstants.EXTRA_ERROR)) {

@@ -9,8 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class AlertParser extends AbstractJSONParser<ModelList<Alert>> {
-    /* access modifiers changed from: protected */
-    public ModelList<Alert> parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected ModelList<Alert> parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         ModelList<Alert> res = new ModelList<>();
         try {
             if (object.has("alert")) {

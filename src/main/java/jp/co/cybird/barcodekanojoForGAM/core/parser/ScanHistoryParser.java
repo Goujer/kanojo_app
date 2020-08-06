@@ -7,8 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ScanHistoryParser extends AbstractJSONParser<ScanHistory> {
-    /* access modifiers changed from: protected */
-    public ScanHistory parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected ScanHistory parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         ScanHistory res = new ScanHistory();
         try {
             if (object.has("barcode")) {

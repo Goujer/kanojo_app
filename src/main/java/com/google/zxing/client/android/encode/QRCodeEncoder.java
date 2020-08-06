@@ -55,23 +55,19 @@ final class QRCodeEncoder {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public String getContents() {
+    String getContents() {
         return this.contents;
     }
 
-    /* access modifiers changed from: package-private */
-    public String getDisplayContents() {
+    String getDisplayContents() {
         return this.displayContents;
     }
 
-    /* access modifiers changed from: package-private */
-    public String getTitle() {
+    String getTitle() {
         return this.title;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isUseVCard() {
+    boolean isUseVCard() {
         return this.useVCard;
     }
 
@@ -263,8 +259,7 @@ final class QRCodeEncoder {
         return Arrays.asList(values);
     }
 
-    /* access modifiers changed from: package-private */
-    public Bitmap encodeAsBitmap() throws WriterException {
+    Bitmap encodeAsBitmap() throws WriterException {
         String contentsToEncode = this.contents;
         if (contentsToEncode == null) {
             return null;

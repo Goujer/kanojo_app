@@ -22,13 +22,11 @@ final class ScanFromWebPageManager {
         this.returnRaw = inputUri.getQueryParameter(RAW_PARAM) != null;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isScanFromWebPage() {
+    boolean isScanFromWebPage() {
         return this.returnUrlTemplate != null;
     }
 
-    /* access modifiers changed from: package-private */
-    public String buildReplyURL(Result rawResult, ResultHandler resultHandler) {
+    String buildReplyURL(Result rawResult, ResultHandler resultHandler) {
         return replace(META_PLACEHOLDER, String.valueOf(rawResult.getResultMetadata()), replace(TYPE_PLACEHOLDER, resultHandler.getType().toString(), replace(FORMAT_PLACEHOLDER, rawResult.getBarcodeFormat().toString(), replace(RAW_CODE_PLACEHOLDER, rawResult.getText(), replace(CODE_PLACEHOLDER, this.returnRaw ? rawResult.getText() : resultHandler.getDisplayContents(), this.returnUrlTemplate)))));
     }
 

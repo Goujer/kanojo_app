@@ -50,8 +50,7 @@ public final class HistoryActivity extends ListActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    protected void onListItemClick(ListView l, View v, int position, long id) {
         if (((HistoryItem) this.adapter.getItem(position)).getResult() != null) {
             Intent intent = new Intent(this, CaptureActivity.class);
             intent.putExtra(Intents.History.ITEM_NUMBER, position);

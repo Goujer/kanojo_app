@@ -131,8 +131,7 @@ public class RequestParams {
         this.fileParams = new ConcurrentHashMap<>();
     }
 
-    /* access modifiers changed from: protected */
-    public List<BasicNameValuePair> getParamsList() {
+    protected List<BasicNameValuePair> getParamsList() {
         List<BasicNameValuePair> lparams = new LinkedList<>();
         for (Map.Entry<String, String> entry : this.urlParams.entrySet()) {
             lparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
@@ -140,8 +139,7 @@ public class RequestParams {
         return lparams;
     }
 
-    /* access modifiers changed from: protected */
-    public String getParamString() {
+    protected String getParamString() {
         return URLEncodedUtils.format(getParamsList(), ENCODING);
     }
 

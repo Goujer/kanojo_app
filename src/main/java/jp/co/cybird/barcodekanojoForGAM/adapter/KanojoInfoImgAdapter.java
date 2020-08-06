@@ -22,10 +22,8 @@ public class KanojoInfoImgAdapter extends BaseAdapter implements ObservableAdapt
     private Context context;
     private int galleryIconSize;
     private List<String> imgUrls;
-    /* access modifiers changed from: private */
-    public Handler mHandler;
-    /* access modifiers changed from: private */
-    public final Runnable mNotifyThread = new Runnable() {
+    private Handler mHandler;
+    private final Runnable mNotifyThread = new Runnable() {
         public void run() {
             KanojoInfoImgAdapter.this.notifyDataSetChanged();
         }

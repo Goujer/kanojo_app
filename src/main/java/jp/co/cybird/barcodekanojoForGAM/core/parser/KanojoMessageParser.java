@@ -8,8 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class KanojoMessageParser extends AbstractJSONParser<KanojoMessage> {
-    /* access modifiers changed from: protected */
-    public KanojoMessage parseInner(JSONObject object) throws IOException, BarcodeKanojoException, BarcodeKanojoParseException {
+    protected KanojoMessage parseInner(JSONObject object) throws IOException, BarcodeKanojoException, BarcodeKanojoParseException {
         KanojoMessage item = new KanojoMessage();
         try {
             if (object.has("text")) {

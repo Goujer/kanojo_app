@@ -53,19 +53,16 @@ public class KanojoPaymentActivity extends BaseEditActivity implements View.OnCl
         this.wv.postUrl(Defs.URL_PAYMENT(), ("user_id=" + Integer.toString(user.getId()) + "&store_item_id=" + Integer.toString(this.mKanojoItem.getItem_id())).getBytes());
     }
 
-    /* access modifiers changed from: protected */
-    public void paymentSuccessed() {
+    protected void paymentSuccessed() {
         setResult(BaseInterface.RESULT_KANOJO_ITEM_PAYMENT_DONE, (Intent) null);
         close();
     }
 
-    /* access modifiers changed from: protected */
-    public void paymentFailed() {
+    protected void paymentFailed() {
         close();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    protected void onDestroy() {
         this.btnClose.setOnClickListener((View.OnClickListener) null);
         this.wv.setWebViewClient((WebViewClient) null);
         super.onDestroy();

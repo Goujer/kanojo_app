@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 abstract class ContactEncoder {
-    /* access modifiers changed from: package-private */
-    public abstract String[] encode(Iterable<String> iterable, String str, Iterable<String> iterable2, Iterable<String> iterable3, Iterable<String> iterable4, Iterable<String> iterable5, String str2);
+
+    abstract String[] encode(Iterable<String> iterable, String str, Iterable<String> iterable2, Iterable<String> iterable3, Iterable<String> iterable4, Iterable<String> iterable5, String str2);
 
     ContactEncoder() {
     }

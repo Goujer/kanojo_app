@@ -25,22 +25,15 @@ public class DownloadHelper {
     public static final String REQUEST_METHOD_GET = "GET";
     public static final String REQUEST_METHOD_POST = "POST";
     static final String TAG = "DownloadHelper";
-    /* access modifiers changed from: private */
-    public URLConnection mConn;
-    /* access modifiers changed from: private */
-    public Context mContext;
-    /* access modifiers changed from: private */
-    public String mFileName;
-    /* access modifiers changed from: private */
-    public String mFilePath;
-    /* access modifiers changed from: private */
-    public String mRequestMethod = REQUEST_METHOD_GET;
+    private URLConnection mConn;
+    private Context mContext;
+    private String mFileName;
+    private String mFilePath;
+    private String mRequestMethod = REQUEST_METHOD_GET;
     private Map<String, String> mRequestProperty;
-    /* access modifiers changed from: private */
-    public SaveDir mSaveDir = SaveDir.SAVE_DIR_APP;
+    private SaveDir mSaveDir = SaveDir.SAVE_DIR_APP;
     private URL mURL;
-    /* access modifiers changed from: private */
-    public String mUserAgent;
+    private String mUserAgent;
 
     public enum SaveDir {
         SAVE_DIR_APP,
@@ -120,8 +113,7 @@ public class DownloadHelper {
         Download() {
         }
 
-        /* access modifiers changed from: private */
-        public void execute() {
+        private void execute() {
             DLog.d("DHP", "Download#execute()");
             HttpURLConnection httpURLConn = (HttpURLConnection) DownloadHelper.this.mConn;
             try {

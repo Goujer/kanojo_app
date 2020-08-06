@@ -19,8 +19,7 @@ public class ModelListParser extends AbstractJSONParser<ModelList<BarcodeKanojoM
         this.mSubParser = subParser;
     }
 
-    /* access modifiers changed from: protected */
-    public ModelList<BarcodeKanojoModel> parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected ModelList<BarcodeKanojoModel> parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         ModelList<BarcodeKanojoModel> modelList = new ModelList<>();
         try {
             if (!object.has(this.mName)) {

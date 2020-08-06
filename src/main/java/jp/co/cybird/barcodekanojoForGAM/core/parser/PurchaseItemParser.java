@@ -8,8 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PurchaseItemParser extends AbstractJSONParser<PurchaseItem> {
-    /* access modifiers changed from: protected */
-    public PurchaseItem parseInner(JSONObject object) throws IOException, BarcodeKanojoException, BarcodeKanojoParseException {
+    protected PurchaseItem parseInner(JSONObject object) throws IOException, BarcodeKanojoException, BarcodeKanojoParseException {
         PurchaseItem item = new PurchaseItem();
         try {
             if (object.has("google_transaction_id")) {

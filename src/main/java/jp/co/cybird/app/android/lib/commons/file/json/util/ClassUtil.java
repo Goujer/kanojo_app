@@ -37,8 +37,7 @@ public final class ClassUtil {
             map = cache.get(cl);
             if (map == null) {
                 map = new LinkedHashMap<String, Class<?>>(16, 0.75f, true) {
-                    /* access modifiers changed from: protected */
-                    public boolean removeEldestEntry(Map.Entry<String, Class<?>> entry) {
+                    protected boolean removeEldestEntry(Map.Entry<String, Class<?>> entry) {
                         return size() > 1024;
                     }
                 };
@@ -367,8 +366,7 @@ public final class ClassUtil {
             super(in);
         }
 
-        /* access modifiers changed from: protected */
-        public Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+        protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
             try {
                 return Class.forName(desc.getName(), true, Thread.currentThread().getContextClassLoader());
             } catch (Exception e) {

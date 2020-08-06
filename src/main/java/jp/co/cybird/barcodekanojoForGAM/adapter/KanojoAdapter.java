@@ -22,24 +22,18 @@ import jp.co.cybird.barcodekanojoForGAM.view.KanojoView;
 public class KanojoAdapter extends BaseKanojoPairAdapter implements ObservableAdapter {
 
     private static final String TAG = "KanojoAdapter";
-    /* access modifiers changed from: private */
-    public Handler mHandler;
+    private Handler mHandler;
     private LayoutInflater mInflater;
-    /* access modifiers changed from: private */
-    public OnKanojoClickListener mListener;
-    /* access modifiers changed from: private */
-    public int mLoadedPhotoIndex = 0;
-    /* access modifiers changed from: private */
-    public final Runnable mNotifyThread = new Runnable() {
+    private OnKanojoClickListener mListener;
+    private int mLoadedPhotoIndex = 0;
+    private final Runnable mNotifyThread = new Runnable() {
         public void run() {
             KanojoAdapter.this.notifyDataSetChanged();
         }
     };
     private RemoteResourceManagerObserver mResourcesObserver;
-    /* access modifiers changed from: private */
-    public RemoteResourceManager mRrm;
-    /* access modifiers changed from: private */
-    public Runnable mRunnableLoadPhotos = new Runnable() {
+    private RemoteResourceManager mRrm;
+    private Runnable mRunnableLoadPhotos = new Runnable() {
         public void run() {
             if (KanojoAdapter.this.mLoadedPhotoIndex < KanojoAdapter.this.getCount()) {
                 KanojoAdapter kanojoAdapter = KanojoAdapter.this;

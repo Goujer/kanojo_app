@@ -27,16 +27,12 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 public class TopActivity extends BaseActivity {
 
     private static final String TAG = "TopActivity";
-    /* access modifiers changed from: private */
-    public Button login_btn;
-    /* access modifiers changed from: private */
-    public ProgressBar mProgressBar;
+    private Button login_btn;
+    private ProgressBar mProgressBar;
     private TopLogInTask mTopLogInTask;
     private TopSignUpTask mTopSignUpTask;
-    /* access modifiers changed from: private */
-    public File modifiedPhoto;
-    /* access modifiers changed from: private */
-    public Button signup_btn;
+    private File modifiedPhoto;
+    private Button signup_btn;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +53,7 @@ public class TopActivity extends BaseActivity {
         });
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    protected void onDestroy() {
         this.login_btn.setOnClickListener((View.OnClickListener) null);
         this.signup_btn.setOnClickListener((View.OnClickListener) null);
         super.onDestroy();
@@ -232,15 +227,13 @@ public class TopActivity extends BaseActivity {
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        protected void onCancelled() {
             TopActivity.this.mProgressBar.setVisibility(View.INVISIBLE);
             TopActivity.this.login_btn.setVisibility(View.VISIBLE);
             TopActivity.this.signup_btn.setVisibility(View.VISIBLE);
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> login() throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> login() throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) TopActivity.this.getApplication()).getBarcodeKanojo();
             User user = barcodeKanojo.getUser();
             Response<BarcodeKanojoModel> iphone_verify = barcodeKanojo.iphone_verify(user.getEmail(), user.getPassword(), ((BarcodeKanojoApp) TopActivity.this.getApplication()).getUDID());
@@ -298,15 +291,13 @@ public class TopActivity extends BaseActivity {
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        protected void onCancelled() {
             TopActivity.this.mProgressBar.setVisibility(View.INVISIBLE);
             TopActivity.this.login_btn.setVisibility(View.VISIBLE);
             TopActivity.this.signup_btn.setVisibility(View.VISIBLE);
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> signup() throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> signup() throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) TopActivity.this.getApplication()).getBarcodeKanojo();
             User user = barcodeKanojo.getUser();
             Response<BarcodeKanojoModel> iphone_signup = barcodeKanojo.iphone_signup(user.getName(), user.getPassword(), user.getEmail(), user.getBirth_month(), user.getBirth_day(), user.getSex(), user.getDescription(), TopActivity.this.modifiedPhoto, ((BarcodeKanojoApp) TopActivity.this.getApplication()).getUDID());
