@@ -24,9 +24,9 @@ android {
 	buildToolsVersion '29.0.2'
 
 	defaultConfig {
-		applicationId 'jp.co.cybird.barcodekanojoForGAM'
+		applicationId 'com.goujer.barcodekanojo'
 		versionCode 1
-		versionName "2.4.3"
+		versionName "0.1.0"
 	}
 	buildTypes {
 		release {

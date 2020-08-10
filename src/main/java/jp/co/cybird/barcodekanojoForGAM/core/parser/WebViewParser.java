@@ -8,8 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class WebViewParser extends AbstractJSONParser<WebViewData> {
-    /* access modifiers changed from: protected */
-    public WebViewData parseInner(JSONObject object) throws IOException, BarcodeKanojoException, BarcodeKanojoParseException {
+    protected WebViewData parseInner(JSONObject object) throws IOException, BarcodeKanojoException, BarcodeKanojoParseException {
         WebViewData webviewData = new WebViewData();
         if (object.has("url")) {
             try {

@@ -25,22 +25,17 @@ public class KanojoItemAdapter extends BaseKanojoItemAdapter implements Observab
     public static final int MODE_EXTEND_DATE = 4;
     public static final int MODE_EXTEND_GIFT = 5;
     private static final String TAG = "KanojoAdapter";
-    /* access modifiers changed from: private */
-    public Handler mHandler;
+    private Handler mHandler;
     private LayoutInflater mInflater;
-    /* access modifiers changed from: private */
-    public int mLoadedPhotoIndex = 0;
-    /* access modifiers changed from: private */
-    public final Runnable mNotifyThread = new Runnable() {
+    private int mLoadedPhotoIndex = 0;
+    private final Runnable mNotifyThread = new Runnable() {
         public void run() {
             KanojoItemAdapter.this.notifyDataSetChanged();
         }
     };
     private RemoteResourceManagerObserver mResourcesObserver;
-    /* access modifiers changed from: private */
-    public RemoteResourceManager mRrm;
-    /* access modifiers changed from: private */
-    public Runnable mRunnableLoadPhotos = new Runnable() {
+    private RemoteResourceManager mRrm;
+    private Runnable mRunnableLoadPhotos = new Runnable() {
         public void run() {
             if (KanojoItemAdapter.this.mLoadedPhotoIndex < KanojoItemAdapter.this.getCount()) {
                 KanojoItemAdapter kanojoItemAdapter = KanojoItemAdapter.this;

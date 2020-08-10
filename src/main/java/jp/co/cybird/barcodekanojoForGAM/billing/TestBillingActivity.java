@@ -137,8 +137,7 @@ public class TestBillingActivity extends Activity {
         this.mHelper.launchPurchaseFlow(this, SKU_PREMIUM, RC_REQUEST, this.mPurchaseFinishedListener);
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
         if (!this.mHelper.handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
@@ -174,8 +173,7 @@ public class TestBillingActivity extends Activity {
         ((ImageView) findViewById(R.id.gas_gauge)).setImageResource(TANK_RES_IDS[this.mTank >= TANK_RES_IDS.length ? TANK_RES_IDS.length - 1 : this.mTank]);
     }
 
-    /* access modifiers changed from: package-private */
-    public void setWaitScreen(boolean set) {
+    void setWaitScreen(boolean set) {
         int i;
         int i2 = 0;
         View findViewById = findViewById(R.id.screen_main);
@@ -192,14 +190,12 @@ public class TestBillingActivity extends Activity {
         findViewById2.setVisibility(i2);
     }
 
-    /* access modifiers changed from: package-private */
-    public void complain(String message) {
+    void complain(String message) {
         Log.e(TAG, "**** TrivialDrive Error: " + message);
         alert("Error: " + message);
     }
 
-    /* access modifiers changed from: package-private */
-    public void alert(String message) {
+    void alert(String message) {
         AlertDialog.Builder bld = new AlertDialog.Builder(this);
         bld.setMessage(message);
         bld.setNeutralButton("OK", (DialogInterface.OnClickListener) null);
@@ -207,16 +203,14 @@ public class TestBillingActivity extends Activity {
         bld.create().show();
     }
 
-    /* access modifiers changed from: package-private */
-    public void saveData() {
+    void saveData() {
         SharedPreferences.Editor spe = getPreferences(0).edit();
         spe.putInt("tank", this.mTank);
         spe.commit();
         Log.d(TAG, "Saved data: tank = " + String.valueOf(this.mTank));
     }
 
-    /* access modifiers changed from: package-private */
-    public void loadData() {
+    void loadData() {
         this.mTank = getPreferences(0).getInt("tank", 2);
         Log.d(TAG, "Loaded data: tank = " + String.valueOf(this.mTank));
     }

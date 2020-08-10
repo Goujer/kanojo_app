@@ -53,16 +53,12 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
     EditItemView btnTwitter;
     private EditItemView btnoldID;
     private AutoLoginTask mAutoLoginTask;
-    /* access modifiers changed from: private */
-    public boolean mBlockClick = false;
-    /* access modifiers changed from: private */
-    public FaceBookUtil mFb;
+    private boolean mBlockClick = false;
+    private FaceBookUtil mFb;
     private Handler mHandler;
-    /* access modifiers changed from: private */
-    public CustomLoadingView mLoadingView;
+    private CustomLoadingView mLoadingView;
     private int mRequestCode;
-    /* access modifiers changed from: private */
-    public ApplicationSetting mSetting;
+    private ApplicationSetting mSetting;
     private LinearLayout mSkipLayout;
     private LinearLayout mSocialLayout;
     private LinearLayout mSukiyaLayout;
@@ -76,11 +72,9 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
     };
     private Queue<StatusHolder> mTaskQueue;
     private boolean mTwitterOn = false;
-    /* access modifiers changed from: private */
-    public TwitterDialog mTwitterdialog;
+    private TwitterDialog mTwitterdialog;
     private File modifiedPhoto;
-    /* access modifiers changed from: private */
-    public User modifiedUser;
+    private User modifiedUser;
     private boolean oauthStarted;
     private Resources r;
     private TextView txtSettingTitle;
@@ -160,8 +154,7 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
         CookieSyncManager.createInstance(this);
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         CookieSyncManager.getInstance().startSync();
         if (!this.mTwitterOn) {
@@ -172,8 +165,7 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    protected void onPause() {
         if (this.mAutoLoginTask != null) {
             this.mAutoLoginTask.cancel(true);
             this.mAutoLoginTask = null;
@@ -184,8 +176,7 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
         super.onPause();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    protected void onDestroy() {
         super.onDestroy();
     }
 
@@ -276,8 +267,7 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 108) {
             if (requestCode == 1102 || requestCode == 1103) {
@@ -313,8 +303,7 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
         this.mLoadingView.dismiss();
     }
 
-    /* access modifiers changed from: protected */
-    public void exectuteInspectionAndSignUpTask(String txtName) {
+    protected void exectuteInspectionAndSignUpTask(String txtName) {
         HashMap<String, String> param = new HashMap<>();
         param.put(GreeDefs.USER_NAME, txtName);
         inspectionAndUpdateByAction(param, 0, (HashMap<String, Object>) null);
@@ -355,14 +344,12 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void fixUser() {
+    protected void fixUser() {
         checkAndCopyUser();
         showNoticeDialog(getString(R.string.edit_account_update_done));
     }
 
-    /* access modifiers changed from: private */
-    public void showAlertDialog(Alert alert) {
+    private void showAlertDialog(Alert alert) {
         super.showAlertDialog(alert, new DialogInterface.OnDismissListener() {
             public void onDismiss(DialogInterface dialog) {
             }
@@ -413,21 +400,18 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
         }
     }
 
-    /* access modifiers changed from: private */
-    public Queue<StatusHolder> getQueue() {
+    private Queue<StatusHolder> getQueue() {
         if (this.mTaskQueue == null) {
             this.mTaskQueue = new LinkedList();
         }
         return this.mTaskQueue;
     }
 
-    /* access modifiers changed from: private */
-    public synchronized void clearQueue() {
+    private synchronized void clearQueue() {
         getQueue().clear();
     }
 
-    /* access modifiers changed from: private */
-    public synchronized boolean isQueueEmpty() {
+    private synchronized boolean isQueueEmpty() {
         return this.mTaskQueue.isEmpty();
     }
 
@@ -470,8 +454,7 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
         this.mTaskEndHandler.sendEmptyMessage(0);
     }
 
-    /* access modifiers changed from: private */
-    public synchronized void executeDisconnectListTask(boolean fbFlag) {
+    private synchronized void executeDisconnectListTask(boolean fbFlag) {
         clearQueue();
         StatusHolder mFbHolder = new StatusHolder();
         mFbHolder.key = 3;
@@ -485,8 +468,7 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
         this.mTaskEndHandler.sendEmptyMessage(0);
     }
 
-    /* access modifiers changed from: private */
-    public void executeAutoLoginTask(StatusHolder list) {
+    private void executeAutoLoginTask(StatusHolder list) {
         if (isLoading(list)) {
             Log.d("NguyenTT", "task " + list.key + " is running ");
             return;
@@ -596,8 +578,7 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        protected void onCancelled() {
             SignUpActivity.this.dismissProgressDialog();
             SignUpActivity.this.mBlockClick = false;
         }
@@ -633,14 +614,12 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void startDashboard() {
+    protected void startDashboard() {
         finish();
         startActivity(new Intent().setClass(this, KanojosActivity.class));
     }
 
-    /* access modifiers changed from: protected */
-    public void showTwitterDialog(String message, DialogInterface.OnDismissListener listener) {
+    protected void showTwitterDialog(String message, DialogInterface.OnDismissListener listener) {
         if (this.mTwitterdialog == null) {
             this.mTwitterdialog = new TwitterDialog(this, "http://google.com");
         }
@@ -743,8 +722,7 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void showConfirmDisconnectDialog(String message, final boolean isFaceBook) {
+    protected void showConfirmDisconnectDialog(String message, final boolean isFaceBook) {
         AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.app_name).setMessage(message).setPositiveButton(R.string.common_dialog_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 if (isFaceBook) {
@@ -774,21 +752,18 @@ public class SignUpActivity extends BaseEditActivity implements View.OnClickList
         return new ProgressDialog(this);
     }
 
-    /* access modifiers changed from: protected */
-    public void dismissProgressDialog() {
+    protected void dismissProgressDialog() {
         this.mLoadingView.dismiss();
     }
 
-    /* access modifiers changed from: protected */
-    public void startCheckSession() {
+    protected void startCheckSession() {
         if (this.mRequestCode != 1102) {
             super.startCheckSession();
             showProgressDialog();
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void endCheckSession() {
+    protected void endCheckSession() {
         dismissProgressDialog();
     }
 }

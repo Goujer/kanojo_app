@@ -22,8 +22,7 @@ public final class SearchBookContentsListItem extends LinearLayout {
         super(context, attrs);
     }
 
-    /* access modifiers changed from: protected */
-    public void onFinishInflate() {
+    protected void onFinishInflate() {
         super.onFinishInflate();
         this.pageNumberView = (TextView) findViewById(R.id.page_number_view);
         this.snippetView = (TextView) findViewById(R.id.snippet_view);

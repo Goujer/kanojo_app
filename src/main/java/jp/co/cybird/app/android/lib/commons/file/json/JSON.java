@@ -71,8 +71,7 @@ import org.w3c.dom.Node;
 
 public class JSON {
     private static final Map<Class<?>, Converter> CONVERT_MAP = new HashMap(50);
-    /* access modifiers changed from: private */
-    public static final Map<Class<?>, Formatter> FORMAT_MAP = new HashMap(50);
+    private static final Map<Class<?>, Formatter> FORMAT_MAP = new HashMap(50);
     public static volatile Class<? extends JSON> prototype = JSON.class;
     Object contextObject;
     String dateFormat;
@@ -440,8 +439,7 @@ public class JSON {
         return ap;
     }
 
-    /* access modifiers changed from: protected */
-    public Object preformat(JSONContext context, Object value) throws Exception {
+    protected Object preformat(JSONContext context, Object value) throws Exception {
         return value;
     }
 
@@ -561,8 +559,7 @@ public class JSON {
         return new JSONReader(new JSONContext(), new ReaderInputSource(reader), true, ignoreWhitespace);
     }
 
-    /* access modifiers changed from: package-private */
-    public String getMessage(String id, Object... args) {
+    String getMessage(String id, Object... args) {
         return MessageFormat.format(ResourceBundle.getBundle("net.arnx.jsonic.Messages", this.locale).getString(id), args);
     }
 
@@ -570,8 +567,7 @@ public class JSON {
         return new JSONContext().convertInternal(value, type);
     }
 
-    /* access modifiers changed from: protected */
-    public <T> T postparse(JSONContext context, Object value, Class<? extends T> cls, Type type) throws Exception {
+    protected <T> T postparse(JSONContext context, Object value, Class<? extends T> cls, Type type) throws Exception {
         Converter c = null;
         Converter c2 = null;
         if (value != null) {
@@ -635,13 +631,11 @@ public class JSON {
         throw new UnsupportedOperationException();
     }
 
-    /* access modifiers changed from: protected */
-    public String normalize(String name) {
+    protected String normalize(String name) {
         return name;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean ignore(JSONContext context, Class<?> cls, Member member) {
+    protected boolean ignore(JSONContext context, Class<?> cls, Member member) {
         if (!Modifier.isTransient(member.getModifiers()) && !member.getDeclaringClass().equals(Object.class)) {
             return false;
         }
@@ -705,15 +699,13 @@ public class JSON {
         return cls.cast(instance);
     }
 
-    /* access modifiers changed from: private */
-    public static boolean isAssignableFrom(Class<?> target, Class<?> cls) {
+    private static boolean isAssignableFrom(Class<?> target, Class<?> cls) {
         return target != null && target.isAssignableFrom(cls);
     }
 
     public final class JSONContext {
         private final LocalCache cache;
-        /* access modifiers changed from: private */
-        public final Object contextObject;
+        private final Object contextObject;
         private final String dateFormat;
         private int depth = -1;
         private final NamingStyle enumStyle;
@@ -721,8 +713,7 @@ public class JSON {
         private final int initialIndent;
         private final Locale locale;
         private final int maxDepth;
-        /* access modifiers changed from: private */
-        public Map<Class<?>, Object> memberCache;
+        private Map<Class<?>, Object> memberCache;
         private final Mode mode;
         private final String numberFormat;
         private Object[] path;
@@ -772,7 +763,6 @@ public class JSON {
             }
         }
 
-        /* access modifiers changed from: package-private */
         public JSONContext copy() {
             return new JSONContext(this);
         }
@@ -868,8 +858,8 @@ public class JSON {
             return c.cast(o);
         }
 
-        /* access modifiers changed from: package-private */
-        public void enter(Object key, JSONHint hint) {
+
+        void enter(Object key, JSONHint hint) {
             this.depth++;
             if (this.path == null) {
                 this.path = new Object[8];
@@ -883,18 +873,15 @@ public class JSON {
             this.path[(this.depth * 2) + 1] = hint;
         }
 
-        /* access modifiers changed from: package-private */
-        public void enter(Object key) {
+        void enter(Object key) {
             enter(key, getHint());
         }
 
-        /* access modifiers changed from: package-private */
-        public void exit() {
+        void exit() {
             this.depth--;
         }
 
-        /* access modifiers changed from: package-private */
-        public NumberFormat getNumberFormat() {
+        NumberFormat getNumberFormat() {
             JSONHint hint = getHint();
             String format = (hint == null || hint.format().length() <= 0) ? this.numberFormat : hint.format();
             if (format != null) {
@@ -903,8 +890,7 @@ public class JSON {
             return null;
         }
 
-        /* access modifiers changed from: package-private */
-        public DateFormat getDateFormat() {
+        DateFormat getDateFormat() {
             JSONHint hint = getHint();
             String format = (hint == null || hint.format().length() <= 0) ? this.dateFormat : hint.format();
             if (format != null) {
@@ -954,8 +940,7 @@ public class JSON {
             return sb.toString();
         }
 
-        /* access modifiers changed from: package-private */
-        public final Object preformatInternal(Object value) {
+        final Object preformatInternal(Object value) {
             if (value == null) {
                 return null;
             }
@@ -972,8 +957,7 @@ public class JSON {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public final Formatter formatInternal(Object src, OutputSource ap) throws IOException {
+        final Formatter formatInternal(Object src, OutputSource ap) throws IOException {
             Object o = src;
             Formatter f = null;
             if (o == null) {
@@ -1072,13 +1056,11 @@ public class JSON {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public <T> T postparseInternal(Object value, Class<? extends T> cls, Type type) throws Exception {
+        <T> T postparseInternal(Object value, Class<? extends T> cls, Type type) throws Exception {
             return JSON.this.postparse(this, value, cls, type);
         }
 
-        /* access modifiers changed from: package-private */
-        public <T> T convertInternal(Object value, Type type) throws JSONException {
+        <T> T convertInternal(Object value, Type type) throws JSONException {
             String text;
             if (type instanceof TypeReference) {
                 type = ((TypeReference) type).getType();
@@ -1103,18 +1085,15 @@ public class JSON {
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public <T> T createInternal(Class<? extends T> c) throws Exception {
+        <T> T createInternal(Class<? extends T> c) throws Exception {
             return JSON.this.create(this, c);
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean ignoreInternal(Class<?> target, Member member) {
+        boolean ignoreInternal(Class<?> target, Member member) {
             return JSON.this.ignore(this, target, member);
         }
 
-        /* access modifiers changed from: package-private */
-        public String normalizeInternal(String name) {
+        String normalizeInternal(String name) {
             return JSON.this.normalize(name);
         }
     }

@@ -106,8 +106,7 @@ public class JSONParser {
         //return type2;
     }
 
-    /* access modifiers changed from: package-private */
-    public int beforeRoot() throws IOException {
+    int beforeRoot() throws IOException {
         int n = this.in.next();
         if (n == 65279) {
             n = this.in.next();
@@ -140,8 +139,7 @@ public class JSONParser {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int afterRoot() throws IOException {
+    int afterRoot() throws IOException {
         int n = this.in.next();
         switch (n) {
             case -1:
@@ -168,8 +166,7 @@ public class JSONParser {
         throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
     }
 
-    /* access modifiers changed from: package-private */
-    public int beforeName() throws IOException {
+    int beforeName() throws IOException {
         int n = this.in.next();
         switch (n) {
             case -1:
@@ -202,8 +199,7 @@ public class JSONParser {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int afterName() throws IOException {
+    int afterName() throws IOException {
         int n = this.in.next();
         switch (n) {
             case -1:
@@ -225,8 +221,7 @@ public class JSONParser {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int beforeValue() throws IOException {
+    int beforeValue() throws IOException {
         int n = this.in.next();
         switch (n) {
             case -1:
@@ -298,8 +293,7 @@ public class JSONParser {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int afterValue() throws IOException {
+    int afterValue() throws IOException {
         int n = this.in.next();
         switch (n) {
             case -1:
@@ -352,8 +346,7 @@ public class JSONParser {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void push(JSONEventType type2) {
+    void push(JSONEventType type2) {
         boolean z = true;
         this.type = type2;
         this.stack.add(type2);
@@ -364,8 +357,7 @@ public class JSONParser {
         this.active = z;
     }
 
-    /* access modifiers changed from: package-private */
-    public void set(JSONEventType type2, Object value2, boolean isValue) {
+    void set(JSONEventType type2, Object value2, boolean isValue) {
         this.type = type2;
         this.value = value2;
         if (isValue) {
@@ -373,8 +365,7 @@ public class JSONParser {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void pop() {
+    void pop() {
         boolean z = false;
         JSONEventType beginType = this.stack.remove(this.stack.size() - 1);
         if (beginType == JSONEventType.START_OBJECT) {
@@ -391,26 +382,22 @@ public class JSONParser {
         this.active = z;
     }
 
-    /* access modifiers changed from: package-private */
-    public JSONEventType getBeginType() {
+    JSONEventType getBeginType() {
         if (!this.stack.isEmpty()) {
             return this.stack.get(this.stack.size() - 1);
         }
         return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public JSONEventType getType() {
+    JSONEventType getType() {
         return this.type;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isFirst() {
+    boolean isFirst() {
         return this.first;
     }
 
-    /* access modifiers changed from: package-private */
-    public Object parseString(InputSource in2, boolean any) throws IOException {
+    Object parseString(InputSource in2, boolean any) throws IOException {
         StringBuilder sb;
         int n;
         if (this.active) {
@@ -474,8 +461,7 @@ public class JSONParser {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public char parseEscape(InputSource in2) throws IOException {
+    char parseEscape(InputSource in2) throws IOException {
         int hex;
         int point = 1;
         char escape = 0;
@@ -525,7 +511,6 @@ public class JSONParser {
         }
     }
 
-    /* access modifiers changed from: package-private */
     /* JADX WARNING: Code restructure failed: missing block: B:28:0x0056, code lost:
         if (r4 != 0) goto L_0x0016;
      */
@@ -533,7 +518,7 @@ public class JSONParser {
         r4 = r13.mark();
         r1 = 0;
      */
-    public Object parseNumber(InputSource in2) throws IOException {
+    Object parseNumber(InputSource in2) throws IOException {
         int point = 0;
         StringBuilder sb = this.active ? this.cache.getCachedBuffer() : null;
         int rest = in2.mark();
@@ -680,8 +665,7 @@ public class JSONParser {
         throw createParseException(in2, "json.parse.UnrecognizedLiteral", expected.substring(0, pos));
     }
 
-    /* access modifiers changed from: package-private */
-    public Object parseLiteral(InputSource in2, boolean asValue) throws IOException {
+    Object parseLiteral(InputSource in2, boolean asValue) throws IOException {
         StringBuilder sb;
         String str;
         int point = 0;
@@ -753,7 +737,6 @@ public class JSONParser {
         return str;
     }
 
-    /* access modifiers changed from: package-private */
     /* JADX WARNING: Code restructure failed: missing block: B:16:0x003b, code lost:
         if (r3 != 0) goto L_0x0018;
      */
@@ -770,7 +753,7 @@ public class JSONParser {
     /* JADX WARNING: Code restructure failed: missing block: B:72:0x00dd, code lost:
         r12.copy(r4, r0);
      */
-    public String parseComment(InputSource in2) throws IOException {
+    String parseComment(InputSource in2) throws IOException {
         int point = 0;
         StringBuilder sb = !isIgnoreWhitespace() ? this.cache.getCachedBuffer() : null;
         int rest = in2.mark();
@@ -915,13 +898,11 @@ public class JSONParser {
         return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public JSONException createParseException(InputSource in2, String id) {
+    JSONException createParseException(InputSource in2, String id) {
         return createParseException(in2, id, (Object[]) null);
     }
 
-    /* access modifiers changed from: package-private */
-    public JSONException createParseException(InputSource in2, String id, Object... args) {
+    JSONException createParseException(InputSource in2, String id, Object... args) {
         return new JSONException(in2.getLineNumber() + ": " + this.cache.getMessage(id, args) + "\n" + in2.toString() + " <- ?", 200, in2.getLineNumber(), in2.getColumnNumber(), in2.getOffset());
     }
 }

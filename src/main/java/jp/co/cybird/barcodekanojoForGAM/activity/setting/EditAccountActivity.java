@@ -22,8 +22,7 @@ import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs;
 public class EditAccountActivity extends BaseEditActivity implements BaseInterface, View.OnClickListener {
     public static final String TAG = "LogInActivity";
     private Resources r;
-    /* access modifiers changed from: private */
-    public TextView txtName;
+    private TextView txtName;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,8 +72,7 @@ public class EditAccountActivity extends BaseEditActivity implements BaseInterfa
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == -1) {
             switch (requestCode) {
@@ -98,8 +96,7 @@ public class EditAccountActivity extends BaseEditActivity implements BaseInterfa
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void executeInspectionAndEditAccountTask(String txt) {
+    protected void executeInspectionAndEditAccountTask(String txt) {
         HashMap<String, String> param = new HashMap<>();
         param.put(GreeDefs.USER_NAME, txt);
         inspectionAndUpdateByAction(param, 1, (HashMap<String, Object>) null);

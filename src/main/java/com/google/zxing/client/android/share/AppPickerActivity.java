@@ -12,15 +12,13 @@ public final class AppPickerActivity extends ListActivity {
     private LoadPackagesAsyncTask backgroundTask;
     private final AsyncTaskExecInterface taskExec = ((AsyncTaskExecInterface) new AsyncTaskExecManager().build());
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         this.backgroundTask = new LoadPackagesAsyncTask(this);
         this.taskExec.execute(this.backgroundTask, new Void[0]);
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    protected void onPause() {
         LoadPackagesAsyncTask task = this.backgroundTask;
         if (task != null) {
             task.cancel(true);
@@ -29,8 +27,7 @@ public final class AppPickerActivity extends ListActivity {
         super.onPause();
     }
 
-    /* access modifiers changed from: protected */
-    public void onListItemClick(ListView l, View view, int position, long id) {
+    protected void onListItemClick(ListView l, View view, int position, long id) {
         ListAdapter adapter = getListAdapter();
         if (position < 0 || position >= adapter.getCount()) {
             setResult(0);

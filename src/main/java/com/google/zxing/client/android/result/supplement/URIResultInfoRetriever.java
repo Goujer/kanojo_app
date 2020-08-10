@@ -21,8 +21,7 @@ final class URIResultInfoRetriever extends SupplementalInfoRetriever {
         this.result = result2;
     }
 
-    /* access modifiers changed from: package-private */
-    public void retrieveSupplementalInfo() throws IOException {
+    void retrieveSupplementalInfo() throws IOException {
         try {
             URI oldURI = new URI(this.result.getURI());
             URI newURI = HttpHelper.unredirect(oldURI);

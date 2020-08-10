@@ -72,8 +72,7 @@ public abstract class SupplementalInfoRetriever extends AsyncTask<Object, Object
         }
     }
 
-    /* access modifiers changed from: protected */
-    public final void onPostExecute(Object arg) {
+    protected final void onPostExecute(Object arg) {
         TextView textView = (TextView) this.textViewRef.get();
         if (textView != null) {
             for (Spannable content : this.newContents) {
@@ -89,8 +88,7 @@ public abstract class SupplementalInfoRetriever extends AsyncTask<Object, Object
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void append(String itemID, String source, String[] newTexts, String linkURL) {
+    final void append(String itemID, String source, String[] newTexts, String linkURL) {
         StringBuilder newTextCombined = new StringBuilder();
         if (source != null) {
             newTextCombined.append(source).append(' ');

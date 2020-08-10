@@ -34,13 +34,11 @@ public class Inventory {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public List<String> getAllOwnedSkus() {
+    List<String> getAllOwnedSkus() {
         return new ArrayList(this.mPurchaseMap.keySet());
     }
 
-    /* access modifiers changed from: package-private */
-    public List<String> getAllOwnedSkus(String itemType) {
+    List<String> getAllOwnedSkus(String itemType) {
         List<String> result = new ArrayList<>();
         for (Purchase p : this.mPurchaseMap.values()) {
             if (p.getItemType().equals(itemType)) {
@@ -50,18 +48,15 @@ public class Inventory {
         return result;
     }
 
-    /* access modifiers changed from: package-private */
-    public List<Purchase> getAllPurchases() {
+    List<Purchase> getAllPurchases() {
         return new ArrayList(this.mPurchaseMap.values());
     }
 
-    /* access modifiers changed from: package-private */
-    public void addSkuDetails(SkuDetails d) {
+    void addSkuDetails(SkuDetails d) {
         this.mSkuMap.put(d.getSku(), d);
     }
 
-    /* access modifiers changed from: package-private */
-    public void addPurchase(Purchase p) {
+    void addPurchase(Purchase p) {
         this.mPurchaseMap.put(p.getSku(), p);
     }
 }

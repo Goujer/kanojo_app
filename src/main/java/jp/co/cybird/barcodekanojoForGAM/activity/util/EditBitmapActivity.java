@@ -48,8 +48,7 @@ public class EditBitmapActivity extends Activity implements BaseInterface, View.
     };
     private File mRootDir;
     private String mRootPath;
-    /* access modifiers changed from: private */
-    public EditBitmapView mView;
+    private EditBitmapView mView;
     private int mode = 0;
 
     public interface OnDialogDismissListener {
@@ -95,8 +94,7 @@ public class EditBitmapActivity extends Activity implements BaseInterface, View.
         finish();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    protected void onDestroy() {
         try {
             unregisterReceiver(this.mLoggedOutReceiver);
         } catch (Exception e) {
@@ -126,8 +124,7 @@ public class EditBitmapActivity extends Activity implements BaseInterface, View.
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == -1) {
             switch (requestCode) {
@@ -169,8 +166,7 @@ public class EditBitmapActivity extends Activity implements BaseInterface, View.
         }
     }
 
-    /* access modifiers changed from: protected */
-    public final void cleanupView(View view) {
+    protected final void cleanupView(View view) {
         Drawable d = view.getBackground();
         if (d != null) {
             d.setCallback((Drawable.Callback) null);

@@ -190,8 +190,7 @@ public final class HistoryManager {
 		}
 	}
 
-	/* access modifiers changed from: package-private */
-	public CharSequence buildHistory() {
+	CharSequence buildHistory() {
 		SQLiteDatabase db = null;
 		Cursor cursor = null;
 		try {
@@ -212,8 +211,7 @@ public final class HistoryManager {
 		}
 	}
 
-	/* access modifiers changed from: package-private */
-	public void clearHistory() {
+	void clearHistory() {
 		SQLiteDatabase db = null;
 		try {
 			db = new DBHelper(this.activity).getWritableDatabase();

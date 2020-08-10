@@ -25,8 +25,7 @@ public class PrivacyInfoActivity extends BaseActivity implements View.OnClickLis
         this.btnNO.setOnClickListener(this);
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    protected void onDestroy() {
         this.btnOK.setOnClickListener((View.OnClickListener) null);
         this.btnNO.setOnClickListener((View.OnClickListener) null);
         super.onDestroy();

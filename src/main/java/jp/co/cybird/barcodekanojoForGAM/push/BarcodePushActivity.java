@@ -176,8 +176,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         this.mTaskEndHandler.sendEmptyMessage(0);
     }
 
-    /* access modifiers changed from: private */
-    public void executePushTask(StatusHolder list) {
+    private void executePushTask(StatusHolder list) {
         if (!isLoading(list)) {
             this.mAutoLoginTask = new AutoLoginTask();
             this.mAutoLoginTask.setList(list);

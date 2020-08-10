@@ -25,8 +25,7 @@ final class ProductResultInfoRetriever extends SupplementalInfoRetriever {
         this.context = context2;
     }
 
-    /* access modifiers changed from: package-private */
-    public void retrieveSupplementalInfo() throws IOException {
+    void retrieveSupplementalInfo() throws IOException {
         String uri = "http://www.google." + LocaleManager.getProductSearchCountryTLD(this.context) + "/m/products?ie=utf8&oe=utf8&scoring=p&source=zxing&q=" + URLEncoder.encode(this.productID, "UTF-8");
         CharSequence content = HttpHelper.downloadViaHttp(uri, HttpHelper.ContentType.HTML);
         for (Pattern p : PRODUCT_NAME_PRICE_PATTERNS) {

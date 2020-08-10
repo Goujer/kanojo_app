@@ -27,16 +27,13 @@ public class FaceBookUtil {
     public static final int AUTHORIZE_ACTIVITY_RESULT_CODE = -100;
     public static Facebook mFb;
     public static int mWaitCounter;
-    /* access modifiers changed from: private */
-    public FaceBookProfile fbHolder;
-    /* access modifiers changed from: private */
-    public Activity mActivity;
+    private FaceBookProfile fbHolder;
+    private Activity mActivity;
     private int mActivityCode;
     private AsyncFacebookRunner mAsyncRunner;
     private Context mContext;
     private Handler mHandler;
-    /* access modifiers changed from: private */
-    public OnFaceBoookListener mListener;
+    private OnFaceBoookListener mListener;
     private String[] mPermissions;
     RemoteResourceManager mRrm;
     private BaseDiskCache.BaseDiskCallBack mSaveListener;

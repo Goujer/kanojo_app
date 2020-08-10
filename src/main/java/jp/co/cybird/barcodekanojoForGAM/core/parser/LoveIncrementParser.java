@@ -8,8 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LoveIncrementParser extends AbstractJSONParser<LoveIncrement> {
-    /* access modifiers changed from: protected */
-    public LoveIncrement parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected LoveIncrement parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         LoveIncrement res = new LoveIncrement();
         Log.d(LoveIncrement.TAG, object.toString());
         try {

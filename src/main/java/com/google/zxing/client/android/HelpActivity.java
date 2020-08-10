@@ -17,8 +17,7 @@ public final class HelpActivity extends Activity {
     public static final String REQUESTED_PAGE_KEY = "requested_page_key";
     private static final String WEBVIEW_STATE_PRESENT = "webview_state_present";
     public static final String WHATS_NEW_PAGE = "whatsnew.html";
-    /* access modifiers changed from: private */
-    public Button backButton;
+    private Button backButton;
     private final View.OnClickListener backListener = new View.OnClickListener() {
         public void onClick(View view) {
             HelpActivity.this.webView.goBack();
@@ -29,11 +28,9 @@ public final class HelpActivity extends Activity {
             HelpActivity.this.finish();
         }
     };
-    /* access modifiers changed from: private */
-    public WebView webView;
+    private WebView webView;
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle icicle) {
+    protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.help);
         this.webView = (WebView) findViewById(R.id.help_contents);
@@ -56,8 +53,7 @@ public final class HelpActivity extends Activity {
         findViewById(R.id.done_button).setOnClickListener(this.doneListener);
     }
 
-    /* access modifiers changed from: protected */
-    public void onSaveInstanceState(Bundle state) {
+    protected void onSaveInstanceState(Bundle state) {
         String url = this.webView.getUrl();
         if (url != null && url.length() > 0) {
             this.webView.saveState(state);

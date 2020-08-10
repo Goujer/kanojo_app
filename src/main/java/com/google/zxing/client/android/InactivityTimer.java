@@ -12,10 +12,8 @@ import com.google.zxing.client.android.common.executor.AsyncTaskExecManager;
 
 final class InactivityTimer {
     private static final long INACTIVITY_DELAY_MS = 300000;
-    /* access modifiers changed from: private */
-    public static final String TAG = InactivityTimer.class.getSimpleName();
-    /* access modifiers changed from: private */
-    public final Activity activity;
+    private static final String TAG = InactivityTimer.class.getSimpleName();
+    private final Activity activity;
     private InactivityAsyncTask inactivityTask;
     private final BroadcastReceiver powerStatusReceiver = new PowerStatusReceiver(this, (PowerStatusReceiver) null);
     private final AsyncTaskExecInterface taskExec = ((AsyncTaskExecInterface) new AsyncTaskExecManager().build());
@@ -25,8 +23,7 @@ final class InactivityTimer {
         onActivity();
     }
 
-    /* access modifiers changed from: package-private */
-    public synchronized void onActivity() {
+    synchronized void onActivity() {
         cancel();
         this.inactivityTask = new InactivityAsyncTask(this, (InactivityAsyncTask) null);
         this.taskExec.execute(this.inactivityTask, new Object[0]);
@@ -42,8 +39,7 @@ final class InactivityTimer {
         onActivity();
     }
 
-    /* access modifiers changed from: private */
-    public synchronized void cancel() {
+    private synchronized void cancel() {
         AsyncTask<?, ?, ?> task = this.inactivityTask;
         if (task != null) {
             task.cancel(true);
@@ -51,8 +47,7 @@ final class InactivityTimer {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void shutdown() {
+    void shutdown() {
         cancel();
     }
 
@@ -83,8 +78,7 @@ final class InactivityTimer {
             this();
         }
 
-        /* access modifiers changed from: protected */
-        public Object doInBackground(Object... objects) {
+        protected Object doInBackground(Object... objects) {
             try {
                 Thread.sleep(300000);
                 Log.i(InactivityTimer.TAG, "Finishing activity due to inactivity");

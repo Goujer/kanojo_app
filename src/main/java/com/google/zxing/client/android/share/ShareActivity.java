@@ -69,8 +69,7 @@ public final class ShareActivity extends Activity {
         }
     };
 
-    /* access modifiers changed from: private */
-    public void launchSearch(String text) {
+    private void launchSearch(String text) {
         Intent intent = new Intent(Intents.Encode.ACTION);
         intent.addFlags(524288);
         intent.putExtra(Intents.Encode.TYPE, Contents.Type.TEXT);
@@ -90,8 +89,7 @@ public final class ShareActivity extends Activity {
         findViewById(R.id.share_text_view).setOnKeyListener(this.textListener);
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         this.clipboardButton.setEnabled(((ClipboardManager) getSystemService("clipboard")).hasText());
     }

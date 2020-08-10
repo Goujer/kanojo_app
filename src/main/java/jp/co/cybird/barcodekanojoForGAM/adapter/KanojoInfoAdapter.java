@@ -21,11 +21,9 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 public class KanojoInfoAdapter extends BaseActivityModelAdapter {
 
     private static final String TAG = "KanojoInfoAdapter";
-    /* access modifiers changed from: private */
-    public Handler mHandler;
+    private Handler mHandler;
     private LayoutInflater mInflater;
-    /* access modifiers changed from: private */
-    public final Runnable mNotifyThread = new Runnable() {
+    private final Runnable mNotifyThread = new Runnable() {
         public void run() {
             KanojoInfoAdapter.this.notifyDataSetChanged();
         }

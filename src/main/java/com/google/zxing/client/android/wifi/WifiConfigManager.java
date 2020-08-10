@@ -16,8 +16,7 @@ public final class WifiConfigManager extends AsyncTask<WifiParsedResult, Object,
         this.wifiManager = wifiManager2;
     }
 
-    /* access modifiers changed from: protected */
-    public Object doInBackground(WifiParsedResult... args) {
+    protected Object doInBackground(WifiParsedResult... args) {
         WifiParsedResult theWifiResult = args[0];
         if (!this.wifiManager.isWifiEnabled()) {
             Log.i(TAG, "Enabling wi-fi...");

@@ -48,43 +48,35 @@ public class AsyncHttpResponseHandler {
         onFailure(error);
     }
 
-    /* access modifiers changed from: protected */
-    public void sendSuccessMessage(int statusCode, String responseBody) {
+    protected void sendSuccessMessage(int statusCode, String responseBody) {
         sendMessage(obtainMessage(0, new Object[]{new Integer(statusCode), responseBody}));
     }
 
-    /* access modifiers changed from: protected */
-    public void sendFailureMessage(Throwable e, String responseBody) {
+    protected void sendFailureMessage(Throwable e, String responseBody) {
         sendMessage(obtainMessage(1, new Object[]{e, responseBody}));
     }
 
-    /* access modifiers changed from: protected */
-    public void sendFailureMessage(Throwable e, byte[] responseBody) {
+    protected void sendFailureMessage(Throwable e, byte[] responseBody) {
         sendMessage(obtainMessage(1, new Object[]{e, responseBody}));
     }
 
-    /* access modifiers changed from: protected */
-    public void sendStartMessage() {
+    protected void sendStartMessage() {
         sendMessage(obtainMessage(2, (Object) null));
     }
 
-    /* access modifiers changed from: protected */
-    public void sendFinishMessage() {
+    protected void sendFinishMessage() {
         sendMessage(obtainMessage(3, (Object) null));
     }
 
-    /* access modifiers changed from: protected */
-    public void handleSuccessMessage(int statusCode, String responseBody) {
+    protected void handleSuccessMessage(int statusCode, String responseBody) {
         onSuccess(statusCode, responseBody);
     }
 
-    /* access modifiers changed from: protected */
-    public void handleFailureMessage(Throwable e, String responseBody) {
+    protected void handleFailureMessage(Throwable e, String responseBody) {
         onFailure(e, responseBody);
     }
 
-    /* access modifiers changed from: protected */
-    public void handleMessage(Message msg) {
+    protected void handleMessage(Message msg) {
         switch (msg.what) {
             case 0:
                 Object[] response = (Object[]) msg.obj;
@@ -105,8 +97,7 @@ public class AsyncHttpResponseHandler {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void sendMessage(Message msg) {
+    protected void sendMessage(Message msg) {
         if (this.handler != null) {
             this.handler.sendMessage(msg);
         } else {
@@ -114,8 +105,7 @@ public class AsyncHttpResponseHandler {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public Message obtainMessage(int responseMessage, Object response) {
+    protected Message obtainMessage(int responseMessage, Object response) {
         if (this.handler != null) {
             return this.handler.obtainMessage(responseMessage, response);
         }
@@ -125,10 +115,9 @@ public class AsyncHttpResponseHandler {
         return msg;
     }
 
-    /* access modifiers changed from: package-private */
     /* JADX WARNING: Removed duplicated region for block: B:10:0x001f  */
     /* JADX WARNING: Removed duplicated region for block: B:13:0x0036  */
-    public void sendResponseMessage(HttpResponse response) {
+    void sendResponseMessage(HttpResponse response) {
         StatusLine status = response.getStatusLine();
         String responseBody = null;
         try {

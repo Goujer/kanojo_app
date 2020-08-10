@@ -52,22 +52,15 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
     private ImageView imgView;
     private List<String> lstProductId;
     private BuyTicketTask mBuyTicketTask;
-    /* access modifiers changed from: private */
-    public Inventory mInventory;
-    /* access modifiers changed from: private */
-    public Kanojo mKanojo;
-    /* access modifiers changed from: private */
-    public KanojoItem mKanojoItem;
+    private Inventory mInventory;
+    private Kanojo mKanojo;
+    private KanojoItem mKanojoItem;
     private PurchaseApi.OnPurchaseListener mListener;
-    /* access modifiers changed from: private */
-    public boolean mLoadingDone = false;
+    private boolean mLoadingDone = false;
     private CustomLoadingView mLoadingView;
-    /* access modifiers changed from: private */
-    public LoveIncrement mLoveIncrement;
-    /* access modifiers changed from: private */
-    public PurchaseApi mPurchaseAPI;
-    /* access modifiers changed from: private */
-    public String mReceiptData;
+    private LoveIncrement mLoveIncrement;
+    private PurchaseApi mPurchaseAPI;
+    private String mReceiptData;
     private RemoteResourceManager mRrm;
     final Handler mTaskEndHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -78,11 +71,9 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
         }
     };
     private Queue<StatusHolder> mTaskQueue;
-    /* access modifiers changed from: private */
-    public int mTransactionId;
+    private int mTransactionId;
     private User mUser;
-    /* access modifiers changed from: private */
-    public int mode;
+    private int mode;
     private TextView txtDescription;
     private TextView txtTitle;
 
@@ -148,8 +139,7 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
         this.mPurchaseAPI.setListener(this.mListener);
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         if (this.mLoadingDone || !((this.mode == 4 || this.mode == 5) && this.mKanojoItem.getHas_units() == null)) {
             loadContent(0);
@@ -198,8 +188,7 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
         return appLayoutRoot;
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    protected void onPause() {
         super.onPause();
         if (this.mBuyTicketTask != null) {
             this.mBuyTicketTask.cancel(true);
@@ -207,8 +196,7 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (this.mPurchaseAPI.getHelper() == null || !this.mPurchaseAPI.handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
             if (requestCode == 1009 && resultCode == 207) {
@@ -288,21 +276,18 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
         }
     }
 
-    /* access modifiers changed from: private */
-    public Queue<StatusHolder> getQueue() {
+    private Queue<StatusHolder> getQueue() {
         if (this.mTaskQueue == null) {
             this.mTaskQueue = new LinkedList();
         }
         return this.mTaskQueue;
     }
 
-    /* access modifiers changed from: private */
-    public synchronized void clearQueue() {
+    private synchronized void clearQueue() {
         getQueue().clear();
     }
 
-    /* access modifiers changed from: private */
-    public synchronized boolean isQueueEmpty() {
+    private synchronized boolean isQueueEmpty() {
         return this.mTaskQueue.isEmpty();
     }
 
@@ -339,8 +324,7 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
         this.mTaskEndHandler.sendEmptyMessage(0);
     }
 
-    /* access modifiers changed from: private */
-    public void executePurchaseTask(StatusHolder list) {
+    private void executePurchaseTask(StatusHolder list) {
         if (isLoading(list)) {
             Log.d("NguyenTT", "task " + list.key + " is running ");
         } else if (list.key != 1) {
@@ -466,13 +450,11 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        protected void onCancelled() {
             KanojoItemDetailActivity.this.dismissProgressDialog();
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) KanojoItemDetailActivity.this.getApplication()).getBarcodeKanojo();
             if (list == null) {
                 throw new BarcodeKanojoException("process:StatusHolder is null!");
@@ -526,8 +508,7 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void nextScreen(StatusHolder list) {
+    void nextScreen(StatusHolder list) {
         int i = list.key;
         dismissProgressDialog();
     }
@@ -557,8 +538,7 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
         return new ProgressDialog(this);
     }
 
-    /* access modifiers changed from: protected */
-    public void dismissProgressDialog() {
+    protected void dismissProgressDialog() {
         this.mLoadingView.dismiss();
     }
 }

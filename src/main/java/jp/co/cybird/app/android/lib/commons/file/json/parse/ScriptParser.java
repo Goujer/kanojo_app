@@ -14,8 +14,7 @@ public class ScriptParser extends JSONParser {
         this.in = in2;
     }
 
-    /* access modifiers changed from: package-private */
-    public int beforeRoot() throws IOException {
+    int beforeRoot() throws IOException {
         int n = this.in.next();
         if (n == 65279) {
             n = this.in.next();
@@ -87,8 +86,7 @@ public class ScriptParser extends JSONParser {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int afterRoot() throws IOException {
+    int afterRoot() throws IOException {
         int n = this.in.next();
         switch (n) {
             case -1:
@@ -139,8 +137,7 @@ public class ScriptParser extends JSONParser {
         throw createParseException(this.in, "json.parse.UnexpectedChar", Character.valueOf((char) n));
     }
 
-    /* access modifiers changed from: package-private */
-    public int beforeName() throws IOException {
+    int beforeName() throws IOException {
         int n = this.in.next();
         switch (n) {
             case -1:
@@ -199,8 +196,7 @@ public class ScriptParser extends JSONParser {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int afterName() throws IOException {
+    int afterName() throws IOException {
         int n = this.in.next();
         switch (n) {
             case -1:
@@ -231,8 +227,7 @@ public class ScriptParser extends JSONParser {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int beforeValue() throws IOException {
+    int beforeValue() throws IOException {
         int n = this.in.next();
         switch (n) {
             case -1:
@@ -313,8 +308,7 @@ public class ScriptParser extends JSONParser {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int afterValue() throws IOException {
+    int afterValue() throws IOException {
         int n = this.in.next();
         switch (n) {
             case -1:

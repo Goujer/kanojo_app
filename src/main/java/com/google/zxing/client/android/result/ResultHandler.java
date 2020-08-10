@@ -76,13 +76,11 @@ public abstract class ResultHandler {
         return this.result;
     }
 
-    /* access modifiers changed from: package-private */
-    public final boolean hasCustomProductSearch() {
+    final boolean hasCustomProductSearch() {
         return this.customProductSearch != null;
     }
 
-    /* access modifiers changed from: package-private */
-    public final Activity getActivity() {
+    final Activity getActivity() {
         return this.activity;
     }
 
@@ -90,8 +88,7 @@ public abstract class ResultHandler {
         return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public final void showGoogleShopperButton(View.OnClickListener listener) {
+    final void showGoogleShopperButton(View.OnClickListener listener) {
         View shopperButton = this.activity.findViewById(R.id.shopper_button);
         shopperButton.setVisibility(View.VISIBLE);
         shopperButton.setOnClickListener(listener);
@@ -105,18 +102,15 @@ public abstract class ResultHandler {
         return this.result.getType();
     }
 
-    /* access modifiers changed from: package-private */
-    public final void addPhoneOnlyContact(String[] phoneNumbers, String[] phoneTypes) {
+    final void addPhoneOnlyContact(String[] phoneNumbers, String[] phoneTypes) {
         addContact((String[]) null, (String[]) null, (String) null, phoneNumbers, phoneTypes, (String[]) null, (String[]) null, (String) null, (String) null, (String) null, (String) null, (String) null, (String) null, (String[]) null, (String) null, (String[]) null);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void addEmailOnlyContact(String[] emails, String[] emailTypes) {
+    final void addEmailOnlyContact(String[] emails, String[] emailTypes) {
         addContact((String[]) null, (String[]) null, (String) null, (String[]) null, (String[]) null, emails, emailTypes, (String) null, (String) null, (String) null, (String) null, (String) null, (String) null, (String[]) null, (String) null, (String[]) null);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void addContact(String[] names, String[] nicknames, String pronunciation, String[] phoneNumbers, String[] phoneTypes, String[] emails, String[] emailTypes, String note, String instantMessenger, String address, String addressType, String org2, String title, String[] urls, String birthday, String[] geo) {
+    final void addContact(String[] names, String[] nicknames, String pronunciation, String[] phoneNumbers, String[] phoneTypes, String[] emails, String[] emailTypes, String note, String instantMessenger, String address, String addressType, String org2, String title, String[] urls, String birthday, String[] geo) {
         int type;
         int type2;
         int type3;
@@ -199,13 +193,11 @@ public abstract class ResultHandler {
         return NO_TYPE;
     }
 
-    /* access modifiers changed from: package-private */
-    public final void shareByEmail(String contents) {
+    final void shareByEmail(String contents) {
         sendEmailFromUri("mailto:", (String) null, this.activity.getString(R.string.msg_share_subject_line), contents);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void sendEmail(String address, String subject, String body) {
+    final void sendEmail(String address, String subject, String body) {
         sendEmailFromUri("mailto:" + address, address, subject, body);
     }
 

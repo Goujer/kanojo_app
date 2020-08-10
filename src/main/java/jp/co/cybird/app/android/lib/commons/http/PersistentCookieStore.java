@@ -83,8 +83,7 @@ public class PersistentCookieStore implements CookieStore {
         return new ArrayList(this.cookies.values());
     }
 
-    /* access modifiers changed from: protected */
-    public String encodeCookie(SerializableCookie cookie) {
+    protected String encodeCookie(SerializableCookie cookie) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             new ObjectOutputStream(os).writeObject(cookie);
@@ -94,8 +93,7 @@ public class PersistentCookieStore implements CookieStore {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public Cookie decodeCookie(String cookieStr) {
+    protected Cookie decodeCookie(String cookieStr) {
         try {
             return ((SerializableCookie) new ObjectInputStream(new ByteArrayInputStream(hexStringToByteArray(cookieStr))).readObject()).getCookie();
         } catch (Exception e) {
@@ -104,8 +102,7 @@ public class PersistentCookieStore implements CookieStore {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public String byteArrayToHexString(byte[] b) {
+    protected String byteArrayToHexString(byte[] b) {
         StringBuffer sb = new StringBuffer(b.length * 2);
         for (byte element : b) {
             int v = element & MotionEventCompat.ACTION_MASK;
@@ -117,8 +114,7 @@ public class PersistentCookieStore implements CookieStore {
         return sb.toString().toUpperCase();
     }
 
-    /* access modifiers changed from: protected */
-    public byte[] hexStringToByteArray(String s) {
+    protected byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[(len / 2)];
         for (int i = 0; i < len; i += 2) {

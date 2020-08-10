@@ -11,8 +11,7 @@ import java.util.HashMap;
 import jp.co.cybird.app.android.lib.commons.file.DownloadHelper;
 
 public class ThreadHttpClient {
-    /* access modifiers changed from: private */
-    public HashMap<String, String> clientHeaderMap = new HashMap<>();
+    private HashMap<String, String> clientHeaderMap = new HashMap<>();
     private String mUserAgent = null;
 
     enum Method {

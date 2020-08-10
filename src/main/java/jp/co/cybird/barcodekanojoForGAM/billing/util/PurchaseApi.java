@@ -42,10 +42,8 @@ public class PurchaseApi {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public IabHelper mHelper;
-    /* access modifiers changed from: private */
-    public OnPurchaseListener mListener;
+    private IabHelper mHelper;
+    private OnPurchaseListener mListener;
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
         public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
             Log.d(PurchaseApi.TAG, "Purchase finished: " + result + ", purchase: " + purchase);

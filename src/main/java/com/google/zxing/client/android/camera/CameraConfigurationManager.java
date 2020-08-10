@@ -27,8 +27,7 @@ final class CameraConfigurationManager {
         this.context = context2;
     }
 
-    /* access modifiers changed from: package-private */
-    public void initFromCameraParameters(Camera camera) {
+    void initFromCameraParameters(Camera camera) {
         Camera.Parameters parameters = camera.getParameters();
         Display display = ((WindowManager) this.context.getSystemService("window")).getDefaultDisplay();
         int width = display.getWidth();
@@ -45,8 +44,7 @@ final class CameraConfigurationManager {
         Log.i(TAG, "Camera resolution: " + this.cameraResolution);
     }
 
-    /* access modifiers changed from: package-private */
-    public void setDesiredCameraParameters(Camera camera, boolean safeMode) {
+    void setDesiredCameraParameters(Camera camera, boolean safeMode) {
         String colorMode;
         Camera.Parameters parameters = camera.getParameters();
         if (parameters == null) {
@@ -80,18 +78,15 @@ final class CameraConfigurationManager {
         camera.setParameters(parameters);
     }
 
-    /* access modifiers changed from: package-private */
-    public Point getCameraResolution() {
+    Point getCameraResolution() {
         return this.cameraResolution;
     }
 
-    /* access modifiers changed from: package-private */
-    public Point getScreenResolution() {
+    Point getScreenResolution() {
         return this.screenResolution;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean getTorchState(Camera camera) {
+    boolean getTorchState(Camera camera) {
         String flashMode;
         if (camera == null || camera.getParameters() == null || (flashMode = camera.getParameters().getFlashMode()) == null) {
             return false;
@@ -102,8 +97,7 @@ final class CameraConfigurationManager {
         return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setTorch(Camera camera, boolean newSetting) {
+    void setTorch(Camera camera, boolean newSetting) {
         Camera.Parameters parameters = camera.getParameters();
         doSetTorch(parameters, newSetting, false);
         camera.setParameters(parameters);

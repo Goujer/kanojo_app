@@ -26,8 +26,7 @@ final class BeepManager {
         updatePrefs();
     }
 
-    /* access modifiers changed from: package-private */
-    public void updatePrefs() {
+    void updatePrefs() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.activity);
         this.playBeep = shouldBeep(prefs, this.activity);
         this.vibrate = prefs.getBoolean(PreferencesActivity.KEY_VIBRATE, false);
@@ -37,8 +36,7 @@ final class BeepManager {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void playBeepSoundAndVibrate() {
+    void playBeepSoundAndVibrate() {
         if (this.playBeep && this.mediaPlayer != null) {
             this.mediaPlayer.start();
         }

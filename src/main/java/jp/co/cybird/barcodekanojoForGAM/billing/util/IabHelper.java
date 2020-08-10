@@ -424,8 +424,7 @@ public class IabHelper {
         queryInventoryAsync(querySkuDetails, (List<String>) null, listener);
     }
 
-    /* access modifiers changed from: package-private */
-    public void consume(Purchase itemInfo) throws IabException {
+    void consume(Purchase itemInfo) throws IabException {
         checkNotDisposed();
         checkSetupDone("consume");
         if (!itemInfo.mItemType.equals(ITEM_TYPE_INAPP)) {
@@ -481,16 +480,14 @@ public class IabHelper {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void checkSetupDone(String operation) {
+    void checkSetupDone(String operation) {
         if (!this.mSetupDone) {
             logError("Illegal state for operation (" + operation + "): IAB helper is not set up.");
             throw new IllegalStateException("IAB helper is not set up. Can't perform operation: " + operation);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int getResponseCodeFromBundle(Bundle b) {
+    int getResponseCodeFromBundle(Bundle b) {
         Object o = b.get(RESPONSE_CODE);
         if (o == null) {
             logDebug("Bundle with null response code, assuming OK (known issue)");
@@ -507,8 +504,7 @@ public class IabHelper {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int getResponseCodeFromIntent(Intent i) {
+    int getResponseCodeFromIntent(Intent i) {
         Object o = i.getExtras().get(RESPONSE_CODE);
         if (o == null) {
             logError("Intent with no response code, assuming OK (known issue)");
@@ -525,8 +521,7 @@ public class IabHelper {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void flagStartAsync(String operation) {
+    void flagStartAsync(String operation) {
         if (this.mAsyncInProgress) {
             throw new IllegalStateException("Can't start async operation (" + operation + ") because another async operation(" + this.mAsyncOperation + ") is in progress.");
         }
@@ -535,15 +530,13 @@ public class IabHelper {
         logDebug("Starting async operation: " + operation);
     }
 
-    /* access modifiers changed from: package-private */
-    public void flagEndAsync() {
+    void flagEndAsync() {
         logDebug("Ending async operation: " + this.mAsyncOperation);
         this.mAsyncOperation = "";
         this.mAsyncInProgress = false;
     }
 
-    /* access modifiers changed from: package-private */
-    public int queryPurchases(Inventory inv, String itemType) throws JSONException, RemoteException, NullPointerException {
+    int queryPurchases(Inventory inv, String itemType) throws JSONException, RemoteException, NullPointerException {
         int response;
         logDebug("Querying owned items, item type: " + itemType);
         boolean verificationFailed = false;
@@ -594,8 +587,7 @@ public class IabHelper {
         return response;
     }
 
-    /* access modifiers changed from: package-private */
-    public int querySkuDetails(String itemType, Inventory inv, List<String> moreSkus) throws RemoteException, JSONException {
+    int querySkuDetails(String itemType, Inventory inv, List<String> moreSkus) throws RemoteException, JSONException {
         logDebug("Querying SKU details.");
         ArrayList<String> skuList = new ArrayList<>();
         skuList.addAll(inv.getAllOwnedSkus(itemType));

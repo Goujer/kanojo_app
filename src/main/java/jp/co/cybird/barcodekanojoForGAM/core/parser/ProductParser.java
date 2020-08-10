@@ -7,8 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ProductParser extends AbstractJSONParser<Product> {
-    /* access modifiers changed from: protected */
-    public Product parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected Product parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         Product res = new Product();
         try {
             if (object.has("barcode")) {

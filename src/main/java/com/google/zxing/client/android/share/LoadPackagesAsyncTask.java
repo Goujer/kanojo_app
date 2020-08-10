@@ -23,8 +23,7 @@ final class LoadPackagesAsyncTask extends AsyncTask<Void, Void, List<AppInfo>> {
         this.activity = activity2;
     }
 
-    /* access modifiers changed from: protected */
-    public List<AppInfo> doInBackground(Void... objects) {
+    protected List<AppInfo> doInBackground(Void... objects) {
         List<AppInfo> labelsPackages = new ArrayList<>();
         PackageManager packageManager = this.activity.getPackageManager();
         for (ApplicationInfo appInfo : packageManager.getInstalledApplications(0)) {
@@ -58,8 +57,7 @@ final class LoadPackagesAsyncTask extends AsyncTask<Void, Void, List<AppInfo>> {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public void onPostExecute(List<AppInfo> results) {
+    protected void onPostExecute(List<AppInfo> results) {
         final List<AppInfo> list = results;
         this.activity.setListAdapter(new ArrayAdapter<AppInfo>(this.activity, R.layout.app_picker_list_item, R.id.app_picker_list_item_label, results) {
             public View getView(int position, View convertView, ViewGroup parent) {

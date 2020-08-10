@@ -18,8 +18,7 @@ final class TitleRetriever extends SupplementalInfoRetriever {
         this.httpUrl = result.getURI();
     }
 
-    /* access modifiers changed from: package-private */
-    public void retrieveSupplementalInfo() {
+    void retrieveSupplementalInfo() {
         String title;
         try {
             CharSequence contents = HttpHelper.downloadViaHttp(this.httpUrl, HttpHelper.ContentType.HTML, 4096);

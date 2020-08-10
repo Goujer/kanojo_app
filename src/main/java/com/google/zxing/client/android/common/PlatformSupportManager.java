@@ -26,8 +26,7 @@ public abstract class PlatformSupportManager<T> {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public final void addImplementationClass(int minVersion, String className) {
+    protected final void addImplementationClass(int minVersion, String className) {
         this.implementations.put(minVersion, className);
     }
 

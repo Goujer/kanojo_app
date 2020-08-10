@@ -39,8 +39,7 @@ final class DecodeThread extends Thread {
         Log.i("DecodeThread", "Hints: " + this.hints);
     }
 
-    /* access modifiers changed from: package-private */
-    public Handler getHandler() {
+	Handler getHandler() {
         try {
             this.handlerInitLatch.await();
         } catch (InterruptedException e) {

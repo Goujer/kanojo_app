@@ -13,8 +13,7 @@ public class MessageParser extends AbstractJSONParser<MessageModel> {
         this.mNames = names;
     }
 
-    /* access modifiers changed from: protected */
-    public MessageModel parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected MessageModel parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         MessageModel res = new MessageModel();
         if (object.has("message") && !object.isNull("message")) {
             try {

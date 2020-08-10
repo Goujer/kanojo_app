@@ -131,8 +131,7 @@ public class ImageCache {
         }
     }
 
-    /* access modifiers changed from: private */
-    public static void updateImageView(Context context, final ImageView imageView, final Uri uri, final RemoteResourceManager rrm, final int default_rid) {
+    private static void updateImageView(Context context, final ImageView imageView, final Uri uri, final RemoteResourceManager rrm, final int default_rid) {
         ((Activity) context).runOnUiThread(new Runnable() {
             public void run() {
                 try {
