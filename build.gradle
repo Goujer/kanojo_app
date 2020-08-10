@@ -28,13 +28,27 @@ android {
 		versionCode 1
 		versionName "0.1.0"
 	}
+
+	signingConfigs {
+		release {
+			storeFile file("release.jks")
+			storePassword RELEASE_STORE_PASSWORD
+			keyAlias RELEASE_KEY_ALIAS
+			keyPassword RELEASE_KEY_PASSWORD
+		}
+	}
+
 	buildTypes {
 		release {
-			minifyEnabled true
-			shrinkResources true
+			minifyEnabled false
+			shrinkResources false
+			signingConfig signingConfigs.release
+			debuggable true
 		}
 		debug {
 			debuggable true
+			applicationIdSuffix '.DEBUG'
+			versionNameSuffix '.d'
 		}
 	}
 
