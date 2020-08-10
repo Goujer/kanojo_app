@@ -66,7 +66,7 @@ public class AsyncHttpClient {
 
     public AsyncHttpClient() {
         BasicHttpParams httpParams = new BasicHttpParams();
-        ConnManagerParams.setTimeout(httpParams, (long) socketTimeout);
+        ConnManagerParams.setTimeout(httpParams, socketTimeout);
         ConnManagerParams.setMaxConnectionsPerRoute(httpParams, new ConnPerRouteBean(maxConnections));
         ConnManagerParams.setMaxTotalConnections(httpParams, 10);
         HttpConnectionParams.setSoTimeout(httpParams, socketTimeout);
@@ -86,7 +86,7 @@ public class AsyncHttpClient {
                     request.addHeader(AsyncHttpClient.HEADER_ACCEPT_ENCODING, AsyncHttpClient.ENCODING_GZIP);
                 }
                 for (String header : AsyncHttpClient.this.clientHeaderMap.keySet()) {
-                    request.addHeader(header, (String) AsyncHttpClient.this.clientHeaderMap.get(header));
+                    request.addHeader(header, AsyncHttpClient.this.clientHeaderMap.get(header));
                 }
             }
         });
@@ -110,72 +110,72 @@ public class AsyncHttpClient {
         this.clientHeaderMap = new HashMap();
     }
 
-    public HttpClient getHttpClient() {
-        return this.httpClient;
-    }
-
-    public HttpContext getHttpContext() {
-        return this.httpContext;
-    }
-
-    public void setCookieStore(CookieStore cookieStore) {
-        this.httpContext.setAttribute("http.cookie-store", cookieStore);
-    }
-
-    public void setThreadPool(ThreadPoolExecutor threadPool2) {
-        this.threadPool = threadPool2;
-    }
+//    public HttpClient getHttpClient() {
+//        return this.httpClient;
+//    }
+//
+//    public HttpContext getHttpContext() {
+//        return this.httpContext;
+//    }
+//
+//    public void setCookieStore(CookieStore cookieStore) {
+//        this.httpContext.setAttribute("http.cookie-store", cookieStore);
+//    }
+//
+//    public void setThreadPool(ThreadPoolExecutor threadPool2) {
+//        this.threadPool = threadPool2;
+//    }
 
     public void setUserAgent(String userAgent) {
         HttpProtocolParams.setUserAgent(this.httpClient.getParams(), userAgent);
     }
 
-    public void setTimeout(int timeout) {
-        HttpParams httpParams = this.httpClient.getParams();
-        ConnManagerParams.setTimeout(httpParams, (long) timeout);
-        HttpConnectionParams.setSoTimeout(httpParams, timeout);
-        HttpConnectionParams.setConnectionTimeout(httpParams, timeout);
-    }
+//    public void setTimeout(int timeout) {
+//        HttpParams httpParams = this.httpClient.getParams();
+//        ConnManagerParams.setTimeout(httpParams, (long) timeout);
+//        HttpConnectionParams.setSoTimeout(httpParams, timeout);
+//        HttpConnectionParams.setConnectionTimeout(httpParams, timeout);
+//    }
+//
+//    public void setSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
+//        this.httpClient.getConnectionManager().getSchemeRegistry().register(new Scheme("https", sslSocketFactory, 443));
+//    }
+//
+//    public void addHeader(String header, String value) {
+//        this.clientHeaderMap.put(header, value);
+//    }
+//
+//    public void setBasicAuth(String user, String pass) {
+//        setBasicAuth(user, pass, AuthScope.ANY);
+//    }
 
-    public void setSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
-        this.httpClient.getConnectionManager().getSchemeRegistry().register(new Scheme("https", sslSocketFactory, 443));
-    }
-
-    public void addHeader(String header, String value) {
-        this.clientHeaderMap.put(header, value);
-    }
-
-    public void setBasicAuth(String user, String pass) {
-        setBasicAuth(user, pass, AuthScope.ANY);
-    }
-
-    public void setBasicAuth(String user, String pass, AuthScope scope) {
-        this.httpClient.getCredentialsProvider().setCredentials(scope, new UsernamePasswordCredentials(user, pass));
-    }
-
-    public void cancelRequests(Context context, boolean mayInterruptIfRunning) {
-        List<WeakReference<Future<?>>> requestList = this.requestMap.get(context);
-        if (requestList != null) {
-            for (WeakReference<Future<?>> requestRef : requestList) {
-                Future<?> request = (Future) requestRef.get();
-                if (request != null) {
-                    request.cancel(mayInterruptIfRunning);
-                }
-            }
-        }
-        this.requestMap.remove(context);
-    }
+//    public void setBasicAuth(String user, String pass, AuthScope scope) {
+//        this.httpClient.getCredentialsProvider().setCredentials(scope, new UsernamePasswordCredentials(user, pass));
+//    }
+//
+//    public void cancelRequests(Context context, boolean mayInterruptIfRunning) {
+//        List<WeakReference<Future<?>>> requestList = this.requestMap.get(context);
+//        if (requestList != null) {
+//            for (WeakReference<Future<?>> requestRef : requestList) {
+//                Future<?> request = (Future) requestRef.get();
+//                if (request != null) {
+//                    request.cancel(mayInterruptIfRunning);
+//                }
+//            }
+//        }
+//        this.requestMap.remove(context);
+//    }
 
     public void get(String url, AsyncHttpResponseHandler responseHandler) {
-        get((Context) null, url, (RequestParams) null, responseHandler);
+        get(null, url, null, responseHandler);
     }
 
     public void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        get((Context) null, url, params, responseHandler);
+        get(null, url, params, responseHandler);
     }
 
     public void get(Context context, String url, AsyncHttpResponseHandler responseHandler) {
-        get(context, url, (RequestParams) null, responseHandler);
+        get(context, url, null, responseHandler);
     }
 
     public void get(Context context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
@@ -187,19 +187,19 @@ public class AsyncHttpClient {
         if (headers != null) {
             request.setHeaders(headers);
         }
-        sendRequest(this.httpClient, this.httpContext, request, (String) null, responseHandler, context);
+        sendRequest(this.httpClient, this.httpContext, request, null, responseHandler, context);
     }
 
     public void post(String url, AsyncHttpResponseHandler responseHandler) {
-        post((Context) null, url, (RequestParams) null, responseHandler);
+        post(null, url, null, responseHandler);
     }
 
     public void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        post((Context) null, url, params, responseHandler);
+        post(null, url, params, responseHandler);
     }
 
     public void post(Context context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        post(context, url, paramsToEntity(params), (String) null, responseHandler);
+        post(context, url, paramsToEntity(params), null, responseHandler);
     }
 
     public void post(Context context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
@@ -226,15 +226,15 @@ public class AsyncHttpClient {
     }
 
     public void put(String url, AsyncHttpResponseHandler responseHandler) {
-        put((Context) null, url, (RequestParams) null, responseHandler);
+        put(null, url, null, responseHandler);
     }
 
     public void put(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        put((Context) null, url, params, responseHandler);
+        put(null, url, params, responseHandler);
     }
 
     public void put(Context context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        put(context, url, paramsToEntity(params), (String) null, responseHandler);
+        put(context, url, paramsToEntity(params), null, responseHandler);
     }
 
     public void put(Context context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
@@ -250,7 +250,7 @@ public class AsyncHttpClient {
     }
 
     public void delete(String url, AsyncHttpResponseHandler responseHandler) {
-        delete((Context) null, url, responseHandler);
+        delete(null, url, responseHandler);
     }
 
     public void delete(Context context, String url, AsyncHttpResponseHandler responseHandler) {

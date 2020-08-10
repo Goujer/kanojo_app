@@ -3,6 +3,8 @@ package jp.co.cybird.barcodekanojoForGAM.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
+
 import jp.co.cybird.barcodekanojoForGAM.core.util.PhoneInfo;
 
 public class ApplicationSetting {
@@ -117,7 +119,7 @@ public class ApplicationSetting {
     }
 
     public String getUUID() {
-        return this.setting.getString(this.keys.userAndroidId, null);
+    	return this.setting.getString(this.keys.userAndroidId, null);
     }
 
     public void clearUUID() {

@@ -27,29 +27,26 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 public class TopActivity extends BaseActivity {
 
     private static final String TAG = "TopActivity";
-    /* access modifiers changed from: private */
-    public Button login_btn;
-    /* access modifiers changed from: private */
-    public ProgressBar mProgressBar;
+    private Button login_btn;
+    private ProgressBar mProgressBar;
     private TopLogInTask mTopLogInTask;
     private TopSignUpTask mTopSignUpTask;
-    /* access modifiers changed from: private */
-    public File modifiedPhoto;
-    /* access modifiers changed from: private */
-    public Button signup_btn;
+    private File modifiedPhoto;
+    private Button signup_btn;
 
-    public void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top);
-        this.mProgressBar = (ProgressBar) findViewById(R.id.top_progressbar);
+        this.mProgressBar = findViewById(R.id.top_progressbar);
         this.mProgressBar.setVisibility(View.INVISIBLE);
-        this.login_btn = (Button) findViewById(R.id.top_log_in);
+        this.login_btn = findViewById(R.id.top_log_in);
         this.login_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 TopActivity.this.startLogin();
             }
         });
-        this.signup_btn = (Button) findViewById(R.id.top_sign_up);
+        this.signup_btn = findViewById(R.id.top_sign_up);
         this.signup_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 TopActivity.this.startShowPrivacy();
@@ -57,21 +54,23 @@ public class TopActivity extends BaseActivity {
         });
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
-        this.login_btn.setOnClickListener((View.OnClickListener) null);
-        this.signup_btn.setOnClickListener((View.OnClickListener) null);
+    @Override
+    protected void onDestroy() {
+        this.login_btn.setOnClickListener(null);
+        this.signup_btn.setOnClickListener(null);
         super.onDestroy();
     }
 
-    public View getClientView() {
+    @Override
+    protected View getClientView() {
         View leyout = getLayoutInflater().inflate(R.layout.activity_top, (ViewGroup) null);
         RelativeLayout appLayoutRoot = new RelativeLayout(this);
         appLayoutRoot.addView(leyout);
         return appLayoutRoot;
     }
 
-    public void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         this.login_btn.setVisibility(View.VISIBLE);
         this.signup_btn.setVisibility(View.VISIBLE);
@@ -88,7 +87,8 @@ public class TopActivity extends BaseActivity {
         }
     }
 
-    public void onPause() {
+    @Override
+    protected void onPause() {
         ((BarcodeKanojoApp) getApplication()).removeLocationUpdates();
         if (this.mTopLogInTask != null) {
             this.mTopLogInTask.cancel(true);
@@ -173,13 +173,15 @@ public class TopActivity extends BaseActivity {
         TopLogInTask() {
         }
 
-        public void onPreExecute() {
+        @Override
+        protected void onPreExecute() {
             TopActivity.this.mProgressBar.setVisibility(View.VISIBLE);
             TopActivity.this.login_btn.setVisibility(View.INVISIBLE);
             TopActivity.this.signup_btn.setVisibility(View.INVISIBLE);
         }
 
-        public Response<?> doInBackground(Void... params) {
+        @Override
+        protected Response<?> doInBackground(Void... params) {
             try {
                 return login();
             } catch (Exception e) {
@@ -188,7 +190,8 @@ public class TopActivity extends BaseActivity {
             }
         }
 
-        public void onPostExecute(Response<?> response) {
+        @Override
+        protected void onPostExecute(Response<?> response) {
             if (response == null) {
                 try {
                     throw new BarcodeKanojoException("response is null! \n" + this.mReason);
@@ -232,15 +235,14 @@ public class TopActivity extends BaseActivity {
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        @Override
+        protected void onCancelled() {
             TopActivity.this.mProgressBar.setVisibility(View.INVISIBLE);
             TopActivity.this.login_btn.setVisibility(View.VISIBLE);
             TopActivity.this.signup_btn.setVisibility(View.VISIBLE);
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> login() throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> login() throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) TopActivity.this.getApplication()).getBarcodeKanojo();
             User user = barcodeKanojo.getUser();
             Response<BarcodeKanojoModel> iphone_verify = barcodeKanojo.iphone_verify(user.getEmail(), user.getPassword(), ((BarcodeKanojoApp) TopActivity.this.getApplication()).getUDID());
@@ -255,13 +257,15 @@ public class TopActivity extends BaseActivity {
         TopSignUpTask() {
         }
 
-        public void onPreExecute() {
+        @Override
+        protected void onPreExecute() {
             TopActivity.this.mProgressBar.setVisibility(View.VISIBLE);
             TopActivity.this.login_btn.setVisibility(View.INVISIBLE);
             TopActivity.this.signup_btn.setVisibility(View.INVISIBLE);
         }
 
-        public Response<?> doInBackground(Void... params) {
+        @Override
+        protected Response<?> doInBackground(Void... params) {
             try {
                 return signup();
             } catch (Exception e) {
@@ -298,15 +302,14 @@ public class TopActivity extends BaseActivity {
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        @Override
+        protected void onCancelled() {
             TopActivity.this.mProgressBar.setVisibility(View.INVISIBLE);
             TopActivity.this.login_btn.setVisibility(View.VISIBLE);
             TopActivity.this.signup_btn.setVisibility(View.VISIBLE);
         }
 
-        /* access modifiers changed from: package-private */
-        public Response<?> signup() throws BarcodeKanojoException, IllegalStateException, IOException {
+        Response<?> signup() throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) TopActivity.this.getApplication()).getBarcodeKanojo();
             User user = barcodeKanojo.getUser();
             Response<BarcodeKanojoModel> iphone_signup = barcodeKanojo.iphone_signup(user.getName(), user.getPassword(), user.getEmail(), user.getBirth_month(), user.getBirth_day(), user.getSex(), user.getDescription(), TopActivity.this.modifiedPhoto, ((BarcodeKanojoApp) TopActivity.this.getApplication()).getUDID());
