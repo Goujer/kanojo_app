@@ -113,8 +113,10 @@ public class BarcodeKanojoApp extends Application {
 //        removeLocationUpdates();
 //    }
 
+	//TODO This is a quick fix, but a real in depth consensual location approximation should be used eventually.
     public Location getLastKnownLocation() {
-        return this.mBestLocationListener.getLastKnownLocation();
+        return null;
+    	//return this.mBestLocationListener.getLastKnownLocation();
     }
 
 //    public Location getLastKnownLocationOrThrow() {
