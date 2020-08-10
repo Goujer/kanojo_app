@@ -4,7 +4,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.goujer.barcodekanojo.core.http.HttpApi
 import com.goujer.barcodekanojo.core.http.NameValueOrFilePair
 import com.goujer.barcodekanojo.core.http.NameValuePair
-import jp.co.cybird.app.android.lib.commons.security.popgate.Codec
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel
@@ -35,8 +34,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun android_signup(birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, uuid: String?): Response<BarcodeKanojoModel?>? {
-		val uuid2 = Codec.encode(uuid)
-		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_SIGNUP, NameValueOrFilePair("uuid", uuid2))
+		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_SIGNUP, NameValueOrFilePair("uuid", uuid))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
@@ -72,8 +70,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun android_verify(udid: String?): Response<BarcodeKanojoModel?>? {
-		val udid2: String = Codec.encode(udid)
-		val connection: HttpURLConnection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY, NameValuePair("uuid", udid2))
+		val connection: HttpURLConnection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY, NameValuePair("uuid", udid))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
@@ -257,8 +254,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun getURLWebView(uuid: String?): Response<BarcodeKanojoModel?>? {
-		val uuid2 = Codec.encode(uuid)
-		val connection = mHttpApi.createHttpGet(URL_WEBVIEW, NameValuePair("uuid", uuid2))
+		val connection = mHttpApi.createHttpGet(URL_WEBVIEW, NameValuePair("uuid", uuid))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), WebViewParser()))
 	}
 
@@ -282,9 +278,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun android_register_fb(facebookid: String?, facebookToken: String?): Response<BarcodeKanojoModel?>? {
-		val facebookid2 = Codec.encode(facebookid)
-		val facebookToken2 = Codec.encode(facebookToken)
-		val connection = mHttpApi.createHttpPost(URL_API_FACEBOOK_CONNECT, NameValuePair("FACEBOOK_ID", facebookid2), NameValuePair("FACEBOOK_TOKEN", facebookToken2))
+		val connection = mHttpApi.createHttpPost(URL_API_FACEBOOK_CONNECT, NameValuePair("FACEBOOK_ID", facebookid), NameValuePair("FACEBOOK_TOKEN", facebookToken))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
@@ -296,9 +290,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun android_register_twitter(access_token: String?, access_secret: String?): Response<BarcodeKanojoModel?>? {
-		val access_token2 = Codec.encode(access_token)
-		val access_secret2 = Codec.encode(access_secret)
-		val connection = mHttpApi.createHttpPost(URL_API_TWITTER_CONNECT, NameValuePair("access_token", access_token2), NameValuePair("access_secret", access_secret2))
+		val connection = mHttpApi.createHttpPost(URL_API_TWITTER_CONNECT, NameValuePair("access_token", access_token), NameValuePair("access_secret", access_secret))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
@@ -310,8 +302,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun android_register_device(uuid: String?, device_token: String?): Response<BarcodeKanojoModel?>? {
-		val uuid2 = Codec.encode(uuid)
-		val connection = mHttpApi.createHttpMultipartPost(URL_API_REGISTER_TOKEN, NameValueOrFilePair("uuid", uuid2), NameValueOrFilePair(Preferences.PREFERENCE_DEVICE_TOKEN, device_token))
+		val connection = mHttpApi.createHttpMultipartPost(URL_API_REGISTER_TOKEN, NameValueOrFilePair("uuid", uuid), NameValueOrFilePair(Preferences.PREFERENCE_DEVICE_TOKEN, device_token))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
@@ -323,8 +314,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun android_uuid_verify(email: String?, password: String?, uuid: String?): Response<BarcodeKanojoModel?>? {
-		val uuid2 = Codec.encode(uuid)
-		val connection = mHttpApi.createHttpPost(URL_API_VERIFY_UUID, NameValuePair("email", email), NameValuePair("password", password), NameValuePair("uuid", uuid2))
+		val connection = mHttpApi.createHttpPost(URL_API_VERIFY_UUID, NameValuePair("email", email), NameValuePair("password", password), NameValuePair("uuid", uuid))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 

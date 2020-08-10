@@ -8,11 +8,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
-import jp.co.cybird.app.android.lib.cybirdid.CybirdCommonUserId;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.activity.DashboardActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity;
@@ -39,7 +37,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
     };
     final Handler mTaskEndHandler = new Handler() {
         public void handleMessage(Message msg) {
-            StatusHolder next = (StatusHolder) BarcodePushActivity.this.getQueue().poll();
+            StatusHolder next = BarcodePushActivity.this.getQueue().poll();
             if (next != null) {
                 BarcodePushActivity.this.executePushTask(next);
             }
@@ -52,7 +50,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
         ApplicationSetting mSetting = new ApplicationSetting(this);
-        String uuid = CybirdCommonUserId.get(this);
+        String uuid = ((BarcodeKanojoApp) getApplication()).getUUID();
         String push_type = getIntent().getStringExtra("push_type");
         mSetting.commitUUID(uuid);
         if (push_type.equalsIgnoreCase(PUSH_NOTIFICATION_REGISTER)) {
@@ -78,9 +76,9 @@ public class BarcodePushActivity extends BaseKanojosActivity {
     protected void changeTab(Context packageContext, Class<?> cls) {
         if (!packageContext.getClass().getName().equalsIgnoreCase(cls.getName())) {
             Intent intent = new Intent().setClass(packageContext, cls);
-            intent.addFlags(AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
-            intent.addFlags(67108864);
-            intent.addFlags(268435456);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             packageContext.startActivity(intent);
             finish();
             ((Activity) packageContext).overridePendingTransition(0, 0);
@@ -90,15 +88,13 @@ public class BarcodePushActivity extends BaseKanojosActivity {
     protected void startKanojoActivity(Kanojo kanojo) {
         if (kanojo != null) {
             Intent intent = new Intent().setClass(this, KanojosActivity.class);
-            if (kanojo != null) {
-                intent.putExtra(BaseInterface.EXTRA_KANOJO, kanojo);
-                intent.addFlags(AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
-                intent.addFlags(67108864);
-                intent.addFlags(268435456);
-                startActivity(intent);
-                finish();
-                overridePendingTransition(0, 0);
-            }
+			intent.putExtra(BaseInterface.EXTRA_KANOJO, kanojo);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+			finish();
+			overridePendingTransition(0, 0);
         }
     }
 
@@ -127,8 +123,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         StatusHolder() {
         }
 
-        /* access modifiers changed from: package-private */
-        public void updatePushType() {
+        void updatePushType() {
             if (this.type.equalsIgnoreCase(BarcodePushActivity.PUSH_NOTIFICATION_P1)) {
                 this.mPushType = 1;
             } else if (this.type.equalsIgnoreCase(BarcodePushActivity.PUSH_NOTIFICATION_P2)) {
@@ -143,8 +138,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         }
     }
 
-    /* access modifiers changed from: private */
-    public Queue<StatusHolder> getQueue() {
+    private Queue<StatusHolder> getQueue() {
         if (this.mTaskQueue == null) {
             this.mTaskQueue = new LinkedList();
         }
@@ -155,8 +149,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         getQueue().clear();
     }
 
-    /* access modifiers changed from: private */
-    public synchronized boolean isQueueEmpty() {
+    private synchronized boolean isQueueEmpty() {
         return this.mTaskQueue.isEmpty();
     }
 
@@ -248,8 +241,8 @@ public class BarcodePushActivity extends BaseKanojosActivity {
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onCancelled() {
+        @Override
+        protected void onCancelled() {
         }
 
         Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
@@ -259,7 +252,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
                 case 0:
                     return barcodeKanojo.android_register_device(setting.getUUID(), setting.getDeviceToken());
                 case 1:
-                    Response<BarcodeKanojoModel> android_verify = barcodeKanojo.android_verify(CybirdCommonUserId.get(BarcodePushActivity.this.getApplicationContext()));
+                    Response<BarcodeKanojoModel> android_verify = barcodeKanojo.android_verify(((BarcodeKanojoApp) getApplication()).getUUID());
                     if (android_verify == null) {
                         return android_verify;
                     }

@@ -27,9 +27,6 @@ android {
 		applicationId 'jp.co.cybird.barcodekanojoForGAM'
 		versionCode 1
 		versionName "2.4.3"
-		ndk {
-			abiFilters "armeabi", "armeabi-v7a", "mips", "x86"
-		}
 	}
 	buildTypes {
 		release {

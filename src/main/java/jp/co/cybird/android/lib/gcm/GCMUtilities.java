@@ -16,9 +16,9 @@ import jp.co.cybird.app.android.lib.applauncher.AppLauncherConsts;
 import jp.co.cybird.app.android.lib.commons.http.RequestParams;
 import jp.co.cybird.app.android.lib.commons.http.ThreadHttpClient;
 import jp.co.cybird.app.android.lib.commons.log.DLog;
-import jp.co.cybird.app.android.lib.commons.security.popgate.Codec;
-import jp.co.cybird.app.android.lib.cybirdid.CybirdCommonUserId;
+import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs;
+import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
 
 public class GCMUtilities {
     public static final String CYLIB_GCM_PARAM_DATA = "cylib_gcm_data";
@@ -29,28 +29,28 @@ public class GCMUtilities {
     private static Runnable mUnregistrationRunnable;
     private static String mUserAgent;
 
-    public static void setRegistrationRunnable(Runnable r) {
-        mRegistrationRunnable = r;
-    }
-
-    public static void setUnRegistrationRunnable(Runnable r) {
-        mUnregistrationRunnable = r;
-    }
-
-    public static void launchPerfActivity(Context context) {
-        Pattern emailPattern = Patterns.EMAIL_ADDRESS;
-        String possibleEmail = "";
-        for (Account account : AccountManager.get(context).getAccounts()) {
-            if (emailPattern.matcher(account.name).matches()) {
-                possibleEmail = account.name;
-                DLog.d("JP.CO.CYBIRD.ANDROID.GCM", possibleEmail);
-                context.startActivity(new Intent(context, PrefsActivity.class));
-            }
-        }
-        if ("".equals(possibleEmail)) {
-            Toast.makeText(context, ParameterLoader.getString("LIB_GCM_GOOGLE_ACCOUNT_MISSING_INFO", context), 1).show();
-        }
-    }
+//    public static void setRegistrationRunnable(Runnable r) {
+//        mRegistrationRunnable = r;
+//    }
+//
+//    public static void setUnRegistrationRunnable(Runnable r) {
+//        mUnregistrationRunnable = r;
+//    }
+//
+//    public static void launchPerfActivity(Context context) {
+//        Pattern emailPattern = Patterns.EMAIL_ADDRESS;
+//        String possibleEmail = "";
+//        for (Account account : AccountManager.get(context).getAccounts()) {
+//            if (emailPattern.matcher(account.name).matches()) {
+//                possibleEmail = account.name;
+//                DLog.d("JP.CO.CYBIRD.ANDROID.GCM", possibleEmail);
+//                context.startActivity(new Intent(context, PrefsActivity.class));
+//            }
+//        }
+//        if ("".equals(possibleEmail)) {
+//            Toast.makeText(context, ParameterLoader.getString("LIB_GCM_GOOGLE_ACCOUNT_MISSING_INFO", context), Toast.LENGTH_LONG).show();
+//        }
+//    }
 
     public static String getSendID(Context context) {
         String sender_id = ParameterLoader.getString("LIB_GCM_SENDERID", context);
@@ -79,9 +79,9 @@ public class GCMUtilities {
         String parametersString = "";
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            Boolean isFromPush = Boolean.valueOf(extras.getBoolean("push", false));
+            Boolean isFromPush = extras.getBoolean("push", false);
             DLog.e("JP.CO.CYBIRD.ANDROID.GCM", String.valueOf(isFromPush));
-            if (isFromPush.booleanValue()) {
+            if (isFromPush) {
                 DLog.e("JP.CO.CYBIRD.ANDROID.GCM", "Get parameters from bundle");
                 Intent pushIntent = intent;
                 if (!(pushIntent == null || pushIntent.getData() == null)) {
@@ -115,30 +115,27 @@ public class GCMUtilities {
         }
     }
 
-    public static int isPush(Activity activity) {
-        Context context = activity.getApplicationContext();
-        return context.getSharedPreferences(context.getPackageName(), 0).getInt(CYLIB_GCM_PARAM_ISPUSH, 0);
-    }
+//    public static int isPush(Activity activity) {
+//        Context context = activity.getApplicationContext();
+//        return context.getSharedPreferences(context.getPackageName(), 0).getInt(CYLIB_GCM_PARAM_ISPUSH, 0);
+//    }
 
-    public static String parseParametersString(Activity activity) {
-        SharedPreferences packagePrefs = activity.getSharedPreferences(activity.getPackageName(), 0);
-        String returnString = packagePrefs.getString(CYLIB_GCM_PARAM_DATA, "");
-        SharedPreferences.Editor editor = packagePrefs.edit();
-        editor.remove(CYLIB_GCM_PARAM_ISPUSH);
-        editor.remove(CYLIB_GCM_PARAM_DATA);
-        editor.commit();
-        return returnString;
-    }
+//    public static String parseParametersString(Activity activity) {
+//        SharedPreferences packagePrefs = activity.getSharedPreferences(activity.getPackageName(), 0);
+//        String returnString = packagePrefs.getString(CYLIB_GCM_PARAM_DATA, "");
+//        SharedPreferences.Editor editor = packagePrefs.edit();
+//        editor.remove(CYLIB_GCM_PARAM_ISPUSH);
+//        editor.remove(CYLIB_GCM_PARAM_DATA);
+//        editor.commit();
+//        return returnString;
+//    }
 
     public static void sendRegistrationInfo(Context context, boolean doesAllowCustmization) {
         String registrationId = getRegistrationID(context);
-        if (!"".equals(registrationId)) {
-            registrationId = Codec.decode(registrationId);
-        }
         DLog.d("JP.CO.CYBIRD.ANDROID.GCM", "sendRegistrationInfo() registrationId: " + registrationId);
         if (!"".equals(registrationId)) {
             Boolean willSendMessage = true;
-            String UUID = CybirdCommonUserId.get(context);
+            String UUID = new ApplicationSetting(context).getUUID();
             if (UUID == null || "".equals(UUID)) {
                 willSendMessage = false;
                 DLog.e("JP.CO.CYBIRD.ANDROID.GCM", "CAN NOT GET UUID WHEN REGISTER!");
@@ -149,12 +146,12 @@ public class GCMUtilities {
                 DLog.e("JP.CO.CYBIRD.ANDROID.GCM", "CAN NOT GET PACKAGE NAME WHEN REGISTER!");
             }
             String test = Const.IS_TESTING;
-            if (willSendMessage.booleanValue()) {
+            if (willSendMessage) {
                 RequestParams params = new RequestParams();
                 String query = "uuid=" + UUID + "&device_id=" + registrationId + "&product_id=" + packageName + "&user_agent=" + getUserAgent(context) + "&test=" + test;
                 DLog.v("JP.CO.CYBIRD.ANDROID.GCM", "q=" + query);
                 params.put("v", GreeDefs.KANOJO_NAME);
-                params.put(AppLauncherConsts.REQUEST_PARAM_GENERAL, Codec.encode(query));
+                params.put(AppLauncherConsts.REQUEST_PARAM_GENERAL, query);
                 ThreadHttpClient threadClient = new ThreadHttpClient();
                 threadClient.setUserAgent(getUserAgent(context));
                 threadClient.post(Const.REGISTER_URL, params);
@@ -168,10 +165,7 @@ public class GCMUtilities {
     public static void sendUnregistrationInfo(Context context) {
         String registrationId = getRegistrationID(context);
         if (!"".equals(registrationId)) {
-            registrationId = Codec.decode(registrationId);
-        }
-        if (!"".equals(registrationId)) {
-            String UUID = CybirdCommonUserId.get(context);
+            String UUID = new ApplicationSetting(context).getUUID();
             if (UUID == null || "".equals(UUID)) {
                 DLog.e("JP.CO.CYBIRD.ANDROID.GCM", "CAN NOT GET UUID WHEN UNREGISTER!");
             }
@@ -184,7 +178,7 @@ public class GCMUtilities {
             String query = "uuid=" + UUID + "&device_id=" + registrationId + "&product_id=" + packageName + "&test=" + test;
             DLog.v("JP.CO.CYBIRD.ANDROID.GCM", "q=" + query);
             params.put("v", GreeDefs.KANOJO_NAME);
-            params.put(AppLauncherConsts.REQUEST_PARAM_GENERAL, Codec.encode(query));
+            params.put(AppLauncherConsts.REQUEST_PARAM_GENERAL, query);
             ThreadHttpClient threadClient = new ThreadHttpClient();
             threadClient.setUserAgent(getUserAgent(context));
             threadClient.post(Const.UNREGISTER_URL, params);
@@ -210,52 +204,52 @@ public class GCMUtilities {
         return ParameterLoader.getBool("LIB_GCM_IS_UNITY", context);
     }
 
-    public static void setWillSendNotification(boolean willSendNotification) {
-        if (mPrefs != null) {
-            mPrefs.edit().putBoolean("lib_gcm_willSendNotification", willSendNotification).commit();
-        }
-    }
-
-    public static boolean willSendNotification() {
-        if (mPrefs == null) {
-            return false;
-        }
-        return mPrefs.getBoolean("lib_gcm_willSendNotification", true);
-    }
-
-    public static void setWillPlaySound(boolean willPlaySound) {
-        if (mPrefs != null) {
-            mPrefs.edit().putBoolean("lib_gcm_willPlaySound", willPlaySound).commit();
-        }
-    }
-
-    public static boolean willPlaySound() {
-        if (mPrefs == null) {
-            return false;
-        }
-        return mPrefs.getBoolean("lib_gcm_willPlaySound", false);
-    }
-
-    public static void setWillVibrate(boolean willVibrate) {
-        if (mPrefs != null) {
-            mPrefs.edit().putBoolean("lib_gcm_willVibrate", willVibrate).commit();
-        }
-    }
-
-    public static boolean willVibrate() {
-        if (mPrefs == null) {
-            return false;
-        }
-        return mPrefs.getBoolean("lib_gcm_willVibrate", false);
-    }
-
-    public static void allowCustomizationEveryLaunch() {
-        allowCustomizationEveryLaunch = true;
-    }
-
-    public static String getRegistrationId(Context c) {
-        return GCMRegistrar.getRegistrationId(c);
-    }
+//    public static void setWillSendNotification(boolean willSendNotification) {
+//        if (mPrefs != null) {
+//            mPrefs.edit().putBoolean("lib_gcm_willSendNotification", willSendNotification).commit();
+//        }
+//    }
+//
+//    public static boolean willSendNotification() {
+//        if (mPrefs == null) {
+//            return false;
+//        }
+//        return mPrefs.getBoolean("lib_gcm_willSendNotification", true);
+//    }
+//
+//    public static void setWillPlaySound(boolean willPlaySound) {
+//        if (mPrefs != null) {
+//            mPrefs.edit().putBoolean("lib_gcm_willPlaySound", willPlaySound).commit();
+//        }
+//    }
+//
+//    public static boolean willPlaySound() {
+//        if (mPrefs == null) {
+//            return false;
+//        }
+//        return mPrefs.getBoolean("lib_gcm_willPlaySound", false);
+//    }
+//
+//    public static void setWillVibrate(boolean willVibrate) {
+//        if (mPrefs != null) {
+//            mPrefs.edit().putBoolean("lib_gcm_willVibrate", willVibrate).commit();
+//        }
+//    }
+//
+//    public static boolean willVibrate() {
+//        if (mPrefs == null) {
+//            return false;
+//        }
+//        return mPrefs.getBoolean("lib_gcm_willVibrate", false);
+//    }
+//
+//    public static void allowCustomizationEveryLaunch() {
+//        allowCustomizationEveryLaunch = true;
+//    }
+//
+//    public static String getRegistrationId(Context c) {
+//        return GCMRegistrar.getRegistrationId(c);
+//    }
 
     private static void initGCM(Context context) {
         try {
@@ -280,13 +274,10 @@ public class GCMUtilities {
         DLog.e("JP.CO.CYBIRD.ANDROID.GCM", "RegisterID is " + regId);
         SharedPreferences prefs = context.getSharedPreferences(Const.PREF_FILE_NAME, 0);
         String savedRegistrationId = prefs.getString("lib_gcm_registration_ID", "");
-        if (!"".equals(savedRegistrationId)) {
-            savedRegistrationId = Codec.decode(savedRegistrationId);
-        }
         if (!savedRegistrationId.equals(regId)) {
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("lib_gcm_registration_ID", Codec.encode(regId));
-            editor.commit();
+            editor.putString("lib_gcm_registration_ID", regId);
+            editor.apply();
         }
         sendRegistrationInfo(context, allowCustomizationEveryLaunch);
     }

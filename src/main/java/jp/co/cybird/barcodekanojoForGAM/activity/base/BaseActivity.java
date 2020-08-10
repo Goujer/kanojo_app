@@ -26,8 +26,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Locale;
-import jp.co.cybird.app.android.lib.commons.security.popgate.Codec;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.Defs;
 import jp.co.cybird.barcodekanojoForGAM.R;
@@ -449,7 +450,14 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     }
 
     private String getGeneralUrl(String url, String uuid) {
-        return url + "?id=" + Codec.encode(uuid);
+    	try {
+			return url + "?id=" + URLEncoder.encode(uuid, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+    		if (Defs.DEBUG) {
+				e.printStackTrace();
+			}
+			return url + "?id=" + uuid;
+		}
     }
 
     public void showKDDI() {
@@ -574,7 +582,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
                     mReason.printStackTrace();
                 }
                 if (response == null) {
-                    throw new BarcodeKanojoException("response is null! \n" + this.mReason);
+                    throw new BarcodeKanojoException("Response is null! \n" + this.mReason);
                 }
                 if (Defs.DEBUG) {
                     Response.checkResponse(response);

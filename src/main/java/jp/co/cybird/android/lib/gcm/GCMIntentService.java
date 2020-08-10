@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import com.google.android.gcm.GCMBaseIntentService;
 import jp.co.cybird.app.android.lib.commons.log.DLog;
-import jp.co.cybird.app.android.lib.commons.security.popgate.Codec;
 import jp.co.cybird.app.android.lib.commons.tracker.TrackerWrapper;
 import jp.co.cybird.app.android.lib.unity.GCMProxyActivity;
 import jp.co.cybird.barcodekanojoForGAM.R;
@@ -127,8 +126,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	protected void onRegistered(Context context, String registrationId) {
 		SharedPreferences.Editor sharedata = context.getSharedPreferences(Const.PREF_FILE_NAME, 0).edit();
-		sharedata.putString("lib_gcm_registration_ID", Codec.encode(registrationId));
-		sharedata.commit();
+		sharedata.putString("lib_gcm_registration_ID", registrationId);
+		sharedata.apply();
 		GCMUtilities.sendRegistrationInfo(context, true);
 	}
 

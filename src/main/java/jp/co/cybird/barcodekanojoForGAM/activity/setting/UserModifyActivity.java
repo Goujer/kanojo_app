@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
-import jp.co.cybird.app.android.lib.cybirdid.CybirdCommonUserId;
+
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.Defs;
 import jp.co.cybird.barcodekanojoForGAM.R;
@@ -641,7 +641,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
                     return barcodeKanojo.android_delete_account(user.getId());
                 case 9:
                     String str7 = cPassword3;
-                    return barcodeKanojo.android_verify(CybirdCommonUserId.get(UserModifyActivity.this.getApplicationContext()));
+                    return barcodeKanojo.android_verify(((BarcodeKanojoApp) getApplication()).getUUID());
                 default:
                     String str8 = cPassword3;
                     return null;

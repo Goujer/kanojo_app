@@ -15,8 +15,9 @@ import com.goujer.barcodekanojo.activity.setting.ServerConfigurationActivity;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.UUID;
+
 import jp.co.cybird.android.lib.gcm.GCMUtilities;
-import jp.co.cybird.app.android.lib.cybirdid.CybirdCommonUserId;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity;
@@ -67,9 +68,9 @@ public final class BootActivity extends BaseKanojosActivity {
         ApplicationSetting setting = new ApplicationSetting(this);
         String userAndroidID = setting.getUUID();
         if (userAndroidID == null) {
-            userAndroidID = CybirdCommonUserId.get(this);
+            userAndroidID = UUID.randomUUID().toString();
+			setting.commitUUID(userAndroidID);
         }
-        setting.commitUUID(userAndroidID);
         setting.commitDeviceToken(GCMRegistrar.getRegistrationId(this));
         setting.commitUserGoogleAccount();
         Log.d("NguyenTT", "UUID " + userAndroidID);
