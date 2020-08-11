@@ -82,6 +82,6 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 .idea/codeStyles/codeStyleConfig.xml
-gradle.properties
+#gradle.properties
 minApi9/release/output-metadata.json
-release.jks
+#release.jks

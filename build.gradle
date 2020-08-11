@@ -43,7 +43,6 @@ android {
 			minifyEnabled false
 			shrinkResources false
 			signingConfig signingConfigs.release
-			debuggable true
 		}
 		debug {
 			debuggable true
@@ -54,7 +53,7 @@ android {
 
 	flavorDimensions "default"
 	productFlavors {
-		modern {
+		minApi14 {
 			minSdkVersion 14
 			targetSdkVersion 22
 		}
@@ -83,18 +82,18 @@ android {
 dependencies {
 	//Maps
 	//implementation 'com.google.android.maps:maps:7_r1'
-	modernImplementation 'com.google.android.gms:play-services-maps:8.4.0'
+	minApi14Implementation 'com.google.android.gms:play-services-maps:8.4.0'
 	minApi9Implementation 'com.google.android.gms:play-services-maps:8.4.0'
 	//implementation 'com.google.android.maps:maps:15_r2'
 	//Analytics
 	//implementation files('libs/libGoogleAnalyticsV2.jar')
 	//implementation 'com.google.android.gms:play-services-base:6.5.87'	//Need to migrate to Jetpack WorkManager
 	//Billing
-	modernImplementation 'com.android.billingclient:billing:2.0.3'
+	minApi14Implementation 'com.android.billingclient:billing:2.0.3'
 	minApi9Implementation 'com.android.billingclient:billing:2.0.3'
 	//Twitter4j
 	implementation 'org.twitter4j:twitter4j-core:4.0.7'
-	modernImplementation 'com.facebook.android:facebook-android-sdk:3.23.1'
+	minApi14Implementation 'com.facebook.android:facebook-android-sdk:3.23.1'
 	minApi9Implementation 'com.facebook.android:facebook-android-sdk:3.23.1'
 	//ZXing
 	implementation 'com.google.zxing:core:3.2.1'
