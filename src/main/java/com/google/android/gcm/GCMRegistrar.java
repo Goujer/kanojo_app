@@ -46,9 +46,9 @@ public final class GCMRegistrar {
     public static void checkManifest(Context context) {
         PackageManager packageManager = context.getPackageManager();
         String packageName = context.getPackageName();
-        String permissionName = packageName + ".permission.C2D_MESSAGE";
-        try {
-            packageManager.getPermissionInfo(permissionName, 4096);
+        //String permissionName = packageName + ".permission.C2D_MESSAGE";
+        //try {
+            //packageManager.getPermissionInfo(permissionName, 4096);
             try {
                 ActivityInfo[] receivers = packageManager.getPackageInfo(packageName, PackageManager.GET_RECEIVERS).receivers;
                 if (receivers == null || receivers.length == 0) {
@@ -71,9 +71,9 @@ public final class GCMRegistrar {
             } catch (PackageManager.NameNotFoundException e) {
                 throw new IllegalStateException("Could not get receivers for package " + packageName);
             }
-        } catch (PackageManager.NameNotFoundException e2) {
+        /*} catch (PackageManager.NameNotFoundException e2) {
             throw new IllegalStateException("Application does not define permission " + permissionName);
-        }
+        }*/
     }
 
     private static void checkReceiver(Context context, Set<String> allowedReceivers, String action) {
@@ -81,7 +81,7 @@ public final class GCMRegistrar {
         String packageName = context.getPackageName();
         Intent intent = new Intent(action);
         intent.setPackage(packageName);
-        List<ResolveInfo> receivers = pm.queryBroadcastReceivers(intent, 32);
+        List<ResolveInfo> receivers = pm.queryBroadcastReceivers(intent, PackageManager.GET_INTENT_FILTERS);
         if (receivers.isEmpty()) {
             throw new IllegalStateException("No receivers for action " + action);
         }
@@ -163,7 +163,7 @@ public final class GCMRegistrar {
                 IntentFilter filter = new IntentFilter(GCMConstants.INTENT_FROM_GCM_LIBRARY_RETRY);
                 filter.addCategory(category);
                 Log.v(TAG, "Registering receiver");
-                context.registerReceiver(sRetryReceiver, filter, category + ".permission.C2D_MESSAGE", (Handler) null);
+                context.registerReceiver(sRetryReceiver, filter, /*category + ".permission.C2D_MESSAGE"*/null, (Handler) null);
             }
         }
         return;
