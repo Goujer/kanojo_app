@@ -36,7 +36,8 @@ public class ScanKanojoGenerateActivity extends BaseKanojoEditActivity implement
     private EditItemView mProductName;
 
 	//TODO make arrows include generated icons and perhaps barcode image.
-    public void onCreate(Bundle savedInstanceState) {
+    @Override
+	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_generate);
         findViewById(R.id.edit_close).setOnClickListener(this);
