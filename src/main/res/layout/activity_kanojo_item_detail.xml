@@ -5,8 +5,9 @@
     <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
         <LinearLayout android:gravity="center_vertical" android:background="@drawable/common_title_bg" android:layout_width="match_parent" android:layout_height="@dimen/common_title_height">
             <Button android:id="@+id/kanojo_item_detail_close" android:text="@string/common_edit_close" style="@style/btn_navi"/>
-            <TextView android:ellipsize="end" android:id="@+id/kanojo_item_detail_title" android:singleLine="true" android:layout_weight="1" style="@style/txt_kanojo_room_name"
-				android:layout_width="0dp" />
+            <TextView android:id="@+id/kanojo_item_detail_title" android:layout_weight="1" style="@style/txt_toolbar_title"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"/>
             <Button android:id="@+id/kanojo_item_detail_dummy" android:visibility="invisible" android:text="@string/common_edit_close" style="@style/btn_navi"/>
         </LinearLayout>
         <ScrollView android:id="@+id/scrollView1" android:background="@color/kanojo_item_detail_bg" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">

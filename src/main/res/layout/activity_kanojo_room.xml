@@ -1,29 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
-    <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
-        <LinearLayout android:gravity="center_vertical" android:background="@drawable/common_title_bg" android:layout_width="match_parent" android:layout_height="@dimen/common_title_height">
-            <Button android:id="@+id/kanojo_room_close" android:text="@string/kanojo_room_close" style="@style/btn_navi"/>
-            <TextView
+	android:layout_height="wrap_content">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/common_title_height"
+			android:background="@drawable/common_title_bg"
+			android:gravity="center_vertical">
+
+			<Button
+				android:id="@+id/kanojo_room_close"
+				style="@style/btn_navi"
+				android:text="@string/kanojo_room_close" />
+
+			<TextView
 				android:id="@+id/kanojo_room_name"
-				style="@style/txt_kanojo_room_name"
-				android:gravity="center"
+				style="@style/txt_toolbar_title"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:ellipsize="end"
-				android:singleLine="true"
-				android:paddingRight="20dp"
+				android:layout_marginEnd="10dp"
+				android:layout_marginRight="10dp"/>
+
+			<ImageButton
+				android:id="@+id/kanojo_room_info"
+				style="@style/btn_navi"
+				android:layout_width="@dimen/row_setting_icon_height"
+				android:layout_height="@dimen/row_setting_icon_height"
+				android:layout_gravity="center_vertical"
+				android:background="@color/transparent"
+				android:src="@drawable/icon_info" />
+		</LinearLayout>
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1">
+
+			<RelativeLayout
+				android:id="@+id/kanojo_room_live2d"
 				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
-            <ImageButton android:layout_gravity="center_vertical" android:id="@+id/kanojo_room_info" android:background="@color/transparent" android:layout_width="@dimen/row_setting_icon_height" android:layout_height="@dimen/row_setting_icon_height" android:src="@drawable/icon_info" style="@style/btn_navi"/>
-        </LinearLayout>
-        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">
-            <RelativeLayout android:id="@+id/kanojo_room_live2d" android:background="@drawable/dummy_back256" android:layout_width="match_parent" android:layout_height="match_parent"/>
-            <ToggleButton android:id="@+id/kanojo_room_like_btn" android:background="@drawable/btn_kanojo_like" android:layout_width="65dp" android:layout_height="25dp" android:layout_marginLeft="15dp" android:layout_marginTop="40dp" android:textOn="" android:textOff="" android:layout_alignParentLeft="true" android:layout_alignParentTop="true"/>
-            <Button android:id="@+id/kanojo_room_items_btn" android:background="@drawable/btn_kanojo_items" android:layout_width="70dp" android:layout_height="25dp" android:layout_marginRight="15dp" android:layout_marginBottom="20dp" android:layout_above="@+id/kanojo_room_message_banner" android:layout_alignParentRight="true"/>
-            <Button android:id="@+id/kanojo_room_date_btn" android:background="@drawable/btn_kanojo_date" android:layout_width="70dp" android:layout_height="25dp" android:layout_marginRight="15dp" android:layout_marginBottom="12dp" android:layout_above="@+id/kanojo_room_items_btn" android:layout_alignParentRight="true"/>
-            <Button android:id="@+id/kanojo_room_ticket_btn" android:background="@drawable/btn_kanojo_tickets" android:layout_width="70dp" android:layout_height="25dp" android:layout_marginRight="15dp" android:layout_marginBottom="12dp" android:layout_above="@+id/kanojo_room_date_btn" android:layout_alignParentRight="true"/>
-            <WebView
+				android:layout_height="match_parent"
+				android:background="@drawable/dummy_back256" />
+
+			<ToggleButton
+				android:id="@+id/kanojo_room_like_btn"
+				android:layout_width="65dp"
+				android:layout_height="25dp"
+				android:layout_alignParentLeft="true"
+				android:layout_alignParentTop="true"
+				android:layout_marginLeft="15dp"
+				android:layout_marginTop="40dp"
+				android:background="@drawable/btn_kanojo_like"
+				android:textOff=""
+				android:textOn=""
+				android:layout_alignParentStart="true"
+				android:layout_marginStart="15dp" />
+
+			<Button
+				android:id="@+id/kanojo_room_items_btn"
+				android:layout_width="70dp"
+				android:layout_height="25dp"
+				android:layout_above="@+id/kanojo_room_message_banner"
+				android:layout_alignParentRight="true"
+				android:layout_marginRight="15dp"
+				android:layout_marginBottom="20dp"
+				android:background="@drawable/btn_kanojo_items" />
+
+			<Button
+				android:id="@+id/kanojo_room_date_btn"
+				android:layout_width="70dp"
+				android:layout_height="25dp"
+				android:layout_above="@+id/kanojo_room_items_btn"
+				android:layout_alignParentRight="true"
+				android:layout_marginRight="15dp"
+				android:layout_marginBottom="12dp"
+				android:background="@drawable/btn_kanojo_date" />
+
+			<Button
+				android:id="@+id/kanojo_room_ticket_btn"
+				android:layout_width="70dp"
+				android:layout_height="25dp"
+				android:layout_above="@+id/kanojo_room_date_btn"
+				android:layout_alignParentRight="true"
+				android:layout_marginRight="15dp"
+				android:layout_marginBottom="12dp"
+				android:background="@drawable/btn_kanojo_tickets" />
+
+			<WebView
 				android:id="@+id/kanojo_room_message_banner"
 				android:layout_width="match_parent"
 				android:layout_height="50dp"
@@ -32,46 +102,173 @@
 				android:layout_centerVertical="true"
 				android:background="@android:color/transparent"
 				android:gravity="center" />
-            <LinearLayout android:orientation="vertical" android:id="@+id/kanojo_room_status_txt_layout" android:background="@color/kanojo_room_status_bg" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true">
-                <RelativeLayout android:id="@+id/progressbar_radar_view" android:visibility="gone" android:layout_width="match_parent" android:layout_height="220dp">
-                    <ProgressBar android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true"/>
-                </RelativeLayout>
-                <WebView
+
+			<LinearLayout
+				android:id="@+id/kanojo_room_status_txt_layout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:background="@color/kanojo_room_status_bg"
+				android:orientation="vertical">
+
+				<RelativeLayout
+					android:id="@+id/progressbar_radar_view"
+					android:layout_width="match_parent"
+					android:layout_height="220dp"
+					android:visibility="gone">
+
+					<ProgressBar
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_centerInParent="true" />
+				</RelativeLayout>
+
+				<WebView
 					android:id="@+id/radar_webview"
 					android:layout_width="match_parent"
 					android:layout_height="220dp"
 					android:scrollbars="none"
 					android:visibility="gone" />
-                <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
-                    <TextView
+
+				<ScrollView
+					android:layout_width="match_parent"
+					android:layout_height="match_parent">
+
+					<TextView
 						android:id="@+id/kanojo_room_status_txt"
 						style="@style/txt_kanojo_room_status"
-						android:paddingLeft="5dp"
-						android:paddingRight="5dp"
+						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_width="match_parent"/>
-                </ScrollView>
-            </LinearLayout>
-            <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@+id/kanojo_room_status_bar_layout" android:background="@color/kanojo_room_status_bg" android:layout_width="match_parent" android:layout_height="24dp" android:layout_below="@+id/kanojo_room_status_txt_layout">
-                <ImageView android:id="@+id/kanojo_room_heart" android:layout_width="11dp" android:layout_height="10dp" android:layout_marginLeft="5dp" android:layout_marginRight="5dp" android:src="@drawable/kanojo_room_heart" android:scaleType="fitXY" android:adjustViewBounds="true"/>
-                <FrameLayout android:background="@drawable/kanojo_room_status_bar_bg" android:layout_width="0dp" android:layout_height="6dp" android:layout_marginRight="10dp" android:layout_weight="1">
-                    <ProgressBar android:id="@+id/kanojo_room_status_bar" android:paddingLeft="2dp" android:paddingRight="2dp" android:layout_width="match_parent" android:layout_height="match_parent" android:max="100" android:progressDrawable="@drawable/row_kanojos_bar_less" style="?android:attr/progressBarStyleHorizontal"/>
-                    <ImageView android:id="@+id/kanojo_room_status_bar_cover" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/kanojo_room_status_bar_cover" android:scaleType="fitXY"/>
-                </FrameLayout>
-            </LinearLayout>
-            <RelativeLayout android:id="@+id/kanojo_room_buttom_status_bar_layout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_below="@+id/kanojo_room_status_bar_layout">
-                <ImageView android:id="@+id/dropdown_img" android:layout_width="111dp" android:layout_height="12dp" android:src="@drawable/btn_drop" android:layout_centerInParent="true"/>
-                <ImageView android:id="@+id/kanojo_room_arrow" android:layout_width="13dp" android:layout_height="7dp" android:src="@drawable/kanojo_room_arrow_up" android:layout_centerInParent="true"/>
-            </RelativeLayout>
-            <RelativeLayout android:id="@+id/kanojo_bg_action_love_gauge" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_above="@+id/kanojo_room_ticket_btn" android:layout_below="@+id/kanojo_room_status_bar_layout">
-                <ImageView android:id="@+id/imageView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="90dp" android:layout_marginTop="20dp" android:layout_centerHorizontal="false"/>
-                <ImageView android:id="@+id/imageView02" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="20dp" android:layout_marginTop="100dp" android:layout_alignParentLeft="true" android:layout_alignParentTop="true"/>
-                <ImageView android:id="@+id/imageView03" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="60dp" android:layout_marginRight="40dp" android:layout_alignParentLeft="false" android:layout_alignParentTop="true" android:layout_alignParentRight="true"/>
-            </RelativeLayout>
-            <RelativeLayout android:gravity="bottom" android:id="@+id/kanojo_tag_love_gauge" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="40dp" android:layout_alignTop="@+id/kanojo_room_status_bar_layout">
-                <LinearLayout android:gravity="bottom" android:background="@drawable/ballonheart_image" android:layout_width="wrap_content" android:layout_height="25dp">
-                    <ImageView android:id="@+id/ImageView01" android:layout_width="11dp" android:layout_height="18dp" android:layout_marginLeft="4dp" android:src="@drawable/kanojo_room_heart" android:adjustViewBounds="true"/>
-                    <TextView
+						android:paddingLeft="5dp"
+						android:paddingRight="5dp" />
+				</ScrollView>
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/kanojo_room_status_bar_layout"
+				android:layout_width="match_parent"
+				android:layout_height="24dp"
+				android:layout_below="@+id/kanojo_room_status_txt_layout"
+				android:background="@color/kanojo_room_status_bg"
+				android:gravity="center_vertical"
+				android:orientation="horizontal">
+
+				<ImageView
+					android:id="@+id/kanojo_room_heart"
+					android:layout_width="11dp"
+					android:layout_height="10dp"
+					android:layout_marginLeft="5dp"
+					android:layout_marginRight="5dp"
+					android:adjustViewBounds="true"
+					android:scaleType="fitXY"
+					android:src="@drawable/kanojo_room_heart" />
+
+				<FrameLayout
+					android:layout_width="0dp"
+					android:layout_height="6dp"
+					android:layout_marginRight="10dp"
+					android:layout_weight="1"
+					android:background="@drawable/kanojo_room_status_bar_bg">
+
+					<ProgressBar
+						android:id="@+id/kanojo_room_status_bar"
+						style="?android:attr/progressBarStyleHorizontal"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:max="100"
+						android:paddingLeft="2dp"
+						android:paddingRight="2dp"
+						android:progressDrawable="@drawable/row_kanojos_bar_less" />
+
+					<ImageView
+						android:id="@+id/kanojo_room_status_bar_cover"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:scaleType="fitXY"
+						android:src="@drawable/kanojo_room_status_bar_cover" />
+				</FrameLayout>
+			</LinearLayout>
+
+			<RelativeLayout
+				android:id="@+id/kanojo_room_buttom_status_bar_layout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_below="@+id/kanojo_room_status_bar_layout">
+
+				<ImageView
+					android:id="@+id/dropdown_img"
+					android:layout_width="111dp"
+					android:layout_height="12dp"
+					android:layout_centerInParent="true"
+					android:src="@drawable/btn_drop" />
+
+				<ImageView
+					android:id="@+id/kanojo_room_arrow"
+					android:layout_width="13dp"
+					android:layout_height="7dp"
+					android:layout_centerInParent="true"
+					android:src="@drawable/kanojo_room_arrow_up" />
+			</RelativeLayout>
+
+			<RelativeLayout
+				android:id="@+id/kanojo_bg_action_love_gauge"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_above="@+id/kanojo_room_ticket_btn"
+				android:layout_below="@+id/kanojo_room_status_bar_layout"
+				android:visibility="gone">
+
+				<ImageView
+					android:id="@+id/imageView01"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_centerHorizontal="false"
+					android:layout_marginLeft="90dp"
+					android:layout_marginTop="20dp" />
+
+				<ImageView
+					android:id="@+id/imageView02"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentLeft="true"
+					android:layout_alignParentTop="true"
+					android:layout_marginLeft="20dp"
+					android:layout_marginTop="100dp" />
+
+				<ImageView
+					android:id="@+id/imageView03"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentLeft="false"
+					android:layout_alignParentTop="true"
+					android:layout_alignParentRight="true"
+					android:layout_marginTop="60dp"
+					android:layout_marginRight="40dp" />
+			</RelativeLayout>
+
+			<RelativeLayout
+				android:id="@+id/kanojo_tag_love_gauge"
+				android:layout_width="wrap_content"
+				android:layout_height="40dp"
+				android:layout_alignTop="@+id/kanojo_room_status_bar_layout"
+				android:gravity="bottom"
+				android:visibility="gone">
+
+				<LinearLayout
+					android:layout_width="wrap_content"
+					android:layout_height="25dp"
+					android:background="@drawable/ballonheart_image"
+					android:gravity="bottom">
+
+					<ImageView
+						android:id="@+id/ImageView01"
+						android:layout_width="11dp"
+						android:layout_height="18dp"
+						android:layout_marginLeft="4dp"
+						android:adjustViewBounds="true"
+						android:src="@drawable/kanojo_room_heart" />
+
+					<TextView
 						android:id="@+id/kanojo_tag_love_gauge_text"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
@@ -80,20 +277,83 @@
 						android:singleLine="true"
 						android:textColor="@color/black"
 						android:textStyle="bold" />
-                </LinearLayout>
-            </RelativeLayout>
-            <RelativeLayout android:id="@+id/dialog_frame_all" android:background="@android:color/transparent" android:visibility="visible" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_above="@+id/kanojo_room_message_banner">
-                <RelativeLayout android:id="@+id/dialog_frame" android:background="@drawable/dialog_frame" android:layout_width="match_parent" android:layout_height="150dp" android:layout_margin="5dp" android:layout_alignParentBottom="true">
-                    <jp.co.cybird.barcodekanojoForGAM.view.DialogTextView android:id="@+id/dialog_message" android:layout_width="match_parent" android:layout_height="match_parent"/>
-                </RelativeLayout>
-            </RelativeLayout>
-        </RelativeLayout>
-    </LinearLayout>
-    <RelativeLayout android:id="@+id/kanojo_room_firstboot" android:paddingLeft="@dimen/kanojo_room_firstboot_left" android:paddingRight="@dimen/kanojo_room_firstboot_right" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent">
-        <ImageView android:id="@+id/ticket_instruction" android:paddingBottom="@dimen/kanojo_room_item_firstboot_padding_space" android:visibility="visible" android:layout_width="match_parent" android:layout_height="wrap_content" android:src="@drawable/ticket_instruction" android:scaleType="fitEnd" android:adjustViewBounds="true" android:layout_above="@+id/item_instruction"/>
-        <ImageView android:id="@+id/item_instruction" android:visibility="visible" android:layout_width="match_parent" android:layout_height="wrap_content" android:src="@drawable/item_instruction" android:scaleType="fitEnd" android:adjustViewBounds="true" android:layout_above="@+id/spacing" android:layout_alignParentRight="true"/>
-        <ImageView android:id="@+id/spacing" android:layout_width="match_parent" android:layout_height="@dimen/kanojo_room_firstboot_bottom" android:adjustViewBounds="true" android:layout_alignParentBottom="true"/>
-        <ImageView android:id="@+id/imageView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="52dp" android:layout_alignParentLeft="true" android:layout_alignParentTop="true"/>
-    </RelativeLayout>
-    <jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView android:id="@+id/loadingView" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent"/>
+				</LinearLayout>
+			</RelativeLayout>
+
+			<RelativeLayout
+				android:id="@+id/dialog_frame_all"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_above="@+id/kanojo_room_message_banner"
+				android:background="@android:color/transparent"
+				android:visibility="visible">
+
+				<RelativeLayout
+					android:id="@+id/dialog_frame"
+					android:layout_width="match_parent"
+					android:layout_height="150dp"
+					android:layout_alignParentBottom="true"
+					android:layout_margin="5dp"
+					android:background="@drawable/dialog_frame">
+
+					<jp.co.cybird.barcodekanojoForGAM.view.DialogTextView
+						android:id="@+id/dialog_message"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent" />
+				</RelativeLayout>
+			</RelativeLayout>
+		</RelativeLayout>
+	</LinearLayout>
+
+	<RelativeLayout
+		android:id="@+id/kanojo_room_firstboot"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:paddingLeft="@dimen/kanojo_room_firstboot_left"
+		android:paddingRight="@dimen/kanojo_room_firstboot_right"
+		android:visibility="visible">
+
+		<ImageView
+			android:id="@+id/ticket_instruction"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_above="@+id/item_instruction"
+			android:adjustViewBounds="true"
+			android:paddingBottom="@dimen/kanojo_room_item_firstboot_padding_space"
+			android:scaleType="fitEnd"
+			android:src="@drawable/ticket_instruction"
+			android:visibility="visible" />
+
+		<ImageView
+			android:id="@+id/item_instruction"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_above="@+id/spacing"
+			android:layout_alignParentRight="true"
+			android:adjustViewBounds="true"
+			android:scaleType="fitEnd"
+			android:src="@drawable/item_instruction"
+			android:visibility="visible" />
+
+		<ImageView
+			android:id="@+id/spacing"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/kanojo_room_firstboot_bottom"
+			android:layout_alignParentBottom="true"
+			android:adjustViewBounds="true" />
+
+		<ImageView
+			android:id="@+id/imageView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentTop="true"
+			android:layout_marginTop="52dp" />
+	</RelativeLayout>
+
+	<jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView
+		android:id="@+id/loadingView"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:visibility="visible" />
 </FrameLayout>

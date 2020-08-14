@@ -5,14 +5,12 @@
             <Button android:id="@+id/kanojo_room_close" android:text="@string/kanojo_room_close" style="@style/btn_navi"/>
             <TextView
 				android:id="@+id/kanojo_room_name"
-				style="@style/txt_kanojo_room_name"
-				android:gravity="center"
+				style="@style/txt_toolbar_title"
 				android:layout_weight="1"
-				android:ellipsize="end"
-				android:singleLine="true"
-				android:paddingRight="20dp"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
+				android:layout_marginRight="10dp"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="10dp"/>
             <ImageButton android:layout_gravity="center_vertical" android:id="@+id/kanojo_room_info" android:background="@color/transparent" android:layout_width="@dimen/row_setting_icon_height" android:layout_height="@dimen/row_setting_icon_height" android:src="@drawable/icon_info" style="@style/btn_navi"/>
         </LinearLayout>
         <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">

@@ -7,12 +7,10 @@
             <Button android:id="@+id/kanojo_items_close" android:text="@string/common_edit_close" style="@style/btn_navi"/>
             <TextView
 				android:id="@+id/kanojo_items_title"
-				style="@style/txt_kanojo_room_name"
+				style="@style/txt_toolbar_title"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:ellipsize="end"
-				android:singleLine="true" />
+				android:layout_weight="1"/>
             <Button android:enabled="false" android:id="@+id/kanojo_items_store" android:visibility="invisible" android:text="@string/kanojo_items_store" style="@style/btn_navi"/>
         </LinearLayout>
         <RelativeLayout android:id="@+id/layoutTab" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content">

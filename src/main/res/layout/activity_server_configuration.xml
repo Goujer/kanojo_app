@@ -9,12 +9,10 @@
 		<Button android:id="@+id/setting_server_close" android:text="@string/common_edit_close" style="@style/btn_navi"/>
 
 		<TextView
-			style="@style/txt_kanojo_room_name"
+			style="@style/txt_toolbar_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:ellipsize="end"
-			android:singleLine="true"
 			android:text="@string/server_settings"
 			android:layout_centerInParent="true" />
 
