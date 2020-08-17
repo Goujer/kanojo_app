@@ -30,7 +30,7 @@ public class ImageCache {
     }
 
     public static void setImage(String key, Bitmap image) {
-        cache.put(key, new SoftReference(image));
+        cache.put(key, new SoftReference<>(image));
     }
 
     public static boolean hasImage(String key) {
@@ -50,13 +50,13 @@ public class ImageCache {
             if (bitmap == null) {
                 return null;
             }
-            File file = new File(String.valueOf(Environment.getExternalStorageDirectory().getPath()) + "/barcodekanojo/", "temp.jpg");
+            File file = new File(Environment.getExternalStorageDirectory().getPath() + "/barcodekanojo/", "temp.jpg");
             if (file.exists()) {
                 file.delete();
             }
             try {
                 FileOutputStream out = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
                 out.flush();
                 out.close();
                 return file;
@@ -123,7 +123,7 @@ public class ImageCache {
                 rrm.addObserver(new RemoteResourceManager.ResourceRequestObserver(photoUri) {
                     public void requestReceived(Observable observable, Uri uri) {
                         observable.deleteObserver(this);
-                        ImageCache.updateImageView(context2, imageView2, uri, remoteResourceManager, i);
+                        updateImageView(context2, imageView2, uri, remoteResourceManager, i);
                     }
                 });
                 rrm.request(photoUri);

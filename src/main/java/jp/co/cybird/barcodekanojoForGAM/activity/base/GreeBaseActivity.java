@@ -69,7 +69,8 @@ public abstract class GreeBaseActivity extends Activity {
         startActivity(intent);
     }
 
-    public void onNewIntent(Intent intent) {
+    @Override
+    protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         this.backTabFlg = false;
         if (intent != null && intent.getBooleanExtra(FLG_NO_ANIMATION, false)) {

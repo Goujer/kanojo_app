@@ -25,10 +25,11 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.io.IOException;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Locale;
+
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.Defs;
 import jp.co.cybird.barcodekanojoForGAM.R;
@@ -469,8 +470,6 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         new ApplicationSetting(getApplicationContext()).reset();
     }
 
-
-
     public void executeRefreshSession() {
         if (this.mRefreshTask == null || this.mRefreshTask.getStatus() == AsyncTask.Status.FINISHED) {
             if (Defs.DEBUG) {
@@ -495,7 +494,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         @Override
         protected Response<?> doInBackground(Void... params) {
             try {
-				return ((BarcodeKanojoApp) BaseActivity.this.getApplication()).getBarcodeKanojo().android_verify(((BarcodeKanojoApp) BaseActivity.this.getApplication()).getUUID());
+				return ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().android_verify(((BarcodeKanojoApp) getApplication()).getUUID());
             } catch (Exception e) {
                 this.mReason = e;
                 return null;
@@ -506,7 +505,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         protected void onPostExecute(Response<?> response) {
             try {
                 if (this.mReason != null && Defs.DEBUG) {
-                    Log.d("NguyenTT", "Error message: " + this.mReason.getMessage());
+                    Log.d(TAG, "Error message: " + this.mReason.getMessage());
                 }
                 if (response == null) {
                     throw new BarcodeKanojoException("response is null! \n" + this.mReason);
@@ -525,9 +524,6 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
                         return;
                     case 401:
                         BaseActivity.this.showNoticeDialog("lalallalal");
-                        return;
-                    default:
-                        return;
                 }
             } catch (BarcodeKanojoException e) {
 				BaseActivity.this.endCheckSession();

@@ -241,7 +241,8 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         }
     }
 
-    public void onNewIntent(Intent intent) {
+    @Override
+    protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (intent != null) {
             String action = intent.getAction();

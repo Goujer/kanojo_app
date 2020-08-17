@@ -1,6 +1,10 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
     <option name="AUTODETECT_INDENTS" value="false" />
+    <XML>
+      <option name="XML_KEEP_BLANK_LINES" value="1" />
+      <option name="XML_SPACE_INSIDE_EMPTY_TAG" value="false" />
+    </XML>
     <codeStyleSettings language="Groovy">
       <indentOptions>
         <option name="USE_TAB_CHARACTER" value="true" />
