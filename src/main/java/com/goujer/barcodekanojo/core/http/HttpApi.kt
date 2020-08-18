@@ -39,6 +39,8 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 				throw BarcodeKanojoException(message)
 			}
 			HttpURLConnection.HTTP_UNAUTHORIZED, HttpURLConnection.HTTP_NOT_FOUND -> {
+				connection.disconnect()
+				throw BarcodeKanojoException(connection.responseMessage)
 			}
 			HttpURLConnection.HTTP_INTERNAL_ERROR -> {
 				connection.disconnect()
@@ -49,8 +51,6 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 				throw BarcodeKanojoException("Error connecting to Server: $statusCode. Try again later.")
 			}
 		}
-		connection.disconnect()
-		throw BarcodeKanojoException(connection.responseMessage)
 	}
 
 	fun createHttpGet(fileIn: String, vararg nameValuePairs: NameValuePair?): HttpURLConnection {
@@ -68,6 +68,8 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 			file += parameters.toString()
 			connection = URL(mApiBaseProtocol, mApiBaseUrl, mApiBasePort, file).openConnection() as HttpURLConnection
 		}
+		connection.doInput = true
+		connection.requestMethod = "GET"
 		connection.setRequestProperty("Accept-Charset", "utf-8")
 		connection.setRequestProperty(CLIENT_VERSION_HEADER, mClientVersion)
 		connection.setRequestProperty(CLIENT_LANGUAGE_HEADER, mClientLanguage)
@@ -77,6 +79,7 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 	fun createHttpPost(file: String, vararg nameValuePairs: NameValuePair?): HttpURLConnection {
 		val connection = URL(mApiBaseProtocol, mApiBaseUrl, mApiBasePort, file).openConnection() as HttpURLConnection
 		connection.doOutput = true
+		connection.doInput = true
 		connection.requestMethod = "POST"
 		connection.setRequestProperty("Accept-Charset", "utf-8")
 		connection.setRequestProperty(CLIENT_VERSION_HEADER, mClientVersion)
@@ -93,6 +96,7 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 	fun createHttpMultipartPost(file: String, vararg nameValueOrFilePairs: NameValueOrFilePair?): HttpURLConnection {
 		val connection = URL(mApiBaseProtocol, mApiBaseUrl, mApiBasePort, file).openConnection() as HttpURLConnection
 		connection.doOutput = true
+		connection.doInput = true
 		connection.requestMethod = "POST"
 		connection.setRequestProperty("Accept-Charset", "utf-8")
 		connection.setRequestProperty(CLIENT_VERSION_HEADER, mClientVersion)

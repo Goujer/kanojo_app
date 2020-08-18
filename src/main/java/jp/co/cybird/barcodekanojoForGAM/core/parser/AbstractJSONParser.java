@@ -1,13 +1,17 @@
 package jp.co.cybird.barcodekanojoForGAM.core.parser;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import jp.co.cybird.barcodekanojoForGAM.Defs;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoParseException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
-import org.json.JSONException;
+
 import org.json.JSONObject;
 
 public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implements JSONParser<T> {
@@ -39,26 +43,32 @@ public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implement
     /* JADX WARNING: Failed to process nested try/catch */
     /* JADX WARNING: Removed duplicated region for block: B:12:0x004d A[ExcHandler: IOException (r0v0 'e' java.io.IOException A[CUSTOM_DECLARE]), Splitter:B:0:0x0000] */
     public static JSONObject createJSONObject(InputStream is) {
-        try {
-            InputStreamReader objReader = new InputStreamReader(is);
-            BufferedReader objBuf = new BufferedReader(objReader);
-            StringBuilder objJson = new StringBuilder();
-            while (true) {
-                String sLine = objBuf.readLine();
-                if (sLine == null) {
-                    is.close();
-                    objReader.close();
-                    objBuf.close();
-                    return new JSONObject(objJson.toString());
-                }
-                //new JSONObject(sLine);
-                objJson.append(sLine);
-            }
-        } catch (JSONException e) {
-        	e.printStackTrace();
-        } catch (IOException e2) {
-			e2.printStackTrace();
-        }
+		try {
+			StringBuilder objJson = new StringBuilder();
+			try {
+				BufferedReader objBuf = new BufferedReader(new InputStreamReader(is));
+				String sLine;
+				while ((sLine = objBuf.readLine()) != null) {
+					//new JSONObject(sLine);
+					objJson.append(sLine);
+				}
+				is.close();
+				objBuf.close();
+				return new JSONObject(objJson.toString());
+			} catch (Exception e) {
+				if (Defs.DEBUG) {
+					Log.w(TAG, "Length: " + objJson.length() + " Downloaded: " + objJson.toString());
+					Throwable t = e.getCause();
+					if (t != null) {
+						t.printStackTrace();
+					}
+					e.printStackTrace();
+				}
+				is.close();
+			}
+		} catch (IOException e) {
+			if (Defs.DEBUG) e.printStackTrace();
+		}
 		return null;
     }
 }

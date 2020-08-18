@@ -31,7 +31,7 @@ public class Live2dDiskCache implements DiskCache {
     }
 
     public File getFile(String hash) {
-        return new File(String.valueOf(this.mStorageDirectory.toString()) + File.separator + hash);
+        return new File(this.mStorageDirectory.toString() + File.separator + hash);
     }
 
     public InputStream getInputStream(String hash) throws IOException {
@@ -102,7 +102,7 @@ public class Live2dDiskCache implements DiskCache {
         if (children != null) {
             for (String file : children) {
                 File child = new File(this.mStorageDirectory, file);
-                if (!child.equals(new File(this.mStorageDirectory, NOMEDIA)) && child.length() <= 100) {
+                if (!child.equals(new File(this.mStorageDirectory, NOMEDIA)) && child.length() <= MIN_FILE_SIZE_IN_BYTES) {
                     child.delete();
                 }
             }
@@ -136,27 +136,27 @@ public class Live2dDiskCache implements DiskCache {
 
     private static final void createDirectory(File storageDirectory) {
         if (!storageDirectory.exists()) {
-            Log.d(TAG, "Trying to create storageDirectory: " + String.valueOf(storageDirectory.mkdirs()));
-            Log.d(TAG, "Exists: " + storageDirectory + " " + String.valueOf(storageDirectory.exists()));
+            Log.d(TAG, "Trying to create storageDirectory: " + storageDirectory.mkdirs());
+            Log.d(TAG, "Exists: " + storageDirectory + " " + storageDirectory.exists());
             Log.d(TAG, "State: " + Environment.getExternalStorageState());
-            Log.d(TAG, "Isdir: " + storageDirectory + " " + String.valueOf(storageDirectory.isDirectory()));
-            Log.d(TAG, "Readable: " + storageDirectory + " " + String.valueOf(storageDirectory.canRead()));
-            Log.d(TAG, "Writable: " + storageDirectory + " " + String.valueOf(storageDirectory.canWrite()));
+            Log.d(TAG, "Isdir: " + storageDirectory + " " + storageDirectory.isDirectory());
+            Log.d(TAG, "Readable: " + storageDirectory + " " + storageDirectory.canRead());
+            Log.d(TAG, "Writable: " + storageDirectory + " " + storageDirectory.canWrite());
             File tmp = storageDirectory.getParentFile();
-            Log.d(TAG, "Exists: " + tmp + " " + String.valueOf(tmp.exists()));
-            Log.d(TAG, "Isdir: " + tmp + " " + String.valueOf(tmp.isDirectory()));
-            Log.d(TAG, "Readable: " + tmp + " " + String.valueOf(tmp.canRead()));
-            Log.d(TAG, "Writable: " + tmp + " " + String.valueOf(tmp.canWrite()));
+            Log.d(TAG, "Exists: " + tmp + " " + tmp.exists());
+            Log.d(TAG, "Isdir: " + tmp + " " + tmp.isDirectory());
+            Log.d(TAG, "Readable: " + tmp + " " + tmp.canRead());
+            Log.d(TAG, "Writable: " + tmp + " " + tmp.canWrite());
             File tmp2 = tmp.getParentFile();
-            Log.d(TAG, "Exists: " + tmp2 + " " + String.valueOf(tmp2.exists()));
-            Log.d(TAG, "Isdir: " + tmp2 + " " + String.valueOf(tmp2.isDirectory()));
-            Log.d(TAG, "Readable: " + tmp2 + " " + String.valueOf(tmp2.canRead()));
-            Log.d(TAG, "Writable: " + tmp2 + " " + String.valueOf(tmp2.canWrite()));
+            Log.d(TAG, "Exists: " + tmp2 + " " + tmp2.exists());
+            Log.d(TAG, "Isdir: " + tmp2 + " " + tmp2.isDirectory());
+            Log.d(TAG, "Readable: " + tmp2 + " " + tmp2.canRead());
+            Log.d(TAG, "Writable: " + tmp2 + " " + tmp2.canWrite());
         }
         File nomediaFile = new File(storageDirectory, NOMEDIA);
         if (!nomediaFile.exists()) {
             try {
-                Log.d(TAG, "Created file: " + nomediaFile + " " + String.valueOf(nomediaFile.createNewFile()));
+                Log.d(TAG, "Created file: " + nomediaFile + " " + nomediaFile.createNewFile());
             } catch (IOException e) {
                 Log.d(TAG, "Unable to create .nomedia file for some reason.", e);
                 throw new IllegalStateException("Unable to create nomedia file.");
@@ -176,7 +176,7 @@ public class Live2dDiskCache implements DiskCache {
             File nomediaFile = new File(rootDirectory, NOMEDIA);
             if (!nomediaFile.exists()) {
                 try {
-                    Log.d(TAG, "Created file: " + nomediaFile + " " + String.valueOf(nomediaFile.createNewFile()));
+                    Log.d(TAG, "Created file: " + nomediaFile + " " + nomediaFile.createNewFile());
                 } catch (IOException e) {
                     Log.d(TAG, "Unable to create .nomedia file for some reason.", e);
                     throw new IllegalStateException("Unable to create nomedia file.");

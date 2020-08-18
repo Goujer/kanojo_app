@@ -21,11 +21,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
@@ -135,7 +137,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
             getIntent().replaceExtras((Bundle) null);
         }
         updateProfileView();
-        Log.d("NguyenTT", "Kanojo onResume " + this.isLoading);
+        Log.d(TAG, "Kanojo onResume " + this.isLoading);
         if (this.isSearch) {
             executeSearchTask(this.mSearchWord);
         } else {

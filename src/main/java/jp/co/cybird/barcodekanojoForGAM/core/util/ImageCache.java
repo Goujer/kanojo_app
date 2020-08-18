@@ -46,7 +46,7 @@ public class ImageCache {
 
     public static File saveImageBitmap(RemoteResourceManager rrm, String key) {
         try {
-            Bitmap bitmap = (Bitmap) new SoftReference(BitmapFactory.decodeStream(rrm.getInputStream(Uri.parse(key)))).get();
+            Bitmap bitmap = BitmapFactory.decodeStream(rrm.getInputStream(Uri.parse(key)));
             if (bitmap == null) {
                 return null;
             }
@@ -85,7 +85,7 @@ public class ImageCache {
                 imageView.setImageResource(default_rid);
             } else {
                 try {
-                    Bitmap bitmap = (Bitmap) new SoftReference(BitmapFactory.decodeStream(rrm.getInputStream(photoUri))).get();
+                    Bitmap bitmap = BitmapFactory.decodeStream(rrm.getInputStream(photoUri));
                     if (bitmap != null) {
                         imageView.setImageBitmap(bitmap);
                     } else {
@@ -139,7 +139,7 @@ public class ImageCache {
                 } catch (IOException e) {
                     imageView.setImageResource(default_rid);
                 } catch (Exception e2) {
-                    Log.d(ImageCache.TAG, "updateImageView: error??? ", e2);
+                    Log.d(TAG, "updateImageView: error??? ", e2);
                 }
             }
         });

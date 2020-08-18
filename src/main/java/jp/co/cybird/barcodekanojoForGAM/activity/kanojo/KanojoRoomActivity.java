@@ -42,6 +42,7 @@ import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
+import jp.co.cybird.barcodekanojoForGAM.Defs;
 import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.DashboardActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity;
@@ -819,8 +820,13 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 						KanojoRoomActivity.this.mKanojoDialogMessage.initDialogMessage(KanojoRoomActivity.this.mKanojoMessage.getMessage(), KanojoRoomActivity.this.mKanojoMessage.getSiteURL(), KanojoRoomActivity.this.mKanojoMessage.getButtonText());
 						KanojoRoomActivity.this.dialoglayout.setVisibility(View.VISIBLE);
 					}
+				} else if (Defs.DEBUG) {
+					mReason.printStackTrace();
 				}
 			} catch (BarcodeKanojoException e) {
+            	if (Defs.DEBUG) {
+            		e.printStackTrace();
+				}
             }
         }
 

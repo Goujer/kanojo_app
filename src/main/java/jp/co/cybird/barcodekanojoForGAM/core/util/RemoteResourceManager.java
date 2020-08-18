@@ -25,7 +25,7 @@ public class RemoteResourceManager extends Observable {
     }
 
     public RemoteResourceManager(DiskCache cache) {
-        this.mFetcherObserver = new FetcherObserver(this, (FetcherObserver) null);
+        this.mFetcherObserver = new FetcherObserver(this, null);
         this.mDiskCache = cache;
         this.mRemoteResourceFetcher = new RemoteResourceFetcher(this.mDiskCache);
         this.mRemoteResourceFetcher.addObserver(this.mFetcherObserver);

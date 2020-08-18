@@ -57,7 +57,7 @@ public class KanojoAdapter extends BaseKanojoPairAdapter implements ObservableAd
         this.mInflater = LayoutInflater.from(context);
         this.mRrm = rrm;
         this.mHandler = new Handler();
-        this.mResourcesObserver = new RemoteResourceManagerObserver(this, (RemoteResourceManagerObserver) null);
+        this.mResourcesObserver = new RemoteResourceManagerObserver(this, null);
         if (this.mRrm != null) {
             this.mRrm.addObserver(this.mResourcesObserver);
         }
@@ -109,18 +109,16 @@ public class KanojoAdapter extends BaseKanojoPairAdapter implements ObservableAd
 
     public void addModelList(ModelList<KanojoPair> l) {
         super.addModelList(l);
-        Iterator it = l.iterator();
-        while (it.hasNext()) {
-            KanojoPair pair = (KanojoPair) it.next();
-            Kanojo kanojo = pair.getLeft();
-            if (kanojo != null) {
-                ImageCache.requestImage(kanojo.getProfile_image_url(), this.mRrm);
-            }
-            Kanojo kanojo2 = pair.getRight();
-            if (kanojo2 != null) {
-                ImageCache.requestImage(kanojo2.getProfile_image_url(), this.mRrm);
-            }
-        }
+		for (KanojoPair pair : l) {
+			Kanojo kanojo = pair.getLeft();
+			if (kanojo != null) {
+				ImageCache.requestImage(kanojo.getProfile_image_url(), this.mRrm);
+			}
+			Kanojo kanojo2 = pair.getRight();
+			if (kanojo2 != null) {
+				ImageCache.requestImage(kanojo2.getProfile_image_url(), this.mRrm);
+			}
+		}
     }
 
     public void addKanojosModelList(ModelList<Kanojo> kanojos) {
