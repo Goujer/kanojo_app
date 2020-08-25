@@ -79,9 +79,7 @@ public class ImageCache {
             }
             Uri photoUri = Uri.parse(key);
             File file = rrm.getFile(photoUri);
-            if (file == null) {
-                imageView.setImageResource(default_rid);
-            } else if (!file.exists()) {
+            if (file == null || !file.exists()) {
                 imageView.setImageResource(default_rid);
             } else {
                 try {

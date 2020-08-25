@@ -82,7 +82,7 @@ public class BaseDiskCache implements DiskCache {
     }
 
     public File getFile(File root, String hash) {
-        File result = new File(String.valueOf(root.toString()) + File.separator + hash);
+        File result = new File(root.toString() + File.separator + hash);
         if (result == null || !result.exists()) {
         }
         return result;
@@ -100,7 +100,7 @@ public class BaseDiskCache implements DiskCache {
         } else {
             mTempStorageDirectory = createDirectory(false, this.mDirPath, this.mBaseDiskName);
         }
-        return new File(String.valueOf(mTempStorageDirectory.toString()) + File.separator + hash);
+        return new File(mTempStorageDirectory.toString() + File.separator + hash);
     }
 
     public InputStream getInputStream(String hash) throws IOException {

@@ -75,6 +75,7 @@ public class RemoteResourceManager extends Observable {
             this.mRequestUri = requestUri;
         }
 
+        @Override
         public void update(Observable observable, Object data) {
             Uri dataUri = (Uri) data;
             if (dataUri == this.mRequestUri) {
@@ -91,6 +92,7 @@ public class RemoteResourceManager extends Observable {
             this();
         }
 
+        @Override
         public void update(Observable observable, Object data) {
             RemoteResourceManager.this.setChanged();
             RemoteResourceManager.this.notifyObservers(data);
