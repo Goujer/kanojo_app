@@ -284,8 +284,8 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
     }
 
     public String getProfile_image_url() {
-        return this.profile_image_url;
-    }
+        return profile_image_url;
+	}
 
     public void setProfile_image_url(String profileImageUrl) {
         this.profile_image_url = profileImageUrl;

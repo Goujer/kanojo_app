@@ -16,8 +16,8 @@ public class Live2dUtil {
     public static final String BACKGROUND_DIR = "background";
     public static final int DEFAULT_LOVE_GAUGE = 85;
     public static final float ICON_OFFSET_Y = -0.3f;
-    public static final float ICON_SCALE = 0.8f;
-    public static final int ICON_SIZE = 368;
+    public static final float ICON_SCALE = 0.78f;
+    public static final int ICON_SIZE = 400;	//Export size should be 1024
     public static final float PREICON_OFFSET_Y = 0.2f;
     public static final float PREICON_SCALE = 1.3f;
     private static final int REQUEST_MAX = 5;
@@ -64,7 +64,7 @@ public class Live2dUtil {
         String partsUrl = Defs.URL_BASE_LIVE2D_EXTPARTS + File.separator + partsID + File.separator + partsID + "_" + String.format("%03d", partsItemNo) + ".zip";
         if (this.map.containsKey(partsUrl)) {
             int count = this.map.get(partsUrl);
-            if (count > 5) {
+            if (count > REQUEST_MAX) {
                 setting.setParts(partsID, 0);
                 return true;
             }
@@ -90,12 +90,12 @@ public class Live2dUtil {
             return true;
         }
         if (this.map.containsKey(StringUrl)) {
-            int count = this.map.get(StringUrl).intValue();
-            if (count > 5) {
+            int count = this.map.get(StringUrl);
+            if (count > REQUEST_MAX) {
                 this.mKanojoLive2D.setBackgroundImage((String) null, false);
                 return true;
             }
-            this.map.put(StringUrl, Integer.valueOf(count + 1));
+            this.map.put(StringUrl, count + 1);
         } else {
             this.map.put(StringUrl, 0);
         }
@@ -117,15 +117,15 @@ public class Live2dUtil {
     }
 
     public static Bitmap createNormalIcon(Context context, Kanojo kanojo, int emotion_status) {
-        return createIcon(context, kanojo, emotion_status, 0.8f, 0.0f, -0.3f, 0);
+        return createIcon(context, kanojo, emotion_status, ICON_SCALE, 0.0f, ICON_OFFSET_Y, 0);
     }
 
     public static Bitmap createNormalIcon(Context context, Kanojo kanojo) {
-        return createIcon(context, kanojo, kanojo.getEmotion_status(), 0.8f, 0.0f, -0.3f, 0);
+        return createIcon(context, kanojo, kanojo.getEmotion_status(), ICON_SCALE, 0.0f, ICON_OFFSET_Y, 0);
     }
 
     public static Bitmap createSilhouette(Context context, Kanojo kanojo, int emotion_status) {
-        return createIcon(context, kanojo, emotion_status, 1.3f, 0.0f, 0.2f, 1);
+        return createIcon(context, kanojo, emotion_status, PREICON_SCALE, 0.0f, PREICON_OFFSET_Y, 1);
     }
 
     private static Bitmap createIcon(Context context, Kanojo kanojo, int emotion_status, float scale, float offset_x, float offset_y, int iconFlg) {
@@ -135,7 +135,7 @@ public class Live2dUtil {
         }
         KanojoSetting setting = kanojoLive2D.getKanojoSetting();
         setLive2DKanojoParts(setting, kanojo);
-        setting.setLoveGage(85.0d);
+        setting.setLoveGage(DEFAULT_LOVE_GAUGE);
         return kanojoLive2D.createIcon(ICON_SIZE, ICON_SIZE, scale, offset_x, offset_y, iconFlg);
     }
 
