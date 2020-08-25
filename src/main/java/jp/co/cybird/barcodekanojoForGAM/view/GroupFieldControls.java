@@ -70,7 +70,7 @@ public class GroupFieldControls extends LinearLayout {
     private View MakeFirstView(RelativeLayout parent, int imgLeft, int type) {
         ImageView img = new ImageView(this._ctx);
         if (imgLeft == 0) {
-            img.setBackgroundResource(R.drawable.icon);
+            img.setBackgroundResource(R.mipmap.icon);
         } else {
             img.setBackgroundResource(imgLeft);
         }
