@@ -14,7 +14,9 @@
 		android:ellipsize="end"
 		android:singleLine="true"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
+		android:layout_height="wrap_content"
+		android:layout_marginStart="6dp"
+		android:layout_toEndOf="@+id/view_kanojo_img"/>
     <ImageView android:id="@+id/view_kanojo_rate" android:layout_width="@dimen/row_kanojos_rate_width" android:layout_height="@dimen/row_kanojos_rate_height" android:layout_marginLeft="6dp" android:layout_marginTop="3dp" android:src="@drawable/row_kanojos_star0" android:scaleType="fitXY" android:adjustViewBounds="true" android:layout_toRightOf="@+id/view_kanojo_img" android:layout_below="@+id/view_kanojo_bar"/>
     <View android:id="@+id/view_kanojo_cover" android:background="@color/default_bg" android:visibility="invisible" android:layout_width="match_parent" android:layout_height="match_parent"/>
 </merge>

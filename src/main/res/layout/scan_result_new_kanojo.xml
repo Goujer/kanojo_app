@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:padding="6dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:padding="6dp"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
     <ImageView android:id="@+id/scan_result_photo" android:layout_width="@dimen/scan_result_shadow_photo_width" android:layout_height="@dimen/scan_result_shadow_photo_height" android:src="@drawable/test_dummy_kanojo_kage" android:layout_centerHorizontal="true"/>
 </RelativeLayout>

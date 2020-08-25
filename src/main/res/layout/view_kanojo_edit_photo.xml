@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:gravity="center_horizontal" android:background="@color/edit_bg" android:paddingTop="8dp" android:paddingBottom="8dp" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_photo_height">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:EditItemView="http://schemas.android.com/apk/res-auto"
+	android:gravity="center_horizontal"
+	android:background="@color/edit_bg"
+	android:paddingTop="8dp"
+	android:paddingBottom="8dp"
+	android:layout_width="match_parent"
+	android:layout_height="@dimen/row_kanojo_edit_photo_height">
     <ImageView android:id="@+id/row_kanojo_edit_photo_ya" android:layout_width="@dimen/row_kanojo_edit_photo_ya_width" android:layout_height="@dimen/row_kanojo_edit_photo_ya_height" android:src="@drawable/row_kanojo_edit_photo_ya" android:layout_centerInParent="true"/>
-    <FrameLayout android:layout_width="@dimen/kanojo_info_img_width" android:layout_height="@dimen/kanojo_info_img_width" android:layout_marginRight="24dp" android:layout_toLeftOf="@+id/row_kanojo_edit_photo_ya">
+    <FrameLayout android:layout_width="@dimen/kanojo_info_img_width" android:layout_height="@dimen/kanojo_info_img_width" android:layout_marginRight="24dp" android:layout_toLeftOf="@+id/row_kanojo_edit_photo_ya"
+		android:layout_marginEnd="24dp"
+		android:layout_toStartOf="@+id/row_kanojo_edit_photo_ya">
         <ImageView android:id="@+id/row_kanojo_edit_photo_left" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/common_noimage_product" android:scaleType="fitXY" android:adjustViewBounds="true"/>
         <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/product_info_cover" android:scaleType="fitXY" android:adjustViewBounds="true"/>
     </FrameLayout>
-    <FrameLayout android:layout_width="@dimen/kanojo_info_img_width" android:layout_height="@dimen/kanojo_info_img_width" android:layout_marginLeft="22dp" android:layout_toRightOf="@+id/row_kanojo_edit_photo_ya">
+    <FrameLayout android:layout_width="@dimen/kanojo_info_img_width" android:layout_height="@dimen/kanojo_info_img_width" android:layout_marginLeft="22dp" android:layout_toRightOf="@+id/row_kanojo_edit_photo_ya"
+		android:layout_marginStart="22dp"
+		android:layout_toEndOf="@+id/row_kanojo_edit_photo_ya">
         <ImageView android:id="@+id/row_kanojo_edit_photo_right" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/dummy_face_90" android:scaleType="fitXY" android:adjustViewBounds="true"/>
     </FrameLayout>
 </RelativeLayout>

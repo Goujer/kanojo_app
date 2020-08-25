@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:layout_width="match_parent" android:layout_height="wrap_content">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
     <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:background="@drawable/row_enemies_bg" android:paddingTop="3dp" android:paddingBottom="3dp" android:layout_width="match_parent" android:layout_height="@dimen/row_enemies_height">
         <FrameLayout android:padding="4dp" android:layout_width="wrap_content" android:layout_height="match_parent">
             <ImageView android:layout_width="wrap_content" android:layout_height="match_parent" android:src="@drawable/common_noimage" android:scaleType="fitXY" android:adjustViewBounds="true"/>

@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:layout_width="match_parent" android:layout_height="wrap_content">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
     <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:background="@drawable/row_activities_bg" android:paddingLeft="4dp" android:paddingTop="3dp" android:paddingRight="4dp" android:paddingBottom="3dp" android:layout_width="match_parent" android:layout_height="@dimen/row_activities_height">
         <FrameLayout android:layout_width="@dimen/row_activities_img_width" android:layout_height="@dimen/row_activities_img_height">
             <ImageView android:id="@+id/row_kanojo_info_activities_img" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/common_noimage" android:scaleType="fitXY" android:adjustViewBounds="true"/>
             <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/row_activities_img_cover" android:scaleType="fitXY" android:adjustViewBounds="true"/>
         </FrameLayout>
-        <TextView android:id="@+id/row_kanojo_info_activities_txt" android:layout_marginLeft="4dp" android:maxLines="3" android:layout_weight="1" style="@style/txt_activites"/>
+        <TextView android:id="@+id/row_kanojo_info_activities_txt" android:layout_marginLeft="4dp" android:maxLines="3" android:layout_weight="1" style="@style/txt_activites"
+			android:layout_width="0dp"
+			android:layout_marginStart="4dp"/>
     </LinearLayout>
 </FrameLayout>

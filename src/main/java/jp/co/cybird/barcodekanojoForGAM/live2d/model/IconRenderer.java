@@ -80,10 +80,10 @@ public class IconRenderer {
             try {
                 KanojoModel kanojoModel = kanojoLive2D.getKanojoModel(gl);
                 if (kanojoModel == null) {
-                    UtDebug.error("kanojoModel not intiailzed at KanojoLive2D#createIcon()", new Object[0]);
+                    UtDebug.error("kanojoModel not intiailzed at KanojoLive2D#createIcon()");
                     return null;
                 }
-                if (!((iconFlags & 2) != 0) && (model = kanojoModel.getModel()) != null) {
+                if ((iconFlags & 2) == 0 && (model = kanojoModel.getModel()) != null) {
                     model.setParamFloat("PARAM_ANGLE_X", getRandF(-30.0f, 30.0f));
                     model.setParamFloat("PARAM_ANGLE_Y", getRandF(-30.0f, 30.0f));
                     model.setParamFloat("PARAM_ANGLE_Z", getRandF(-30.0f, 30.0f));

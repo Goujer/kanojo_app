@@ -53,7 +53,7 @@ public class ProductAndKanojoView extends RelativeLayout {
             ImageCache.hasImageAndRequest(leftImgUrl, rrm);
             this.mLoadImgTask = new LoadImgTask();
             this.mLoadImgTask.setSources(rrm, leftImgUrl, kanojo);
-            this.mLoadImgTask.execute(new Void[0]);
+            this.mLoadImgTask.execute();
         }
     }
 
@@ -72,10 +72,12 @@ public class ProductAndKanojoView extends RelativeLayout {
             this.mLeftImgUrl = leftimgurl;
         }
 
-        public void onPreExecute() {
+        @Override
+        protected void onPreExecute() {
         }
 
-        public Void doInBackground(Void... params) {
+        @Override
+        protected Void doInBackground(Void... params) {
             try {
                 return process();
             } catch (Exception e) {
@@ -84,7 +86,8 @@ public class ProductAndKanojoView extends RelativeLayout {
             }
         }
 
-        public void onPostExecute(Void params) {
+        @Override
+        protected void onPostExecute(Void params) {
             if (this.mReason != null) {
             }
             if (ProductAndKanojoView.this.imgRight != null && ImageCache.hasImage("kanojo")) {
