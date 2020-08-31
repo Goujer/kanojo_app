@@ -18,8 +18,7 @@
 
 	</RelativeLayout>
 	<LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/edit_bg" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="match_parent">
-
-		<CheckBox
+		<Switch
 			android:id="@+id/setting_server_https"
 			style="@style/txt_kanojo_edit_key"
 			android:layout_width="match_parent"

@@ -4,19 +4,17 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.View
 import android.widget.Button
+import android.widget.CompoundButton
 import android.widget.EditText
-import android.widget.Switch
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp
 import jp.co.cybird.barcodekanojoForGAM.R
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity
 import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView
-import java.net.CookieHandler
-import java.net.CookieManager
 
 class ServerConfigurationActivity : BaseEditActivity(), View.OnClickListener {
 	private lateinit var btnClose: Button
-	private lateinit var switchHttp: Switch
+	private lateinit var switchHttp: CompoundButton
 	private lateinit var txtURL: EditItemView
 	private lateinit var txtPort: EditItemView
 
@@ -29,10 +27,10 @@ class ServerConfigurationActivity : BaseEditActivity(), View.OnClickListener {
 		switchHttp.isChecked = ApplicationSetting(this).serverHttps
 		txtURL = findViewById(R.id.setting_server_url)
 		txtURL.setOnClickListener(this)
-		txtURL.value = ApplicationSetting(this).getServerURL()
+		txtURL.value = ApplicationSetting(this).serverURL
 		txtPort = findViewById(R.id.setting_server_port)
 		txtPort.setOnClickListener(this)
-		txtPort.value = ApplicationSetting(this).getServerPort().toString()
+		txtPort.value = ApplicationSetting(this).serverPort.toString()
 	}
 
 	override fun onDestroy() {
@@ -50,10 +48,12 @@ class ServerConfigurationActivity : BaseEditActivity(), View.OnClickListener {
 				finish()
 			}
 			R.id.setting_server_url -> {
+				input.setText(txtURL.value)
 				input.inputType = InputType.TYPE_CLASS_TEXT
 				showEditTextDialog(r.getString(R.string.server_url), txtURL, input)
 			}
 			R.id.setting_server_port -> {
+				input.setText(txtPort.value)
 				input.inputType = InputType.TYPE_CLASS_NUMBER
 				showEditTextDialog(r.getString(R.string.server_port), txtPort, input)
 			}
