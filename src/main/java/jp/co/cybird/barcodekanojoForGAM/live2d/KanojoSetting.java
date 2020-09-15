@@ -64,7 +64,7 @@ public class KanojoSetting {
     ArrayList<PartsSet> partsSetList = new ArrayList<>();
     boolean silhouetteMode = false;
 
-    public class PartsSet {
+    public static class PartsSet {
         public String partsID;
         public int partsItemNo;
 
@@ -72,7 +72,7 @@ public class KanojoSetting {
         }
     }
 
-    public class ColorSet {
+    public static class ColorSet {
         public String colorID;
         public int colorNo;
 
@@ -80,7 +80,7 @@ public class KanojoSetting {
         }
     }
 
-    public class FeatureSet {
+    public static class FeatureSet {
         public String featureID;
         public float featureValue;
 
@@ -106,7 +106,7 @@ public class KanojoSetting {
         this.colorSetList.add(cset(COLOR_01_SKIN, 1));
         this.colorSetList.add(cset(COLOR_01_HAIR, 1));
         this.colorSetList.add(cset(COLOR_01_EYE, 1));
-        this.colorSetList.add(cset("COLOR_01_CLOTHES_A", 1));
+        this.colorSetList.add(cset(COLOR_01_CLOTHES_A, 1));
         this.colorSetList.add(cset(COLOR_01_CLOTHES_B, 1));
         this.featureSetList.add(fset(FEATURE_01_EYE_POS, 0));
         this.featureSetList.add(fset(FEATURE_01_BROW_POS, 0));
@@ -145,22 +145,22 @@ public class KanojoSetting {
         if (cno < 1) {
             cno = 1;
         }
-        if (colorID == COLOR_01_SKIN) {
-            if (cno > 12) {
+        if (colorID.equals(COLOR_01_SKIN)) {
+            if (cno > MAX_COLOR_CONVERT_SKIN) {
                 cno = 1;
             }
             return this.SKIN_CONVERT[cno - 1];
-        } else if (colorID == COLOR_01_HAIR) {
-            if (cno > 24) {
+        } else if (colorID.equals(COLOR_01_HAIR)) {
+            if (cno > MAX_COLOR_CONVERT_HAIR) {
                 cno = 1;
             }
             return this.HAIR_CONVERT[cno - 1];
-        } else if (colorID == COLOR_01_EYE) {
-            if (cno > 12) {
+        } else if (colorID.equals(COLOR_01_EYE)) {
+            if (cno > MAX_COLOR_CONVERT_EYE) {
                 cno = 1;
             }
             return this.EYE_CONVERT[cno - 1];
-        } else if (colorID != "COLOR_01_CLOTHES_A") {
+        } else if (!colorID.equals(COLOR_01_CLOTHES_A)) {
             return null;
         } else {
             if (cno > 6) {
@@ -185,16 +185,16 @@ public class KanojoSetting {
 
     public void setParts(String _partsID, int partsItemNo) {
         if (partsItemNo < 1) {
-            UtDebug.error("illegal argment @KanojoSetting#setParts()/ id : %s / partsItemNo : %d\n", _partsID, Integer.valueOf(partsItemNo));
+            UtDebug.error("illegal argment @KanojoSetting#setParts()/ id : %s / partsItemNo : %d\n", _partsID, partsItemNo);
             return;
         }
         for (int i = this.partsSetList.size() - 1; i >= 0; i--) {
-            if (_partsID == this.partsSetList.get(i).partsID) {
+            if (_partsID.equals(this.partsSetList.get(i).partsID)) {
                 this.partsSetList.get(i).partsItemNo = partsItemNo;
                 return;
             }
         }
-        UtDebug.error("Live2D Error . no partsID @ KanojoSetting#setParts() ", new Object[0]);
+        UtDebug.error("Live2D Error . no partsID @ KanojoSetting#setParts() ");
     }
 
     public ArrayList<PartsSet> getPartsSetList() {
@@ -203,65 +203,65 @@ public class KanojoSetting {
 
     public void setColor(String _colorID, int colorNo) {
         for (int i = this.colorSetList.size() - 1; i >= 0; i--) {
-            if (_colorID == this.colorSetList.get(i).colorID) {
+            if (_colorID.equals(this.colorSetList.get(i).colorID)) {
                 this.colorSetList.get(i).colorNo = colorNo;
                 return;
             }
         }
-        UtDebug.error("Live2D Error . no partsID @ KanojoSetting#setColor() ", new Object[0]);
+        UtDebug.error("Live2D Error . no partsID @ KanojoSetting#setColor() ");
     }
 
     public int getColor(String _colorID) {
         for (int i = this.colorSetList.size() - 1; i >= 0; i--) {
-            if (_colorID == this.colorSetList.get(i).colorID) {
+            if (_colorID.equals(this.colorSetList.get(i).colorID)) {
                 return this.colorSetList.get(i).colorNo;
             }
         }
-        UtDebug.error("Live2D Error . no partsID @ KanojoSetting#getColor() ", new Object[0]);
+        UtDebug.error("Live2D Error . no partsID @ KanojoSetting#getColor() ");
         return 0;
     }
 
     public void setFeature(String _featureID, float featureValue) {
         for (int i = this.featureSetList.size() - 1; i >= 0; i--) {
-            if (_featureID == this.featureSetList.get(i).featureID) {
+            if (_featureID.equals(this.featureSetList.get(i).featureID)) {
                 this.featureSetList.get(i).featureValue = featureValue;
                 return;
             }
         }
-        UtDebug.error("Live2D Error . no featureID @ KanojoSetting#setColor() ", new Object[0]);
+        UtDebug.error("Live2D Error . no featureID @ KanojoSetting#setColor() ");
     }
 
     public float getFeature(String _featureID) {
         for (int i = this.featureSetList.size() - 1; i >= 0; i--) {
-            if (_featureID == this.featureSetList.get(i).featureID) {
+            if (_featureID.equals(this.featureSetList.get(i).featureID)) {
                 return this.featureSetList.get(i).featureValue;
             }
         }
-        UtDebug.error("Live2D Error . no featureID @ KanojoSetting#getColor() ", new Object[0]);
+        UtDebug.error("Live2D Error . no featureID @ KanojoSetting#getColor() ");
         return 0.0f;
     }
 
     public void dump() {
-        System.out.printf("--------- DUMP SETTING ---------\n", new Object[0]);
-        System.out.printf("\n << parts setting >>\n  ", new Object[0]);
+		System.out.println("--------- DUMP SETTING ---------");
+		System.out.print("\n << parts setting >>\n  ");
         for (int i = 0; i < this.partsSetList.size(); i++) {
-            System.out.printf("%18s [%2d]  ", new Object[]{this.partsSetList.get(i).partsID, Integer.valueOf(this.partsSetList.get(i).partsItemNo)});
+            System.out.printf("%18s [%2d]  ", this.partsSetList.get(i).partsID, this.partsSetList.get(i).partsItemNo);
             if (i % 5 == 4) {
-                System.out.printf("\n  ", new Object[0]);
+				System.out.print("\n  ");
             }
         }
-        System.out.printf("\n << color setting >>\n", new Object[0]);
+        System.out.printf("\n << color setting >>\n");
         for (int i2 = 0; i2 < this.colorSetList.size(); i2++) {
-            System.out.printf("%18s [%2d]  ", new Object[]{this.colorSetList.get(i2).colorID, Integer.valueOf(this.colorSetList.get(i2).colorNo)});
+            System.out.printf("%18s [%2d]  ", this.colorSetList.get(i2).colorID, Integer.valueOf(this.colorSetList.get(i2).colorNo));
             if (i2 % 5 == 4) {
-                System.out.printf("\n  ", new Object[0]);
+                System.out.printf("\n  ");
             }
         }
-        System.out.printf("\n << feature setting >>\n  ", new Object[0]);
+        System.out.printf("\n << feature setting >>\n  ");
         for (int i3 = 0; i3 < this.featureSetList.size(); i3++) {
             System.out.printf("%18s [%6.2f]  ", new Object[]{this.featureSetList.get(i3).featureID, Float.valueOf(this.featureSetList.get(i3).featureValue)});
             if (i3 % 5 == 4) {
-                System.out.printf("\n  ", new Object[0]);
+                System.out.printf("\n  ");
             }
         }
         System.out.printf("\n\n", new Object[0]);

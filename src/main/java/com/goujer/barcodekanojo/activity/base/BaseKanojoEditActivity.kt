@@ -46,7 +46,7 @@ open class BaseKanojoEditActivity : BaseEditActivity() {
 	}
 
 	protected fun getDefaultCategory(): Category? {
-		return if (mCategories == null || mCategories.size === 0) {
+		return if (mCategories == null || mCategories.size == 0) {
 			null
 		} else mCategories[0]
 	}
@@ -56,7 +56,7 @@ open class BaseKanojoEditActivity : BaseEditActivity() {
 		if (mCategories != null) {
 			val size: Int = mCategories.size
 			for (i in 0 until size) {
-				if (mCategories[i].id === product.category_id) {
+				if (mCategories[i].id == product.category_id) {
 					selected = i
 				}
 			}
