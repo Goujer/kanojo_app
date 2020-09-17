@@ -11,6 +11,7 @@ public final class ResultButtonListener implements View.OnClickListener {
         this.index = index2;
     }
 
+    @Override
     public void onClick(View view) {
         this.resultHandler.handleButtonPress(this.index);
     }

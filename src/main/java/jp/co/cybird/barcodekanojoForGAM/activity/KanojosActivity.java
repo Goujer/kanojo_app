@@ -250,7 +250,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
             String action = intent.getAction();
             String query = intent.getStringExtra("query");
             if ("android.intent.action.SEARCH".equals(action) && query != null) {
-                new SearchRecentSuggestions(this, KanojoSearchSuggestionsProvider.AUTHORITY, 1).saveRecentQuery(query, (String) null);
+                new SearchRecentSuggestions(this, KanojoSearchSuggestionsProvider.AUTHORITY, 1).saveRecentQuery(query, null);
                 executeSearchTask(query);
             }
             Bundle bundle = intent.getExtras();

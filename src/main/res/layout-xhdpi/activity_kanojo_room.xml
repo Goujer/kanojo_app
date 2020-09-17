@@ -18,7 +18,15 @@
             <ToggleButton android:id="@+id/kanojo_room_like_btn" android:background="@drawable/btn_kanojo_like" android:layout_width="65dp" android:layout_height="25dp" android:layout_marginLeft="15dp" android:layout_marginTop="40dp" android:textOn="" android:textOff="" android:layout_alignParentLeft="true" android:layout_alignParentTop="true"/>
             <Button android:id="@+id/kanojo_room_items_btn" android:background="@drawable/btn_kanojo_items" android:layout_width="70dp" android:layout_height="25dp" android:layout_marginRight="15dp" android:layout_marginBottom="20dp" android:layout_above="@+id/kanojo_room_message_banner" android:layout_alignParentRight="true"/>
             <Button android:id="@+id/kanojo_room_date_btn" android:background="@drawable/btn_kanojo_date" android:layout_width="70dp" android:layout_height="25dp" android:layout_marginRight="15dp" android:layout_marginBottom="12dp" android:layout_above="@+id/kanojo_room_items_btn" android:layout_alignParentRight="true"/>
-            <Button android:id="@+id/kanojo_room_ticket_btn" android:background="@drawable/btn_kanojo_tickets" android:layout_width="70dp" android:layout_height="25dp" android:layout_marginRight="15dp" android:layout_marginBottom="12dp" android:layout_above="@+id/kanojo_room_date_btn" android:layout_alignParentRight="true"/>
+            <Button
+				android:id="@+id/kanojo_room_ticket_btn"
+				android:layout_width="70dp"
+				android:layout_height="25dp"
+				android:layout_above="@+id/kanojo_room_date_btn"
+				android:layout_alignParentRight="true"
+				android:layout_marginRight="15dp"
+				android:layout_marginBottom="12dp"
+				android:background="@drawable/btn_kanojo_tickets"/>
             <WebView android:gravity="center" android:id="@+id/kanojo_room_message_banner" android:background="@android:color/transparent" android:layout_width="match_parent" android:layout_height="50dp" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" android:layout_centerVertical="true"/>
             <LinearLayout android:orientation="vertical" android:id="@+id/kanojo_room_status_txt_layout" android:background="@color/kanojo_room_status_bg" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true">
                 <RelativeLayout android:id="@+id/progressbar_radar_view" android:visibility="gone" android:layout_width="match_parent" android:layout_height="220dp">

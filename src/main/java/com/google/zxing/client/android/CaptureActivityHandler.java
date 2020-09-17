@@ -2,14 +2,15 @@ package com.google.zxing.client.android;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import android.util.Log;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
@@ -41,6 +42,7 @@ public final class CaptureActivityHandler extends Handler {
         restartPreviewAndDecode();
     }
 
+    @Override
     public void handleMessage(Message message) {
         switch (message.what) {
             case R.id.decode_failed:
@@ -56,7 +58,7 @@ public final class CaptureActivityHandler extends Handler {
                 if (bundle != null) {
                     byte[] compressedBitmap = bundle.getByteArray(DecodeThread.BARCODE_BITMAP);
                     if (compressedBitmap != null) {
-                        barcode = BitmapFactory.decodeByteArray(compressedBitmap, 0, compressedBitmap.length, (BitmapFactory.Options) null).copy(Bitmap.Config.ARGB_8888, true);
+                        barcode = BitmapFactory.decodeByteArray(compressedBitmap, 0, compressedBitmap.length, null).copy(Bitmap.Config.ARGB_8888, true);
                     }
                     scaleFactor = bundle.getFloat(DecodeThread.BARCODE_SCALED_FACTOR);
                 }
@@ -66,9 +68,13 @@ public final class CaptureActivityHandler extends Handler {
                 Log.d(TAG, "Got product query message");
                 String url = (String) message.obj;
                 Intent intent = new Intent("android.intent.action.VIEW");
-                intent.addFlags(524288);
+                if (Build.VERSION.SDK_INT < 21) {
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+				} else {
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+				}
                 intent.setData(Uri.parse(url));
-                ResolveInfo resolveInfo = this.activity.getPackageManager().resolveActivity(intent, AccessibilityEventCompat.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED);
+                ResolveInfo resolveInfo = this.activity.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
                 String browserPackageName = null;
                 if (resolveInfo.activityInfo != null) {
                     browserPackageName = resolveInfo.activityInfo.packageName;
@@ -76,7 +82,7 @@ public final class CaptureActivityHandler extends Handler {
                 }
                 if ("com.android.browser".equals(browserPackageName) || "com.android.chrome".equals(browserPackageName)) {
                     intent.setPackage(browserPackageName);
-                    intent.addFlags(268435456);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("com.android.browser.application_id", browserPackageName);
                 }
                 try {
@@ -94,23 +100,25 @@ public final class CaptureActivityHandler extends Handler {
                 Log.d(TAG, "Got return scan result message");
                 this.activity.setResult(-1, (Intent) message.obj);
                 this.activity.finish();
-                return;
-            default:
-                return;
         }
     }
 
-    public void quitSynchronously() {
-        this.state = State.DONE;
-        this.cameraManager.stopPreview();
-        Message.obtain(this.decodeThread.getHandler(), R.id.quit).sendToTarget();
-        try {
-            this.decodeThread.join(500);
-        } catch (InterruptedException e) {
-        }
-        removeMessages(R.id.decode_succeeded);
-        removeMessages(R.id.decode_failed);
-    }
+	public void quitSynchronously() {
+		state = State.DONE;
+		cameraManager.stopPreview();
+		Message quit = Message.obtain(decodeThread.getHandler(), R.id.quit);
+		quit.sendToTarget();
+		try {
+			// Wait at most half a second; should be enough time, and onPause() will timeout quickly
+			decodeThread.join(500L);
+		} catch (InterruptedException e) {
+			// continue
+		}
+
+		// Be absolutely sure we don't send any queued up messages
+		removeMessages(R.id.decode_succeeded);
+		removeMessages(R.id.decode_failed);
+	}
 
     private void restartPreviewAndDecode() {
         if (this.state == State.SUCCESS) {
