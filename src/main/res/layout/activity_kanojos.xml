@@ -11,6 +11,7 @@
     <RelativeLayout android:id="@+id/kanojo_firstboot" android:paddingLeft="@dimen/common_firstboot_left" android:paddingTop="@dimen/common_firstboot_top" android:paddingRight="@dimen/common_firstboot_right" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent"
 		android:paddingStart="@dimen/common_firstboot_left"
 		android:paddingEnd="@dimen/common_firstboot_right">
-        <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/kanojo_firstboot_instruction" android:scaleType="fitStart" android:adjustViewBounds="true" android:layout_alignParentRight="true"/>
+        <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/kanojo_firstboot_instruction" android:scaleType="fitStart" android:adjustViewBounds="true" android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"/>
     </RelativeLayout>
 </FrameLayout>

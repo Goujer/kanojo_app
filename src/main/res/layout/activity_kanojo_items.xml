@@ -14,7 +14,17 @@
             <Button android:enabled="false" android:id="@+id/kanojo_items_store" android:visibility="invisible" android:text="@string/kanojo_items_store" style="@style/btn_navi"/>
         </LinearLayout>
         <RelativeLayout android:id="@+id/layoutTab" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content">
-            <Button android:textStyle="bold" android:textColor="@android:color/black" android:id="@+id/kanojo_tab_items_store" android:background="@drawable/button_store_tab_select" android:focusable="true" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Store" android:layout_alignParentLeft="true"/>
+            <Button
+				android:id="@+id/kanojo_tab_items_store"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentLeft="true"
+				android:background="@drawable/button_store_tab_select"
+				android:clickable="true"
+				android:focusable="true"
+				android:text="Store"
+				android:textColor="@android:color/black"
+				android:textStyle="bold"/>
             <Button android:textStyle="bold" android:textColor="@android:color/black" android:id="@+id/kanojo_tab_items_list" android:background="@drawable/button_list_item_tab" android:focusable="true" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Belongings List" android:layout_alignParentRight="true"/>
         </RelativeLayout>
         <ListView android:id="@+id/kanojo_items_list" android:background="@color/default_bg" android:layout_width="match_parent" android:layout_height="match_parent" android:divider="#555555"/>

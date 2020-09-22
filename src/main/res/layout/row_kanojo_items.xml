@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM" android:layout_width="match_parent" android:layout_height="wrap_content">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
     <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:background="@drawable/row_kanojo_items_bg" android:paddingLeft="8dp" android:paddingTop="3dp" android:paddingRight="8dp" android:paddingBottom="3dp" android:layout_width="match_parent" android:layout_height="@dimen/row_activities_height">
         <ImageView android:id="@+id/row_kanojo_items_img" android:layout_width="@dimen/row_activities_img_width" android:layout_height="@dimen/row_activities_img_height" android:src="@drawable/common_noimage_product" android:scaleType="fitXY" android:adjustViewBounds="true"/>
-        <LinearLayout android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_marginLeft="4dp" android:layout_weight="1">
+        <LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_marginStart="4dp"
+			android:layout_marginLeft="4dp"
+			android:layout_weight="1"
+			android:orientation="vertical">
             <TextView
 				android:id="@+id/row_kanojo_items_title"
 				style="@style/txt_kanojo_items_title"
@@ -16,7 +24,16 @@
         </LinearLayout>
     </LinearLayout>
     <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@+id/layout_hide_up_level" android:background="@drawable/design_items_list_tab_level_bg" android:layout_width="match_parent" android:layout_height="@dimen/row_activities_height">
-        <ImageView android:id="@+id/imageView1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/design_items_list_key_tab_level_key"/>
-        <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:textColor="@color/white_tn" android:gravity="center" android:id="@+id/textViewPurchasableLevel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="5dp" android:text="Large Text"/>
+        <ImageView android:id="@+id/imageView1" android:layout_width="wrap_content" android:layout_height="25dp" android:src="@drawable/design_items_list_key_tab_level_key"/>
+        <TextView
+			android:id="@+id/textViewPurchasableLevel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="5dp"
+			android:layout_marginLeft="5dp"
+			android:gravity="center"
+			android:text="Large Text"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:textColor="@color/white_tn"/>
     </LinearLayout>
 </FrameLayout>
