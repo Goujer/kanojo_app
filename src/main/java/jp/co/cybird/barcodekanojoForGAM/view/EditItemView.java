@@ -158,7 +158,7 @@ public class EditItemView extends LinearLayout {
         if (this.mHoverInital) {
             return "";
         }
-        return this.mTextString;
+        return this.mTextString.trim();
     }
 
     public boolean isEmpty() {
