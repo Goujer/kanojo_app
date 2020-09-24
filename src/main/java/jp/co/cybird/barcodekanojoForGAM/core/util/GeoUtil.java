@@ -9,7 +9,7 @@ public class GeoUtil {
 
     public static String geoToString(LatLng gp) {
         if (gp == null) {
-            return null;
+            return "0,0";
         }
         return gp.latitude + "," + gp.longitude;
     }
