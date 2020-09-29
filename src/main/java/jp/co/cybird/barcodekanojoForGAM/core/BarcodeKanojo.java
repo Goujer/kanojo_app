@@ -244,7 +244,7 @@ public class BarcodeKanojo {
     }
 
     public Response<BarcodeKanojoModel> update(String barcode, String company_name, String company_name_textid, String product_name, String product_name_textid, int product_category_id, String product_comment, String product_comment_textid, File product_image_data, LatLng product_geo) throws BarcodeKanojoException, IOException {
-        return this.mBCKApi.update(barcode, company_name, company_name_textid, product_name, product_name_textid, product_category_id, product_comment, product_comment_textid, product_image_data, product_geo);
+        return this.mBCKApi.update(barcode, company_name, product_name, product_category_id, product_comment, product_image_data, product_geo);
     }
 
     public Response<BarcodeKanojoModel> my_user_timeline(int since_id, int index, int limit) throws IllegalStateException, BarcodeKanojoException, IOException {
