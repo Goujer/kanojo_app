@@ -8,7 +8,7 @@ public class ActivityModel implements BarcodeKanojoModel {
     private int id;
     private Kanojo kanojo = null;
     private User other_user = null;
-    private Scanned scanned = null;
+    private Product product = null;
     private User user = null;
 
     public int getId() {
@@ -52,7 +52,7 @@ public class ActivityModel implements BarcodeKanojoModel {
     	try {
 			switch (getActivity_type()) {
 				case 2:
-					return this.scanned.getProduct_image_url();
+					return this.product.getProduct_image_url();
 				case 5:
 				case 7:
 				case 8:
@@ -86,12 +86,12 @@ public class ActivityModel implements BarcodeKanojoModel {
         this.kanojo = kanojo2;
     }
 
-    public Scanned getScanned() {
-        return this.scanned;
+    public Product getProduct() {
+        return this.product;
     }
 
-    public void setScanned(Scanned scanned2) {
-        this.scanned = scanned2;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     User getOther_user() {

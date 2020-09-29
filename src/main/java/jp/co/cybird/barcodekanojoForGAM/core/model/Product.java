@@ -128,14 +128,8 @@ public class Product implements BarcodeKanojoModel, Parcelable {
         this.geo = geo2;
     }
 
-    public void setGeo(String geo2) {
-        String[] s = geo2.split(" ");
-        if (s.length == 2) {
-            try {
-                setGeo(new LatLng(Double.parseDouble(s[0]), Double.parseDouble(s[1])));
-            } catch (Exception e) {
-            }
-        }
+    public void setGeo(String geo) {
+        this.geo = GeoUtil.stringToGeo(geo);
     }
 
     public String getLocation() {

@@ -202,9 +202,6 @@ public class Response<T extends BarcodeKanojoModel> extends ModelList<T> impleme
         } else if (item instanceof Product) {
             Product product = (Product) item;
             Log.v(TAG, "[Product]\n barcode: " + product.getBarcode() + "\n name:" + product.getName() + "\n category_id:" + product.getCategory_id() + "\n category:" + product.getCategory() + "\n commment:" + product.getComment() + "\n geo:" + GeoUtil.geoToString(product.getGeo()) + "\n location:" + product.getLocation() + "\n product_image_url:" + product.getProduct_image_url() + "\n scan_count:" + product.getScan_count() + "\n company_name:" + product.getCompany_name() + "\n country:" + product.getCountry());
-        } else if (item instanceof Scanned) {
-            Scanned scanned = (Scanned) item;
-            Log.v(TAG, "[Scanned]\n id:" + scanned.getId() + "\n barcode: " + scanned.getBarcode() + "\n user_id:" + scanned.getUser_id() + "\n geo:" + GeoUtil.geoToString(scanned.getGeo()) + "\n location:" + scanned.getLocation() + "\n name:" + scanned.getName() + "\n category_id:" + scanned.getCategory_id() + "\n category:" + scanned.getCategory() + "\n commment:" + scanned.getComment() + "\n product_image_url:" + scanned.getProduct_image_url() + "\n nationality:" + scanned.getNationality());
         } else if (item instanceof ScanHistory) {
             ScanHistory scanHistory = (ScanHistory) item;
             Log.v(TAG, "[ScanHistory]\n barcode: " + scanHistory.getBarcode() + "\n total_count:" + scanHistory.getTotal_count() + "\n kanojo_count:" + scanHistory.getKanojo_count() + "\n friend_count:" + scanHistory.getFriend_count());
@@ -230,10 +227,10 @@ public class Response<T extends BarcodeKanojoModel> extends ModelList<T> impleme
                     Log.v(TAG, "[Activity Kanojo]");
                     checkResponse(kanojo2);
                 }
-                Scanned scanned2 = act.getScanned();
-                if (scanned2 != null) {
-                    Log.v(TAG, "[Activity Scanned]");
-                    checkResponse(scanned2);
+                Product product2 = act.getProduct();
+                if (product2 != null) {
+                    Log.v(TAG, "[Activity Product]");
+                    checkResponse(product2);
                 }
             } else if (item instanceof Category) {
                 Category category2 = (Category) item;

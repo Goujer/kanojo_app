@@ -18,7 +18,6 @@ import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Product;
-import jp.co.cybird.barcodekanojoForGAM.core.model.Scanned;
 import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 import jp.co.cybird.barcodekanojoForGAM.view.ProductAndKanojoView;
@@ -39,7 +38,6 @@ public class KanojoEditActivity extends BaseKanojoEditActivity implements View.O
     private Product mProduct;
     private ProductAndKanojoView mProductAndKanojo;
     private EditItemView mProductName;
-    private Scanned mScanned;
     private boolean mShowMessage = false;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -68,20 +66,19 @@ public class KanojoEditActivity extends BaseKanojoEditActivity implements View.O
         Bundle bundle = getIntent().getExtras();
         this.mKanojo = (Kanojo) bundle.get(BaseInterface.EXTRA_KANOJO);
         this.mProduct = (Product) bundle.get(BaseInterface.EXTRA_PRODUCT);
-        this.mScanned = (Scanned) bundle.get(BaseInterface.EXTRA_SCANNED);
         this.mMessage = bundle.getString(MessageModel.NOTIFY_AMENDMENT_INFORMATION);
-        if (this.mKanojo != null && this.mProduct != null && this.mScanned != null) {
+        if (this.mKanojo != null && this.mProduct != null) {
             this.mKanojoName.setValue(this.mKanojo.getName());
             this.mCompanyName.setValue(this.mProduct.getCompany_name());
             this.mProductName.setValue(this.mProduct.getName());
             this.mCategoryName.setValue(this.mProduct.getCategory());
             this.mLocation.setValue(this.mProduct.getLocation());
-            this.mComment.setValue(this.mScanned.getComment());
-            this.mLoadingView = (CustomLoadingView) findViewById(R.id.loadingView);
+            this.mComment.setValue(this.mProduct.getComment());
+            this.mLoadingView = findViewById(R.id.loadingView);
             if (!this.mCompanyName.isEmpty() && !this.mProductName.isEmpty()) {
                 this.btnSave.setEnabled(true);
             }
-            this.mProductAndKanojo.executeLoadImgTask(((BarcodeKanojoApp) getApplication()).getRemoteResourceManager(), this.mScanned.getProduct_image_url(), this.mKanojo);
+            this.mProductAndKanojo.executeLoadImgTask(((BarcodeKanojoApp) getApplication()).getRemoteResourceManager(), this.mProduct.getProduct_image_url(), this.mKanojo);
             if (this.mMessage != null) {
                 showNoticeDialog(this.mMessage, new DialogInterface.OnDismissListener() {
                     public void onDismiss(DialogInterface arg0) {
@@ -93,9 +90,9 @@ public class KanojoEditActivity extends BaseKanojoEditActivity implements View.O
     }
 
     public View getClientView() {
-        View leyout = getLayoutInflater().inflate(R.layout.activity_kanojo_edit, null);
+        View layout = getLayoutInflater().inflate(R.layout.activity_kanojo_edit, null);
         LinearLayout appLayoutRoot = new LinearLayout(this);
-        appLayoutRoot.addView(leyout);
+        appLayoutRoot.addView(layout);
         return appLayoutRoot;
     }
 

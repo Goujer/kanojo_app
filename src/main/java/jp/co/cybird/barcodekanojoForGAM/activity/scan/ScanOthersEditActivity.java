@@ -17,7 +17,6 @@ import jp.co.cybird.barcodekanojoForGAM.activity.util.ApiTask;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Product;
-import jp.co.cybird.barcodekanojoForGAM.core.model.Scanned;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 import jp.co.cybird.barcodekanojoForGAM.view.ProductAndKanojoView;
 
@@ -34,7 +33,6 @@ public class ScanOthersEditActivity extends BaseKanojoEditActivity implements Vi
     private Product mProduct;
     private ProductAndKanojoView mProductAndKanojo;
     private EditItemView mProductName;
-    private Scanned mScanned;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +63,6 @@ public class ScanOthersEditActivity extends BaseKanojoEditActivity implements Vi
         if (bundle != null) {
             this.mKanojo = (Kanojo) bundle.get(BaseInterface.EXTRA_KANOJO);
             this.mProduct = (Product) bundle.get(BaseInterface.EXTRA_PRODUCT);
-            this.mScanned = (Scanned) bundle.get(BaseInterface.EXTRA_SCANNED);
         }
         this.mMessage = bundle.getString(MessageModel.NOTIFY_AMENDMENT_INFORMATION);
         if (this.mKanojo != null && this.mProduct != null) {
@@ -73,11 +70,9 @@ public class ScanOthersEditActivity extends BaseKanojoEditActivity implements Vi
             this.mCompanyName.setValue(this.mProduct.getCompany_name());
             this.mProductName.setValue(this.mProduct.getName());
             this.mCategoryName.setValue(this.mProduct.getCategory());
+			this.mComment.setValue(this.mProduct.getComment());
             mCountry.setValue(this.mProduct.getCountry());
             mLocation.setValue(this.mProduct.getLocation());
-            if (this.mScanned != null) {
-                this.mComment.setValue(this.mScanned.getComment());
-            }
             if (!this.mKanojoName.isEmpty() && !this.mCompanyName.isEmpty() && !this.mProductName.isEmpty()) {
                 this.btnSave.setEnabled(true);
             }

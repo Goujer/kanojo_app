@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.http.SslError;
 import android.os.AsyncTask;
@@ -35,8 +34,6 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
@@ -59,10 +56,8 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.LoveIncrement;
 import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Product;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
-import jp.co.cybird.barcodekanojoForGAM.core.model.Scanned;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 import jp.co.cybird.barcodekanojoForGAM.core.model.WebViewData;
-import jp.co.cybird.barcodekanojoForGAM.core.util.Digest;
 import jp.co.cybird.barcodekanojoForGAM.core.util.FileUtil;
 import jp.co.cybird.barcodekanojoForGAM.core.util.FirstbootUtil;
 import jp.co.cybird.barcodekanojoForGAM.core.util.Live2dUtil;
@@ -125,7 +120,6 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
             KanojoRoomActivity.this.mHandler.postDelayed(KanojoRoomActivity.this.mProgressThread, 100);
         }
     };
-    private Scanned mScanned;
     private LinearLayout mStatusLayout;
     private Timer mTimerCallAPI;
     private User mUser;
@@ -281,9 +275,9 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     }
 
     public View getClientView() {
-        View leyout = getLayoutInflater().inflate(R.layout.activity_kanojo_room, (ViewGroup) null);
+        View layout = getLayoutInflater().inflate(R.layout.activity_kanojo_room, null);
         LinearLayout appLayoutRoot = new LinearLayout(this);
-        appLayoutRoot.addView(leyout);
+        appLayoutRoot.addView(layout);
         return appLayoutRoot;
     }
 
@@ -505,9 +499,6 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
                 if (this.mProduct != null) {
                     intent.putExtra(BaseInterface.EXTRA_PRODUCT, this.mProduct);
                 }
-                if (this.mScanned != null) {
-                    intent.putExtra(BaseInterface.EXTRA_SCANNED, this.mScanned);
-                }
                 if (this.mMessage != null) {
                     intent.putExtra(MessageModel.NOTIFY_AMENDMENT_INFORMATION, this.mMessage.get(MessageModel.NOTIFY_AMENDMENT_INFORMATION));
                 }
@@ -719,9 +710,8 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 				if (KanojoRoomActivity.this.getCodeAndShowAlert(response, this.mReason) == 200) {
 					KanojoRoomActivity.this.mKanojo = (Kanojo) response.get(Kanojo.class);
 					KanojoRoomActivity.this.mProduct = (Product) response.get(Product.class);
-					KanojoRoomActivity.this.mScanned = (Scanned) response.get(Scanned.class);
 					KanojoRoomActivity.this.mMessage = (MessageModel) response.get(MessageModel.class);
-					if (KanojoRoomActivity.this.mKanojo != null && KanojoRoomActivity.this.mProduct != null && KanojoRoomActivity.this.mScanned != null) {
+					if (KanojoRoomActivity.this.mKanojo != null && KanojoRoomActivity.this.mProduct != null) {
 						KanojoRoomActivity.this.isPrepared = true;
 						KanojoRoomActivity.this.settingLive2D();
 					} else {

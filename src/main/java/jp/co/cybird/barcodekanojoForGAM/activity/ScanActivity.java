@@ -18,13 +18,13 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.android.CaptureActivity;
 import com.google.zxing.client.android.Intents;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
+import jp.co.cybird.barcodekanojoForGAM.Defs;
 import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
@@ -32,13 +32,11 @@ import jp.co.cybird.barcodekanojoForGAM.activity.scan.ScanKanojoGenerateActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.scan.ScanOthersEditActivity;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
-import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Barcode;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Product;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
-import jp.co.cybird.barcodekanojoForGAM.core.model.Scanned;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 import jp.co.cybird.barcodekanojoForGAM.core.util.GeoUtil;
 import jp.co.cybird.barcodekanojoForGAM.core.util.Live2dUtil;
@@ -68,7 +66,6 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
     private ProgressBar mProgressBar;
     private ScanApiTask mScanApiTask;
     private ScanQueryTask mScanQueryTask;
-    private Scanned mScanned;
     private String mStringMessage = "";
     private int result = 0;
     private TextView txtMessage;
@@ -157,9 +154,6 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                     if (this.mProduct != null) {
                         intent.putExtra(BaseInterface.EXTRA_PRODUCT, this.mProduct);
                     }
-                    if (this.mScanned != null) {
-                        intent.putExtra(BaseInterface.EXTRA_SCANNED, this.mScanned);
-                    }
                     if (this.mMessages != null) {
                         intent.putExtra(MessageModel.NOTIFY_AMENDMENT_INFORMATION, this.mMessages.get(MessageModel.NOTIFY_AMENDMENT_INFORMATION));
                     }
@@ -179,9 +173,6 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                     }
                     if (this.mProduct != null) {
                         intent2.putExtra(BaseInterface.EXTRA_PRODUCT, this.mProduct);
-                    }
-                    if (this.mScanned != null) {
-                        intent2.putExtra(BaseInterface.EXTRA_SCANNED, this.mScanned);
                     }
                     if (this.mMessages != null) {
                         intent2.putExtra(MessageModel.NOTIFY_AMENDMENT_INFORMATION, this.mMessages.get(MessageModel.NOTIFY_AMENDMENT_INFORMATION));
@@ -372,7 +363,6 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                         ScanActivity.this.mKanojo = (Kanojo) response.get(Kanojo.class);
                         ScanActivity.this.mBarcode = (Barcode) response.get(Barcode.class);
                         ScanActivity.this.mProduct = (Product) response.get(Product.class);
-                        ScanActivity.this.mScanned = (Scanned) response.get(Scanned.class);
                         ScanActivity.this.mMessages = (MessageModel) response.get(MessageModel.class);
                         if (ScanActivity.this.mKanojo == null) {
                             if (ScanActivity.this.mBarcode != null) {
@@ -418,6 +408,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                         break;
                 }
             } catch (BarcodeKanojoException e) {
+            	if (Defs.DEBUG) e.printStackTrace();
             } finally {
                 ScanActivity.this.dismissProgressDialog();
                 ScanActivity.this.updateViews();

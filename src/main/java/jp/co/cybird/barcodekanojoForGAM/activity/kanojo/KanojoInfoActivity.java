@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -18,11 +17,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Iterator;
+
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
+import jp.co.cybird.barcodekanojoForGAM.Defs;
 import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
@@ -35,7 +36,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Product;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
-import jp.co.cybird.barcodekanojoForGAM.core.model.Scanned;
 import jp.co.cybird.barcodekanojoForGAM.core.util.Digest;
 import jp.co.cybird.barcodekanojoForGAM.core.util.HttpUtil;
 import jp.co.cybird.barcodekanojoForGAM.core.util.ImageCache;
@@ -64,7 +64,6 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
     private Product mProduct;
     private ImageView mProductImg;
     private RemoteResourceManager mRrm;
-    private Scanned mScanned;
     private Resources r;
     private boolean readAllFlg = false;
 
@@ -88,9 +87,8 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
         Bundle bundle = getIntent().getExtras();
         this.mKanojo = (Kanojo) bundle.get(BaseInterface.EXTRA_KANOJO);
         this.mProduct = (Product) bundle.get(BaseInterface.EXTRA_PRODUCT);
-        this.mScanned = (Scanned) bundle.get(BaseInterface.EXTRA_SCANNED);
         this.mMessage = bundle.getString(MessageModel.NOTIFY_AMENDMENT_INFORMATION);
-        if (this.mKanojo != null && this.mProduct != null && this.mScanned != null) {
+        if (this.mKanojo != null && this.mProduct != null) {
             if (this.mKanojo.getRelation_status() == 1) {
                 this.btnEdit.setVisibility(View.GONE);
                 this.btnEdit.setEnabled(false);
@@ -107,7 +105,7 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
     }
 
     public View getClientView() {
-        View leyout = getLayoutInflater().inflate(R.layout.activity_kanojo_info, (ViewGroup) null);
+        View leyout = getLayoutInflater().inflate(R.layout.activity_kanojo_info, null);
         LinearLayout appLayoutRoot = new LinearLayout(this);
         appLayoutRoot.addView(leyout);
         return appLayoutRoot;
@@ -168,17 +166,13 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
                 if (this.mProduct != null) {
                     intent.putExtra(BaseInterface.EXTRA_PRODUCT, this.mProduct);
                 }
-                if (this.mScanned != null) {
-                    intent.putExtra(BaseInterface.EXTRA_SCANNED, this.mScanned);
-                }
                 if (this.mMessage != null) {
                     intent.putExtra(MessageModel.NOTIFY_AMENDMENT_INFORMATION, this.mMessage);
                 }
                 startActivityForResult(intent, BaseInterface.REQUEST_KANOJO_EDIT);
                 return;
             default:
-                return;
-        }
+		}
     }
 
     public void onMoreClick(int id) {
@@ -202,34 +196,34 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initProductView() {
-        TextView txtName = (TextView) findViewById(R.id.kanojo_info_name);
+        TextView txtName = findViewById(R.id.kanojo_info_name);
         if (txtName != null) {
             txtName.setText(this.mProduct.getName());
         }
-        TextView txtComapnyName = (TextView) findViewById(R.id.kanojo_info_company_name);
+        TextView txtComapnyName = findViewById(R.id.kanojo_info_company_name);
         if (txtComapnyName != null) {
             txtComapnyName.setText(this.mProduct.getCompany_name());
         }
-        TextView txtCountry = (TextView) findViewById(R.id.kanojo_info_country);
+        TextView txtCountry = findViewById(R.id.kanojo_info_country);
         if (txtCountry != null) {
-            txtCountry.setText(String.valueOf(this.r.getString(R.string.kanojo_info_country)) + this.mProduct.getCountry());
+            txtCountry.setText(this.r.getString(R.string.kanojo_info_country) + this.mProduct.getCountry());
         }
-        TextView txtBarcode = (TextView) findViewById(R.id.kanojo_info_barcode);
+        TextView txtBarcode = findViewById(R.id.kanojo_info_barcode);
         if (txtBarcode != null) {
-            txtBarcode.setText(String.valueOf(this.r.getString(R.string.kanojo_info_barcode)) + "************");
+            txtBarcode.setText(this.r.getString(R.string.kanojo_info_barcode) + "************");
         }
-        TextView txtCategory = (TextView) findViewById(R.id.kanojo_info_category);
+        TextView txtCategory = findViewById(R.id.kanojo_info_category);
         if (txtCategory != null) {
-            txtCategory.setText(String.valueOf(this.r.getString(R.string.kanojo_info_category)) + this.mProduct.getCategory());
+            txtCategory.setText(this.r.getString(R.string.kanojo_info_category) + this.mProduct.getCategory());
         }
-        TextView txtScanned = (TextView) findViewById(R.id.kanojo_info_scanned);
+        TextView txtScanned = findViewById(R.id.kanojo_info_scanned);
         if (txtScanned != null) {
-            txtScanned.setText(String.valueOf(this.r.getString(R.string.kanojo_info_scanned)) + this.mProduct.getScan_count());
+            txtScanned.setText(this.r.getString(R.string.kanojo_info_scanned) + this.mProduct.getScan_count());
         }
     }
 
     private void initGalleryView() {
-        this.mProductImg = (ImageView) findViewById(R.id.kanojo_info_product_img);
+        this.mProductImg = findViewById(R.id.kanojo_info_product_img);
         this.mGallery = new Gallery(this);
         Display disp = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         this.mGallery.setSpacing(10);
@@ -313,6 +307,7 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
                         break;
                 }
             } catch (BarcodeKanojoException e) {
+            	if (Defs.DEBUG) e.printStackTrace();
             } finally {
                 KanojoInfoActivity.this.mFooter.setLoading(false);
             }
@@ -328,13 +323,12 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
     }
 
     private void addImgToGallery(ModelList<ActivityModel> l) {
-        Iterator it = l.iterator();
-        while (it.hasNext()) {
-            String strUrl = ((ActivityModel) it.next()).getScanned().getProduct_image_url();
-            if (strUrl != null && HttpUtil.isUrl(strUrl)) {
-                this.mImgAdapter.addImgUrl(strUrl);
-            }
-        }
+		for (ActivityModel activityModel : l) {
+			String strUrl = activityModel.getProduct().getProduct_image_url();
+			if (strUrl != null && HttpUtil.isUrl(strUrl)) {
+				this.mImgAdapter.addImgUrl(strUrl);
+			}
+		}
     }
 
     public static final String md5(String s) {
@@ -342,7 +336,7 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
             MessageDigest digest = MessageDigest.getInstance(Digest.MD5);
             digest.update(s.getBytes());
             byte[] messageDigest = digest.digest();
-            StringBuffer hexString = new StringBuffer();
+            StringBuilder hexString = new StringBuilder();
             for (byte b : messageDigest) {
                 String h = Integer.toHexString(b & 255);
                 while (h.length() < 2) {
