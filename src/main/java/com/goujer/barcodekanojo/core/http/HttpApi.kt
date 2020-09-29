@@ -108,7 +108,8 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 				if (param != null) {
 					if (param.value != null) {
 						request.writeBytes("--$BOUNDARY\r\n")
-						request.writeBytes("Content-Disposition: form-data; name=\"" + param.name + "\"\r\n\r\n" + param.value)
+						request.writeBytes("Content-Disposition: form-data; name=\"" + param.name + "\"\r\n\r\n")
+						request.write(param.value.toByteArray())
 						request.writeBytes("\r\n")
 					} else if (param.file != null && param.file!!.exists()) {
 						request.writeBytes("--$BOUNDARY\r\n")
