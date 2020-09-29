@@ -37,18 +37,15 @@
 				android:background="@color/transparent"
 				android:src="@drawable/icon_info" />
 		</LinearLayout>
-
 		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1">
-
 			<RelativeLayout
 				android:id="@+id/kanojo_room_live2d"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:background="@drawable/dummy_back256" />
-
 			<ToggleButton
 				android:id="@+id/kanojo_room_like_btn"
 				android:layout_width="65dp"
@@ -62,7 +59,6 @@
 				android:textOn=""
 				android:layout_alignParentStart="true"
 				android:layout_marginStart="15dp" />
-
 			<Button
 				android:id="@+id/kanojo_room_items_btn"
 				android:layout_width="70dp"
@@ -72,7 +68,6 @@
 				android:layout_marginRight="15dp"
 				android:layout_marginBottom="20dp"
 				android:background="@drawable/btn_kanojo_items" />
-
 			<Button
 				android:id="@+id/kanojo_room_date_btn"
 				android:layout_width="70dp"
