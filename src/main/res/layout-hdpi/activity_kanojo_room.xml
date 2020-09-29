@@ -64,10 +64,29 @@
             </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
-    <RelativeLayout android:id="@+id/kanojo_room_firstboot" android:paddingLeft="@dimen/kanojo_room_firstboot_left" android:paddingRight="@dimen/kanojo_room_firstboot_right" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent">
-        <ImageView android:id="@+id/ticket_instruction" android:paddingBottom="@dimen/kanojo_room_item_firstboot_padding_space" android:visibility="visible" android:layout_width="match_parent" android:layout_height="wrap_content" android:src="@drawable/ticket_instruction" android:scaleType="fitEnd" android:adjustViewBounds="true" android:layout_above="@+id/item_instruction"/>
-        <ImageView android:id="@+id/item_instruction" android:visibility="visible" android:layout_width="match_parent" android:layout_height="wrap_content" android:src="@drawable/item_instruction" android:scaleType="fitEnd" android:adjustViewBounds="true" android:layout_above="@+id/spacing" android:layout_alignParentRight="true"/>
-        <ImageView android:id="@+id/spacing" android:layout_width="match_parent" android:layout_height="@dimen/kanojo_room_firstboot_bottom" android:adjustViewBounds="true" android:layout_alignParentBottom="true"/>
+    <RelativeLayout android:id="@+id/kanojo_room_firstboot" android:background="@color/firstboot_bg" android:paddingLeft="@dimen/kanojo_room_firstboot_left" android:paddingRight="@dimen/kanojo_room_firstboot_right" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent">
+		<ImageView
+			android:id="@+id/ticket_instruction"
+			android:layout_width="match_parent"
+			android:layout_height="95dp"
+			android:layout_above="@+id/item_instruction"
+			android:layout_alignParentRight="true"
+			android:adjustViewBounds="true"
+			android:layout_marginBottom="10dp"
+			android:scaleType="fitEnd"
+			android:src="@drawable/ticket_instruction"
+			android:visibility="visible"/>
+		<ImageView
+			android:id="@+id/item_instruction"
+			android:layout_width="match_parent"
+			android:layout_height="95dp"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentBottom="true"
+			android:layout_marginBottom="@dimen/kanojo_room_firstboot_bottom"
+			android:adjustViewBounds="true"
+			android:scaleType="fitEnd"
+			android:src="@drawable/item_instruction"
+			android:visibility="visible"/>
     </RelativeLayout>
     <jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView android:id="@+id/loadingView" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent"/>
 </FrameLayout>
