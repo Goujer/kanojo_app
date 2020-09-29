@@ -134,8 +134,8 @@ public class KanojoParser extends AbstractJSONParser<Kanojo> {
             if (object.has("like_rate")) {
                 res.setLike_rate(object.getInt("like_rate"));
             }
-            if (object.has(Inspection.STATUS)) {
-                res.setStatus(object.getString(Inspection.STATUS));
+            if (object.has("status")) {
+                res.setStatus(object.getString("status"));
             }
             if (object.has("avatar_background_image_url")) {
                 res.setAvatar_background_image_url(object.getString("avatar_background_image_url"));
