@@ -115,7 +115,9 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun vote_like(kanojo_id: Int, like: Boolean): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpPost(URL_API_KANOJO_VOTE_LIKE, NameValuePair("kanojo_id", kanojo_id.toString()), NameValuePair("like", like.toString()))
+		val connection = mHttpApi.createHttpPost(URL_API_KANOJO_VOTE_LIKE,
+				NameValuePair("kanojo_id", kanojo_id.toString()),
+				NameValuePair("like", like.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("kanojo", KanojoParser())))
 	}
 

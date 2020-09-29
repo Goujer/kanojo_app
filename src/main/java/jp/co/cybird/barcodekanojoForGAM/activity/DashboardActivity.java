@@ -171,11 +171,13 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         startActivity(intent);
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_dashboard, menu);
         return true;
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_dashboard_refresh:

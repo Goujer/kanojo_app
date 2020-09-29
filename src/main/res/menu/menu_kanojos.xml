@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:icon="@drawable/ic_menu_refresh" android:id="@+id/menu_kanojos_refresh" android:title="@string/menu_common_refresh"/>
     <item android:icon="@android:drawable/ic_menu_search" android:id="@+id/menu_kanojos_search" android:title="@string/menu_kanojos_search"/>
 </menu>

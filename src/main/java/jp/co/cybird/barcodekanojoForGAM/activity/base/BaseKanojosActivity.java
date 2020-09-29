@@ -60,11 +60,11 @@ public abstract class BaseKanojosActivity extends BaseActivity {
         private Exception mReason = null;
 
         @Override
-        public void onPreExecute() {
+        protected void onPreExecute() {
         }
 
         @Override
-        public Response<BarcodeKanojoModel> doInBackground(Void... params) {
+        protected Response<BarcodeKanojoModel> doInBackground(Void... params) {
             try {
                 return process();
             } catch (Exception e) {
@@ -74,7 +74,7 @@ public abstract class BaseKanojosActivity extends BaseActivity {
         }
 
         @Override
-        public void onPostExecute(Response<BarcodeKanojoModel> response) {
+        protected void onPostExecute(Response<BarcodeKanojoModel> response) {
             try {
                 switch (BaseKanojosActivity.this.getCodeAndShowAlert(response, this.mReason)) {
                 }

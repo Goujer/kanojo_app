@@ -1,5 +1,6 @@
 package jp.co.cybird.barcodekanojoForGAM.core.parser;
 
+import jp.co.cybird.barcodekanojoForGAM.Defs;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoParseException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Product;
@@ -51,6 +52,9 @@ public class ProductParser extends AbstractJSONParser<Product> {
             }
             return res;
         } catch (JSONException e) {
+			if (Defs.DEBUG) {
+				e.printStackTrace();
+			}
             throw new BarcodeKanojoParseException(e.toString());
         }
     }

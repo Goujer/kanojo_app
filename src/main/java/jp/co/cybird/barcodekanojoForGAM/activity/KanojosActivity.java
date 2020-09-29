@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -117,10 +118,10 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
     }
 
     public View getClientView() {
-        View leyout = getLayoutInflater().inflate(R.layout.activity_kanojos, (ViewGroup) null);
+        View layout = getLayoutInflater().inflate(R.layout.activity_kanojos, null);
         LinearLayout appLayoutRoot = new LinearLayout(this);
         appLayoutRoot.setBackgroundColor(-1);
-        appLayoutRoot.addView(leyout);
+        appLayoutRoot.addView(layout);
         return appLayoutRoot;
     }
 
@@ -221,11 +222,13 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         }
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_kanojos, menu);
         return true;
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_kanojos_refresh:
