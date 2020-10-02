@@ -74,7 +74,7 @@
     </style>
     <style name="txt_log_in">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textColor">@color/default_txt_color</item>
     </style>
     <style name="txt_tab">
         <item name="android:textSize">10sp</item>
@@ -97,33 +97,33 @@
     </style>
     <style name="txt_kanojo_info">
         <item name="android:textSize">10sp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textColor">@color/default_txt_color</item>
         <item name="android:layout_marginTop">2dp</item>
     </style>
     <style name="txt_scan_result_message">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textColor">@color/default_txt_color</item>
     </style>
     <style name="txt_scan_result_name">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textColor">@color/default_txt_color</item>
     </style>
     <style name="txt_scan_result_default">
         <item name="android:textSize">13sp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textColor">@color/default_txt_color</item>
     </style>
     <style name="txt_userprofile">
         <item name="android:textColor">@color/white</item>
         <item name="android:gravity">clip_horizontal</item>
     </style>
-    <style name="txt_userprofile_name">
-        <item name="android:textSize">14dp</item>
+    <style name="txt_userprofile.name">
+        <item name="android:textSize">14sp</item>
     </style>
-    <style name="txt_userprofile_digit">
-        <item name="android:textSize">12dp</item>
+    <style name="txt_userprofile.digit">
+        <item name="android:textSize">12sp</item>
     </style>
-    <style name="txt_userprofile_title">
-        <item name="android:textSize">10dp</item>
+    <style name="txt_userprofile.title">
+        <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/dark_gray</item>
         <item name="android:gravity">clip_horizontal</item>
     </style>
@@ -131,20 +131,20 @@
         <item name="android:textColor">@color/dark_gray</item>
         <item name="android:gravity">clip_horizontal</item>
     </style>
-    <style name="txt_enemyprofile_name">
-        <item name="android:textSize">14dp</item>
+    <style name="txt_enemyprofile.name">
+        <item name="android:textSize">14sp</item>
     </style>
-    <style name="txt_enemyprofile_digit">
-        <item name="android:textSize">12dp</item>
+    <style name="txt_enemyprofile.digit">
+        <item name="android:textSize">12sp</item>
     </style>
-    <style name="txt_enemyprofile_title">
-        <item name="android:textSize">10dp</item>
+    <style name="txt_enemyprofile.title">
+        <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/dark_gray</item>
         <item name="android:gravity">clip_horizontal</item>
     </style>
     <style name="txt_activites">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textColor">@color/default_txt_color</item>
     </style>
     <style name="txt_enemies">
         <item name="android:textSize">14sp</item>
@@ -156,17 +156,17 @@
     </style>
     <style name="txt_kanojo_items_title">
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textColor">@color/default_txt_color</item>
     </style>
     <style name="txt_kanojo_items_description">
         <item name="android:textSize">13sp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textColor">@color/default_txt_color</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
     <style name="txt_kanojo_item_detail_description">
         <item name="android:textSize">13sp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textColor">@color/default_txt_color</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
@@ -179,28 +179,29 @@
     </style>
     <style name="txt_kanojo_edit_value">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textColor">@color/default_txt_color</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
     <style name="txt_more">
-        <item name="android:textSize">16dp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/default_txt_color</item>
     </style>
-    <style name="txt_section_title">
-        <item name="android:textSize">13dp</item>
+	<style name="txt_section">
+		<item name="android:textSize">13sp</item>
+	</style>
+    <style name="txt_section.title">
         <item name="android:textColor">@color/black</item>
         <item name="android:gravity">left</item>
         <item name="android:paddingLeft">11dp</item>
     </style>
-    <style name="txt_section_digit">
-        <item name="android:textSize">13dp</item>
+    <style name="txt_section.digit">
         <item name="android:textColor">@color/dark_gray</item>
         <item name="android:gravity">right</item>
         <item name="android:paddingRight">11dp</item>
     </style>
     <style name="txt_selection">
-        <item name="android:textSize">13dp</item>
+        <item name="android:textSize">13sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:gravity">left</item>
@@ -210,34 +211,34 @@
         <item name="android:layout_height">@dimen/row_selection_height</item>
     </style>
     <style name="txt_stats">
-        <item name="android:textSize">14dp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/default_txt_color</item>
     </style>
     <style name="txt_stats_number">
-        <item name="android:textSize">42dp</item>
+        <item name="android:textSize">42sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
     <style name="txt_notice_input">
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textColor">@color/default_txt_color</item>
     </style>
     <style name="social_setting_title">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textColor">@color/default_txt_color</item>
         <item name="android:gravity">left</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
     <style name="social_setting_note">
         <item name="android:textSize">9sp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textColor">@color/default_txt_color</item>
         <item name="android:gravity">left</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
     <style name="social_setting_sukiya_note">
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/dafult_txt_color</item>
+        <item name="android:textColor">@color/default_txt_color</item>
         <item name="android:gravity">right</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -245,4 +246,9 @@
     <style name="NoAnimTheme">
         <item name="android:windowAnimationStyle">@style/Animation.NoAnim</item>
     </style>
+	<style name="AppTheme" parent="android:Theme.DeviceDefault">
+		<item name="android:windowBackground">@color/black</item>
+		<item name="android:colorBackground">@color/black</item>
+		<item name="android:windowNoTitle">true</item>
+	</style>
 </resources>
