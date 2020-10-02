@@ -207,7 +207,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         } else if (requestCode == 1020) {
 			if (resultCode == 102) {
 				setResult(102);
-				close();
+				finish();
 			} else {
 				startCaptureActivity();
 			}
@@ -215,17 +215,17 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
             switch (resultCode) {
                 case 101:
                     setResult(101);
-                    close();
+                    finish();
                     return;
                 case 103:
                     setResult(103);
-                    close();
+                    finish();
                     return;
                 default:
                     startCaptureActivity();
 			}
         } else {
-            close();
+            finish();
         }
     }
 
@@ -479,7 +479,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                 } else {
                     ScanActivity.this.code = ScanActivity.this.getCodeAndShowAlert(response, this.mReason, new BaseActivity.OnDialogDismissListener() {
                         public void onDismiss(DialogInterface dialog, int code) {
-                            ScanActivity.this.close();
+                            finish();
                         }
                     });
                 }
@@ -494,7 +494,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                             if (this.mTask.what == 1) {
                                 ScanActivity.this.setResult(103);
                                 if (response.getAlert() == null) {
-                                    ScanActivity.this.close();
+                                    finish();
                                     break;
                                 }
                             }

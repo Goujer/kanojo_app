@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.opengl.GLSurfaceView;
 import android.os.Environment;
-import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -73,7 +72,7 @@ public final class kGLScreenShot {
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
                 int pix = b[(i * w) + j];
-                bt[(((h - i) - 1) * w) + j] = (-16711936 & pix) | ((pix << 16) & 16711680) | ((pix >> 16) & MotionEventCompat.ACTION_MASK);
+                bt[(((h - i) - 1) * w) + j] = (-16711936 & pix) | ((pix << 16) & 16711680) | ((pix >> 16) & 255);
             }
         }
         return Bitmap.createBitmap(bt, w, h, Bitmap.Config.RGB_565);

@@ -2,7 +2,6 @@ package jp.co.cybird.app.android.lib.commons.http;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v4.view.MotionEventCompat;
 import android.text.TextUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -105,7 +104,7 @@ public class PersistentCookieStore implements CookieStore {
     protected String byteArrayToHexString(byte[] b) {
         StringBuffer sb = new StringBuffer(b.length * 2);
         for (byte element : b) {
-            int v = element & MotionEventCompat.ACTION_MASK;
+            int v = element & 255;
             if (v < 16) {
                 sb.append('0');
             }

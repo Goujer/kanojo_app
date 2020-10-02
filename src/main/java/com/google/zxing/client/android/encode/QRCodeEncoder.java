@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.IntentCompat;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import com.google.zxing.BarcodeFormat;
@@ -111,7 +110,7 @@ final class QRCodeEncoder {
 
     private void encodeFromTextExtras(Intent intent) throws WriterException {
         String theContents = ContactEncoder.trim(intent.getStringExtra("android.intent.extra.TEXT"));
-        if (theContents == null && (theContents = ContactEncoder.trim(intent.getStringExtra(IntentCompat.EXTRA_HTML_TEXT))) == null && (theContents = ContactEncoder.trim(intent.getStringExtra("android.intent.extra.SUBJECT"))) == null) {
+        if (theContents == null && (theContents = ContactEncoder.trim(intent.getStringExtra("android.intent.extra.HTML_TEXT"))) == null && (theContents = ContactEncoder.trim(intent.getStringExtra("android.intent.extra.SUBJECT"))) == null) {
             String[] emails = intent.getStringArrayExtra("android.intent.extra.EMAIL");
             if (emails != null) {
                 theContents = ContactEncoder.trim(emails[0]);

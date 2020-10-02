@@ -4,11 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -41,7 +40,7 @@ public abstract class GreeBaseActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (!this.isReUsed) {
-            close();
+            finish();
         }
     }
 
@@ -81,6 +80,7 @@ public abstract class GreeBaseActivity extends Activity {
     protected void clearHistory() {
     }
 
+    @Override
     protected void onDestroy() {
         if (this.savedInstanceState != null) {
             this.savedInstanceState.clear();
@@ -93,11 +93,6 @@ public abstract class GreeBaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState2) {
         this.savedInstanceState = savedInstanceState2;
         super.onCreate(savedInstanceState2);
-    }
-
-    public void setContentView(int layoutResID2) {
-        this.layoutResID = layoutResID2;
-        super.setContentView(layoutResID2);
     }
 
     protected View getClientView() {
@@ -121,12 +116,18 @@ public abstract class GreeBaseActivity extends Activity {
             SeekBar sb = (SeekBar) view;
             sb.setProgressDrawable(null);
             sb.setThumb(null);
-        } else if (view instanceof TextView) {
-            view.setBackgroundDrawable(null);
-        } else if (view instanceof Button) {
-            view.setBackgroundDrawable(null);
+        } else if (view instanceof TextView) {	//Also include Button
+        	if (Build.VERSION.SDK_INT >= 16) {
+				view.setBackground(null);
+			} else {
+				view.setBackgroundDrawable(null);
+			}
         }
-        view.setBackgroundDrawable(null);
+		if (Build.VERSION.SDK_INT >= 16) {
+			view.setBackground(null);
+		} else {
+			view.setBackgroundDrawable(null);
+		}
         if (view instanceof ViewGroup) {
             ViewGroup vg = (ViewGroup) view;
             int size = vg.getChildCount();

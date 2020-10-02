@@ -1,7 +1,6 @@
 package jp.co.cybird.barcodekanojoForGAM.live2d.model;
 
 import android.graphics.Bitmap;
-import android.support.v4.view.MotionEventCompat;
 import java.nio.IntBuffer;
 import java.util.Random;
 import javax.microedition.khronos.egl.EGL10;
@@ -121,7 +120,7 @@ public class IconRenderer {
                 for (int i = 0; i < height; i++) {
                     for (int j = 0; j < width; j++) {
                         int c = ib.get((i * width) + j);
-                        colors[(((height - i) - 1) * width) + j] = (((c >>> 24) & MotionEventCompat.ACTION_MASK) << 24) | (((c >>> 16) & MotionEventCompat.ACTION_MASK) << 0) | (((c >>> 8) & MotionEventCompat.ACTION_MASK) << 8) | (((c >>> 0) & MotionEventCompat.ACTION_MASK) << 16);
+                        colors[(((height - i) - 1) * width) + j] = (((c >>> 24) & 255) << 24) | (((c >>> 16) & 255) << 0) | (((c >>> 8) & 255) << 8) | (((c >>> 0) & 255) << 16);
                     }
                 }
                 ib.clear();

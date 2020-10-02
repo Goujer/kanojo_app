@@ -1,6 +1,5 @@
 package com.google.analytics.tracking.android;
 
-import android.support.v4.view.MotionEventCompat;
 import android.text.TextUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -116,7 +115,7 @@ class Utils {
     static String hexEncode(byte[] bytes) {
         char[] out = new char[(bytes.length * 2)];
         for (int i = 0; i < bytes.length; i++) {
-            int b = bytes[i] & MotionEventCompat.ACTION_MASK;
+            int b = bytes[i] & 255;
             out[i * 2] = HEXBYTES[b >> 4];
             out[(i * 2) + 1] = HEXBYTES[b & 15];
         }

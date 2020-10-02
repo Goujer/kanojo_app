@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import com.google.android.gcm.GCMConstants;
 import jp.co.cybird.app.android.lib.commons.log.DLog;
 import jp.co.cybird.app.android.lib.commons.tracker.TrackerWrapper;

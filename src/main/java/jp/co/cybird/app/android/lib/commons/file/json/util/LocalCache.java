@@ -1,6 +1,5 @@
 package jp.co.cybird.app.android.lib.commons.file.json.util;
 
-import android.support.v4.view.MotionEventCompat;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -127,7 +126,7 @@ public class LocalCache {
         for (int i = 0; i < max; i++) {
             h = (h * 31) + sb.charAt(i);
         }
-        return h & MotionEventCompat.ACTION_MASK;
+        return h & 255;
     }
 
     public NumberFormat getNumberFormat(String format) {

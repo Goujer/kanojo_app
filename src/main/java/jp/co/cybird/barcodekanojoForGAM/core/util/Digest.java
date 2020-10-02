@@ -1,6 +1,5 @@
 package jp.co.cybird.barcodekanojoForGAM.core.util;
 
-import android.support.v4.view.MotionEventCompat;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs;
@@ -38,7 +37,7 @@ public class Digest {
             this.messageDigest.update(message.getBytes());
             byte[] digest = this.messageDigest.digest();
             for (byte b : digest) {
-                String hex = Integer.toHexString(b & MotionEventCompat.ACTION_MASK);
+                String hex = Integer.toHexString(b & 255);
                 if (hex.length() == 1) {
                     builder.append(GreeDefs.BARCODE);
                 }

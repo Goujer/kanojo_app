@@ -36,6 +36,7 @@ public class CustomWebViewActivity extends BaseKanojosActivity implements View.O
         showProgressDialog();
     }
 
+    @Override
     protected void onResume() {
         super.onResume();
         Log.d("NguyenTT", "CustomWebViewActivity onResume " + this.extraWebViewURL);
@@ -44,18 +45,17 @@ public class CustomWebViewActivity extends BaseKanojosActivity implements View.O
         }
     }
 
+    @Override
     public void onNewIntent(Intent intent) {
-    }
 
+	}
+
+	@Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.webview_close:
-                close();
-                return;
-            default:
-                return;
-        }
-    }
+		if (v.getId() == R.id.webview_close) {
+			finish();
+		}
+	}
 
     private class MyWebViewClient extends WebViewClient {
         private MyWebViewClient() {
