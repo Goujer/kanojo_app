@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.accessibility.AccessibilityEventCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -17,6 +17,8 @@ import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.Toolbar;
+
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
@@ -66,6 +68,11 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         requestWindowFeature(1);
         setContentView(R.layout.activity_dashboard);
+		//Toolbar stuff
+		if (Build.VERSION.SDK_INT >= 21) {
+			setActionBar((Toolbar) findViewById(R.id.toolbar_primary));
+			getActionBar().setDisplayShowTitleEnabled(false);
+		}
         this.mRrm = ((BarcodeKanojoApp) getApplication()).getRemoteResourceManager();
         this.mProfileView = findViewById(R.id.common_profile);
         this.mListView = findViewById(R.id.list_activities);
@@ -139,7 +146,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1050 && resultCode == 107) {
             setResult(BaseInterface.RESULT_LOG_OUT, (Intent) null);
-            close();
+            finish();
         } else if (resultCode == 213) {
             final Kanojo kanojo = new Kanojo();
             int kanojo_id = data.getIntExtra(BaseInterface.EXTRA_KANOJO_ITEM, 0);
@@ -179,17 +186,12 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_dashboard_refresh:
-                refreshActivitiesTask();
-                return true;
-            case R.id.menu_dashboard_settings:
-                startActivity(new Intent().setClass(this, OptionActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+		if (item.getItemId() == R.id.menu_dashboard_refresh) {
+			refreshActivitiesTask();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
     public void onKanojoClick(Kanojo kanojo) {
         this.mDashboardAdapter.setOnKanojoClickListener(null);

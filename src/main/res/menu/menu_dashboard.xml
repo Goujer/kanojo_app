@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM">
-    <item android:icon="@drawable/ic_menu_refresh" android:id="@+id/menu_dashboard_refresh" android:title="@string/menu_common_refresh"/>
-    <item android:icon="@android:drawable/ic_menu_preferences" android:id="@+id/menu_dashboard_settings" android:title="@string/menu_dashboard_settings"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:id="@+id/menu_dashboard_refresh"
+		android:icon="@drawable/ic_menu_refresh"
+		android:showAsAction="ifRoom"
+		android:title="@string/menu_common_refresh"/>
 </menu>

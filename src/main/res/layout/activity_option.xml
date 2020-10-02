@@ -5,7 +5,7 @@
 	android:layout_height="match_parent"
 	android:background="@color/edit_bg"
 	android:orientation="vertical">
-    <include layout="@layout/titlebar_with_option2"/>
+    <include layout="@layout/toolbar_primary"/>
     <jp.co.cybird.barcodekanojoForGAM.view.CustomToolBarView android:layout_width="match_parent" android:layout_height="wrap_content"/>
     <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
         <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/edit_bg" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="match_parent">

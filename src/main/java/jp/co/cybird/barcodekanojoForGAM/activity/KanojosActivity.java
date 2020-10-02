@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -82,11 +83,17 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
     private StatusHolder mYourKanojos;
     private Resources r;
 
-    public void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(1);
         setContentView(R.layout.activity_kanojos);
         this.r = getResources();
+        //Toolbar stuff
+        if (Build.VERSION.SDK_INT >= 21) {
+			setActionBar((Toolbar) findViewById(R.id.toolbar_primary));
+			getActionBar().setDisplayShowTitleEnabled(false);
+		}
         this.mRrm = ((BarcodeKanojoApp) getApplication()).getRemoteResourceManager();
         this.mProfileView = findViewById(R.id.common_profile);
         this.mKanojosListView = findViewById(R.id.kanojos_list);
@@ -326,9 +333,9 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
                 addSection(12, this.r.getString(R.string.kanojos_ranking), "ranking", this.mRanking);
                 this.mKanojosListView.setAdapter(this.mAdapter);
             }
-            this.mYourKanojos.MAX = 100;
-            this.mFriends.MAX = 100;
-            this.mRanking.MAX = 100;
+            this.mYourKanojos.MAX = YOUR_KANOJOS_MAX;
+            this.mFriends.MAX = FRIENDS_MAX;
+            this.mRanking.MAX = RANKING_MAX;
             this.mYourKanojos.index = 0;
             this.mFriends.index = 0;
             this.mRanking.index = 0;
