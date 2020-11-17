@@ -209,7 +209,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
             });
 			DialogTextView.OnDismissListener mListener = new DialogTextView.OnDismissListener() {
 				public void onSiteClick(String url) {
-					Log.d("NguyenTT", "mKanojoMessage.getNextScreen(): " + KanojoRoomActivity.this.mKanojoMessage.getNextScreen());
+					Log.d(TAG, "mKanojoMessage.getNextScreen(): " + KanojoRoomActivity.this.mKanojoMessage.getNextScreen());
 					if (KanojoRoomActivity.this.mKanojoMessage.getNextScreen().equalsIgnoreCase("webview")) {
 						Intent intent = new Intent(KanojoRoomActivity.this, WebViewTabActivity.class);
 						intent.putExtra(BaseInterface.EXTRA_WEBVIEW_URL, url);

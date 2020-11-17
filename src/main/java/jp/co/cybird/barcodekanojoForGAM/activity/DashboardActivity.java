@@ -84,7 +84,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         this.mListView.addHeaderView(this.mHeader);
         this.mListView.addFooterView(this.mFooter);
         this.mListView.setAdapter(this.mDashboardAdapter);
-        Log.d("NguyenTT", "Start DashBoard Activity");
+        Log.d(TAG, "Start DashBoard Activity");
     }
 
     public View getClientView() {

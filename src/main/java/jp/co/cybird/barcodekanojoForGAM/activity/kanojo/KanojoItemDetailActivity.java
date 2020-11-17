@@ -104,7 +104,7 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
         this.mPurchaseAPI = ((BarcodeKanojoApp) getApplication()).getPurchaseApi();
         this.mListener = new PurchaseApi.OnPurchaseListener() {
             public void onSetUpFailed(String message) {
-                Log.d("NguyenTT", "setUp Purchase failed " + message);
+                Log.d(TAG, "setUp Purchase failed " + message);
             }
 
             public void onSetUpDone(Inventory inventory) {
@@ -118,7 +118,7 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
             }
 
             public void onPurchaseFailed(String message) {
-                Log.d("NguyenTT", "Error purchasing: " + message);
+                Log.d(TAG, "Error purchasing: " + message);
                 KanojoItemDetailActivity.this.showNoticeDialog(message);
                 KanojoItemDetailActivity.this.clearQueue();
             }
@@ -130,7 +130,7 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
             }
 
             public void onConsumeFail(Purchase purchase, String message) {
-                Log.d("NguyenTT", "Purchase onConsumeDone failed " + message);
+                Log.d(TAG, "Purchase onConsumeDone failed " + message);
                 KanojoItemDetailActivity.this.showNoticeDialog(message);
                 KanojoItemDetailActivity.this.clearQueue();
                 KanojoItemDetailActivity.this.dismissProgressDialog();
@@ -206,7 +206,7 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
                 this.mLoadingDone = false;
             }
         } else {
-            Log.d("NguyenTT", "resume from google play");
+            Log.d(TAG, "resume from google play");
         }
     }
 
@@ -326,7 +326,7 @@ public class KanojoItemDetailActivity extends BaseActivity implements View.OnCli
 
     private void executePurchaseTask(StatusHolder list) {
         if (isLoading(list)) {
-            Log.d("NguyenTT", "task " + list.key + " is running ");
+            Log.d(TAG, "task " + list.key + " is running ");
         } else if (list.key != 1) {
             this.mBuyTicketTask = new BuyTicketTask();
             this.mBuyTicketTask.setList(list);

@@ -117,7 +117,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         mActivityCount++;
         String name = getLocalClassName();
         if (Defs.DEBUG) {
-            Log.d("NguyenTT", "Start Activity: " + name + " Current: " + mActivityCount);
+            Log.d(TAG, "Start Activity: " + name + " Current: " + mActivityCount);
         }
         registerReceiver(this.mLoggedOutReceiver, new IntentFilter(BarcodeKanojoApp.INTENT_ACTION_LOGGED_OUT));
         registerReceiver(this.mWarningFullSpaceReceiver, new IntentFilter(BarcodeKanojoApp.INTENT_ACTION_FULL_STORAGE));
@@ -144,7 +144,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     protected void onDestroy() {
         if (Defs.DEBUG) {
             mActivityCount--;
-            Log.d("NguyenTT", "End Activity: " + getLocalClassName() + " Current: " + mActivityCount);
+            Log.d(TAG, "End Activity: " + getLocalClassName() + " Current: " + mActivityCount);
         }
         try {
             unregisterReceiver(this.mLoggedOutReceiver);
@@ -473,7 +473,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     public void executeRefreshSession() {
         if (this.mRefreshTask == null || this.mRefreshTask.getStatus() == AsyncTask.Status.FINISHED) {
             if (Defs.DEBUG) {
-                Log.e("NguyenTT", "Start Run " + this.mRefreshTask);
+                Log.e(TAG, "Start Run " + this.mRefreshTask);
             }
             this.mRefreshTask = (RefreshTask) new RefreshTask().execute(new Void[0]);
         } else if (Defs.DEBUG) {
@@ -542,7 +542,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     public void executeCheckSession() {
         if (this.mCheckSessionTask == null || this.mCheckSessionTask.getStatus() == AsyncTask.Status.FINISHED) {
             if (Defs.DEBUG) {
-                Log.e("NguyenTT", "Start Run " + this.mCheckSessionTask);
+                Log.e(TAG, "Start Run " + this.mCheckSessionTask);
             }
             this.mCheckSessionTask = (CheckSessionTask) new CheckSessionTask().execute(new Void[0]);
         } else if (Defs.DEBUG) {
@@ -574,7 +574,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         protected void onPostExecute(Response<?> response) {
             try {
                 if (this.mReason != null && Defs.DEBUG) {
-                    Log.d("NguyenTT", "Error message: " + this.mReason.getMessage());
+                    Log.d(TAG, "Error message: " + this.mReason.getMessage());
                     mReason.printStackTrace();
                 }
                 if (response == null) {

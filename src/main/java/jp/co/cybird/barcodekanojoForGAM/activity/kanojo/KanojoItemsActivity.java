@@ -164,7 +164,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
             this.lstProductId = new ArrayList();
             this.mListener = new PurchaseApi.OnPurchaseListener() {
                 public void onSetUpFailed(String message) {
-                    Log.d("NguyenTT", "setUp Purchase failed " + message);
+                    Log.d(TAG, "setUp Purchase failed " + message);
                     KanojoItemsActivity.this.showCustomNoticeDialog(KanojoItemsActivity.this.getString(R.string.purchase_setup_failed));
                 }
 
@@ -585,7 +585,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
 
     private void executeConsumeTicketTask(TicketHolder list) {
         if (isLoading(list)) {
-            Log.d("NguyenTT", "task " + list.key + " is running ");
+            Log.d(TAG, "task " + list.key + " is running ");
         } else if (list.what == 1) {
             consumeTicket(list.key);
         } else {

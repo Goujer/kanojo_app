@@ -53,7 +53,7 @@ public class TestBillingActivity extends Activity {
                 return;
             }
             Log.d(TestBillingActivity.TAG, "Query inventory was successful.");
-            Log.d("NguyenTT", "jp.co.cybird.dev1.zensho.bck.tickets30: " + inventory.getSkuDetails("jp.co.cybird.dev1.zensho.bck.tickets30").getPrice());
+            Log.d(TAG, "jp.co.cybird.dev1.zensho.bck.tickets30: " + inventory.getSkuDetails("jp.co.cybird.dev1.zensho.bck.tickets30").getPrice());
             TestBillingActivity.this.mIsPremium = inventory.hasPurchase(TestBillingActivity.SKU_PREMIUM);
             Log.d(TestBillingActivity.TAG, "User is " + (TestBillingActivity.this.mIsPremium ? "PREMIUM" : "NOT PREMIUM"));
             if (inventory.hasPurchase(TestBillingActivity.SKU_GAS)) {

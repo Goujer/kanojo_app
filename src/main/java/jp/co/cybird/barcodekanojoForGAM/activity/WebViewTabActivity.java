@@ -47,7 +47,7 @@ public class WebViewTabActivity extends BaseKanojosActivity implements View.OnCl
     protected void onResume() {
         super.onResume();
         this.extraWebViewURL = getIntent().getStringExtra(BaseInterface.EXTRA_WEBVIEW_URL);
-        Log.d("NguyenTT", "WebViewTabActivity onResume " + this.extraWebViewURL);
+        Log.d(TAG, "WebViewTabActivity onResume " + this.extraWebViewURL);
         if (this.extraWebViewURL == null) {
             new GetURLWebView().execute();
         } else {

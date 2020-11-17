@@ -39,7 +39,7 @@ public class CustomWebViewActivity extends BaseKanojosActivity implements View.O
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("NguyenTT", "CustomWebViewActivity onResume " + this.extraWebViewURL);
+        Log.d(TAG, "CustomWebViewActivity onResume " + this.extraWebViewURL);
         if (this.extraWebViewURL != null) {
             this.mWebview.loadUrl(this.extraWebViewURL);
         }
@@ -76,7 +76,7 @@ public class CustomWebViewActivity extends BaseKanojosActivity implements View.O
         }
 
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-            Log.i("NguyenTT", "CustomWebViewActivity error code:" + errorCode);
+            Log.i(TAG, "CustomWebViewActivity error code:" + errorCode);
             CustomWebViewActivity.this.showNoticeDialog(CustomWebViewActivity.this.getResources().getString(R.string.error_network));
             super.onReceivedError(view, errorCode, description, failingUrl);
         }

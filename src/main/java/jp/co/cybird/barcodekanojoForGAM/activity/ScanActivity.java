@@ -403,7 +403,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                             }
                         };
                         Timer timer = new Timer();
-                        Log.d("NguyenTT", "time: 3500");
+                        Log.d(TAG, "time: 3500");
                         timer.schedule(task, 3500);
                         break;
                 }
