@@ -246,9 +246,5 @@
     <style name="NoAnimTheme">
         <item name="android:windowAnimationStyle">@style/Animation.NoAnim</item>
     </style>
-	<style name="AppTheme" parent="android:Theme.DeviceDefault">
-		<item name="android:windowBackground">@color/black</item>
-		<item name="android:colorBackground">@color/black</item>
-		<item name="android:windowNoTitle">true</item>
-	</style>
+	<style name="AppTheme" parent="android:Theme.Black.NoTitleBar"/>
 </resources>
