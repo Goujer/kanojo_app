@@ -5,7 +5,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoParseExcepti
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 import org.json.JSONException;
 import org.json.JSONObject;
-import twitter4j.conf.PropertyConfiguration;
 
 public class UserParser extends AbstractJSONParser<User> {
     protected User parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
