@@ -87,7 +87,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     private BroadcastReceiver mLoggedOutReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (Defs.DEBUG) {
-                Log.d("NguyenTT", "Current On Recieve: " + BaseActivity.mActivityCount);
+                Log.d(TAG, "Current On Recieve: " + BaseActivity.mActivityCount);
             }
             if (Defs.DEBUG) {
                 Log.d(BaseActivity.TAG, "onReceive: " + intent + ", at " + this);

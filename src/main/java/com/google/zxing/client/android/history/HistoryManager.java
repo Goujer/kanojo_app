@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import com.facebook.internal.ServerProtocol;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.google.zxing.ResultPoint;
@@ -31,13 +31,21 @@ import java.util.regex.Pattern;
 import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs;
 
 public final class HistoryManager {
-	private static final String[] COLUMNS = {"text", ServerProtocol.DIALOG_PARAM_DISPLAY, "format", "timestamp", "details"};
 	private static final String[] COUNT_COLUMN = {"COUNT(1)"};
 	private static final DateFormat EXPORT_DATE_TIME_FORMAT = DateFormat.getDateTimeInstance(2, 2);
 	private static final String[] ID_COL_PROJECTION = {"id"};
 	private static final String[] ID_DETAIL_COL_PROJECTION = {"id", "details"};
 	private static final int MAX_ITEMS = 2000;
 	private static final String TAG = HistoryManager.class.getSimpleName();
+
+	private static final String[] COLUMNS = {
+			DBHelper.TEXT_COL,
+			DBHelper.DISPLAY_COL,
+			DBHelper.FORMAT_COL,
+			DBHelper.TIMESTAMP_COL,
+			DBHelper.DETAILS_COL,
+	};
+
 	private final Activity activity;
 	private static final Pattern DOUBLE_QUOTE = Pattern.compile("\"", Pattern.LITERAL);
 
@@ -117,8 +125,8 @@ public final class HistoryManager {
 			ContentValues values = new ContentValues();
 			values.put("text", result.getText());
 			values.put("format", result.getBarcodeFormat().toString());
-			values.put(ServerProtocol.DIALOG_PARAM_DISPLAY, handler.getDisplayContents().toString());
-			values.put("timestamp", Long.valueOf(System.currentTimeMillis()));
+			values.put(DBHelper.DISPLAY_COL, handler.getDisplayContents().toString());
+			values.put(DBHelper.TIMESTAMP_COL, System.currentTimeMillis());
 			SQLiteDatabase db = null;
 			try {
 				db = new DBHelper(this.activity).getWritableDatabase();

@@ -2,7 +2,7 @@ package jp.co.cybird.barcodekanojoForGAM.live2d.motion;
 
 import java.util.ArrayList;
 import java.util.Random;
-import jp.co.cybird.barcodekanojoForGAM.billing.util.IabHelper;
+
 import jp.co.cybird.barcodekanojoForGAM.live2d.KanojoLive2D;
 import jp.co.cybird.barcodekanojoForGAM.live2d.KanojoResource;
 import jp.co.cybird.barcodekanojoForGAM.live2d.KanojoSetting;
@@ -348,7 +348,7 @@ public class KanojoAnimation {
             loop4y = 0.0f;
         } else if (t4 < 2000) {
             loop4x = 1.0f;
-            loop4y = ((float) (t4 + IabHelper.IABHELPER_ERROR_BASE)) / 1000.0f;
+            loop4y = ((float) (t4 - 1000)) / 1000.0f;
         } else if (t4 < 3000) {
             loop4x = 1.0f - (((float) (t4 - 2000)) / 1000.0f);
             loop4y = 1.0f;

@@ -159,13 +159,15 @@ public class TestBillingActivity extends Activity {
         Log.d(TAG, "Vrooom. Tank is now " + this.mTank);
     }
 
-    public void onDestroy() {
-        Log.d(TAG, "Destroying helper.");
-        if (this.mHelper != null) {
-            this.mHelper.dispose();
-        }
-        this.mHelper = null;
-    }
+    @Override
+    protected void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG, "Destroying helper.");
+		if (this.mHelper != null) {
+			this.mHelper.dispose();
+		}
+		this.mHelper = null;
+	}
 
     public void updateUi() {
         ((ImageView) findViewById(R.id.free_or_premium)).setImageResource(this.mIsPremium ? R.drawable.premium : R.drawable.free);
@@ -206,12 +208,12 @@ public class TestBillingActivity extends Activity {
     void saveData() {
         SharedPreferences.Editor spe = getPreferences(0).edit();
         spe.putInt("tank", this.mTank);
-        spe.commit();
-        Log.d(TAG, "Saved data: tank = " + String.valueOf(this.mTank));
+        spe.apply();
+        Log.d(TAG, "Saved data: tank = " + this.mTank);
     }
 
     void loadData() {
         this.mTank = getPreferences(0).getInt("tank", 2);
-        Log.d(TAG, "Loaded data: tank = " + String.valueOf(this.mTank));
+        Log.d(TAG, "Loaded data: tank = " + this.mTank);
     }
 }

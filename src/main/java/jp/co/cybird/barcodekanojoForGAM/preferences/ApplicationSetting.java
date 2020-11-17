@@ -119,7 +119,7 @@ public class ApplicationSetting {
     }
 
     public String getUUID() {
-    	return this.setting.getString(this.keys.userAndroidId, null);
+    	return this.setting.getString(this.keys.userAndroidId, "");
     }
 
     public void clearUUID() {

@@ -86,7 +86,7 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 		connection.setRequestProperty(CLIENT_LANGUAGE_HEADER, mClientLanguage)
 		val parameters = StringBuilder()
 		for (pair:NameValuePair in stripNulls(*nameValuePairs)) {
-			if (parameters.length != 0) parameters.append('&')
+			if (parameters.isNotEmpty()) parameters.append('&')
 			parameters.append(pair.encode())
 		}
 		connection.outputStream.write(parameters.toString().toByteArray(charset("UTF-8")))
@@ -140,7 +140,7 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 	private fun stripNulls(vararg nameValuePairs: NameValuePair?): List<NameValuePair> {
 		val params: MutableList<NameValuePair> = ArrayList()
 		for (param in nameValuePairs) {
-			if (param != null && param.value != null) {
+			if (param?.value != null && param.value != "") {
 				params.add(param)
 			}
 		}

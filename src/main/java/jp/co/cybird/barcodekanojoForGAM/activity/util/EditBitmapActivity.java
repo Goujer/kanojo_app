@@ -258,11 +258,11 @@ public class EditBitmapActivity extends Activity implements BaseInterface, View.
     public static File getEditedFile() {
         String mRootPath2;
         if (FileUtil.isAvailableExternalSDMemory()) {
-            mRootPath2 = String.valueOf(Environment.getExternalStorageDirectory().getPath()) + "/barcodekanojo/";
+            mRootPath2 = Environment.getExternalStorageDirectory().getPath() + "/barcodekanojo/";
         } else if (!FileUtil.isAvailableInternalMemory()) {
             return null;
         } else {
-            mRootPath2 = String.valueOf(Environment.getDataDirectory().getAbsolutePath()) + "/data/jp.co.cybird.barcodekanojoForGAM/files/barcodekanojo/";
+            mRootPath2 = Environment.getDataDirectory().getAbsolutePath() + "/data/jp.co.cybird.barcodekanojoForGAM/files/barcodekanojo/";
         }
         File dir = new File(mRootPath2);
         if (!dir.exists()) {

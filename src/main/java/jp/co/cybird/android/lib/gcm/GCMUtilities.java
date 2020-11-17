@@ -254,7 +254,7 @@ public class GCMUtilities {
     private static void initGCM(Context context) {
         try {
             Bundle b = ((Activity) context).getIntent().getExtras();
-            if (b != null && Boolean.valueOf(b.getBoolean("push", false)).booleanValue()) {
+            if (b != null && b.getBoolean("push", false)) {
                 return;
             }
         } catch (Exception e) {

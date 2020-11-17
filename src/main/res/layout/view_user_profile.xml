@@ -10,12 +10,12 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignParentTop="true"
+		android:layout_marginStart="4dp"
 		android:layout_marginLeft="4dp"
 		android:layout_marginTop="4dp"
+		android:layout_toEndOf="@+id/common_profile_layout_img"
 		android:layout_toRightOf="@+id/common_profile_layout_img"
-		android:ellipsize="marquee"
-		android:layout_marginStart="4dp"
-		android:layout_toEndOf="@+id/common_profile_layout_img"/>
+		android:ellipsize="marquee"/>
     <TextView
 		android:id="@+id/common_profile_level"
 		style="@style/txt_userprofile.name"

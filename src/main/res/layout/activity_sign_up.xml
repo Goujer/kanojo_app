@@ -2,7 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:EditItemView="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent">
     <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
         <RelativeLayout android:background="@drawable/common_title_bg" android:layout_width="match_parent" android:layout_height="@dimen/common_title_height">
-            <Button android:id="@+id/signup_option_close" android:text="@string/common_edit_close" android:layout_alignParentLeft="true" style="@style/btn_navi"/>
+            <Button android:id="@+id/signup_option_close" android:text="@string/common_edit_close" android:layout_alignParentLeft="true" style="@style/btn_navi"
+				android:layout_alignParentStart="true"/>
             <ImageView android:layout_width="wrap_content" android:layout_height="@dimen/common_title_logo_height" android:src="@drawable/common_logo" android:scaleType="fitCenter" android:adjustViewBounds="true" android:layout_centerInParent="true"/>
         </RelativeLayout>
         <ScrollView android:background="@color/edit_bg" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
