@@ -2,10 +2,12 @@ package jp.co.cybird.barcodekanojoForGAM.core.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.util.Log;
@@ -20,6 +22,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
+import jp.co.cybird.barcodekanojoForGAM.BuildConfig;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.preferences.Preferences;
@@ -78,30 +83,30 @@ public class FileUtil {
 		}
 	}
 
-	public static Bitmap ByteTobmp(byte[] data) {
-		return BitmapFactory.decodeByteArray(data, 0, data.length);
-	}
+//	public static Bitmap ByteTobmp(byte[] data) {
+//		return BitmapFactory.decodeByteArray(data, 0, data.length);
+//	}
 
-	public static byte[] readDataFile(Context context, String name) throws Exception {
-		InputStream in = null;
-		try {
-			in = context.openFileInput(name);
-			byte[] w = new byte[102400];
-			int size = in.read(w);
-			in.close();
-			byte[] result = new byte[size];
-			System.arraycopy(w, 0, result, 0, size);
-			return result;
-		} catch (Exception e) {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (Exception e2) {
-				}
-			}
-			throw e;
-		}
-	}
+//	public static byte[] readDataFile(Context context, String name) throws Exception {
+//		InputStream in = null;
+//		try {
+//			in = context.openFileInput(name);
+//			byte[] w = new byte[102400];
+//			int size = in.read(w);
+//			in.close();
+//			byte[] result = new byte[size];
+//			System.arraycopy(w, 0, result, 0, size);
+//			return result;
+//		} catch (Exception e) {
+//			if (in != null) {
+//				try {
+//					in.close();
+//				} catch (Exception e2) {
+//				}
+//			}
+//			throw e;
+//		}
+//	}
 
 	//JADX Error
 	/* JADX WARNING: Removed duplicated region for block: B:24:0x0047  */
@@ -227,25 +232,25 @@ public class FileUtil {
 		}
 	}
 
-	public static void WriteToFile(String fileName, String content) throws IOException {
-		FileOutputStream fos = new FileOutputStream(new File(String.valueOf(String.valueOf(Environment.getExternalStorageDirectory().getPath()) + "/barcodekanojo/") + Preferences.PREFERENCE_DEVICE_TOKEN));
-		OutputStreamWriter writer = new OutputStreamWriter(fos);
-		writer.append(content);
-		writer.close();
-		fos.close();
-	}
+//	public static void WriteToFile(String fileName, String content) throws IOException {
+//		FileOutputStream fos = new FileOutputStream(new File(String.valueOf(String.valueOf(Environment.getExternalStorageDirectory().getPath()) + "/barcodekanojo/") + Preferences.PREFERENCE_DEVICE_TOKEN));
+//		OutputStreamWriter writer = new OutputStreamWriter(fos);
+//		writer.append(content);
+//		writer.close();
+//		fos.close();
+//	}
 
-	public static File GetFile(String fileName) {
-		File tokenFile = new File(String.valueOf(String.valueOf(Environment.getExternalStorageDirectory().getPath()) + "/barcodekanojo/") + Preferences.PREFERENCE_DEVICE_TOKEN);
-		if (tokenFile == null || !tokenFile.exists()) {
-			try {
-				tokenFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return tokenFile;
-	}
+//	public static File GetFile(String fileName) {
+//		File tokenFile = new File(String.valueOf(String.valueOf(Environment.getExternalStorageDirectory().getPath()) + "/barcodekanojo/") + Preferences.PREFERENCE_DEVICE_TOKEN);
+//		if (tokenFile == null || !tokenFile.exists()) {
+//			try {
+//				tokenFile.createNewFile();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		return tokenFile;
+//	}
 
 	public static boolean isAvailableExternalSDMemory() {
 		if (!Environment.getExternalStorageState().equals("mounted")) {
@@ -270,12 +275,12 @@ public class FileUtil {
 		}
 	}
 
-	public static boolean isAccessExternalMemory() {
-		if (Environment.getExternalStorageState().equals("mounted")) {
-			return true;
-		}
-		return false;
-	}
+//	public static boolean isAccessExternalMemory() {
+//		if (Environment.getExternalStorageState().equals("mounted")) {
+//			return true;
+//		}
+//		return false;
+//	}
 
 	public static boolean isAvailableInternalMemory() {
 		StatFs statFs = new StatFs(Environment.getDataDirectory().getAbsolutePath());
@@ -283,5 +288,32 @@ public class FileUtil {
 			return true;
 		}
 		return false;
+	}
+
+	public static boolean isCacheDirectoryFull(Context context) {
+		String path;
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+			if (Build.VERSION.SDK_INT <= 8) {
+				path = Environment.getExternalStorageDirectory().getAbsolutePath();
+			} else {
+				path = context.getExternalCacheDir().getAbsolutePath();
+			}
+		} else {
+			path = context.getCacheDir().getAbsolutePath();
+		}
+		StatFs statFs = new StatFs(path);
+		return ((((float) statFs.getAvailableBlocks()) * ((float) statFs.getBlockSize())) / 1048576.0f < 10.0f);
+	}
+
+	public static File getCacheDirectory(Context context) {
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+			if (Build.VERSION.SDK_INT <= 8) {
+				return new File(Environment.getExternalStorageDirectory(), "Android" + File.pathSeparator + "data" + File.pathSeparator + BuildConfig.APPLICATION_ID + File.pathSeparator + "cache");
+			} else {
+				return context.getExternalCacheDir();
+			}
+		} else {
+			return context.getCacheDir();
+		}
 	}
 }

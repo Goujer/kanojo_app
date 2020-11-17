@@ -16,13 +16,13 @@ public class RemoteResourceManager extends Observable {
     private FetcherObserver mFetcherObserver;
     private RemoteResourceFetcher mRemoteResourceFetcher;
 
-    public RemoteResourceManager(String cacheName, Context context) {
-        this(new BaseDiskCache("barcodekanojo", cacheName, context));
+    public RemoteResourceManager(Context context) {
+        this(new BaseDiskCache(context));
     }
 
-    public RemoteResourceManager(String cacheName, BaseDiskCache.BaseDiskCallBack listener, Context context) {
-        this(new BaseDiskCache("barcodekanojo", cacheName, listener, context));
-    }
+//    public RemoteResourceManager(String cacheName, BaseDiskCache.BaseDiskCallBack listener, Context context) {
+//        this(new BaseDiskCache("barcodekanojo", cacheName, listener, context));
+//    }
 
     public RemoteResourceManager(DiskCache cache) {
         this.mFetcherObserver = new FetcherObserver(this, null);

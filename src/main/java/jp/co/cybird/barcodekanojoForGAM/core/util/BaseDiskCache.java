@@ -3,7 +3,9 @@ package jp.co.cybird.barcodekanojoForGAM.core.util;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.os.StatFs;
 import android.util.Log;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -23,62 +25,39 @@ public class BaseDiskCache implements DiskCache {
     private static final String NOMEDIA = ".nomedia";
     private static final int STORAGE_NOT_AVAILABLE = 0;
     private static final String TAG = "BaseDiskCache";
-    private String mBaseDiskName;
     private Context mContext;
     private Digest mDigest;
-    private String mDirPath;
-    private BaseDiskCallBack mListener;
     private File mStorageDirectory;
 
-    public interface BaseDiskCallBack {
-        void onSaveFailed(String str);
-
-        void onSaveFinished(String str);
-    }
-
-    BaseDiskCache(String dirPath, String name, Context context) {
-        File baseDirectory;
+    BaseDiskCache(Context context) {
+        File storageDirectory = FileUtil.getCacheDirectory(context);
         this.mContext = context;
-        this.mBaseDiskName = name;
-        this.mDirPath = dirPath;
-        if (hasAvailableStorge(context) == 1) {
-            baseDirectory = new File(Environment.getExternalStorageDirectory(), dirPath);
-        } else if (hasAvailableStorge(context) == 2) {
-            baseDirectory = new File(this.mContext.getFilesDir(), dirPath);
-        } else {
-            return;
-        }
-        File storageDirectory = new File(baseDirectory, name);
+		if (FileUtil.isCacheDirectoryFull(context)) {
+			context.sendBroadcast(new Intent(BarcodeKanojoApp.INTENT_ACTION_FULL_STORAGE));
+		}
         createDirectory(storageDirectory);
         this.mStorageDirectory = storageDirectory;
         cleanup();
     }
 
-    BaseDiskCache(String dirPath, String name, BaseDiskCallBack listener, Context context) {
-        File storageDirectory = new File(new File(Environment.getExternalStorageDirectory(), dirPath), name);
-        createDirectory(storageDirectory);
-        this.mStorageDirectory = storageDirectory;
-        cleanup();
-        this.mListener = listener;
-    }
+//    BaseDiskCache(String dirPath, String name, BaseDiskCallBack listener, Context context) {
+//    	this(dirPath, name, context);
+//        this.mListener = listener;
+//    }
 
-    BaseDiskCache(File root, String dirPath, String name) {
-        File storageDirectory = new File(new File(root, dirPath), name);
-        createDirectory(storageDirectory);
-        this.mStorageDirectory = storageDirectory;
-        cleanupSimple();
-    }
+//    BaseDiskCache(File root, String dirPath, String name) {
+//        File storageDirectory = new File(new File(root, dirPath), name);
+//        createDirectory(storageDirectory);
+//        this.mStorageDirectory = storageDirectory;
+//        cleanupSimple();
+//    }
 
     public boolean exists(String key) {
         return getFile(key).exists();
     }
 
     public File getFile(String hash) {
-        File result = getFile(createDirectory(false, this.mDirPath, this.mBaseDiskName), hash);
-        if ((result == null || !result.exists()) && FileUtil.isAccessExternalMemory()) {
-            return getFile(createDirectory(true, this.mDirPath, this.mBaseDiskName), hash);
-        }
-        return result;
+		return getFile(createDirectory(), hash);
     }
 
     public File getFile(File root, String hash) {
@@ -93,13 +72,7 @@ public class BaseDiskCache implements DiskCache {
         if (isReadOnly) {
             return getFile(hash);
         }
-        if (hasAvailableStorge(this.mContext) == 1) {
-            mTempStorageDirectory = createDirectory(true, this.mDirPath, this.mBaseDiskName);
-        } else if (hasAvailableStorge(this.mContext) != 2) {
-            return null;
-        } else {
-            mTempStorageDirectory = createDirectory(false, this.mDirPath, this.mBaseDiskName);
-        }
+        mTempStorageDirectory = createDirectory();
         return new File(mTempStorageDirectory.toString() + File.separator + hash);
     }
 
@@ -123,14 +96,10 @@ public class BaseDiskCache implements DiskCache {
                     total += count;
                 }
                 os.close();
-                if (this.mListener != null) {
-                    this.mListener.onSaveFinished(key);
-                }
                 BufferedInputStream bufferedInputStream2 = bufferedInputStream;
             } catch (IOException e) {
-                if (this.mListener != null) {
-                    this.mListener.onSaveFailed(key);
-                }
+            	Log.e(TAG, "Error while saving cache file.");
+            	e.printStackTrace();
                 BufferedInputStream bufferedInputStream3 = bufferedInputStream;
             }
         }
@@ -145,24 +114,24 @@ public class BaseDiskCache implements DiskCache {
         if (children != null) {
             for (String file : children) {
                 File child = new File(this.mStorageDirectory, file);
-                if (!child.equals(new File(this.mStorageDirectory, NOMEDIA)) && child.length() <= 100) {
+                if (!child.equals(new File(this.mStorageDirectory, NOMEDIA)) && child.length() <= MIN_FILE_SIZE_IN_BYTES) {
                     child.delete();
                 }
             }
         }
     }
 
-    public void cleanupSimple() {
-        String[] children = this.mStorageDirectory.list();
-        if (children != null && children.length > 500) {
-            int i = children.length - 1;
-            int m = i - 50;
-            while (i > m) {
-                new File(this.mStorageDirectory, children[i]).delete();
-                i--;
-            }
-        }
-    }
+//    public void cleanupSimple() {
+//        String[] children = this.mStorageDirectory.list();
+//        if (children != null && children.length > 500) {
+//            int i = children.length - 1;
+//            int m = i - 50;
+//            while (i > m) {
+//                new File(this.mStorageDirectory, children[i]).delete();
+//                i--;
+//            }
+//        }
+//    }
 
     public void clear() {
         String[] children = this.mStorageDirectory.list();
@@ -179,27 +148,27 @@ public class BaseDiskCache implements DiskCache {
 
     private static final void createDirectory(File storageDirectory) {
         if (!storageDirectory.exists()) {
-            Log.d(TAG, "Trying to create storageDirectory: " + String.valueOf(storageDirectory.mkdirs()));
-            Log.d(TAG, "Exists: " + storageDirectory + " " + String.valueOf(storageDirectory.exists()));
+            Log.d(TAG, "Trying to create storageDirectory: " + storageDirectory.mkdirs());
+            Log.d(TAG, "Exists: " + storageDirectory + " " + storageDirectory.exists());
             Log.d(TAG, "State: " + Environment.getExternalStorageState());
-            Log.d(TAG, "Isdir: " + storageDirectory + " " + String.valueOf(storageDirectory.isDirectory()));
-            Log.d(TAG, "Readable: " + storageDirectory + " " + String.valueOf(storageDirectory.canRead()));
-            Log.d(TAG, "Writable: " + storageDirectory + " " + String.valueOf(storageDirectory.canWrite()));
+            Log.d(TAG, "Isdir: " + storageDirectory + " " + storageDirectory.isDirectory());
+            Log.d(TAG, "Readable: " + storageDirectory + " " + storageDirectory.canRead());
+            Log.d(TAG, "Writable: " + storageDirectory + " " + storageDirectory.canWrite());
             File tmp = storageDirectory.getParentFile();
-            Log.d(TAG, "Exists: " + tmp + " " + String.valueOf(tmp.exists()));
-            Log.d(TAG, "Isdir: " + tmp + " " + String.valueOf(tmp.isDirectory()));
-            Log.d(TAG, "Readable: " + tmp + " " + String.valueOf(tmp.canRead()));
-            Log.d(TAG, "Writable: " + tmp + " " + String.valueOf(tmp.canWrite()));
+            Log.d(TAG, "Exists: " + tmp + " " + tmp.exists());
+            Log.d(TAG, "Isdir: " + tmp + " " + tmp.isDirectory());
+            Log.d(TAG, "Readable: " + tmp + " " + tmp.canRead());
+            Log.d(TAG, "Writable: " + tmp + " " + tmp.canWrite());
             File tmp2 = tmp.getParentFile();
-            Log.d(TAG, "Exists: " + tmp2 + " " + String.valueOf(tmp2.exists()));
-            Log.d(TAG, "Isdir: " + tmp2 + " " + String.valueOf(tmp2.isDirectory()));
-            Log.d(TAG, "Readable: " + tmp2 + " " + String.valueOf(tmp2.canRead()));
-            Log.d(TAG, "Writable: " + tmp2 + " " + String.valueOf(tmp2.canWrite()));
+            Log.d(TAG, "Exists: " + tmp2 + " " + tmp2.exists());
+            Log.d(TAG, "Isdir: " + tmp2 + " " + tmp2.isDirectory());
+            Log.d(TAG, "Readable: " + tmp2 + " " + tmp2.canRead());
+            Log.d(TAG, "Writable: " + tmp2 + " " + tmp2.canWrite());
         }
         File nomediaFile = new File(storageDirectory, NOMEDIA);
         if (!nomediaFile.exists()) {
             try {
-                Log.d(TAG, "Created file: " + nomediaFile + " " + String.valueOf(nomediaFile.createNewFile()));
+                Log.d(TAG, "Created file: " + nomediaFile + " " + nomediaFile.createNewFile());
             } catch (IOException e) {
                 Log.d(TAG, "Unable to create .nomedia file for some reason.", e);
                 throw new IllegalStateException("Unable to create nomedia file.");
@@ -234,14 +203,8 @@ public class BaseDiskCache implements DiskCache {
         return 0;
     }
 
-    private File createDirectory(boolean isExternalMemeory, String dirPath, String name) {
-        File baseDirectory;
-        if (isExternalMemeory) {
-            baseDirectory = new File(Environment.getExternalStorageDirectory(), this.mDirPath);
-        } else {
-            baseDirectory = new File(this.mContext.getFilesDir(), this.mDirPath);
-        }
-        File storageDirectory = new File(baseDirectory, this.mBaseDiskName);
+    private File createDirectory() {
+		File storageDirectory = FileUtil.getCacheDirectory(this.mContext);
         createDirectory(storageDirectory);
         return storageDirectory;
     }
