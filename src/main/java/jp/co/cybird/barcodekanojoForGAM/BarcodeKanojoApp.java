@@ -7,6 +7,9 @@ import android.location.LocationManager;
 import android.os.Build;
 
 import java.util.Observer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import jp.co.cybird.barcodekanojoForGAM.billing.util.PurchaseApi;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.location.BestLocationListener;
@@ -21,13 +24,13 @@ public class BarcodeKanojoApp extends Application {
     public static final String PACKAGE_NAME = "jp.co.cybird.barcodekanojoForGAM";
     private static final String TAG = "BarcodeKanojo";
     private BarcodeKanojo mBarcodeKanojo;
+    private ApplicationSetting settings;
     private BestLocationListener mBestLocationListener = new BestLocationListener();
     private PurchaseApi mPurchaseApi;
     private RemoteResourceManager mRemoteResourceManager;
-    private BaseDiskCache.BaseDiskCallBack mSaveListener;
     private String[] mUserGenderList;
 
-    @Override
+	@Override
     public void onCreate() {
         super.onCreate();
         this.mBarcodeKanojo = new BarcodeKanojo();
@@ -39,6 +42,8 @@ public class BarcodeKanojoApp extends Application {
 		if (Integer.parseInt(Build.VERSION.SDK) < Build.VERSION_CODES.FROYO) {
 			System.setProperty("http.keepAlive", "false");
 		}
+		settings = new ApplicationSetting(this);
+		mBarcodeKanojo.createHttpApi(settings.getServerHttps(), settings.getServerURL(), settings.getServerPort(), Defs.USER_AGENT(), Defs.USER_LANGUAGE());
     }
 
     public void changeLocate() {
@@ -51,7 +56,7 @@ public class BarcodeKanojoApp extends Application {
     }
 
     public String getUUID() {
-        return new ApplicationSetting(this).getUUID();
+        return settings.getUUID();
     }
 
     public User getUser() {
@@ -69,24 +74,16 @@ public class BarcodeKanojoApp extends Application {
         return this.mPurchaseApi;
     }
 
-    public RemoteResourceManager getRemoteResourceManager() {
+	public ApplicationSetting getSettings() {
+		return settings;
+	}
+
+	public RemoteResourceManager getRemoteResourceManager() {
         return this.mRemoteResourceManager;
     }
 
     public void loadResourceManagers() {
-        try {
-            if (this.mSaveListener != null) {
-                this.mRemoteResourceManager = new RemoteResourceManager("cache", this.mSaveListener, getApplicationContext());
-            } else {
-                this.mRemoteResourceManager = new RemoteResourceManager("cache", getApplicationContext());
-            }
-        } catch (IllegalStateException e) {
-            if (this.mSaveListener != null) {
-                this.mRemoteResourceManager = new RemoteResourceManager("cache", this.mSaveListener, getApplicationContext());
-            } else {
-                this.mRemoteResourceManager = new RemoteResourceManager("cache", getApplicationContext());
-            }
-        }
+        this.mRemoteResourceManager = new RemoteResourceManager(getApplicationContext());
     }
 
     public void logged_out() {
