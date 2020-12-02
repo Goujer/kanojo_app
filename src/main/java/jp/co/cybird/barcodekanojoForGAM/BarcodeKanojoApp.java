@@ -6,17 +6,12 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 
-import java.util.Observer;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import jp.co.cybird.barcodekanojoForGAM.billing.util.PurchaseApi;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.location.BestLocationListener;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
-import jp.co.cybird.barcodekanojoForGAM.core.util.BaseDiskCache;
 import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
-import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
+import com.goujer.barcodekanojo.preferences.ApplicationSetting;
 
 public class BarcodeKanojoApp extends Application {
     public static final String INTENT_ACTION_FULL_STORAGE = "jp.co.cybird.barcodekanojoForGAM.intent.action.FULL_STORAGE";

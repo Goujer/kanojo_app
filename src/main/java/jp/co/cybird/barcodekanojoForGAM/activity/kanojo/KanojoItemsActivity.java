@@ -46,7 +46,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
-import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
+import com.goujer.barcodekanojo.preferences.ApplicationSetting;
 import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
 
 public class KanojoItemsActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {

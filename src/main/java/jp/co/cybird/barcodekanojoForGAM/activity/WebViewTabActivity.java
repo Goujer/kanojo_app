@@ -13,7 +13,6 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
-import java.io.IOException;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
@@ -22,7 +21,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import jp.co.cybird.barcodekanojoForGAM.core.model.WebViewData;
-import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
+import com.goujer.barcodekanojo.preferences.ApplicationSetting;
 
 public class WebViewTabActivity extends BaseKanojosActivity implements View.OnClickListener {
     private String extraWebViewURL;
