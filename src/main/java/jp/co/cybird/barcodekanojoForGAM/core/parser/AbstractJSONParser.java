@@ -18,9 +18,9 @@ public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implement
 
     protected static final String TAG = "AbstractJSONParser";
 
-    protected abstract T parseInner(JSONObject jSONObject) throws IOException, BarcodeKanojoException, BarcodeKanojoParseException;
+    protected abstract T parseInner(JSONObject jSONObject) throws IOException, BarcodeKanojoException;
 
-    public final T parse(JSONObject object) throws BarcodeKanojoParseException, BarcodeKanojoException {
+    public final T parse(JSONObject object) throws BarcodeKanojoException {
         try {
             return parseInner(object);
         } catch (IOException e) {

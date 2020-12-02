@@ -1,24 +1,18 @@
 package jp.co.cybird.android.lib.gcm;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Patterns;
 import android.webkit.WebView;
-import android.widget.Toast;
 import com.google.android.gcm.GCMRegistrar;
-import java.util.regex.Pattern;
+import com.goujer.barcodekanojo.preferences.ApplicationSetting;
 import jp.co.cybird.app.android.lib.applauncher.AppLauncherConsts;
 import jp.co.cybird.app.android.lib.commons.http.RequestParams;
 import jp.co.cybird.app.android.lib.commons.http.ThreadHttpClient;
 import jp.co.cybird.app.android.lib.commons.log.DLog;
-import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs;
-import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
 
 public class GCMUtilities {
     public static final String CYLIB_GCM_PARAM_DATA = "cylib_gcm_data";

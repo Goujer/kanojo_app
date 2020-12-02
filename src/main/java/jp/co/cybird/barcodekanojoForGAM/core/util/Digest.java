@@ -22,9 +22,9 @@ public class Digest {
         }
     }
 
-    public static String hex(String algorithm, String message) {
-        return new Digest(algorithm).hex(message);
-    }
+    //public static String hex(String algorithm, String message) {
+    //    return new Digest(algorithm).hex(message);
+    //}
 
     public String hex(String message) {
         if (message == null) {

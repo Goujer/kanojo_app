@@ -1,5 +1,6 @@
 package jp.co.cybird.barcodekanojoForGAM.activity;
 
+import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,7 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+//import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Toast;
 
@@ -26,7 +27,7 @@ import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 
 //TODO: Get this working and put it somewhere.
-public class MapKanojosActivity extends FragmentActivity implements View.OnClickListener {
+public class MapKanojosActivity extends /*Fragment*/Activity implements View.OnClickListener {
     private LatLng here;
     private GoogleMap googleMap;
     //MapController mapController;

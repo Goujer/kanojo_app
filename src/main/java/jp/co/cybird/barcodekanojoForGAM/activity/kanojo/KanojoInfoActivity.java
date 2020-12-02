@@ -331,23 +331,23 @@ public class KanojoInfoActivity extends BaseActivity implements View.OnClickList
 		}
     }
 
-    public static final String md5(String s) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance(Digest.MD5);
-            digest.update(s.getBytes());
-            byte[] messageDigest = digest.digest();
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : messageDigest) {
-                String h = Integer.toHexString(b & 255);
-                while (h.length() < 2) {
-                    h = GreeDefs.BARCODE + h;
-                }
-                hexString.append(h);
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            Log.v(TAG, e.toString());
-            return "";
-        }
-    }
+    //public static final String md5(String s) {
+    //    try {
+    //        MessageDigest digest = MessageDigest.getInstance(Digest.MD5);
+    //        digest.update(s.getBytes());
+    //        byte[] messageDigest = digest.digest();
+    //        StringBuilder hexString = new StringBuilder();
+    //        for (byte b : messageDigest) {
+    //            String h = Integer.toHexString(b & 255);
+    //            while (h.length() < 2) {
+    //                h = GreeDefs.BARCODE + h;
+    //            }
+    //            hexString.append(h);
+    //        }
+    //        return hexString.toString();
+    //    } catch (NoSuchAlgorithmException e) {
+    //        Log.v(TAG, e.toString());
+    //        return "";
+    //    }
+    //}
 }

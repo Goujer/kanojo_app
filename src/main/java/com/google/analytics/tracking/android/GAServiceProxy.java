@@ -157,60 +157,56 @@ class GAServiceProxy implements ServiceProxy, AnalyticsGmsCoreClient.OnConnected
 //        this.idleTimeout = idleTimeout2;
 //    }
 
-    /* JADX WARNING: Can't fix incorrect switch cases order */
-    /* JADX WARNING: Code restructure failed: missing block: B:15:0x003c, code lost:
-        if (r7.queue.isEmpty() != false) goto L_0x0075;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:16:0x003e, code lost:
-        r6 = r7.queue.poll();
-        com.google.analytics.tracking.android.Log.v("Sending hit to store  " + r6);
-        r7.store.putHit(r6.getWireFormatParams(), r6.getHitTimeInMilliseconds(), r6.getPath(), r6.getCommands());
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:22:0x0077, code lost:
-        if (r7.pendingDispatch == false) goto L_0x001f;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:23:0x0079, code lost:
-        dispatchToStore();
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:31:0x00cc, code lost:
-        r7.lastRequestTime = r7.clock.currentTimeMillis();
-     */
-    private synchronized void sendQueue() {
-        if (Thread.currentThread().equals(this.thread.getThread())) {
-            if (this.pendingClearHits) {
-                clearHits();
-            }
-            switch (this.state) {
-                case CONNECTED_LOCAL:
-                    break;
-                case CONNECTED_SERVICE:
-                    while (!this.queue.isEmpty()) {
-                        HitParams hitParams = this.queue.peek();
-                        Log.v("Sending hit to service   " + hitParams);
-                        if (!this.gaInstance.isDryRunEnabled()) {
-                            this.client.sendHit(hitParams.getWireFormatParams(), hitParams.getHitTimeInMilliseconds(), hitParams.getPath(), hitParams.getCommands());
-                        } else {
-                            Log.v("Dry run enabled. Hit not actually sent to service.");
-                        }
-                        this.queue.poll();
-                    }
-                    break;
-                case DISCONNECTED:
-                    Log.v("Need to reconnect");
-                    if (!this.queue.isEmpty()) {
-                        connectToService();
-                        break;
-                    }
-                    break;
-            }
-        } else {
-            this.thread.getQueue().add(new Runnable() {
-                public void run() {
-                    GAServiceProxy.this.sendQueue();
-                }
-            });
-        }
-    }
+	/* JADX INFO: Can't fix incorrect switch cases order, some code will duplicate */
+	private synchronized void sendQueue() {
+		if (Thread.currentThread().equals(this.thread.getThread())) {
+			if (this.pendingClearHits) {
+				clearHits();
+			}
+			switch (this.state) {
+				case CONNECTED_LOCAL:
+					while (!this.queue.isEmpty()) {
+						HitParams hitParams = this.queue.poll();
+						Log.v("Sending hit to store  " + hitParams);
+						this.store.putHit(hitParams.getWireFormatParams(), hitParams.getHitTimeInMilliseconds(), hitParams.getPath(), hitParams.getCommands());
+					}
+					if (this.pendingDispatch) {
+						dispatchToStore();
+						break;
+					}
+					break;
+				case CONNECTED_SERVICE:
+					while (!this.queue.isEmpty()) {
+						HitParams hitParams2 = this.queue.peek();
+						Log.v("Sending hit to service   " + hitParams2);
+						if (!this.gaInstance.isDryRunEnabled()) {
+							this.client.sendHit(hitParams2.getWireFormatParams(), hitParams2.getHitTimeInMilliseconds(), hitParams2.getPath(), hitParams2.getCommands());
+						} else {
+							Log.v("Dry run enabled. Hit not actually sent to service.");
+						}
+						this.queue.poll();
+					}
+					this.lastRequestTime = this.clock.currentTimeMillis();
+					break;
+				case DISCONNECTED:
+					Log.v("Need to reconnect");
+					if (!this.queue.isEmpty()) {
+						connectToService();
+						break;
+					}
+					break;
+			}
+		} else {
+			this.thread.getQueue().add(new Runnable() {
+				/* class com.google.analytics.tracking.android.GAServiceProxy.AnonymousClass2 */
+
+				public void run() {
+					GAServiceProxy.this.sendQueue();
+				}
+			});
+		}
+	}
+
 
     private void dispatchToStore() {
         this.store.dispatch();

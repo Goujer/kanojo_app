@@ -50,27 +50,21 @@ public class LoginActivity extends BaseEditActivity implements View.OnClickListe
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.kanojo_log_in_close:
-                close();
-                return;
-            case R.id.kanojo_log_in_btn:
-                User user = ((BarcodeKanojoApp) getApplication()).getUser();
-                if (this.txtPassword.getValue().equals("")) {
-                    showNoticeDialog(this.r.getString(R.string.error_no_password));
-                    return;
-                } else if (this.txtEmail.getValue().equals("")) {
-                    showNoticeDialog(this.r.getString(R.string.error_no_email));
-                    return;
-                } else {
-                    user.setPassword(this.txtPassword.getValue());
-                    user.setEmail(this.txtEmail.getValue().replaceAll(" ", ""));
-                    setResult(BaseInterface.RESULT_LOG_IN, (Intent) null);
-                    close();
-                    return;
-                }
-            default:
-                return;
-        }
-    }
+		int id = v.getId();
+		if (id == R.id.kanojo_log_in_close) {
+			finish();
+		} else if (id == R.id.kanojo_log_in_btn) {
+			User user = ((BarcodeKanojoApp) getApplication()).getUser();
+			if (this.txtPassword.getValue().equals("")) {
+				showNoticeDialog(this.r.getString(R.string.error_no_password));
+			} else if (this.txtEmail.getValue().equals("")) {
+				showNoticeDialog(this.r.getString(R.string.error_no_email));
+			} else {
+				user.setPassword(this.txtPassword.getValue());
+				user.setEmail(this.txtEmail.getValue().replaceAll(" ", ""));
+				setResult(BaseInterface.RESULT_LOG_IN, (Intent) null);
+				close();
+			}
+		}
+	}
 }
