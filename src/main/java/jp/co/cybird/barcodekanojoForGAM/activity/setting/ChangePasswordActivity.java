@@ -71,100 +71,94 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
         super.onDestroy();
     }
 
+    @Override
     public void onClick(View v) {
         EditText input = new EditText(this);
-        switch (v.getId()) {
-            case R.id.kanojo_password_change_close:
-                close();
-                return;
-            case R.id.kanojo_password_change_current:
-                input.setInputType(129);
-                showEditTextDialog(this.r.getString(R.string.password_change_current), this.txtCurrent, input);
-                return;
-            case R.id.kanojo_password_change_password:
-                input.setInputType(129);
-                showEditTextDialog(this.r.getString(R.string.password_change_password), this.txtPassword, input);
-                return;
-            case R.id.kanojo_password_change_re_password:
-                input.setInputType(129);
-                showEditTextDialog(this.r.getString(R.string.password_change_re_password), this.txtRePassword, input);
-                return;
-            case R.id.kanojo_password_change_btn:
-                if (!this.isNewEmail && this.txtCurrent.getValue().equals("")) {
-                    showNoticeDialog(this.r.getString(R.string.error_no_old_password));
-                    return;
-                } else if (!this.isNewEmail && !checkCurrentPassword()) {
-                    showNoticeDialog(this.r.getString(R.string.error_unmatch_current_password));
-                    return;
-                } else if (this.txtPassword.getValue().equals("")) {
-                    showNoticeDialog(this.r.getString(R.string.error_no_new_password));
-                    return;
-                } else if (this.txtPassword.getValue().length() < 6 || 16 < this.txtPassword.getValue().length()) {
-                    showNoticeDialog(this.r.getString(R.string.error_password_length));
-                    return;
-                } else if (!this.txtPassword.getValue().equals(this.txtRePassword.getValue())) {
-                    showNoticeDialog(this.r.getString(R.string.error_unmatch_new_password));
-                    return;
-                } else {
-                    Intent intent = new Intent();
-                    intent.putExtra("new_password", this.txtPassword.getValue());
-                    if (!this.isNewEmail) {
-                        intent.putExtra("currentPassword", this.txtCurrent.getValue());
-                    }
-                    setResult(BaseInterface.RESULT_CHANGED, intent);
-                    close();
-                    return;
-                }
-            default:
-        }
+        if (v.getId() == R.id.kanojo_password_change_close) {
+			finish();
+		} else if (v.getId() == R.id.kanojo_password_change_current) {
+			input.setInputType(129);
+			showEditTextDialog(this.r.getString(R.string.password_change_current), this.txtCurrent, input);
+		} else if (v.getId() == R.id.kanojo_password_change_password) {
+			input.setInputType(129);
+			showEditTextDialog(this.r.getString(R.string.password_change_password), this.txtPassword, input);
+		} else if (v.getId() == R.id.kanojo_password_change_re_password) {
+			input.setInputType(129);
+			showEditTextDialog(this.r.getString(R.string.password_change_re_password), this.txtRePassword, input);
+		} else if (v.getId() == R.id.kanojo_password_change_btn) {
+			if (!this.isNewEmail && this.txtCurrent.getValue().equals("")) {
+				showNoticeDialog(this.r.getString(R.string.error_no_old_password));
+			} else if (!this.isNewEmail && !checkCurrentPassword()) {
+				showNoticeDialog(this.r.getString(R.string.error_unmatch_current_password));
+			} else if (this.txtPassword.getValue().equals("")) {
+				showNoticeDialog(this.r.getString(R.string.error_no_new_password));
+			} else if (this.txtPassword.getValue().length() < 6 || 16 < this.txtPassword.getValue().length()) {
+				showNoticeDialog(this.r.getString(R.string.error_password_length));
+			} else if (!this.txtPassword.getValue().equals(this.txtRePassword.getValue())) {
+				showNoticeDialog(this.r.getString(R.string.error_unmatch_new_password));
+			} else {
+				Intent intent = new Intent();
+				intent.putExtra("new_password", this.txtPassword.getValue());
+				if (!this.isNewEmail) {
+					intent.putExtra("currentPassword", this.txtCurrent.getValue());
+				}
+				setResult(BaseInterface.RESULT_CHANGED, intent);
+				finish();
+			}
+		}
     }
 
     private boolean checkCurrentPassword() {
         if (this.encodedCurrentPassword != null) {
             try {
-                String encodeString = SHA1(this.txtCurrent.getValue());
+				String encodeString;
+				if (Build.VERSION.SDK_INT < 19) {
+					encodeString = new String(MessageDigest.getInstance("SHA-512").digest(this.txtCurrent.getValue().getBytes("UTF-8")));
+				} else {
+					encodeString = new String(MessageDigest.getInstance("SHA-512").digest(this.txtCurrent.getValue().getBytes(StandardCharsets.UTF_8)));
+				}
                 Log.d(TAG, "old: " + encodeString + " new:" + this.encodedCurrentPassword);
                 return this.encodedCurrentPassword.equals(encodeString);
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
-            } catch (UnsupportedEncodingException e2) {
-                e2.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
         }
         return false;
     }
 
-    public static String SHA1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        MessageDigest md = MessageDigest.getInstance(Digest.SHA1);
-        if (Build.VERSION.SDK_INT < 19) {
-			md.update(text.getBytes("iso-8859-1"), 0, text.length());
-		} else {
-			md.update(text.getBytes(StandardCharsets.ISO_8859_1), 0, text.length());
-		}
-        return convertToHex(md.digest());
-    }
+    //public static String SHA1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    //    MessageDigest md = MessageDigest.getInstance(Digest.SHA1);
+    //    if (Build.VERSION.SDK_INT < 19) {
+	//		md.update(text.getBytes("iso-8859-1"), 0, text.length());
+	//	} else {
+	//		md.update(text.getBytes(StandardCharsets.ISO_8859_1), 0, text.length());
+	//	}
+    //    return convertToHex(md.digest());
+    //}
 
-    private static String convertToHex(byte[] data) {
-        char c;
-        StringBuilder buf = new StringBuilder();
-        for (byte b : data) {
-            int halfbyte = (b >>> 4) & 15;
-            int two_halfs = 0;
-            while (true) {
-                if (halfbyte < 0 || halfbyte > 9) {
-                    c = (char) ((halfbyte - 10) + 97);
-                } else {
-                    c = (char) (halfbyte + 48);
-                }
-                buf.append(c);
-                halfbyte = b & 15;
-                int two_halfs2 = two_halfs + 1;
-                if (two_halfs >= 1) {
-                    break;
-                }
-                two_halfs = two_halfs2;
-            }
-        }
-        return buf.toString();
-    }
+    //private static String convertToHex(byte[] data) {
+    //    char c;
+    //    StringBuilder buf = new StringBuilder();
+    //    for (byte b : data) {
+    //        int halfbyte = (b >>> 4) & 15;
+    //        int two_halfs = 0;
+    //        while (true) {
+    //            if (halfbyte < 0 || halfbyte > 9) {
+    //                c = (char) ((halfbyte - 10) + 97);
+    //            } else {
+    //                c = (char) (halfbyte + 48);
+    //            }
+    //            buf.append(c);
+    //            halfbyte = b & 15;
+    //            int two_halfs2 = two_halfs + 1;
+    //            if (two_halfs >= 1) {
+    //                break;
+    //            }
+    //            two_halfs = two_halfs2;
+    //        }
+    //    }
+    //    return buf.toString();
+    //}
 }
