@@ -1,11 +1,11 @@
 buildscript {
-	ext.kotlin_version = '1.4.0'
+	ext.kotlin_version = '1.4.10'
 	repositories {
 		jcenter()
 		google()
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:4.0.2'
+		classpath 'com.android.tools.build:gradle:4.1.1'
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 	}
 }
@@ -104,16 +104,9 @@ dependencies {
 	//implementation files('libs/libGoogleAnalyticsV2.jar')
 	//implementation 'com.google.android.gms:play-services-base:6.5.87'	//Need to migrate to Jetpack WorkManager
 	//Billing
+	implementation 'com.android.billingclient:billing:2.0.3'
 	//minApi14Implementation 'com.android.billingclient:billing:2.0.3'
 	//minApi9Implementation 'com.android.billingclient:billing:2.0.3'
-	implementation 'com.android.billingclient:billing:2.0.3'
-	//Twitter4j
-	implementation 'org.twitter4j:twitter4j-core:4.0.7'
-	//Facebook
-	//minApi14Implementation 'com.facebook.android:facebook-android-sdk:3.23.1'
-	//minApi9Implementation 'com.facebook.android:facebook-android-sdk:3.23.1'	//Can go higher, but API changes
-	implementation 'com.facebook.android:facebook-android-sdk:3.23.1'
-	//Need to manually compile for lower versions
 	//ZXing
 	implementation 'com.google.zxing:core:3.2.1'
 	//implementation 'com.google.zxing:android-core:3.2.1'
@@ -121,5 +114,6 @@ dependencies {
 	//Other
     implementation('org.apache.httpcomponents:httpmime:4.3.6')
     implementation files('libs/live2d_android.jar')
-	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.0'
 }
