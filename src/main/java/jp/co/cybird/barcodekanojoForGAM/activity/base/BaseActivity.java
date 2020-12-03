@@ -40,7 +40,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 import jp.co.cybird.barcodekanojoForGAM.core.util.PhoneInfo;
-import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
+import com.goujer.barcodekanojo.preferences.ApplicationSetting;
 
 public abstract class BaseActivity extends GreeBaseActivity implements BaseInterface, DialogInterface.OnDismissListener {
     protected static final String TAG = "BaseActivity";
@@ -173,37 +173,31 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         User user = ((BarcodeKanojoApp) getApplication()).getUser();
         if (user.getName() == null) {
             if (Defs.DEBUG) {
-                Log.d("TAG", "Name copied:" + this.tmpUser.getName());
+                Log.d(TAG, "Name copied:" + this.tmpUser.getName());
             }
             user.setName(this.tmpUser.getName());
         }
-        if (user.getDescription() == null) {
-            if (Defs.DEBUG) {
-                Log.d("TAG", "Description copied:" + this.tmpUser.getDescription());
-            }
-            user.setDescription(this.tmpUser.getDescription());
-        }
         if (user.getBirthText() == null) {
             if (Defs.DEBUG) {
-                Log.d("TAG", "Birthday copied:" + this.tmpUser.getBirthText());
+                Log.d(TAG, "Birthday copied:" + this.tmpUser.getBirthText());
             }
             user.setBirthFromText(this.tmpUser.getBirthText());
         }
         if (user.getSex() == null) {
             if (Defs.DEBUG) {
-                Log.d("TAG", "Sex copied:" + this.tmpUser.getSex());
+                Log.d(TAG, "Sex copied:" + this.tmpUser.getSex());
             }
             user.setSex(this.tmpUser.getSex());
         }
         if (user.getEmail() == null) {
             if (Defs.DEBUG) {
-                Log.d("TAG", "Email copied:" + this.tmpUser.getEmail());
+                Log.d(TAG, "Email copied:" + this.tmpUser.getEmail());
             }
             user.setEmail(this.tmpUser.getEmail());
         }
         if (user.getPassword() == null) {
             if (Defs.DEBUG) {
-                Log.d("TAG", "Password copied:" + this.tmpUser.getPassword());
+                Log.d(TAG, "Password copied:" + this.tmpUser.getPassword());
             }
             user.setPassword(this.tmpUser.getPassword());
         }
@@ -494,7 +488,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         @Override
         protected Response<?> doInBackground(Void... params) {
             try {
-				return ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().android_verify(((BarcodeKanojoApp) getApplication()).getUUID());
+				return ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().verify("", "", ((BarcodeKanojoApp) getApplication()).getUUID());
             } catch (Exception e) {
                 this.mReason = e;
                 return null;

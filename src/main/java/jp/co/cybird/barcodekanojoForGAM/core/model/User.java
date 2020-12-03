@@ -19,10 +19,8 @@ public class User implements BarcodeKanojoModel, Parcelable {
     private int birth_month;
     private int birth_year;
     private String currentPassword;
-    private String description;
     private String email;
     private int enemy_count;
-    private boolean facebook_connect;
     private final String[] genderList;
     private int generate_count;
     private int gree_id;
@@ -41,7 +39,6 @@ public class User implements BarcodeKanojoModel, Parcelable {
     private int stamina;
     private int stamina_max;
     private int tickets;
-    private boolean twitter_connect;
     private int wish_count;
 
     public int describeContents() {
@@ -54,7 +51,6 @@ public class User implements BarcodeKanojoModel, Parcelable {
         dest.writeString(this.email);
         dest.writeString(this.password);
         dest.writeString(this.name);
-        dest.writeString(this.description);
         dest.writeString(this.profile_image_url);
         dest.writeString(this.sex);
         dest.writeString(this.language);
@@ -67,7 +63,6 @@ public class User implements BarcodeKanojoModel, Parcelable {
         dest.writeInt(this.scan_count);
         dest.writeInt(this.enemy_count);
         dest.writeInt(this.wish_count);
-        dest.writeBooleanArray(new boolean[]{this.twitter_connect, this.facebook_connect});
         dest.writeInt(this.birth_month);
         dest.writeInt(this.birth_day);
         dest.writeInt(this.birth_year);
@@ -78,13 +73,12 @@ public class User implements BarcodeKanojoModel, Parcelable {
 
     private User(Parcel in) {
         this.genderList = new String[]{"男性", "女性", "わからない"};
-        this.requestList = new String[]{Defs.DEBUG_SEX, "female", "not sure"};
+        this.requestList = new String[]{"male", "female", "not sure"};
         this.id = in.readInt();
         this.gree_id = in.readInt();
         this.email = in.readString();
         this.password = in.readString();
         this.name = in.readString();
-        this.description = in.readString();
         this.profile_image_url = in.readString();
         this.sex = in.readString();
         this.language = in.readString();
@@ -99,8 +93,6 @@ public class User implements BarcodeKanojoModel, Parcelable {
         this.wish_count = in.readInt();
         boolean[] val = new boolean[2];
         in.readBooleanArray(val);
-        this.twitter_connect = val[0];
-        this.facebook_connect = val[1];
         this.birth_month = in.readInt();
         this.birth_day = in.readInt();
         this.birth_year = in.readInt();
@@ -115,7 +107,7 @@ public class User implements BarcodeKanojoModel, Parcelable {
 
     public User() {
         this.genderList = new String[]{"男性", "女性", "わからない"};
-        this.requestList = new String[]{Defs.DEBUG_SEX, "female", "not sure"};
+        this.requestList = new String[]{"male", "female", "not sure"};
     }
 
     public String getEmail() {
@@ -130,16 +122,16 @@ public class User implements BarcodeKanojoModel, Parcelable {
         return this.password;
     }
 
-    public void setPassword(String password2) {
-        this.password = password2;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getId() {
         return this.id;
     }
 
-    public void setId(int id2) {
-        this.id = id2;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getGree_id() {
@@ -156,14 +148,6 @@ public class User implements BarcodeKanojoModel, Parcelable {
 
     public void setName(String name2) {
         this.name = name2;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description2) {
-        this.description = description2;
     }
 
     public String getProfile_image_url() {
@@ -199,21 +183,21 @@ public class User implements BarcodeKanojoModel, Parcelable {
         }
     }
 
-    public String getSexText() {
-        int selected = 0;
-        if (this.requestList != null) {
-            int size = this.requestList.length;
-            for (int i = 0; i < size; i++) {
-                if (getSex().equalsIgnoreCase(this.requestList[i])) {
-                    selected = i;
-                }
-            }
-        }
-        if (selected < this.genderList.length) {
-            return this.genderList[selected];
-        }
-        return "";
-    }
+    //public String getSexText() {
+    //    int selected = 0;
+    //    if (this.requestList != null) {
+    //        int size = this.requestList.length;
+    //        for (int i = 0; i < size; i++) {
+    //            if (getSex().equalsIgnoreCase(this.requestList[i])) {
+    //                selected = i;
+    //            }
+    //        }
+    //    }
+    //    if (selected < this.genderList.length) {
+    //        return this.genderList[selected];
+    //    }
+    //    return "";
+    //}
 
     public void setSexFromText(String sexText, String[] genderList2) {
         int selected = 2;
@@ -328,27 +312,11 @@ public class User implements BarcodeKanojoModel, Parcelable {
         this.wish_count = wishCount;
     }
 
-    public boolean isTwitter_connect() {
-        return this.twitter_connect;
-    }
-
-    public void setTwitter_connect(boolean twitterConnect) {
-        this.twitter_connect = twitterConnect;
-    }
-
-    public boolean isFacebook_connect() {
-        return this.facebook_connect;
-    }
-
-    public void setFacebook_connect(boolean facebookConnect) {
-        this.facebook_connect = facebookConnect;
-    }
-
     public String getBirthText() {
         if (this.birth_month == 0 || this.birth_day == 0 || this.birth_year == 0) {
             return "";
         }
-        return String.valueOf(String.format("%02d", new Object[]{Integer.valueOf(this.birth_month)})) + "." + String.format("%02d", new Object[]{Integer.valueOf(this.birth_day)}) + "." + String.format("%04d", new Object[]{Integer.valueOf(this.birth_year)});
+        return this.birth_month + "." + this.birth_day + "." + this.birth_year;
     }
 
     public void setBirthFromText(String MandD) {

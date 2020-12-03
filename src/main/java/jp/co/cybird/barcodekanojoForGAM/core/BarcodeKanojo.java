@@ -21,7 +21,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 public class BarcodeKanojo {
     private static final String TAG = "BarcodeKanojo";
     private BarcodeKanojoHttpApi mBCKApi;
-    //private jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojoHttpApi mBCKApi;
     private ModelList<Category> mCategories;
     private PlayLive2d mPlayLive2d;
     private User mUser;
@@ -38,8 +37,8 @@ public class BarcodeKanojo {
         this.mUser = new User();
     }
 
-    public Response<BarcodeKanojoModel> iphone_signup(String name, String password, String email, int birth_month, int birth_day, String sex, String description, File profile_image_data, String udid) throws BarcodeKanojoException, IOException {
-        Response<BarcodeKanojoModel> response = this.mBCKApi.iphone_signup(name, password, email, birth_month, birth_day, sex, description, profile_image_data, udid);
+    public Response<BarcodeKanojoModel> signup(String name, String password, String email, int birth_year, int birth_month, int birth_day, String sex, File profile_image_data) {
+        Response<BarcodeKanojoModel> response = this.mBCKApi.signup(name, password, email, birth_year, birth_month, birth_day, sex, profile_image_data);
         User user = (User) response.get(User.class);
         if (user != null) {
             setUser(user);
@@ -47,22 +46,22 @@ public class BarcodeKanojo {
         return response;
     }
 
-    public Response<BarcodeKanojoModel> android_signup(int birth_year, int birth_month, int birth_day, String sex, String udid) throws BarcodeKanojoException, IOException {
-        Response<BarcodeKanojoModel> response = this.mBCKApi.android_signup(birth_year, birth_month, birth_day, sex, udid);
-        User user = (User) response.get(User.class);
-        if (user != null) {
-            setUser(user);
-        }
-        return response;
-    }
+    //public Response<BarcodeKanojoModel> android_signup(int birth_year, int birth_month, int birth_day, String sex, String udid) throws BarcodeKanojoException, IOException {
+    //    Response<BarcodeKanojoModel> response = this.mBCKApi.signup(birth_year, birth_month, birth_day, sex, udid);
+    //    User user = (User) response.get(User.class);
+    //    if (user != null) {
+    //        setUser(user);
+    //    }
+    //    return response;
+    //}
 
-    public Response<BarcodeKanojoModel> update(String name, File profile_image_data) throws BarcodeKanojoException, IOException {
-        return this.mBCKApi.update(name, profile_image_data);
-    }
+    //public Response<BarcodeKanojoModel> update(String name, File profile_image_data) throws BarcodeKanojoException, IOException {
+    //    return this.mBCKApi.update(name, profile_image_data);
+    //}
 
-    public Response<BarcodeKanojoModel> update(String name, String name_textid, File profile_image_data) throws BarcodeKanojoException, IOException {
-        return this.mBCKApi.update(name, name_textid, profile_image_data);
-    }
+    //public Response<BarcodeKanojoModel> update(String name, String name_textid, File profile_image_data) throws BarcodeKanojoException, IOException {
+    //    return this.mBCKApi.update(name, name_textid, profile_image_data);
+    //}
 
 //    public Response<BarcodeKanojoModel> iphone_update(String name, String current_password, String new_password, String email, int birth_month, int birth_day, String sex, String description, File profile_image_data) throws BarcodeKanojoException, IOException {
 //        Response<BarcodeKanojoModel> response = this.mBCKApi.iphone_update(name, current_password, new_password, email, birth_month, birth_day, sex, description, profile_image_data);
@@ -72,6 +71,16 @@ public class BarcodeKanojo {
 //        }
 //        return response;
 //    }
+
+	public Response<BarcodeKanojoModel> verify(String email, String password, String uuid) throws BarcodeKanojoException {
+		Response<BarcodeKanojoModel> response = this.mBCKApi.verify(email, password, uuid);
+		User user = (User) response.get(User.class);
+		if (user == null) {
+			throw new BarcodeKanojoException("user not found");
+		}
+		setUser(user);
+		return response;
+	}
 
 //    public Response<BarcodeKanojoModel> verify(int gree_id, String verify_key) throws BarcodeKanojoException {
 //        try {
@@ -85,82 +94,82 @@ public class BarcodeKanojo {
 //        }
 //    }
 
-    public Response<BarcodeKanojoModel> iphone_verify(String email, String password, String udid) throws BarcodeKanojoException {
-        try {
-            Response<BarcodeKanojoModel> response = this.mBCKApi.iphone_verify(email, password, udid);
-            User user = (User) response.get(User.class);
-            if (user == null) {
-                throw new BarcodeKanojoException("user not found");
-            }
-            setUser(user);
-            return response;
-        } catch (IOException e) {
-            throw new BarcodeKanojoException(e.toString());
-        }
-    }
+    //public Response<BarcodeKanojoModel> iphone_verify(String email, String password, String uuid) throws BarcodeKanojoException {
+    //    try {
+    //        Response<BarcodeKanojoModel> response = this.mBCKApi.verify(email, password, uuid);
+    //        User user = (User) response.get(User.class);
+    //        if (user == null) {
+    //            throw new BarcodeKanojoException("user not found");
+    //        }
+    //        setUser(user);
+    //        return response;
+    //    } catch (IOException e) {
+    //        throw new BarcodeKanojoException(e.toString());
+    //    }
+    //}
 
-    public Response<BarcodeKanojoModel> android_verify(String udid) throws BarcodeKanojoException {
-        try {
-            Response<BarcodeKanojoModel> response = this.mBCKApi.android_verify(udid);
-            User user = (User) response.get(User.class);
-            if (user == null) {
-                throw new BarcodeKanojoException("user not found");
-            }
-            setUser(user);
-            return response;
-        } catch (IOException e) {
-        	e.printStackTrace();
-            throw new BarcodeKanojoException(e.toString());
-        }
-    }
+    //public Response<BarcodeKanojoModel> android_verify(String udid) throws BarcodeKanojoException {
+    //    try {
+    //        Response<BarcodeKanojoModel> response = this.mBCKApi.verify(udid);
+    //        User user = (User) response.get(User.class);
+    //        if (user == null) {
+    //            throw new BarcodeKanojoException("user not found");
+    //        }
+    //        setUser(user);
+    //        return response;
+    //    } catch (IOException e) {
+    //    	e.printStackTrace();
+    //        throw new BarcodeKanojoException(e.toString());
+    //    }
+    //}
 
-    public Response<BarcodeKanojoModel> android_register_fb(String facebookid, String facebookToken) throws BarcodeKanojoException {
-        try {
-            Response<BarcodeKanojoModel> response = this.mBCKApi.android_register_fb(facebookid, facebookToken);
-            if (response.get(User.class) != null) {
-                return response;
-            }
-            throw new BarcodeKanojoException("user not found");
-        } catch (IOException e) {
-            throw new BarcodeKanojoException(e.toString());
-        }
-    }
+    //public Response<BarcodeKanojoModel> android_register_fb(String facebookid, String facebookToken) throws BarcodeKanojoException {
+    //    try {
+    //        Response<BarcodeKanojoModel> response = this.mBCKApi.android_register_fb(facebookid, facebookToken);
+    //        if (response.get(User.class) != null) {
+    //            return response;
+    //        }
+    //        throw new BarcodeKanojoException("user not found");
+    //    } catch (IOException e) {
+    //        throw new BarcodeKanojoException(e.toString());
+    //    }
+    //}
 
-    public Response<BarcodeKanojoModel> android_disconnect_fb() throws BarcodeKanojoException {
-        try {
-            Response<BarcodeKanojoModel> response = this.mBCKApi.android_disconnect_fb();
-            if (response.get(User.class) != null) {
-                return response;
-            }
-            throw new BarcodeKanojoException("user not found");
-        } catch (IOException e) {
-            throw new BarcodeKanojoException(e.toString());
-        }
-    }
+    //public Response<BarcodeKanojoModel> android_disconnect_fb() throws BarcodeKanojoException {
+    //    try {
+    //        Response<BarcodeKanojoModel> response = this.mBCKApi.android_disconnect_fb();
+    //        if (response.get(User.class) != null) {
+    //            return response;
+    //        }
+    //        throw new BarcodeKanojoException("user not found");
+    //    } catch (IOException e) {
+    //        throw new BarcodeKanojoException(e.toString());
+    //    }
+    //}
 
-    public Response<BarcodeKanojoModel> android_register_twitter(String access_token, String access_secret) throws BarcodeKanojoException {
-        try {
-            Response<BarcodeKanojoModel> response = this.mBCKApi.android_register_twitter(access_token, access_secret);
-            if (response.get(User.class) != null) {
-                return response;
-            }
-            throw new BarcodeKanojoException("user not found");
-        } catch (IOException e) {
-            throw new BarcodeKanojoException(e.toString());
-        }
-    }
+    //public Response<BarcodeKanojoModel> android_register_twitter(String access_token, String access_secret) throws BarcodeKanojoException {
+    //    try {
+    //        Response<BarcodeKanojoModel> response = this.mBCKApi.android_register_twitter(access_token, access_secret);
+    //        if (response.get(User.class) != null) {
+    //            return response;
+    //        }
+    //        throw new BarcodeKanojoException("user not found");
+    //    } catch (IOException e) {
+    //        throw new BarcodeKanojoException(e.toString());
+    //    }
+    //}
 
-    public Response<BarcodeKanojoModel> android_disconnect_twitter() throws BarcodeKanojoException {
-        try {
-            Response<BarcodeKanojoModel> response = this.mBCKApi.android_disconnect_twitter();
-            if (response.get(User.class) != null) {
-                return response;
-            }
-            throw new BarcodeKanojoException("user not found");
-        } catch (IOException e) {
-            throw new BarcodeKanojoException(e.toString());
-        }
-    }
+    //public Response<BarcodeKanojoModel> android_disconnect_twitter() throws BarcodeKanojoException {
+    //    try {
+    //        Response<BarcodeKanojoModel> response = this.mBCKApi.android_disconnect_twitter();
+    //        if (response.get(User.class) != null) {
+    //            return response;
+    //        }
+    //        throw new BarcodeKanojoException("user not found");
+    //    } catch (IOException e) {
+    //        throw new BarcodeKanojoException(e.toString());
+    //    }
+    //}
 
     public Response<BarcodeKanojoModel> my_current_kanojos(int index, int limit, String search) throws IllegalStateException, BarcodeKanojoException, IOException {
     	try {
@@ -441,8 +450,8 @@ public class BarcodeKanojo {
         }
     }
 
-    public Response<BarcodeKanojoModel> android_update(String name, String current_password, String new_password, String email, int birth_month, int birth_day, int birth_year, String sex, String description, File profile_image_data) throws BarcodeKanojoException, IOException {
-        Response<BarcodeKanojoModel> response = this.mBCKApi.android_update(name, current_password, new_password, email, birth_month, birth_day, birth_year, sex, description, profile_image_data);
+    public Response<BarcodeKanojoModel> update(String name, String current_password, String new_password, String email, int birth_month, int birth_day, int birth_year, String sex, File profile_image_data) throws BarcodeKanojoException, IOException {
+        Response<BarcodeKanojoModel> response = this.mBCKApi.update(name, current_password, new_password, email, birth_year, birth_month, birth_day, sex, profile_image_data);
         User user = (User) response.get(User.class);
         if (user != null) {
             setUser(user);

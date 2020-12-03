@@ -19,9 +19,6 @@ public class UserParser extends AbstractJSONParser<User> {
             if (object.has("name")) {
                 res.setName(object.getString("name"));
             }
-            if (object.has("description")) {
-                res.setDescription(object.getString("description"));
-            }
             if (object.has("profile_image_url")) {
                 res.setProfile_image_url(object.getString("profile_image_url"));
             }
@@ -57,12 +54,6 @@ public class UserParser extends AbstractJSONParser<User> {
             }
             if (object.has("friend_count")) {
                 res.setWish_count(object.getInt("friend_count"));
-            }
-            if (object.has("twitter_connect")) {
-                res.setTwitter_connect(object.getBoolean("twitter_connect"));
-            }
-            if (object.has("facebook_connect")) {
-                res.setFacebook_connect(object.getBoolean("facebook_connect"));
             }
             if (object.has("birth_month")) {
                 res.setBirth_month(object.getInt("birth_month"));

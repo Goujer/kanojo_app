@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -17,13 +18,13 @@ import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.WebViewTabActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseKanojosActivity;
-import jp.co.cybird.barcodekanojoForGAM.activity.top.SignUpActivity;
+import jp.co.cybird.barcodekanojoForGAM.activity.setting.UserModifyActivity;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
-import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
+import com.goujer.barcodekanojo.preferences.ApplicationSetting;
 
 public class BarcodePushActivity extends BaseKanojosActivity {
     private static final String PUSH_NOTIFICATION_P1 = "webview";
@@ -217,19 +218,16 @@ public class BarcodePushActivity extends BaseKanojosActivity {
                 if (response == null) {
                     throw new BarcodeKanojoException("response is null! \n" + this.mReason);
                 }
-                switch (response.getCode()) {
-                    case 200:
-                        if (BarcodePushActivity.this.isQueueEmpty()) {
-                            BarcodePushActivity.this.processPush(this.mList);
-                            break;
-                        } else {
-                            BarcodePushActivity.this.mTaskEndHandler.sendEmptyMessage(0);
-                            break;
-                        }
-                }
+				if (response.getCode() == 200) {
+					if (BarcodePushActivity.this.isQueueEmpty()) {
+						BarcodePushActivity.this.processPush(this.mList);
+					} else {
+						BarcodePushActivity.this.mTaskEndHandler.sendEmptyMessage(0);
+					}
+				}
             } catch (BarcodeKanojoException e) {
                 if (this.mList.key == 1 && this.mReason.getMessage().equalsIgnoreCase("user not found")) {
-                    Intent signUp = new Intent().setClass(BarcodePushActivity.this, SignUpActivity.class);
+                    Intent signUp = new Intent().setClass(BarcodePushActivity.this, UserModifyActivity.class);
                     signUp.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST);
                     BarcodePushActivity.this.startActivity(signUp);
                 }
@@ -251,7 +249,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
                 case 0:
                     return barcodeKanojo.android_register_device(setting.getUUID(), setting.getDeviceToken());
                 case 1:
-                    Response<BarcodeKanojoModel> android_verify = barcodeKanojo.android_verify(((BarcodeKanojoApp) getApplication()).getUUID());
+                    Response<BarcodeKanojoModel> android_verify = barcodeKanojo.verify("", "", ((BarcodeKanojoApp) getApplication()).getUUID());
                     if (android_verify == null) {
                         return android_verify;
                     }

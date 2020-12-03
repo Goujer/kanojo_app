@@ -8,6 +8,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
+import jp.co.cybird.barcodekanojoForGAM.core.model.User
 import jp.co.cybird.barcodekanojoForGAM.core.parser.*
 import jp.co.cybird.barcodekanojoForGAM.core.util.GeoUtil
 import jp.co.cybird.barcodekanojoForGAM.preferences.Preferences
@@ -26,66 +27,94 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		return mHttpApi.mApiBaseUrl
 	}
 
-	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun iphone_signup(name: String?, password: String?, email: String?, birth_month: Int, birth_day: Int, sex: String?, description: String?, profile_image_data: File?, udid: String?): Response<BarcodeKanojoModel?>? {
+	//@Throws(BarcodeKanojoException::class, IOException::class)
+	//fun iphone_signup(name: String?, password: String?, email: String?, birth_month: Int, birth_day: Int, sex: String?, description: String?, profile_image_data: File?, udid: String?): Response<BarcodeKanojoModel?>? {
+	//	val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_SIGNUP,
+	//			NameValueOrFilePair("name", name),
+	//			NameValueOrFilePair("password", password),
+	//			NameValueOrFilePair("email", email),
+	//			NameValueOrFilePair("birth_month", birth_month.toString()),
+	//			NameValueOrFilePair("birth_day", birth_day.toString()),
+	//			NameValueOrFilePair("sex", sex),
+	//			NameValueOrFilePair("description", description),
+	//			NameValueOrFilePair("profile_image_data", profile_image_data),
+	//			NameValueOrFilePair("uuid", udid))
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	//}
+
+	//@Throws(BarcodeKanojoException::class, IOException::class)
+	//fun android_signup(birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, uuid: String?): Response<BarcodeKanojoModel?>? {
+	//	val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_SIGNUP,
+	//			NameValueOrFilePair("uuid", uuid),
+	//			NameValueOrFilePair("birth_month", birth_month.toString()),
+	//			NameValueOrFilePair("birth_day", birth_day.toString()),
+	//			NameValueOrFilePair("sex", sex))
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	//}
+
+	fun verify(email: String, password: String, uuid: String): Response<BarcodeKanojoModel?>? {
+		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY,
+				NameValuePair("uuid", uuid),
+				NameValuePair("email", email),
+				NameValuePair("password", password))
+		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	}
+
+	fun signup(name: String?, password: String?, email: String?, birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_SIGNUP,
 				NameValueOrFilePair("name", name),
 				NameValueOrFilePair("password", password),
 				NameValueOrFilePair("email", email),
+				NameValueOrFilePair("birth_year", birth_year.toString()),
 				NameValueOrFilePair("birth_month", birth_month.toString()),
 				NameValueOrFilePair("birth_day", birth_day.toString()),
 				NameValueOrFilePair("sex", sex),
-				NameValueOrFilePair("description", description),
-				NameValueOrFilePair("profile_image_data", profile_image_data),
-				NameValueOrFilePair("uuid", udid))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+				NameValueOrFilePair("profile_image_data", profile_image_data))
+		return  mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
-	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun android_signup(birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, uuid: String?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_SIGNUP,
-				NameValueOrFilePair("uuid", uuid),
-				NameValueOrFilePair("birth_month", birth_month.toString()),
-				NameValueOrFilePair("birth_day", birth_day.toString()),
-				NameValueOrFilePair("sex", sex))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	}
+//	@Throws(BarcodeKanojoException::class, IOException::class)
+//	fun verify(gree_id: Int, verify_key: String?): Response<BarcodeKanojoModel?>? {
+//		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY, NameValuePair("gree_id", gree_id.toString()), NameValuePair("verify_key", verify_key))
+//		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+//	}
 
-	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun verify(gree_id: Int, verify_key: String?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY, NameValuePair("gree_id", gree_id.toString()), NameValuePair("verify_key", verify_key))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	}
+	//@Throws(BarcodeKanojoException::class, IOException::class)
+	//fun iphone_verify(email: String?, password: String?, udid: String?): Response<BarcodeKanojoModel?>? {
+	//	val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY, NameValuePair("email", email), NameValuePair("password", password), NameValuePair("udid", udid))
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	//}
 
-	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun update(name: String?, name_textid: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_UPDATE, NameValueOrFilePair("name", name), NameValueOrFilePair("name_textid", name_textid), NameValueOrFilePair("profile_image_data", profile_image_data))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	}
+	//@Throws(BarcodeKanojoException::class, IOException::class)
+	//fun android_verify(udid: String?): Response<BarcodeKanojoModel?>? {
+	//	val connection: HttpURLConnection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY, NameValuePair("uuid", udid))
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	//}
 
-	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun iphone_update(name: String?, current_apssword: String?, new_password: String?, email: String?, birth_month: Int, birth_day: Int, sex: String?, description: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_UPDATE, NameValueOrFilePair("name", name), NameValueOrFilePair("current_password", current_apssword), NameValueOrFilePair("new_password", new_password), NameValueOrFilePair("email", email), NameValueOrFilePair("birth_month", birth_month.toString()), NameValueOrFilePair("birth_day", birth_day.toString()), NameValueOrFilePair("sex", sex), NameValueOrFilePair("description", description), NameValueOrFilePair("profile_image_data", profile_image_data))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	}
+	//fun update(name: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
+	//	val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_UPDATE,
+	//			NameValueOrFilePair("name", name),
+	//			NameValueOrFilePair("profile_image_data", profile_image_data))
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	//}
 
-	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun update(name: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_UPDATE, NameValueOrFilePair("name", name), NameValueOrFilePair("profile_image_data", profile_image_data))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	}
+	//@Throws(BarcodeKanojoException::class, IOException::class)
+	//fun update(name: String?, name_textid: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
+	//	val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_UPDATE, NameValueOrFilePair("name", name), NameValueOrFilePair("name_textid", name_textid), NameValueOrFilePair("profile_image_data", profile_image_data))
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	//}
 
-	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun iphone_verify(email: String?, password: String?, udid: String?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY, NameValuePair("email", email), NameValuePair("password", password), NameValuePair("udid", udid))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	}
+	//@Throws(BarcodeKanojoException::class, IOException::class)
+	//fun iphone_update(name: String?, current_apssword: String?, new_password: String?, email: String?, birth_month: Int, birth_day: Int, sex: String?, description: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
+	//	val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_UPDATE, NameValueOrFilePair("name", name), NameValueOrFilePair("current_password", current_apssword), NameValueOrFilePair("new_password", new_password), NameValueOrFilePair("email", email), NameValueOrFilePair("birth_month", birth_month.toString()), NameValueOrFilePair("birth_day", birth_day.toString()), NameValueOrFilePair("sex", sex), NameValueOrFilePair("description", description), NameValueOrFilePair("profile_image_data", profile_image_data))
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	//}
 
-	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun android_verify(udid: String?): Response<BarcodeKanojoModel?>? {
-		val connection: HttpURLConnection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY, NameValuePair("uuid", udid))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	}
+	//@Throws(BarcodeKanojoException::class, IOException::class)
+	//fun update(name: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
+	//	val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_UPDATE, NameValueOrFilePair("name", name), NameValueOrFilePair("profile_image_data", profile_image_data))
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	//}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun current_kanojos(user_id: Int, index: Int, limit: Int, search: String?): Response<BarcodeKanojoModel?>? {
@@ -276,15 +305,15 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("activities", ActivityParser())))
 	}
 
-	fun item_detail(store_item_id: Int): String? {
-		return URL_API_PAYMENT_ITEM_DETAIL + "?" + NameValuePair("store_item_id", store_item_id.toString())
-	}
+	//fun item_detail(store_item_id: Int): String? {
+	//	return URL_API_PAYMENT_ITEM_DETAIL + "?" + NameValuePair("store_item_id", store_item_id.toString())
+	//}
 
-	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun payment_verify(payment_id: String?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_API_PAYMENT_VERIFY, NameValuePair("payment_id", payment_id))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser()))
-	}
+	//@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
+	//fun payment_verify(payment_id: String?): Response<BarcodeKanojoModel?>? {
+	//	val connection = mHttpApi.createHttpGet(URL_API_PAYMENT_VERIFY, NameValuePair("payment_id", payment_id))
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser()))
+	//}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun product_category_list(): Response<BarcodeKanojoModel?>? {
@@ -316,29 +345,29 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
-	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun android_register_fb(facebookid: String?, facebookToken: String?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpPost(URL_API_FACEBOOK_CONNECT, NameValuePair("FACEBOOK_ID", facebookid), NameValuePair("FACEBOOK_TOKEN", facebookToken))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	}
+	//@Throws(BarcodeKanojoException::class, IOException::class)
+	//fun android_register_fb(facebookid: String?, facebookToken: String?): Response<BarcodeKanojoModel?>? {
+	//	val connection = mHttpApi.createHttpPost(URL_API_FACEBOOK_CONNECT, NameValuePair("FACEBOOK_ID", facebookid), NameValuePair("FACEBOOK_TOKEN", facebookToken))
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	//}
 
-	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun android_disconnect_fb(): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_API_FACEBOOK_DISCONNECT)
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	}
+	//@Throws(BarcodeKanojoException::class, IOException::class)
+	//fun android_disconnect_fb(): Response<BarcodeKanojoModel?>? {
+	//	val connection = mHttpApi.createHttpGet(URL_API_FACEBOOK_DISCONNECT)
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	//}
 
-	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun android_register_twitter(access_token: String?, access_secret: String?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpPost(URL_API_TWITTER_CONNECT, NameValuePair("access_token", access_token), NameValuePair("access_secret", access_secret))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	}
+	//@Throws(BarcodeKanojoException::class, IOException::class)
+	//fun android_register_twitter(access_token: String?, access_secret: String?): Response<BarcodeKanojoModel?>? {
+	//	val connection = mHttpApi.createHttpPost(URL_API_TWITTER_CONNECT, NameValuePair("access_token", access_token), NameValuePair("access_secret", access_secret))
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	//}
 
-	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun android_disconnect_twitter(): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_API_TWITTER_DISCONNECT)
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	}
+	//@Throws(BarcodeKanojoException::class, IOException::class)
+	//fun android_disconnect_twitter(): Response<BarcodeKanojoModel?>? {
+	//	val connection = mHttpApi.createHttpGet(URL_API_TWITTER_DISCONNECT)
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	//}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun android_register_device(uuid: String?, device_token: String?): Response<BarcodeKanojoModel?>? {
@@ -359,59 +388,17 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun android_update(name: String?, current_apssword: String?, new_password: String?, email: String?, birth_month: Int, birth_day: Int, birth_year: Int, sex: String?, description: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
-		val value = arrayOfNulls<NameValueOrFilePair>(10)
-		if (name == null || name == "") {
-			value[0] = null
-		} else {
-			value[0] = NameValueOrFilePair("name", name)
-		}
-		if (current_apssword == null || current_apssword == "") {
-			value[1] = null
-		} else {
-			value[1] = NameValueOrFilePair("current_apssword", current_apssword)
-		}
-		if (new_password == null || new_password == "") {
-			value[2] = null
-		} else {
-			value[2] = NameValueOrFilePair("new_password", new_password)
-		}
-		if (email == null || email.length == 0) {
-			value[3] = null
-		} else {
-			value[3] = NameValueOrFilePair("email", email)
-		}
-		if (birth_month == 0) {
-			value[4] = null
-		} else {
-			value[4] = NameValueOrFilePair("birth_month", birth_month.toString())
-		}
-		if (birth_day == 0) {
-			value[5] = null
-		} else {
-			value[5] = NameValueOrFilePair("birth_day", birth_day.toString())
-		}
-		if (birth_year == 0) {
-			value[6] = null
-		} else {
-			value[6] = NameValueOrFilePair("birth_year", birth_year.toString())
-		}
-		if (sex == null) {
-			value[7] = null
-		} else {
-			value[7] = NameValueOrFilePair("sex", sex)
-		}
-		if (description == null || description == "") {
-			value[8] = null
-		} else {
-			value[8] = NameValueOrFilePair("description", description)
-		}
-		if (profile_image_data == null) {
-			value[9] = null
-		} else {
-			value[9] = NameValueOrFilePair("profile_image_data", profile_image_data)
-		}
-		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_UPDATE, *value)
+	fun update(name: String?, current_password: String?, new_password: String?, email: String?, birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
+		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_UPDATE,
+				NameValueOrFilePair("name", name),
+				NameValueOrFilePair("current_password", current_password),
+				NameValueOrFilePair("new_password", new_password),
+				NameValueOrFilePair("email", email),
+				NameValueOrFilePair("birth_month", birth_month.toString()),
+				NameValueOrFilePair("birth_day", birth_day.toString()),
+				NameValueOrFilePair("birth_year", birth_year.toString()),
+				NameValueOrFilePair("sex", sex),
+				NameValueOrFilePair("profile_image_data", profile_image_data))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
