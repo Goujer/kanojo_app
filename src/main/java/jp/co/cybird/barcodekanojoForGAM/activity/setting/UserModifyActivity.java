@@ -17,7 +17,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 import com.google.android.gcm.GCMRegistrar;
+
+import com.goujer.barcodekanojo.activity.top.LaunchActivity;
+import com.goujer.barcodekanojo.preferences.ApplicationSetting;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -26,18 +31,15 @@ import java.util.Queue;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.Defs;
 import jp.co.cybird.barcodekanojoForGAM.R;
-import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
-import jp.co.cybird.barcodekanojoForGAM.activity.top.SignUpActivity;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 import jp.co.cybird.barcodekanojoForGAM.core.util.ImageCache;
 import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
-import jp.co.cybird.barcodekanojoForGAM.preferences.ApplicationSetting;
 import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 
@@ -112,7 +114,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         this.txtName = findViewById(R.id.kanojo_user_modify_name);
         this.txtName.setOnClickListener(this);
         this.txtName.setTextChangeListner(this.mTextChangeListener);
-        if (this.user.getName() != null && this.user.getName() != "null") {
+        if (this.user.getName() != null && !this.user.getName().equals("null")) {
             this.txtName.setValue(this.user.getName());
         } else if (this.mRequestCode == 1102) {
             this.txtName.setHoverDescription(getString(R.string.blank_name_L012));
@@ -152,7 +154,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
                 if (code == 200) {
                     UserModifyActivity.this.deleteUser();
                     UserModifyActivity.this.logout();
-                    Intent signUp = new Intent().setClass(UserModifyActivity.this, SignUpActivity.class);
+                    Intent signUp = new Intent().setClass(UserModifyActivity.this, LaunchActivity.class);
                     signUp.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST);
                     UserModifyActivity.this.startActivity(signUp);
                 }
@@ -252,56 +254,45 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
 
     public void onClick(View v) {
         unBindEvent();
-        Log.d("Nguyen", "View Clicked: " + v.getId());
-        switch (v.getId()) {
-            case R.id.kanojo_user_modify_close:
-                close();
-                return;
-            case R.id.kanojo_user_modify_name:
-                showEditTextDialog(this.r.getString(R.string.user_account_name), this.txtName);
-                return;
-            case R.id.kanojo_user_modify_gender:
-                showGenderDialog(this.r.getString(R.string.user_account_gender), this.txtGender);
-                return;
-            case R.id.kanojo_user_modify_birthday:
-                showDatePickDialog(this.r.getString(R.string.user_account_birthday), this.txtBirthday);
-                return;
-            case R.id.kanojo_user_modify_icon:
-                showImagePickerDialog(this.r.getString(R.string.user_account_icon));
-                return;
-            case R.id.kanojo_user_modify_email:
-                showEditTextDialog(this.r.getString(R.string.user_account_email), this.txtEmail);
-                return;
-            case R.id.kanojo_user_modify_password:
-                startPasswordChangeActivity();
-                return;
-            case R.id.kanojo_user_update_btn:
-                this.mResultCode = BaseInterface.RESULT_MODIFIED;
-                if (!this.txtName.getValue().equals("") || !this.txtGender.getValue().equals("") || !this.txtBirthday.getValue().equals("") || this.imgAvarta.getDrawable() != null) {
-                    this.mResultCode = BaseInterface.RESULT_MODIFIED_COMMON;
-                }
-                if (!this.txtEmail.getValue().equals("")) {
-                    if (this.txtPassword.getValue().equals("") && this.user.getEmail() == null) {
-                        showNoticeDialog(this.r.getString(R.string.error_password_length));
-                        return;
-                    } else if (this.mResultCode == 210) {
-                        this.mResultCode = BaseInterface.RESULT_MODIFIED_COMMON;
-                    } else {
-                        this.mResultCode = BaseInterface.RESULT_MODIFIED_DEVICE;
-                    }
-                } else if (this.user.getEmail() == null && !this.txtPassword.getValue().equals("")) {
-                    showNoticeDialog(this.r.getString(R.string.error_no_email));
-                    return;
-                }
-                processData();
-                return;
-            case R.id.kanojo_user_delete_btn:
-                this.mResultCode = BaseInterface.RESULT_DELETE_ACCOUNT;
-                showConfirmDeleteDialog(getResources().getString(R.string.delete_account_warning_message));
-                return;
-            default:
-                return;
-        }
+        Log.d(TAG, "View Clicked: " + v.getId());
+		int id = v.getId();
+		if (id == R.id.kanojo_user_modify_close) {
+			close();
+		} else if (id == R.id.kanojo_user_modify_name) {
+			showEditTextDialog(this.r.getString(R.string.user_account_name), this.txtName);
+		} else if (id == R.id.kanojo_user_modify_gender) {
+			showGenderDialog(this.r.getString(R.string.user_account_gender), this.txtGender);
+		} else if (id == R.id.kanojo_user_modify_birthday) {
+			showDatePickDialog(this.r.getString(R.string.user_account_birthday), this.txtBirthday);
+		} else if (id == R.id.kanojo_user_modify_icon) {
+			showImagePickerDialog(this.r.getString(R.string.user_account_icon));
+		} else if (id == R.id.kanojo_user_modify_email) {
+			showEditTextDialog(this.r.getString(R.string.user_account_email), this.txtEmail);
+		} else if (id == R.id.kanojo_user_modify_password) {
+			startPasswordChangeActivity();
+		} else if (id == R.id.kanojo_user_update_btn) {
+			this.mResultCode = BaseInterface.RESULT_MODIFIED;
+			if (!this.txtName.getValue().equals("") || !this.txtGender.getValue().equals("") || !this.txtBirthday.getValue().equals("") || this.imgAvarta.getDrawable() != null) {
+				this.mResultCode = BaseInterface.RESULT_MODIFIED_COMMON;
+			}
+			if (!this.txtEmail.getValue().equals("")) {
+				if (this.txtPassword.getValue().equals("") && this.user.getEmail() == null) {
+					showNoticeDialog(this.r.getString(R.string.error_password_length));
+					return;
+				} else if (this.mResultCode == BaseInterface.RESULT_MODIFIED_COMMON) {
+					this.mResultCode = BaseInterface.RESULT_MODIFIED_COMMON;
+				} else {
+					this.mResultCode = BaseInterface.RESULT_MODIFIED_DEVICE;
+				}
+			} else if (this.user.getEmail() == null && !this.txtPassword.getValue().equals("")) {
+				showNoticeDialog(this.r.getString(R.string.error_no_email));
+				return;
+			}
+			processData();
+		} else if (id == R.id.kanojo_user_delete_btn) {
+			this.mResultCode = BaseInterface.RESULT_DELETE_ACCOUNT;
+			showConfirmDeleteDialog(getResources().getString(R.string.delete_account_warning_message));
+		}
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -396,7 +387,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
             } else {
                 this.modifiedPhoto = this.mRrm.getFile(Uri.parse(this.user.getProfile_image_url()));
             }
-            executeAutoLoginListTask(this.user.isFacebook_connect());
+            executeAutoLoginListTask();
         } else {
             updateAndClose();
         }
@@ -458,12 +449,12 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         return this.mTaskQueue.isEmpty();
     }
 
-    protected void startDashboard() {
-        finish();
-        startActivity(new Intent().setClass(this, KanojosActivity.class));
-    }
+    //protected void startDashboard() {
+    //    finish();
+    //    startActivity(new Intent().setClass(this, KanojosActivity.class));
+    //}
 
-    private synchronized void executeAutoLoginListTask(boolean fbFlag) {
+    private synchronized void executeAutoLoginListTask() {
         clearQueue();
         StatusHolder mSignUpHolder = new StatusHolder();
         mSignUpHolder.key = 0;
@@ -480,11 +471,6 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         new StatusHolder().key = 9;
         if (this.mRequestCode == 1102) {
             getQueue().offer(mSignUpHolder);
-            if (this.user.isFacebook_connect()) {
-                getQueue().offer(mFbHolder);
-            } else if (this.user.isTwitter_connect()) {
-                getQueue().offer(mTwitterHolder);
-            }
         }
         if (this.mResultCode == 210 || this.mResultCode == 212) {
             getQueue().offer(mSaveCommonInfoHolder);
@@ -501,7 +487,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
 
     private void executeAutoLoginTask(StatusHolder list) {
         if (isLoading(list)) {
-            Log.d("NguyenTT", "task " + list.key + " is running ");
+            Log.d(TAG, "task " + list.key + " is running ");
             return;
         }
         this.mAutoLoginTask = new AutoLoginTask();
@@ -545,7 +531,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
                 }
                 if (!UserModifyActivity.this.isQueueEmpty()) {
                     code = response.getCode();
-                } else if (this.mList.key == 8) {
+                } else if (this.mList.key == StatusHolder.DELETE_USER_TASK) {
                     code = UserModifyActivity.this.getCodeAndShowAlert(response, this.mReason, UserModifyActivity.this.mListener);
                 } else {
                     code = UserModifyActivity.this.getCodeAndShowAlert(response, this.mReason);
@@ -604,7 +590,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
             switch (list.key) {
                 case 0:
                     String str = cPassword3;
-                    return barcodeKanojo.android_signup(1990, 5, 20, Defs.DEBUG_SEX, ((BarcodeKanojoApp) UserModifyActivity.this.getApplication()).getUUID());
+                    return barcodeKanojo.signup(Defs.DEBUG_NAME, Defs.DEBUG_PASSWORD, Defs.DEBUG_EMAIL, 1990, 5, 20, Defs.DEBUG_SEX, null);
                 case 1:
                     if (UserModifyActivity.this.modifiedUser.getPassword().equals("")) {
                         UserModifyActivity.this.modifiedUser.setPassword(user.getPassword());
@@ -614,19 +600,13 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
                     } else {
                         cPassword = cPassword3;
                     }
-                    return barcodeKanojo.android_update(UserModifyActivity.this.modifiedUser.getName(), cPassword, UserModifyActivity.this.modifiedUser.getPassword(), UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getBirth_month(), UserModifyActivity.this.modifiedUser.getBirth_day(), UserModifyActivity.this.modifiedUser.getBirth_year(), UserModifyActivity.this.modifiedUser.getSex(), UserModifyActivity.this.modifiedUser.getDescription(), UserModifyActivity.this.modifiedPhoto);
+                    return barcodeKanojo.update(UserModifyActivity.this.modifiedUser.getName(), cPassword, UserModifyActivity.this.modifiedUser.getPassword(), UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getBirth_year(), UserModifyActivity.this.modifiedUser.getBirth_month(), UserModifyActivity.this.modifiedUser.getBirth_day(), UserModifyActivity.this.modifiedUser.getSex(), UserModifyActivity.this.modifiedPhoto);
                 case 2:
                     String str2 = cPassword3;
                     return barcodeKanojo.android_uuid_verify(UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getPassword(), ((BarcodeKanojoApp) UserModifyActivity.this.getApplication()).getUUID());
                 case 3:
                     String str3 = cPassword3;
                     return barcodeKanojo.android_register_device(setting.getUUID(), GCMRegistrar.getRegistrationId(UserModifyActivity.this));
-                case 4:
-                    String str4 = cPassword3;
-                    return barcodeKanojo.android_register_fb(setting.getFaceBookID(), setting.getFaceBookToken());
-                case 5:
-                    String str5 = cPassword3;
-                    return barcodeKanojo.android_register_twitter(setting.getTwitterAccessToken(), setting.getTwitterAccessTokenSecret());
                 case 6:
                     return null;
                 case 7:
@@ -635,13 +615,13 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
                     } else {
                         cPassword2 = cPassword3;
                     }
-                    return barcodeKanojo.android_update(UserModifyActivity.this.modifiedUser.getName(), cPassword2, UserModifyActivity.this.modifiedUser.getPassword(), UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getBirth_month(), UserModifyActivity.this.modifiedUser.getBirth_day(), UserModifyActivity.this.modifiedUser.getBirth_year(), UserModifyActivity.this.modifiedUser.getSex(), UserModifyActivity.this.modifiedUser.getDescription(), UserModifyActivity.this.modifiedPhoto);
+                    return barcodeKanojo.update(UserModifyActivity.this.modifiedUser.getName(), cPassword2, UserModifyActivity.this.modifiedUser.getPassword(), UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getBirth_year(), UserModifyActivity.this.modifiedUser.getBirth_month(), UserModifyActivity.this.modifiedUser.getBirth_day(), UserModifyActivity.this.modifiedUser.getSex(), UserModifyActivity.this.modifiedPhoto);
                 case 8:
                     String str6 = cPassword3;
                     return barcodeKanojo.android_delete_account(user.getId());
                 case 9:
                     String str7 = cPassword3;
-                    return barcodeKanojo.android_verify(((BarcodeKanojoApp) getApplication()).getUUID());
+                    return barcodeKanojo.verify("", "", ((BarcodeKanojoApp) getApplication()).getUUID());
                 default:
                     String str8 = cPassword3;
                     return null;

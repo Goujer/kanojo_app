@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.goujer.barcodekanojo.activity.setting.ServerConfigurationActivity;
+import com.goujer.barcodekanojo.activity.top.LaunchActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +19,6 @@ import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
-import jp.co.cybird.barcodekanojoForGAM.activity.top.BootActivity;
-import jp.co.cybird.barcodekanojoForGAM.activity.top.SignUpActivity;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
@@ -32,9 +31,9 @@ import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 public class OptionActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "OptionActivity";
+    private View server_btn;
     private EditItemView account_btn;
     private EditItemView bck_btn;
-    private EditItemView common_btn;
     private EditItemView kddi_btn;
     private LinearLayout mDashboard;
     private LinearLayout mKanojos;
@@ -58,12 +57,10 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         requestWindowFeature(1);
         setContentView(R.layout.activity_option);
-        this.account_btn = findViewById(R.id.kanojo_option_server_config);
-        this.account_btn.setOnClickListener(this);
+        this.server_btn = findViewById(R.id.kanojo_option_server_config);
+        this.server_btn.setOnClickListener(this);
         this.account_btn = findViewById(R.id.kanojo_option_account_modify);
         this.account_btn.setOnClickListener(this);
-        this.common_btn = findViewById(R.id.kanojo_option_common);
-        this.common_btn.setOnClickListener(this);
         this.privacy_btn = findViewById(R.id.kanojo_option_privacy);
         this.privacy_btn.setOnClickListener(this);
         this.terms_btn = findViewById(R.id.kanojo_option_terms);
@@ -81,14 +78,14 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         this.mListener = new BaseActivity.OnDialogDismissListener() {
             public void onDismiss(DialogInterface dialog, int code) {
                 OptionActivity.this.logout();
-                OptionActivity.this.startActivity(new Intent().setClass(OptionActivity.this, BootActivity.class));
+                OptionActivity.this.startActivity(new Intent().setClass(OptionActivity.this, LaunchActivity.class));
             }
         };
     }
 
     protected void onDestroy() {
+		server_btn.setOnClickListener(null);
         this.account_btn.setOnClickListener(null);
-        this.common_btn.setOnClickListener(null);
         this.privacy_btn.setOnClickListener(null);
         this.terms_btn.setOnClickListener(null);
         this.rules_btn.setOnClickListener(null);
@@ -100,8 +97,8 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
     }
 
     public void unBindEvent() {
+		server_btn.setOnClickListener(null);
         this.account_btn.setOnClickListener(null);
-        this.common_btn.setOnClickListener(null);
         this.privacy_btn.setOnClickListener(null);
         this.terms_btn.setOnClickListener(null);
         this.rules_btn.setOnClickListener(null);
@@ -112,8 +109,8 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
     }
 
     public void bindEvent() {
+		server_btn.setOnClickListener(this);
         this.account_btn.setOnClickListener(this);
-        this.common_btn.setOnClickListener(this);
         this.privacy_btn.setOnClickListener(this);
         this.terms_btn.setOnClickListener(this);
         this.rules_btn.setOnClickListener(this);
@@ -131,9 +128,6 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
                 return;
             case R.id.kanojo_option_account_modify:
                 startAccountModify();
-                return;
-            case R.id.kanojo_option_common:
-                startConfig();
                 return;
             case R.id.kanojo_option_privacy:
                 showPrivacy();
@@ -261,7 +255,7 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
             if (OptionActivity.this.modifiedUser.getPassword().equals("")) {
                 OptionActivity.this.modifiedUser.setPassword(user.getPassword());
             }
-            Response<BarcodeKanojoModel> android_update = barcodeKanojo.android_update(OptionActivity.this.modifiedUser.getName(), user.getPassword(), OptionActivity.this.modifiedUser.getPassword(), OptionActivity.this.modifiedUser.getEmail(), OptionActivity.this.modifiedUser.getBirth_month(), OptionActivity.this.modifiedUser.getBirth_day(), OptionActivity.this.modifiedUser.getBirth_year(), OptionActivity.this.modifiedUser.getSex(), OptionActivity.this.modifiedUser.getDescription(), OptionActivity.this.modifiedPhoto);
+            Response<BarcodeKanojoModel> android_update = barcodeKanojo.update(OptionActivity.this.modifiedUser.getName(), user.getPassword(), OptionActivity.this.modifiedUser.getPassword(), OptionActivity.this.modifiedUser.getEmail(), OptionActivity.this.modifiedUser.getBirth_year(), OptionActivity.this.modifiedUser.getBirth_month(), OptionActivity.this.modifiedUser.getBirth_day(), OptionActivity.this.modifiedUser.getSex(), OptionActivity.this.modifiedPhoto);
             barcodeKanojo.init_product_category_list();
             User user2 = barcodeKanojo.getUser();
             ImageCache.requestImage(user2.getProfile_image_url(), ((BarcodeKanojoApp) OptionActivity.this.getApplication()).getRemoteResourceManager());
@@ -269,11 +263,11 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    private void executeOptionDeleteTask() {
-        if (this.mOptionDeleteTask == null || this.mOptionDeleteTask.getStatus() == AsyncTask.Status.FINISHED || this.mOptionDeleteTask.cancel(true) || this.mOptionDeleteTask.isCancelled()) {
-            this.mOptionDeleteTask = (OptionDeleteTask) new OptionDeleteTask().execute(new Void[0]);
-        }
-    }
+    //private void executeOptionDeleteTask() {
+    //    if (this.mOptionDeleteTask == null || this.mOptionDeleteTask.getStatus() == AsyncTask.Status.FINISHED || this.mOptionDeleteTask.cancel(true) || this.mOptionDeleteTask.isCancelled()) {
+    //        this.mOptionDeleteTask = (OptionDeleteTask) new OptionDeleteTask().execute(new Void[0]);
+    //    }
+    //}
 
     class OptionDeleteTask extends AsyncTask<Void, Void, Response<?>> {
         private Exception mReason = null;
@@ -337,12 +331,6 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void deleteUser() {
         showNoticeDialog(getString(R.string.delete_account_message));
-    }
-
-    protected void startConfig() {
-        Intent signUp = new Intent().setClass(this, SignUpActivity.class);
-        signUp.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_SETTING);
-        startActivityForResult(signUp, BaseInterface.REQUEST_SOCIAL_CONFIG_SETTING);
     }
 
     private void executeOptionChangeDeviceTask() {

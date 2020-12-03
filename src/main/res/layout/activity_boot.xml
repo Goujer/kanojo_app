@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@drawable/top_bg">
+	<LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+		<View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="2.5"/>
+		<TextView
+			android:id="@+id/top_server_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+		<View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1.5"/>
+		<Button android:id="@+id/top_log_in" android:text="@string/log_in" style="@style/btn_default" android:onClick="logIn"/>
+		<Button android:id="@+id/top_sign_up" android:layout_marginTop="20dp" android:text="@string/sign_up" style="@style/btn_default" android:onClick="signUp"/>
+		<Button android:id="@+id/top_config_server" android:layout_marginTop="20dp" android:text="@string/server_settings" style="@style/btn_default" android:onClick="configServer"/>
+		<View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
+	</LinearLayout>
+	<View android:id="@+id/anchor" android:layout_width="match_parent" android:layout_height="0dp" android:layout_centerInParent="true"/>
+	<ProgressBar android:id="@+id/progressbar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="30dp" android:layout_below="@id/anchor" android:layout_centerHorizontal="true" style="?android:attr/progressBarStyle"/>
+</RelativeLayout>

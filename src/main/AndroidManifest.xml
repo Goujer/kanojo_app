@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	android:installLocation="auto"
-	package="jp.co.cybird.barcodekanojoForGAM">
-    <supports-screens android:anyDensity="true" android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:resizeable="true"/>
+	package="jp.co.cybird.barcodekanojoForGAM"
+	android:installLocation="auto">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
@@ -13,7 +12,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -24,7 +22,6 @@
     <uses-feature android:name="android.hardware.screen.landscape" android:required="false"/>
     <uses-feature android:name="android.hardware.wifi" android:required="false"/>
     <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
-    <supports-screens android:anyDensity="true" android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true"/>
     <uses-permission android:name="com.android.vending.BILLING"/>
     <application
 		android:name=".BarcodeKanojoApp"
@@ -36,7 +33,7 @@
 		android:screenOrientation="portrait"
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme">
-        <activity android:label="@string/app_name" android:name=".activity.top.BootActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation">
+        <activity android:label="@string/app_name" android:name="com.goujer.barcodekanojo.activity.top.LaunchActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -44,7 +41,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
-                <data android:scheme="app" android:host="jp.co.cybird.barcodekanojoForGAM"/>
+                <data android:scheme="app" android:host="com.goujer.barcodekanojo"/>
             </intent-filter>
         </activity>
         <activity android:label="@string/app_name" android:name="jp.co.cybird.barcodekanojoForGAM.billing.TestBillingActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation"/>
@@ -52,7 +49,7 @@
         <activity android:label="@string/app_name" android:name=".activity.top.PrivacyInfoActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
         <activity android:label="@string/app_name" android:name=".activity.top.UserEntryActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
         <activity android:label="@string/app_name" android:name=".activity.top.LoginActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation"/>
-        <activity android:label="@string/app_name" android:name=".activity.top.SignUpActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation">
+        <activity android:label="@string/app_name" android:name="com.goujer.barcodekanojo.activity.top.SignUpActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -106,8 +103,7 @@
 		<activity
 			android:name="com.goujer.barcodekanojo.activity.setting.ServerConfigurationActivity"
 			android:label="@string/setting_name"
-			android:screenOrientation="sensorPortrait"
-			android:theme="@android:style/Theme.Black.NoTitleBar" />
+			android:screenOrientation="sensorPortrait"/>
 		<receiver android:name="jp.co.cybird.barcodekanojoForGAM.push.BarcodeGCMReceiver" android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
