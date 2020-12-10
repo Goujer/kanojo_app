@@ -60,7 +60,7 @@ public class EditBitmapView extends View {
         Resources resources = getResources();
         this.maskColor = resources.getColor(R.color.viewfinder_mask);
         this.frameColor = resources.getColor(R.color.white);
-        this.dirPath = String.valueOf(Environment.getExternalStorageDirectory().getPath()) + "/barcodekanojo/";
+        this.dirPath = Environment.getExternalStorageDirectory().getPath() + "/barcodekanojo/";
     }
 
     public void setDirPath(String path) {

@@ -252,6 +252,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         this.btnDelete.setOnClickListener(null);
     }
 
+    @Override
     public void onClick(View v) {
         unBindEvent();
         Log.d(TAG, "View Clicked: " + v.getId());

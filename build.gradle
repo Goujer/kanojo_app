@@ -94,25 +94,30 @@ dependencies {
 	//androidxImplementation 'androidx.appcompat:appcompat:1.2.0'
 	//minApi9Implementation 'com.android.support:appcompat-v7:25.4.0'
 	//minApi7Implementation 'com.android.support:appcompat-v7:24.1.1'
+
 	//Maps
-	//implementation 'com.google.android.maps:maps:7_r1'
-	//minApi14Implementation 'com.google.android.gms:play-services-maps:8.4.0'	//This is done terribly
-	//minApi9Implementation 'com.google.android.gms:play-services-maps:8.4.0'		//This is done terribly
+	//minApi14Implementation 'com.google.android.gms:play-services-maps:17.0.0'
+	//minApi9Implementation 'com.google.android.gms:play-services-maps:10.0.1'
 	implementation 'com.google.android.gms:play-services-maps:8.4.0'
 	//implementation 'com.google.android.maps:maps:15_r2'
+	//implementation 'com.google.android.maps:maps:7_r1'
+
 	//Analytics
 	//implementation files('libs/libGoogleAnalyticsV2.jar')
 	//implementation 'com.google.android.gms:play-services-base:6.5.87'	//Need to migrate to Jetpack WorkManager
+
 	//Billing
 	implementation 'com.android.billingclient:billing:2.0.3'
 	//minApi14Implementation 'com.android.billingclient:billing:2.0.3'
 	//minApi9Implementation 'com.android.billingclient:billing:2.0.3'
+
 	//ZXing
 	implementation 'com.google.zxing:core:3.2.1'
 	//implementation 'com.google.zxing:android-core:3.2.1'
 	//implementation 'com.google.zxing:android-integration:3.2.1'
+
 	//Other
-    implementation('org.apache.httpcomponents:httpmime:4.3.6')
+    implementation 'org.apache.httpcomponents:httpmime:4.3.6'
     implementation files('libs/live2d_android.jar')
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.0'

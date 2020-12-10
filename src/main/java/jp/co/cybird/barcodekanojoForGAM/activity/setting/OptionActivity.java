@@ -84,15 +84,7 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
     }
 
     protected void onDestroy() {
-		server_btn.setOnClickListener(null);
-        this.account_btn.setOnClickListener(null);
-        this.privacy_btn.setOnClickListener(null);
-        this.terms_btn.setOnClickListener(null);
-        this.rules_btn.setOnClickListener(null);
-        this.bck_btn.setOnClickListener(null);
-        this.team_btn.setOnClickListener(null);
-        this.mail_btn.setOnClickListener(null);
-        this.kddi_btn.setOnClickListener(null);
+		unBindEvent();
         super.onDestroy();
     }
 
@@ -122,34 +114,34 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
 
     public void onClick(View v) {
         unBindEvent();
-        switch (v.getId()) {
-            case R.id.kanojo_option_server_config:
-                startServerConfig();
-                return;
-            case R.id.kanojo_option_account_modify:
-                startAccountModify();
-                return;
-            case R.id.kanojo_option_privacy:
-                showPrivacy();
-                return;
-            case R.id.kanojo_option_terms:
-                showTerms();
-                return;
-            case R.id.kanojo_option_rules:
-                showRules();
-                return;
-            case R.id.kanojo_option_barcodekanojo:
-                showBarcodeKanojo();
-                return;
-            case R.id.kanojo_option_team:
-                showTeam();
-                return;
-            case R.id.kanojo_option_mail:
-                showMail();
-                return;
-            case R.id.kanojo_option_kddi:
-                showKDDI();
-        }
+		int id = v.getId();
+		if (id == R.id.kanojo_option_server_config) {
+			startServerConfig();
+			return;
+		} else if (id == R.id.kanojo_option_account_modify) {
+			startAccountModify();
+			return;
+		} else if (id == R.id.kanojo_option_privacy) {
+			showPrivacy();
+			return;
+		} else if (id == R.id.kanojo_option_terms) {
+			showTerms();
+			return;
+		} else if (id == R.id.kanojo_option_rules) {
+			showRules();
+			return;
+		} else if (id == R.id.kanojo_option_barcodekanojo) {
+			showBarcodeKanojo();
+			return;
+		} else if (id == R.id.kanojo_option_team) {
+			showTeam();
+			return;
+		} else if (id == R.id.kanojo_option_mail) {
+			showMail();
+			return;
+		} else if (id == R.id.kanojo_option_kddi) {
+			showKDDI();
+		}
     }
 
     @Override
@@ -190,13 +182,13 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         });
     }
 
-    private void executeOptionModifyTask() {
-        if (this.mOptionModifyTask == null || this.mOptionModifyTask.getStatus() == AsyncTask.Status.FINISHED || this.mOptionModifyTask.cancel(true) || this.mOptionModifyTask.isCancelled()) {
-            this.mOptionModifyTask = (OptionModifyTask) new OptionModifyTask().execute(new Void[0]);
-        } else {
-            Toast.makeText(this, "ttttttt", Toast.LENGTH_SHORT);
-        }
-    }
+    //private void executeOptionModifyTask() {
+    //    if (this.mOptionModifyTask == null || this.mOptionModifyTask.getStatus() == AsyncTask.Status.FINISHED || this.mOptionModifyTask.cancel(true) || this.mOptionModifyTask.isCancelled()) {
+    //        this.mOptionModifyTask = (OptionModifyTask) new OptionModifyTask().execute(new Void[0]);
+    //    } else {
+    //        Toast.makeText(this, "ttttttt", Toast.LENGTH_SHORT);
+    //    }
+    //}
 
     class OptionModifyTask extends AsyncTask<Void, Void, Response<?>> {
         private Exception mReason = null;
