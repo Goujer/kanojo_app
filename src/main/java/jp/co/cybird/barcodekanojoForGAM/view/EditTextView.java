@@ -14,17 +14,17 @@ public class EditTextView extends LinearLayout {
 
     public EditTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setOrientation(0);
+        setOrientation(LinearLayout.HORIZONTAL);
         setGravity(16);
         setPadding(10, 0, 10, 0);
         LayoutInflater.from(context).inflate(R.layout.view_edit_text, this, true);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.EditTextView, 0, 0);
-        String text = array.getString(0);
+        String text = array.getString(R.styleable.EditTextView_tkey);
         ((TextView) findViewById(R.id.edit_text_key)).setText(text == null ? "" : text);
         this.mTextView = (EditText) findViewById(R.id.edit_text_value);
-        String text2 = array.getString(1);
+        String text2 = array.getString(R.styleable.EditTextView_tvalue);
         this.mTextView.setText(text2 == null ? "" : text2);
-        int color = array.getColor(2, 0);
+        int color = array.getColor(R.styleable.EditTextView_ttextColor, 0);
         if (color != 0) {
             this.mTextView.setTextColor(color);
         }

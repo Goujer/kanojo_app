@@ -46,18 +46,33 @@ class LaunchActivity : Activity() {
 	override fun onStart() {
 		super.onStart()
 		scope = CoroutineScope(Dispatchers.Main)
-		mServerName.text = settings.getServerURL()
-		mLogIn.visibility = View.INVISIBLE
-		mSignUp.visibility = View.INVISIBLE
-		mServerConfig.visibility = View.INVISIBLE
-	}
 
-	override fun onResume() {
-		super.onResume()
+		//Set Button Listeners
+		mLogIn.setOnClickListener {
+			val logInIntent = Intent().setClass(this, LoginActivity::class.java)
+			logInIntent.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
+			startActivityForResult(logInIntent, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
+		}
+		mSignUp.setOnClickListener {
+			val signUp = Intent().setClass(this, UserModifyActivity::class.java)
+			signUp.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
+			startActivity(signUp)
+		}
+		mServerConfig.setOnClickListener {
+			startActivity(Intent(this, ServerConfigurationActivity::class.java))
+		}
+
+		//Set visibilities
 		if (settings.getServerURL() == "") {
 			mProgressbar.visibility = View.GONE
+			mLogIn.visibility = View.INVISIBLE
+			mSignUp.visibility = View.INVISIBLE
 			mServerConfig.visibility = View.VISIBLE
 		} else {
+			mProgressbar.visibility = View.VISIBLE
+			mLogIn.visibility = View.INVISIBLE
+			mSignUp.visibility = View.INVISIBLE
+			mServerConfig.visibility = View.INVISIBLE
 			//Attempt log in / verify server
 			scope.launch(Dispatchers.IO) {
 				try {
@@ -82,33 +97,24 @@ class LaunchActivity : Activity() {
 		}
 	}
 
-	override fun onPause() {
-		super.onPause()
-		mProgressbar.visibility = View.VISIBLE
-		mLogIn.visibility = View.INVISIBLE
-		mSignUp.visibility = View.INVISIBLE
-		mServerConfig.visibility = View.INVISIBLE
+	override fun onResume() {
+		super.onResume()
+		mServerName.text = settings.getServerURL()
 	}
 
 	override fun onStop() {
 		super.onStop()
 		scope.cancel()
-	}
 
-	fun configServer(v: View) {
-		startActivity(Intent(this, ServerConfigurationActivity::class.java))
-	}
+		//Set Button Listeners
+		mLogIn.setOnClickListener(null)
+		mSignUp.setOnClickListener(null)
+		mServerConfig.setOnClickListener(null)
 
-	fun logIn(v: View) {
-		val dashboard = Intent().setClass(this, LoginActivity::class.java)
-		dashboard.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
-		startActivityForResult(dashboard, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
-	}
-
-	fun signUp(v: View) {
-		val signUp = Intent().setClass(this, UserModifyActivity::class.java)
-		signUp.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
-		startActivity(signUp)
+		mProgressbar.visibility = View.VISIBLE
+		mLogIn.visibility = View.INVISIBLE
+		mSignUp.visibility = View.INVISIBLE
+		mServerConfig.visibility = View.INVISIBLE
 	}
 
 	private suspend fun verifyUser(): Boolean {
@@ -132,14 +138,15 @@ class LaunchActivity : Activity() {
 		}
 	}
 
-	private suspend fun bootTaskProcess(): Response<BarcodeKanojoModel>{
+	private suspend fun bootTaskProcess(): Response<BarcodeKanojoModel> {
 		val barcodeKanojo = (application as BarcodeKanojoApp).barcodeKanojo
-		val android_verify = barcodeKanojo.verify("", "", (application as BarcodeKanojoApp).uuid)
+		val user = barcodeKanojo.user
+		val android_verify = barcodeKanojo.verify(user.email, user.password, (application as BarcodeKanojoApp).uuid)
 		barcodeKanojo.init_product_category_list()
 		return android_verify
 	}
 
 	companion object {
-		private val TAG = "Launch Activity"
+		private const val TAG = "Launch Activity"
 	}
 }

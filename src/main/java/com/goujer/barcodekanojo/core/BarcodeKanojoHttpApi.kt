@@ -8,7 +8,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
-import jp.co.cybird.barcodekanojoForGAM.core.model.User
 import jp.co.cybird.barcodekanojoForGAM.core.parser.*
 import jp.co.cybird.barcodekanojoForGAM.core.util.GeoUtil
 import jp.co.cybird.barcodekanojoForGAM.preferences.Preferences
@@ -52,7 +51,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	//}
 
-	fun verify(email: String, password: String, uuid: String): Response<BarcodeKanojoModel?>? {
+	fun verify(email: String?, password: String?, uuid: String?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY,
 				NameValuePair("uuid", uuid),
 				NameValuePair("email", email),

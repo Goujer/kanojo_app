@@ -10,9 +10,9 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 		<View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1.5"/>
-		<Button android:id="@+id/top_log_in" android:text="@string/log_in" style="@style/btn_default" android:onClick="logIn"/>
-		<Button android:id="@+id/top_sign_up" android:layout_marginTop="20dp" android:text="@string/sign_up" style="@style/btn_default" android:onClick="signUp"/>
-		<Button android:id="@+id/top_config_server" android:layout_marginTop="20dp" android:text="@string/server_settings" style="@style/btn_default" android:onClick="configServer"/>
+		<Button android:id="@+id/top_log_in" android:text="@string/log_in" style="@style/btn_default"/>
+		<Button android:id="@+id/top_sign_up" android:layout_marginTop="20dp" android:text="@string/sign_up" style="@style/btn_default"/>
+		<Button android:id="@+id/top_config_server" android:layout_marginTop="20dp" android:text="@string/server_settings" style="@style/btn_default"/>
 		<View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
 	</LinearLayout>
 	<View android:id="@+id/anchor" android:layout_width="match_parent" android:layout_height="0dp" android:layout_centerInParent="true"/>

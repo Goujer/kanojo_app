@@ -392,7 +392,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) DashboardActivity.this.getApplication()).getBarcodeKanojo();
             Log.d(DashboardActivity.TAG, "login() cannot be used !!!");
             User user = barcodeKanojo.getUser();
-            Response<BarcodeKanojoModel> iphone_verify = barcodeKanojo.verify(user.getEmail(), user.getPassword(), ((BarcodeKanojoApp) DashboardActivity.this.getApplication()).getUDID());
+            Response<BarcodeKanojoModel> iphone_verify = barcodeKanojo.verify(user.getEmail(), user.getPassword(), ((BarcodeKanojoApp) DashboardActivity.this.getApplication()).getUUID());
             barcodeKanojo.init_product_category_list();
             return iphone_verify;
         }
