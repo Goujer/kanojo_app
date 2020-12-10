@@ -116,24 +116,24 @@ public class EditItemView extends LinearLayout {
     }
 
 //    public void showIcon() {
-////        this.mIcon.setVisibility(View.VISIBLE);
+////        this.mIcon.setVisibility(VISIBLE);
 ////    }
 ////
 ////    public void hideIcon() {
-////        this.mIcon.setVisibility(View.INVISIBLE);
+////        this.mIcon.setVisibility(INVISIBLE);
 ////    }
 ////
 ////    public ImageView getRightIcon() {
 ////        return this.mAdd;
 ////    }
 
-	public void showIconAdd() {
-		this.mAdd.setVisibility(VISIBLE);
-	}
+	//public void showIconAdd() {
+	//	this.mAdd.setVisibility(VISIBLE);
+	//}
 
-	public void hideIconAdd() {
-		this.mAdd.setVisibility(INVISIBLE);
-	}
+	//public void hideIconAdd() {
+	//	this.mAdd.setVisibility(INVISIBLE);
+	//}
 
     public void setValue(String value) {
         if (this.mTextView != null && value != null) {
@@ -142,7 +142,7 @@ public class EditItemView extends LinearLayout {
             if (this.mListener != null) {
                 this.mListener.onTextChange(this.mTextView, value);
             }
-            if (this.needMask) {
+            if (this.needMask && !value.equals("")) {
                 this.mTextView.setText("********");
             } else {
                 this.mTextView.setText(this.mTextString);
