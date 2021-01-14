@@ -312,7 +312,7 @@ public class TopActivity extends BaseActivity {
         Response<?> signup() throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) TopActivity.this.getApplication()).getBarcodeKanojo();
             User user = barcodeKanojo.getUser();
-            Response<BarcodeKanojoModel> iphone_signup = barcodeKanojo.signup(user.getName(), user.getPassword(), user.getEmail(), user.getBirth_year(), user.getBirth_month(), user.getBirth_day(), user.getSex(), TopActivity.this.modifiedPhoto);
+            Response<BarcodeKanojoModel> iphone_signup = barcodeKanojo.signup(((BarcodeKanojoApp) getApplication()).getUUID(), user.getName(), user.getPassword(), user.getEmail(), user.getBirth_year(), user.getBirth_month(), user.getBirth_day(), user.getSex(), TopActivity.this.modifiedPhoto);
             barcodeKanojo.init_product_category_list();
             return iphone_signup;
         }
