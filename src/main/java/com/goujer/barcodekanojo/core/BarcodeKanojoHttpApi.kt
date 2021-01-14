@@ -59,8 +59,9 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
-	fun signup(name: String?, password: String?, email: String?, birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
+	fun signup(uuid: String, name: String?, password: String?, email: String?, birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_SIGNUP,
+				NameValueOrFilePair("uuid", uuid),
 				NameValueOrFilePair("name", name),
 				NameValueOrFilePair("password", password),
 				NameValueOrFilePair("email", email),
@@ -167,7 +168,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("kanojo", KanojoParser()), ModelParser("scan_history", ScanHistoryParser())))
 	}
 
-	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
+	/*@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun scan_and_generate(barcode: String?, company_name: String?, kanojo_name: String?, kanojo_profile_image_data: File?, product_name: String?, product_category_id: Int, product_comment: String?, product_image_data: File?, product_geo: LatLng?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_BARCODE_SCAN_AND_GENERATE,
 				NameValueOrFilePair("barcode", barcode),
@@ -180,7 +181,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 				NameValueOrFilePair("product_image_data", product_image_data),
 				NameValueOrFilePair("product_geo", GeoUtil.geoToString(product_geo)))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("scan_history", ScanHistoryParser())))
-	}
+	}*/
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun scan_and_generate(barcode: String?, company_name: String?, company_name_textid: String?, kanojo_name: String?, kanojo_name_textid: String?, kanojo_profile_image_data: File?, product_name: String?, product_name_textid: String?, product_category_id: Int, product_comment: String?, product_comment_textid: String?, product_image_data: File?, product_geo: LatLng?): Response<BarcodeKanojoModel?>? {

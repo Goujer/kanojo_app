@@ -48,39 +48,39 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     private int code = 0;
     private boolean mAutoRefresh = true;
     public boolean mBaseLoadingFinished = false;
-    final OnAccountsUpdateListener mChangeAccountListener = new OnAccountsUpdateListener() {
-        public void onAccountsUpdated(Account[] accounts) {
-            if (!new ApplicationSetting(BaseActivity.this.getApplicationContext()).getUserGoogleAccount().equalsIgnoreCase(new PhoneInfo(BaseActivity.this.getApplicationContext()).getGoogleAccount())) {
-                if (Defs.DEBUG) {
-                    Log.d(BaseActivity.TAG, "Google Account has changed, will call verify api");
-                }
-                try {
-                    BaseActivity.this.unregisterReceiver(BaseActivity.this.mChangeGmailReceiver);
-                } catch (Exception e) {
-                }
-                BaseActivity.this.sendBroadcast(new Intent("android.accounts.LOGIN_ACCOUNTS_CHANGED"));
-            }
-        }
-    };
-    public BroadcastReceiver mChangeGmailReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            if (Defs.DEBUG) {
-                Log.d(BaseActivity.TAG, "mChangeGmailReceiver: " + intent + ", at " + this);
-            }
-            String saveGoogle = new ApplicationSetting(context).getUserGoogleAccount();
-            String curGoogle = new PhoneInfo(context).getGoogleAccount();
-            if (Defs.DEBUG) {
-                Log.d(BaseActivity.TAG, "saved Google Account: " + saveGoogle);
-                Log.d(BaseActivity.TAG, "current Google Account: " + curGoogle);
-            }
-            if (!saveGoogle.equalsIgnoreCase(curGoogle)) {
-                if (Defs.DEBUG) {
-                    Log.d(BaseActivity.TAG, "Google Account has changed, will call verify api");
-                }
-                BaseActivity.this.showAlertFullStorageDialog("gmail has changed....");
-            }
-        }
-    };
+    //final OnAccountsUpdateListener mChangeAccountListener = new OnAccountsUpdateListener() {
+    //    public void onAccountsUpdated(Account[] accounts) {
+    //        if (!new ApplicationSetting(BaseActivity.this.getApplicationContext()).getUserGoogleAccount().equalsIgnoreCase(new PhoneInfo(BaseActivity.this.getApplicationContext()).getGoogleAccount())) {
+    //            if (Defs.DEBUG) {
+    //                Log.d(BaseActivity.TAG, "Google Account has changed, will call verify api");
+    //            }
+    //            try {
+    //                BaseActivity.this.unregisterReceiver(BaseActivity.this.mChangeGmailReceiver);
+    //            } catch (Exception e) {
+    //            }
+    //            BaseActivity.this.sendBroadcast(new Intent("android.accounts.LOGIN_ACCOUNTS_CHANGED"));
+    //        }
+    //    }
+    //};
+    //public BroadcastReceiver mChangeGmailReceiver = new BroadcastReceiver() {
+    //    public void onReceive(Context context, Intent intent) {
+    //        if (Defs.DEBUG) {
+    //            Log.d(BaseActivity.TAG, "mChangeGmailReceiver: " + intent + ", at " + this);
+    //        }
+    //        String saveGoogle = new ApplicationSetting(context).getUserGoogleAccount();
+    //        String curGoogle = new PhoneInfo(context).getGoogleAccount();
+    //        if (Defs.DEBUG) {
+    //            Log.d(BaseActivity.TAG, "saved Google Account: " + saveGoogle);
+    //            Log.d(BaseActivity.TAG, "current Google Account: " + curGoogle);
+    //        }
+    //        if (!saveGoogle.equalsIgnoreCase(curGoogle)) {
+    //            if (Defs.DEBUG) {
+    //                Log.d(BaseActivity.TAG, "Google Account has changed, will call verify api");
+    //            }
+    //            BaseActivity.this.showAlertFullStorageDialog("gmail has changed....");
+    //        }
+    //    }
+    //};
     private CheckSessionTask mCheckSessionTask;
     AlertDialog mCommondialog;
     private AlertDialog mFullStorageDialog;

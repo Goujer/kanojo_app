@@ -7,16 +7,16 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 import jp.co.cybird.barcodekanojoForGAM.core.util.GeoUtil;
 
 public class Response<T extends BarcodeKanojoModel> extends ModelList<T> implements BarcodeKanojoModel {
-    public static final int CODE_ERROE_BAD_REQUEST = 400;
+	public static final int CODE_SUCCESS = 200;
+	public static final int CODE_ERROR_NOT_ENOUGH_TICKET = 202;
+	public static final int CODE_ERROR_BAD_REQUEST = 400;
+	public static final int CODE_ERROR_UNAUTHORIZED = 401;
     public static final int CODE_ERROR_FORBIDDEN = 403;
+	public static final int CODE_ERROR_NOT_FOUND = 404;
+	public static final int CODE_ERROR_SERVER = 500;
     public static final int CODE_ERROR_NETWORK = 502;
-    public static final int CODE_ERROR_NOT_ENOUGH_TICKET = 202;
-    public static final int CODE_ERROR_NOT_FOUND = 404;
-    public static final int CODE_ERROR_SERVER = 500;
     public static final int CODE_ERROR_SERVICE_UNAVAILABLE = 503;
-    public static final int CODE_ERROR_UNAUTHORIZED = 401;
     public static final int CODE_FINISHED_CONSUME_TICKET = 600;
-    public static final int CODE_SUCCESS = 200;
     public static final String TAG = "Response";
     private static final long serialVersionUID = 1;
     private int code;
