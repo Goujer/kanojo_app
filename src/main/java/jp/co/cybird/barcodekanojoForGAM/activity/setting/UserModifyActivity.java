@@ -18,18 +18,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.google.android.gcm.GCMRegistrar;
+//import com.google.android.gcm.GCMRegistrar;
 
 import com.goujer.barcodekanojo.activity.top.LaunchActivity;
 import com.goujer.barcodekanojo.preferences.ApplicationSetting;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
-import jp.co.cybird.barcodekanojoForGAM.Defs;
 import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity;
@@ -381,7 +379,12 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
             this.modifiedUser.setPassword(this.txtPassword.getValue());
             this.modifiedUser.setEmail(this.txtEmail.getValue().replaceAll(" ", ""));
             this.modifiedUser.setSexFromText(this.txtGender.getValue(), this.app.getUserGenderList());
-            this.modifiedUser.setBirthFromText(this.txtBirthday.getValue());
+			String birthday = this.txtBirthday.getValue();
+			if (birthday.equals("")) {
+				this.modifiedUser.setBirth(1,1,1990);
+			} else {
+				this.modifiedUser.setBirthFromText(this.txtBirthday.getValue());
+			}
             backupUser(this.modifiedUser);
             if (this.mRequestCode != 1102 || this.user.getProfile_image_url() == null) {
                 this.modifiedPhoto = getFile();
@@ -421,7 +424,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         public static final int DELETE_USER_TASK = 8;
         public static final int REGISTER_FB_TASK = 4;
         public static final int REGISTER_SUKIYA_TASK = 6;
-        public static final int REGISTER_TOKEN_TASK = 3;
+        //public static final int REGISTER_TOKEN_TASK = 3;
         public static final int REGISTER_TWITTER_TASK = 5;
         public static final int SAVING_COMMON_INFO_TASK = 1;
         public static final int SAVING_DEVICE_ACCOUNT_TASK = 2;
@@ -459,12 +462,8 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         clearQueue();
         StatusHolder mSignUpHolder = new StatusHolder();
         mSignUpHolder.key = 0;
-        StatusHolder mFbHolder = new StatusHolder();
-        mFbHolder.key = 4;
-        StatusHolder mTwitterHolder = new StatusHolder();
-        mTwitterHolder.key = 5;
-        new StatusHolder().key = 7;
-        new StatusHolder().key = 3;
+		new StatusHolder().key = 7;
+        //new StatusHolder().key = StatusHolder.REGISTER_TOKEN_TASK;
         StatusHolder mSaveCommonInfoHolder = new StatusHolder();
         mSaveCommonInfoHolder.key = 1;
         StatusHolder mSaveDeviceHolder = new StatusHolder();
@@ -514,7 +513,43 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
 
         public Response<?> doInBackground(Void... params) {
             try {
-                return process(this.mList);
+				BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) UserModifyActivity.this.getApplication()).getBarcodeKanojo();
+				User user = barcodeKanojo.getUser();
+				ApplicationSetting setting = new ApplicationSetting(UserModifyActivity.this);
+				if (mList == null) {
+					throw new BarcodeKanojoException("process:StatusHolder is null!");
+				}
+				String cPassword = UserModifyActivity.this.currentPassword;
+				switch (mList.key) {
+					case 0:
+						return barcodeKanojo.signup(((BarcodeKanojoApp) getApplication()).getUUID(), UserModifyActivity.this.modifiedUser.getName(), UserModifyActivity.this.modifiedUser.getPassword(), UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getBirth_year(), UserModifyActivity.this.modifiedUser.getBirth_month(), UserModifyActivity.this.modifiedUser.getBirth_day(), UserModifyActivity.this.modifiedUser.getSex(), UserModifyActivity.this.modifiedPhoto);
+					case 1:
+						if (UserModifyActivity.this.modifiedUser.getPassword().equals("")) {
+							UserModifyActivity.this.modifiedUser.setPassword(user.getPassword());
+						}
+						if (cPassword == null) {
+							cPassword = user.getPassword();
+						}
+						return barcodeKanojo.update(UserModifyActivity.this.modifiedUser.getName(), cPassword, UserModifyActivity.this.modifiedUser.getPassword(), UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getBirth_year(), UserModifyActivity.this.modifiedUser.getBirth_month(), UserModifyActivity.this.modifiedUser.getBirth_day(), UserModifyActivity.this.modifiedUser.getSex(), UserModifyActivity.this.modifiedPhoto);
+					case 2:
+						return barcodeKanojo.android_uuid_verify(UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getPassword(), ((BarcodeKanojoApp) UserModifyActivity.this.getApplication()).getUUID());
+					//case StatusHolder.REGISTER_TOKEN_TASK:
+					//	String str3 = cPassword3;
+					//	return barcodeKanojo.android_register_device(setting.getUUID(), GCMRegistrar.getRegistrationId(UserModifyActivity.this));
+					case 6:
+						return null;
+					case 7:
+						if (cPassword == null) {
+							cPassword = user.getPassword();
+						}
+						return barcodeKanojo.update(UserModifyActivity.this.modifiedUser.getName(), cPassword, UserModifyActivity.this.modifiedUser.getPassword(), UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getBirth_year(), UserModifyActivity.this.modifiedUser.getBirth_month(), UserModifyActivity.this.modifiedUser.getBirth_day(), UserModifyActivity.this.modifiedUser.getSex(), UserModifyActivity.this.modifiedPhoto);
+					case 8:
+						return barcodeKanojo.android_delete_account(user.getId());
+					case 9:
+						return barcodeKanojo.verify("", "", ((BarcodeKanojoApp) getApplication()).getUUID());
+					default:
+						return null;
+				}
             } catch (Exception e) {
                 this.mReason = e;
                 return null;
@@ -526,6 +561,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
             int code;
             try {
                 if (this.mReason != null) {
+                	mReason.printStackTrace();
                 }
                 if (response == null) {
                     throw new BarcodeKanojoException("response is null! \n" + this.mReason);
@@ -538,13 +574,16 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
                     code = UserModifyActivity.this.getCodeAndShowAlert(response, this.mReason);
                 }
                 switch (code) {
-                    case 200:
+                    case Response.CODE_SUCCESS:
+                    	if (mList.key == 0) {
+							((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().setUser((User) response.get(User.class));
+						}
                         if (!UserModifyActivity.this.isQueueEmpty()) {
                             UserModifyActivity.this.mTaskEndHandler.sendEmptyMessage(0);
                             break;
                         }
                         break;
-                    case 400:
+                    case Response.CODE_ERROR_BAD_REQUEST:
                     case 401:
                     case 403:
                     case 404:
@@ -576,57 +615,6 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         protected void onCancelled() {
             UserModifyActivity.this.dismissProgressDialog();
             UserModifyActivity.this.bindEvent();
-        }
-
-        Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
-            String cPassword;
-            String cPassword2;
-            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) UserModifyActivity.this.getApplication()).getBarcodeKanojo();
-            User user = barcodeKanojo.getUser();
-            ApplicationSetting setting = new ApplicationSetting(UserModifyActivity.this);
-            if (list == null) {
-                throw new BarcodeKanojoException("process:StatusHolder is null!");
-            }
-            String cPassword3 = UserModifyActivity.this.currentPassword;
-            switch (list.key) {
-                case 0:
-                    String str = cPassword3;
-                    return barcodeKanojo.signup(Defs.DEBUG_NAME, Defs.DEBUG_PASSWORD, Defs.DEBUG_EMAIL, 1990, 5, 20, Defs.DEBUG_SEX, null);
-                case 1:
-                    if (UserModifyActivity.this.modifiedUser.getPassword().equals("")) {
-                        UserModifyActivity.this.modifiedUser.setPassword(user.getPassword());
-                    }
-                    if (UserModifyActivity.this.currentPassword == null) {
-                        cPassword = user.getPassword();
-                    } else {
-                        cPassword = cPassword3;
-                    }
-                    return barcodeKanojo.update(UserModifyActivity.this.modifiedUser.getName(), cPassword, UserModifyActivity.this.modifiedUser.getPassword(), UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getBirth_year(), UserModifyActivity.this.modifiedUser.getBirth_month(), UserModifyActivity.this.modifiedUser.getBirth_day(), UserModifyActivity.this.modifiedUser.getSex(), UserModifyActivity.this.modifiedPhoto);
-                case 2:
-                    String str2 = cPassword3;
-                    return barcodeKanojo.android_uuid_verify(UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getPassword(), ((BarcodeKanojoApp) UserModifyActivity.this.getApplication()).getUUID());
-                case 3:
-                    String str3 = cPassword3;
-                    return barcodeKanojo.android_register_device(setting.getUUID(), GCMRegistrar.getRegistrationId(UserModifyActivity.this));
-                case 6:
-                    return null;
-                case 7:
-                    if (UserModifyActivity.this.currentPassword == null) {
-                        cPassword2 = user.getPassword();
-                    } else {
-                        cPassword2 = cPassword3;
-                    }
-                    return barcodeKanojo.update(UserModifyActivity.this.modifiedUser.getName(), cPassword2, UserModifyActivity.this.modifiedUser.getPassword(), UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getBirth_year(), UserModifyActivity.this.modifiedUser.getBirth_month(), UserModifyActivity.this.modifiedUser.getBirth_day(), UserModifyActivity.this.modifiedUser.getSex(), UserModifyActivity.this.modifiedPhoto);
-                case 8:
-                    String str6 = cPassword3;
-                    return barcodeKanojo.android_delete_account(user.getId());
-                case 9:
-                    String str7 = cPassword3;
-                    return barcodeKanojo.verify("", "", ((BarcodeKanojoApp) getApplication()).getUUID());
-                default:
-                    String str8 = cPassword3;
-                    return null;
-            }
         }
     }
 
