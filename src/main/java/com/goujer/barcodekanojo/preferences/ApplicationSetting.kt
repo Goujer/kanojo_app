@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import jp.co.cybird.barcodekanojoForGAM.core.util.PhoneInfo
 import jp.co.cybird.barcodekanojoForGAM.preferences.Preferences
+import java.util.*
 
 class ApplicationSetting(context: Context) {
 	private var mContext: Context = context
@@ -58,27 +59,6 @@ class ApplicationSetting(context: Context) {
 		editor.apply()
 	}
 
-	fun getUserGoogleAccount(): String? {
-		return setting.getString(Preferences.PREFERENCE_GOOGLE_ACCOUNT, "")
-	}
-
-	fun commitUserGoogleAccount() {
-		val p = PhoneInfo(mContext)
-		val editor = setting.edit()
-		editor.putString(Preferences.PREFERENCE_GOOGLE_ACCOUNT, p.googleAccount)
-		editor.apply()
-	}
-
-	fun commitICCID(iccid: String?) {
-		val editor = setting.edit()
-		editor.putString(Preferences.PREFERENCE_USER_ICCID, iccid)
-		editor.apply()
-	}
-
-	fun getICCID(): String? {
-		return setting.getString(Preferences.PREFERENCE_USER_ICCID, "")
-	}
-
 	fun commitUUID(uuid: String?) {
 		val editor = setting.edit()
 		editor.putString(Preferences.PREFERENCE_ANDROID_ID, uuid)
@@ -86,7 +66,10 @@ class ApplicationSetting(context: Context) {
 	}
 
 	fun getUUID(): String? {
-		return setting.getString(Preferences.PREFERENCE_ANDROID_ID, "")
+		//TODO: This is shit, fix it.
+		var uuid = setting.getString(Preferences.PREFERENCE_ANDROID_ID, UUID.randomUUID().toString())
+		commitUUID(uuid)
+		return uuid
 	}
 
 	fun clearUUID() {

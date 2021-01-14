@@ -13,9 +13,6 @@ public class UserParser extends AbstractJSONParser<User> {
             if (object.has("id")) {
                 res.setId(object.getInt("id"));
             }
-            if (object.has("gree_id")) {
-                res.setGree_id(object.getInt("gree_id"));
-            }
             if (object.has("name")) {
                 res.setName(object.getString("name"));
             }

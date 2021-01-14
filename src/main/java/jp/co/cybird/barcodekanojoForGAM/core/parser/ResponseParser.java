@@ -19,7 +19,7 @@ public class ResponseParser extends AbstractJSONParser<Response<BarcodeKanojoMod
     protected Response<BarcodeKanojoModel> parseInner(JSONObject object) throws BarcodeKanojoException {
         Response<BarcodeKanojoModel> response = new Response<>();
         try {
-            if (!object.has("code") || object.isNull("code")) {
+            if (object == null || !object.has("code") || object.isNull("code")) {
                 throw new BarcodeKanojoException("Message from the server does not contain code!");
             }
             response.setCode(object.getInt("code"));
