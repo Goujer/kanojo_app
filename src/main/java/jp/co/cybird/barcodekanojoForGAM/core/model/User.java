@@ -330,6 +330,12 @@ public class User implements BarcodeKanojoModel, Parcelable {
         }
     }
 
+    public void setBirth(int month, int day, int year) {
+    	birth_month = month;
+    	birth_day = day;
+    	birth_year = year;
+	}
+
     public int getBirth_month() {
         return this.birth_month;
     }
