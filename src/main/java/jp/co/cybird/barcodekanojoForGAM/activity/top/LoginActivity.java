@@ -1,9 +1,15 @@
 package jp.co.cybird.barcodekanojoForGAM.activity.top;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.R;
@@ -62,7 +68,17 @@ public class LoginActivity extends BaseEditActivity implements View.OnClickListe
 			} else if (this.txtEmail.getValue().equals("")) {
 				showNoticeDialog(this.r.getString(R.string.error_no_email));
 			} else {
-				user.setPassword(this.txtPassword.getValue());
+				try {
+					if (Build.VERSION.SDK_INT < 19) {
+						user.setPassword(new String(MessageDigest.getInstance("SHA-512").digest(this.txtPassword.getValue().getBytes("UTF-8"))));
+					} else {
+						user.setPassword(new String(MessageDigest.getInstance("SHA-512").digest(this.txtPassword.getValue().getBytes(StandardCharsets.UTF_8))));
+					}
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 				user.setEmail(this.txtEmail.getValue().replaceAll(" ", ""));
 				setResult(BaseInterface.RESULT_LOG_IN, (Intent) null);
 				finish();

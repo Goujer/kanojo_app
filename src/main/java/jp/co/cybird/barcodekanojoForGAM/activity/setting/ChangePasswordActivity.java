@@ -7,14 +7,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.goujer.barcodekanojo.activity.base.BaseEditActivity;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
 import jp.co.cybird.barcodekanojoForGAM.R;
-import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
-import jp.co.cybird.barcodekanojoForGAM.core.util.Digest;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 
 public class ChangePasswordActivity extends BaseEditActivity implements View.OnClickListener {
@@ -35,7 +37,7 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
         if (bundle != null) {
             this.isNewEmail = bundle.getBoolean("new_email", false);
             this.encodedCurrentPassword = bundle.getString("encodedCurrentPassword");
-            if (this.encodedCurrentPassword.equals("")) {
+            if (this.encodedCurrentPassword != null && this.encodedCurrentPassword.equals("")) {
                 this.encodedCurrentPassword = null;
             }
         }
@@ -78,32 +80,47 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
 			finish();
 		} else if (v.getId() == R.id.kanojo_password_change_current) {
 			input.setInputType(129);
-			showEditTextDialog(this.r.getString(R.string.password_change_current), this.txtCurrent, input);
+			showEditTextDialog(getResources().getString(R.string.password_change_current), this.txtCurrent, input);
 		} else if (v.getId() == R.id.kanojo_password_change_password) {
 			input.setInputType(129);
-			showEditTextDialog(this.r.getString(R.string.password_change_password), this.txtPassword, input);
+			showEditTextDialog(getResources().getString(R.string.password_change_password), this.txtPassword, input);
 		} else if (v.getId() == R.id.kanojo_password_change_re_password) {
 			input.setInputType(129);
-			showEditTextDialog(this.r.getString(R.string.password_change_re_password), this.txtRePassword, input);
+			showEditTextDialog(getResources().getString(R.string.password_change_re_password), this.txtRePassword, input);
 		} else if (v.getId() == R.id.kanojo_password_change_btn) {
 			if (!this.isNewEmail && this.txtCurrent.getValue().equals("")) {
-				showNoticeDialog(this.r.getString(R.string.error_no_old_password));
+				showNoticeDialog(getResources().getString(R.string.error_no_old_password));
 			} else if (!this.isNewEmail && !checkCurrentPassword()) {
-				showNoticeDialog(this.r.getString(R.string.error_unmatch_current_password));
+				showNoticeDialog(getResources().getString(R.string.error_unmatch_current_password));
 			} else if (this.txtPassword.getValue().equals("")) {
-				showNoticeDialog(this.r.getString(R.string.error_no_new_password));
+				showNoticeDialog(getResources().getString(R.string.error_no_new_password));
 			} else if (this.txtPassword.getValue().length() < 6 || 16 < this.txtPassword.getValue().length()) {
-				showNoticeDialog(this.r.getString(R.string.error_password_length));
+				showNoticeDialog(getResources().getString(R.string.error_password_length));
 			} else if (!this.txtPassword.getValue().equals(this.txtRePassword.getValue())) {
-				showNoticeDialog(this.r.getString(R.string.error_unmatch_new_password));
+				showNoticeDialog(getResources().getString(R.string.error_unmatch_new_password));
 			} else {
-				Intent intent = new Intent();
-				intent.putExtra("new_password", this.txtPassword.getValue());
-				if (!this.isNewEmail) {
-					intent.putExtra("currentPassword", this.txtCurrent.getValue());
+				try {
+					Intent intent = new Intent();
+					String current_password;
+					String new_password;
+					if (Build.VERSION.SDK_INT < 19) {
+						current_password = new String(MessageDigest.getInstance("SHA-512").digest(this.txtCurrent.getValue().getBytes("UTF-8")));
+						new_password = new String(MessageDigest.getInstance("SHA-512").digest(this.txtPassword.getValue().getBytes("UTF-8")));
+					} else {
+						current_password = new String(MessageDigest.getInstance("SHA-512").digest(this.txtCurrent.getValue().getBytes(StandardCharsets.UTF_8)));
+						new_password = new String(MessageDigest.getInstance("SHA-512").digest(this.txtPassword.getValue().getBytes(StandardCharsets.UTF_8)));
+					}
+					intent.putExtra("new_password", new_password);
+					if (!this.isNewEmail) {
+						intent.putExtra("currentPassword", current_password);
+					}
+					setResult(BaseInterface.RESULT_CHANGED, intent);
+					finish();
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
 				}
-				setResult(BaseInterface.RESULT_CHANGED, intent);
-				finish();
 			}
 		}
     }
