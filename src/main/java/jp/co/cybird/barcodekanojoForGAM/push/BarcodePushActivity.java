@@ -181,7 +181,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         if (!isLoading(list)) {
             this.mAutoLoginTask = new AutoLoginTask();
             this.mAutoLoginTask.setList(list);
-            this.mAutoLoginTask.execute(new Void[0]);
+            this.mAutoLoginTask.execute();
         }
     }
 
