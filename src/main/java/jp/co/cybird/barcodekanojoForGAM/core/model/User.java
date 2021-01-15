@@ -23,7 +23,6 @@ public class User implements BarcodeKanojoModel, Parcelable {
     private int enemy_count;
     private final String[] genderList;
     private int generate_count;
-    private int gree_id;
     private int id;
     private int kanojo_count;
     private String language;
@@ -47,7 +46,6 @@ public class User implements BarcodeKanojoModel, Parcelable {
 
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
-        dest.writeInt(this.gree_id);
         dest.writeString(this.email);
         dest.writeString(this.password);
         dest.writeString(this.name);
@@ -75,7 +73,6 @@ public class User implements BarcodeKanojoModel, Parcelable {
         this.genderList = new String[]{"男性", "女性", "わからない"};
         this.requestList = new String[]{"male", "female", "not sure"};
         this.id = in.readInt();
-        this.gree_id = in.readInt();
         this.email = in.readString();
         this.password = in.readString();
         this.name = in.readString();
@@ -132,14 +129,6 @@ public class User implements BarcodeKanojoModel, Parcelable {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getGree_id() {
-        return this.gree_id;
-    }
-
-    public void setGree_id(int greeId) {
-        this.gree_id = greeId;
     }
 
     public String getName() {
