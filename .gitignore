@@ -87,3 +87,5 @@ minApi9/release/output-metadata.json
 release.jks
 .idea/codeStyles/codeStyleConfig.xml
 modern/release/output-metadata.json
+gradle.properties
+release.jks
