@@ -49,7 +49,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
     private Button btnDelete;
     private Button btnSave;
     private String currentPassword;
-    private ImageView imgAvarta;
+    private ImageView imgAvatar;
     private AutoLoginTask mAutoLoginTask;
     private LinearLayout mChangeDeviceLayout;
     private BaseActivity.OnDialogDismissListener mListener;
@@ -141,11 +141,11 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         this.txtIcon.setOnClickListener(this);
         this.btnDelete = findViewById(R.id.kanojo_user_delete_btn);
         this.btnDelete.setOnClickListener(this);
-        this.imgAvarta = this.txtIcon.getAvarta();
-        this.imgAvarta.setVisibility(View.VISIBLE);
+        this.imgAvatar = this.txtIcon.getAvatar();
+        this.imgAvatar.setVisibility(View.VISIBLE);
         this.mChangeDeviceLayout = findViewById(R.id.kanojo_user_account_device_layout);
         if (this.user.getProfile_image_url() != null) {
-            ImageCache.setImageAndRequest(this, this.imgAvarta, this.user.getProfile_image_url(), this.mRrm, R.drawable.common_noimage);
+            ImageCache.setImageAndRequest(this, this.imgAvatar, this.user.getProfile_image_url(), this.mRrm, R.drawable.common_noimage);
         }
         this.mListener = new BaseActivity.OnDialogDismissListener() {
             public void onDismiss(DialogInterface dialog, int code) {
@@ -209,14 +209,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
 
     @Override
     protected void onDestroy() {
-        this.btnClose.setOnClickListener(null);
-        this.txtName.setOnClickListener(null);
-        this.txtPassword.setOnClickListener(null);
-        this.txtEmail.setOnClickListener(null);
-        this.txtGender.setOnClickListener(null);
-        this.txtBirthday.setOnClickListener(null);
-        this.txtIcon.setOnClickListener(null);
-        this.btnSave.setOnClickListener(null);
+        unBindEvent();
         super.onDestroy();
     }
 
@@ -271,7 +264,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
 			startPasswordChangeActivity();
 		} else if (id == R.id.kanojo_user_update_btn) {
 			this.mResultCode = BaseInterface.RESULT_MODIFIED;
-			if (!this.txtName.getValue().equals("") || !this.txtGender.getValue().equals("") || !this.txtBirthday.getValue().equals("") || this.imgAvarta.getDrawable() != null) {
+			if (!this.txtName.getValue().equals("") || !this.txtGender.getValue().equals("") || !this.txtBirthday.getValue().equals("") || this.imgAvatar.getDrawable() != null) {
 				this.mResultCode = BaseInterface.RESULT_MODIFIED_COMMON;
 			}
 			if (!this.txtEmail.getValue().equals("")) {
@@ -298,7 +291,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         super.onActivityResult(requestCode, resultCode, data);
         File f = getFile();
         if (f != null && f.exists()) {
-            setBitmapFromFile(this.imgAvarta, f, 30, 30);
+            setBitmapFromFile(this.imgAvatar, f, 30, 30);
             this.btnSave.setEnabled(true);
         }
         if (requestCode == 807 && resultCode == 109) {
@@ -324,7 +317,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
 
     private void startPasswordChangeActivity() {
         Intent intent = new Intent().setClass(this, ChangePasswordActivity.class);
-        if (this.user.getEmail() == null) {
+        if (this.user.getEmail() == null || !((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().getIsUserLoggedIn()) {
             intent.putExtra("new_email", true);
             intent.putExtra("encodedCurrentPassword", "");
         } else {
@@ -635,7 +628,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         if (!this.txtBirthday.getValue().equals("") && this.txtBirthday.getValue().equalsIgnoreCase(this.user.getBirthText())) {
             mCount++;
         }
-        if (this.imgAvarta.getDrawable() != null) {
+        if (this.imgAvatar.getDrawable() != null) {
             mCount++;
         }
         if (!this.txtEmail.getValue().equals("") && this.txtEmail.getValue().equalsIgnoreCase(this.user.getEmail()) && !this.txtPassword.getValue().equals("") && this.txtPassword.getValue().equalsIgnoreCase(this.user.getPassword())) {

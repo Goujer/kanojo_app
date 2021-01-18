@@ -24,6 +24,11 @@ public class BarcodeKanojo {
     private ModelList<Category> mCategories;
     private PlayLive2d mPlayLive2d;
     private User mUser;
+    private boolean userLoggedIn;
+
+    public BarcodeKanojo() {
+		userLoggedIn = false;
+	}
 
     public void setUser(User user) {
         this.mUser = user;
@@ -76,9 +81,11 @@ public class BarcodeKanojo {
 		Response<BarcodeKanojoModel> response = this.mBCKApi.verify(email, password, uuid);
 		User user = (User) response.get(User.class);
 		if (user == null) {
+			userLoggedIn = false;
 			throw new BarcodeKanojoException("user not found");
 		}
 		setUser(user);
+		userLoggedIn = true;
 		return response;
 	}
 
@@ -489,5 +496,9 @@ public class BarcodeKanojo {
 
     public String getmApiBaseUrl() {
     	return mBCKApi.getApiBaseUrl();
+	}
+
+	public boolean getIsUserLoggedIn() {
+    	return userLoggedIn;
 	}
 }

@@ -91,7 +91,7 @@ public class EditItemView extends LinearLayout {
         this.mListener = listener;
     }
 
-    public ImageView getAvarta() {
+    public ImageView getAvatar() {
         return this.mImageView;
     }
 
