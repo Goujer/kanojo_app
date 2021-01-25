@@ -42,7 +42,7 @@ import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 
 public class UserModifyActivity extends BaseEditActivity implements View.OnClickListener {
-
+	//TODO Rewrite all of this
     private static final String TAG = "UserModifyActivity";
     private BarcodeKanojoApp app;
     private Button btnClose;
@@ -514,9 +514,9 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
 				}
 				String cPassword = UserModifyActivity.this.currentPassword;
 				switch (mList.key) {
-					case 0:
+					case StatusHolder.SIGNUP_TASK:
 						return barcodeKanojo.signup(((BarcodeKanojoApp) getApplication()).getUUID(), UserModifyActivity.this.modifiedUser.getName(), UserModifyActivity.this.modifiedUser.getPassword(), UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getBirth_year(), UserModifyActivity.this.modifiedUser.getBirth_month(), UserModifyActivity.this.modifiedUser.getBirth_day(), UserModifyActivity.this.modifiedUser.getSex(), UserModifyActivity.this.modifiedPhoto);
-					case 1:
+					case StatusHolder.SAVING_COMMON_INFO_TASK:
 						if (UserModifyActivity.this.modifiedUser.getPassword().equals("")) {
 							UserModifyActivity.this.modifiedUser.setPassword(user.getPassword());
 						}
@@ -531,12 +531,12 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
 					//	return barcodeKanojo.android_register_device(setting.getUUID(), GCMRegistrar.getRegistrationId(UserModifyActivity.this));
 					case 6:
 						return null;
-					case 7:
+					case StatusHolder.UPDATE_TASK:
 						if (cPassword == null) {
 							cPassword = user.getPassword();
 						}
 						return barcodeKanojo.update(UserModifyActivity.this.modifiedUser.getName(), cPassword, UserModifyActivity.this.modifiedUser.getPassword(), UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getBirth_year(), UserModifyActivity.this.modifiedUser.getBirth_month(), UserModifyActivity.this.modifiedUser.getBirth_day(), UserModifyActivity.this.modifiedUser.getSex(), UserModifyActivity.this.modifiedPhoto);
-					case 8:
+					case StatusHolder.DELETE_USER_TASK:
 						return barcodeKanojo.android_delete_account(user.getId());
 					case 9:
 						return barcodeKanojo.verify("", "", ((BarcodeKanojoApp) getApplication()).getUUID());
@@ -568,8 +568,12 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
                 }
                 switch (code) {
                     case Response.CODE_SUCCESS:
-                    	if (mList.key == 0) {
+                    	if (mList.key == StatusHolder.SIGNUP_TASK) {
 							((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().setUser((User) response.get(User.class));
+						}
+                    	if (mList.key == StatusHolder.DELETE_USER_TASK) {
+                    		finish();
+							startActivity(new Intent().setClass(UserModifyActivity.this, LaunchActivity.class));
 						}
                         if (!UserModifyActivity.this.isQueueEmpty()) {
                             UserModifyActivity.this.mTaskEndHandler.sendEmptyMessage(0);
@@ -577,7 +581,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
                         }
                         break;
                     case Response.CODE_ERROR_BAD_REQUEST:
-                    case 401:
+                    case Response.CODE_ERROR_UNAUTHORIZED:
                     case 403:
                     case 404:
                     case 500:

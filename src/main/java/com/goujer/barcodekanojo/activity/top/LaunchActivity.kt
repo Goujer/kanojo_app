@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import com.goujer.barcodekanojo.activity.base.BaseActivity
 import com.goujer.barcodekanojo.activity.setting.ServerConfigurationActivity
 import com.goujer.barcodekanojo.preferences.ApplicationSetting
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp
@@ -23,7 +24,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 
-class LaunchActivity : Activity() {
+class LaunchActivity : BaseActivity() {
 	private lateinit var mProgressbar: View
 	private lateinit var mLogIn: View
 	private lateinit var mSignUp: View
@@ -117,15 +118,22 @@ class LaunchActivity : Activity() {
 		mServerConfig.visibility = View.INVISIBLE
 	}
 
+	override fun onBackPressed() {
+
+	}
+
 	private suspend fun verifyUser(): Boolean {
 		val response: Response<BarcodeKanojoModel>
 		try {
 			response = bootTaskProcess()
 		} catch (e: BarcodeKanojoException) {
 			if (e.message.equals("user not found", ignoreCase = true)) {
+				runOnUiThread {
+					showNoticeDialog(getString(R.string.error_user_not_found));
+				}
 				return false
 			} else {
-				Log.d(TAG, "Unknown error has occured during verify")
+				Log.d(TAG, "Unknown error has occurred during verify")
 				e.printStackTrace()
 				return false
 			}
