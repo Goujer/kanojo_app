@@ -209,4 +209,8 @@
 	<string name="server_port">Server Port</string>
 	<string name="server_settings">Server Settings</string>
 	<string name="use_https">Use HTTPS</string>
+	<string name="setting_category_notifications">Notifications</string>
+	<string name="setting_category_user">User Settings</string>
+	<string name="setting_category_miscellaneous">Miscellaneous</string>
+	<string name="error_user_not_found">User not found.</string>
 </resources>

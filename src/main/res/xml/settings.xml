@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory android:title="@string/setting_category_notifications">
+		<CheckBoxPreference android:title="@string/LIB_GCM_PREF_KEY_WILLSENDNOTIFICATION_TITLE" android:key="@string/LIB_GCM_PREF_KEY_WILLSENDNOTIFICATION" android:defaultValue="true"/>
+		<CheckBoxPreference android:title="@string/LIB_GCM_PREF_KEY_WILLPLAYSOUND_TITLE" android:key="@string/LIB_GCM_PREF_KEY_WILLPLAYSOUND" android:summary="notification_sound" android:dependency="@string/LIB_GCM_PREF_KEY_WILLSENDNOTIFICATION" android:defaultValue="true"/>
+		<CheckBoxPreference android:title="@string/LIB_GCM_PREF_KEY_WILLVIBRATE_TITLE" android:key="@string/LIB_GCM_PREF_KEY_WILLVIBRATE" android:summary="notification_" android:dependency="@string/LIB_GCM_PREF_KEY_WILLSENDNOTIFICATION" android:defaultValue="true"/>
+		Update Frequency
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/setting_category_user">
+		Pronouns
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/setting_category_miscellaneous">
+		Reset Tutorial
+	</PreferenceCategory>
+</PreferenceScreen>
