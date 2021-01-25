@@ -2,6 +2,8 @@ package jp.co.cybird.barcodekanojoForGAM.core.parser;
 
 import android.util.Log;
 
+import com.goujer.utils.StringUtilsKt;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +14,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoParseException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implements JSONParser<T> {
@@ -28,20 +31,7 @@ public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implement
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:11:0x004c, code lost:
-        throw new java.lang.IllegalArgumentException(TAG + r0.toString());
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x004d, code lost:
-        r0 = move-exception;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:14:0x0066, code lost:
-        throw new java.lang.IllegalArgumentException(TAG + r0.toString());
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:9:0x0033, code lost:
-        r0 = move-exception;
-     */
-    /* JADX WARNING: Failed to process nested try/catch */
-    /* JADX WARNING: Removed duplicated region for block: B:12:0x004d A[ExcHandler: IOException (r0v0 'e' java.io.IOException A[CUSTOM_DECLARE]), Splitter:B:0:0x0000] */
+    /* JADX WARNING: Had issues */
     public static JSONObject createJSONObject(InputStream is) {
 		try {
 			StringBuilder objJson = new StringBuilder();
@@ -56,6 +46,7 @@ public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implement
 				objBuf.close();
 				return new JSONObject(objJson.toString());
 			} catch (Exception e) {
+				is.close();
 				if (Defs.DEBUG) {
 					Log.w(TAG, "Length: " + objJson.length() + " Downloaded: " + objJson.toString());
 					Throwable t = e.getCause();
@@ -64,9 +55,14 @@ public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implement
 					}
 					e.printStackTrace();
 				}
-				is.close();
+				String json = objJson.toString();
+				int missingBrackets = StringUtilsKt.countOccurrences(json, '{') - StringUtilsKt.countOccurrences(json, '}');
+				for (int i = 0; i < missingBrackets; i++) {
+					objJson.append("}");
+				}
+				return new JSONObject(objJson.toString());
 			}
-		} catch (IOException e) {
+		} catch (IOException | JSONException e) {
 			if (Defs.DEBUG) e.printStackTrace();
 		}
 		return null;
