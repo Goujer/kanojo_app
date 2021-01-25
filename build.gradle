@@ -5,7 +5,7 @@ buildscript {
 		google()
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:4.1.1'
+		classpath 'com.android.tools.build:gradle:4.1.2'
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 	}
 }
@@ -101,10 +101,6 @@ dependencies {
 	implementation 'com.google.android.gms:play-services-maps:8.4.0'
 	//implementation 'com.google.android.maps:maps:15_r2'
 	//implementation 'com.google.android.maps:maps:7_r1'
-
-	//Analytics
-	//implementation files('libs/libGoogleAnalyticsV2.jar')
-	//implementation 'com.google.android.gms:play-services-base:6.5.87'	//Need to migrate to Jetpack WorkManager
 
 	//Billing
 	implementation 'com.android.billingclient:billing:2.0.3'

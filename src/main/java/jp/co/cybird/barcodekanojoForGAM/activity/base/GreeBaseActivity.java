@@ -44,9 +44,9 @@ public abstract class GreeBaseActivity extends Activity {
         }
     }
 
-    protected void stop() {
+    /*protected void stop() {
         this.isReUsed = false;
-    }
+    }*/
 
     protected void close() {
         finish();
