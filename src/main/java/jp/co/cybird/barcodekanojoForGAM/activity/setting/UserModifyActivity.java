@@ -24,6 +24,7 @@ import com.goujer.barcodekanojo.activity.top.LaunchActivity;
 import com.goujer.barcodekanojo.preferences.ApplicationSetting;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -42,13 +43,13 @@ import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 
 public class UserModifyActivity extends BaseEditActivity implements View.OnClickListener {
-	//TODO Rewrite all of this
+	//TODO Rewrite all of this?
     private static final String TAG = "UserModifyActivity";
     private BarcodeKanojoApp app;
     private Button btnClose;
     private Button btnDelete;
     private Button btnSave;
-    private String currentPassword;
+    private byte[] currentPassword;
     private ImageView imgAvatar;
     private AutoLoginTask mAutoLoginTask;
     private LinearLayout mChangeDeviceLayout;
@@ -74,6 +75,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
     private EditItemView txtName;
     private EditItemView txtPassword;
     private User user = null;
+    private byte[] password;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -295,8 +297,9 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
             this.btnSave.setEnabled(true);
         }
         if (requestCode == 807 && resultCode == 109) {
-            this.txtPassword.setValue(data.getStringExtra("new_password"));
-            this.currentPassword = data.getStringExtra("currentPassword");
+            this.txtPassword.setValue("********");
+            this.password = data.getByteArrayExtra("new_password");
+            this.currentPassword = data.getByteArrayExtra("currentPassword");
         }
     }
 
@@ -319,7 +322,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         Intent intent = new Intent().setClass(this, ChangePasswordActivity.class);
         if (this.user.getEmail() == null || !((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().getIsUserLoggedIn()) {
             intent.putExtra("new_email", true);
-            intent.putExtra("encodedCurrentPassword", "");
+            intent.putExtra("encodedCurrentPassword", new byte[0]);
         } else {
             intent.putExtra("new_email", false);
             intent.putExtra("encodedCurrentPassword", this.user.getCurrentPassword());
@@ -369,7 +372,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         } else if (this.mResultCode == 212 || this.mResultCode == 210 || this.mResultCode == 211 || this.mResultCode == 108) {
             this.modifiedUser = new User();
             this.modifiedUser.setName(this.txtName.getValue());
-            this.modifiedUser.setPassword(this.txtPassword.getValue());
+            this.modifiedUser.setPassword(this.password);
             this.modifiedUser.setEmail(this.txtEmail.getValue().replaceAll(" ", ""));
             this.modifiedUser.setSexFromText(this.txtGender.getValue(), this.app.getUserGenderList());
 			String birthday = this.txtBirthday.getValue();
@@ -512,12 +515,12 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
 				if (mList == null) {
 					throw new BarcodeKanojoException("process:StatusHolder is null!");
 				}
-				String cPassword = UserModifyActivity.this.currentPassword;
+				byte[] cPassword = UserModifyActivity.this.currentPassword;
 				switch (mList.key) {
 					case StatusHolder.SIGNUP_TASK:
 						return barcodeKanojo.signup(((BarcodeKanojoApp) getApplication()).getUUID(), UserModifyActivity.this.modifiedUser.getName(), UserModifyActivity.this.modifiedUser.getPassword(), UserModifyActivity.this.modifiedUser.getEmail(), UserModifyActivity.this.modifiedUser.getBirth_year(), UserModifyActivity.this.modifiedUser.getBirth_month(), UserModifyActivity.this.modifiedUser.getBirth_day(), UserModifyActivity.this.modifiedUser.getSex(), UserModifyActivity.this.modifiedPhoto);
 					case StatusHolder.SAVING_COMMON_INFO_TASK:
-						if (UserModifyActivity.this.modifiedUser.getPassword().equals("")) {
+						if (UserModifyActivity.this.modifiedUser.getPassword().length == 0) {
 							UserModifyActivity.this.modifiedUser.setPassword(user.getPassword());
 						}
 						if (cPassword == null) {
@@ -539,7 +542,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
 					case StatusHolder.DELETE_USER_TASK:
 						return barcodeKanojo.android_delete_account(user.getId());
 					case 9:
-						return barcodeKanojo.verify("", "", ((BarcodeKanojoApp) getApplication()).getUUID());
+						return barcodeKanojo.verify("", new byte[0], ((BarcodeKanojoApp) getApplication()).getUUID());
 					default:
 						return null;
 				}
@@ -635,7 +638,7 @@ public class UserModifyActivity extends BaseEditActivity implements View.OnClick
         if (this.imgAvatar.getDrawable() != null) {
             mCount++;
         }
-        if (!this.txtEmail.getValue().equals("") && this.txtEmail.getValue().equalsIgnoreCase(this.user.getEmail()) && !this.txtPassword.getValue().equals("") && this.txtPassword.getValue().equalsIgnoreCase(this.user.getPassword())) {
+        if (!this.txtEmail.getValue().equals("") && this.txtEmail.getValue().equalsIgnoreCase(this.user.getEmail()) && !this.txtPassword.getValue().equals("") && Arrays.equals(this.password, this.user.getPassword())) {
             mCount++;
         }
         if (this.mRequestCode == 1102) {

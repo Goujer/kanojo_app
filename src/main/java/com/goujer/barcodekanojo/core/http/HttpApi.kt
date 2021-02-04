@@ -21,7 +21,7 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 		CookieHandler.setDefault(CookieManager())
 	}
 
-	//TODO Copied and modified from core.http.HttpApi.executeHttpRequest() which did not decompile correctly.
+	//TODO Copied and modified from core.http.HttpApi.executeHttpRequest() which JADX did not decompile correctly.
 	fun executeHttpRequest(connection: HttpURLConnection, parser: JSONParser<out BarcodeKanojoModel?>): Response<BarcodeKanojoModel?>? {
 		connection.connect()
 		val statusCode = connection.responseCode
@@ -53,7 +53,7 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 		}
 	}
 
-	fun createHttpGet(fileIn: String, vararg nameValuePairs: NameValuePair?): HttpURLConnection {
+	fun createHttpGet(fileIn: String, vararg nameValuePairs: NameValuePair): HttpURLConnection {
 		var file: String = fileIn
 		val connection: HttpURLConnection
 		if (nameValuePairs.isEmpty()) {
@@ -63,7 +63,7 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 			val parameters = StringBuilder()
 			for (pair in stripNulls(*nameValuePairs)) {
 				if (parameters.length != 0) parameters.append('&')
-				parameters.append(pair.encode())
+				parameters.append(pair.toString())
 			}
 			file += parameters.toString()
 			connection = URL(mApiBaseProtocol, mApiBaseUrl, mApiBasePort, file).openConnection() as HttpURLConnection
@@ -76,7 +76,7 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 		return connection
 	}
 
-	fun createHttpPost(file: String, vararg nameValuePairs: NameValuePair?): HttpURLConnection {
+	fun createHttpPost(file: String, vararg nameValuePairs: NameValuePair): HttpURLConnection {
 		val connection = URL(mApiBaseProtocol, mApiBaseUrl, mApiBasePort, file).openConnection() as HttpURLConnection
 		connection.doOutput = true
 		connection.doInput = true
@@ -87,13 +87,13 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 		val parameters = StringBuilder()
 		for (pair:NameValuePair in stripNulls(*nameValuePairs)) {
 			if (parameters.isNotEmpty()) parameters.append('&')
-			parameters.append(pair.encode())
+			parameters.append(pair.toString())
 		}
 		connection.outputStream.write(parameters.toString().toByteArray(charset("UTF-8")))
 		return connection
 	}
 
-	fun createHttpMultipartPost(file: String, vararg nameValueOrFilePairs: NameValueOrFilePair?): HttpURLConnection {
+	fun createHttpMultipartPost(file: String, vararg nameValuePairs: NameValuePair): HttpURLConnection {
 		val connection = URL(mApiBaseProtocol, mApiBaseUrl, mApiBasePort, file).openConnection() as HttpURLConnection
 		connection.doOutput = true
 		connection.doInput = true
@@ -104,28 +104,17 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 		connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=$BOUNDARY")
 		try {
 			val request = DataOutputStream(connection.outputStream)
-			for (param in nameValueOrFilePairs) {
-				if (param != null) {
-					if (param.value != null) {
-						request.writeBytes("--$BOUNDARY\r\n")
-						request.writeBytes("Content-Disposition: form-data; name=\"" + param.name + "\"\r\n\r\n")
-						request.write(param.value.toByteArray())
-						request.writeBytes("\r\n")
-					} else if (param.file != null && param.file!!.exists()) {
-						request.writeBytes("--$BOUNDARY\r\n")
-						request.writeBytes("Content-Disposition: form-data; name=\"" + param.name + "\"; filename=\"image.png\"\r\nContent-Type: application/octet-stream\r\n\r\n")
-						val inp: InputStream = FileInputStream(param.file)
-						try {
-							val tmp = ByteArray(4096)
-							var l: Int
-							while (inp.read(tmp).also { l = it } != -1) {
-								request.write(tmp, 0, l)
-							}
-						} finally {
-							inp.close()
-						}
-						request.writeBytes("\r\n")
-					}
+			for (param in stripNulls(*nameValuePairs)) {
+				if (param is NameFilePair) {
+					request.writeBytes("--$BOUNDARY\r\n")
+					request.writeBytes("Content-Disposition: form-data; name=\"" + param.name + "\"; filename=\"image.png\"\r\nContent-Type: application/octet-stream\r\n\r\n")
+					request.write(param.valueAsBytes())
+					request.writeBytes("\r\n")
+				} else {
+					request.writeBytes("--$BOUNDARY\r\n")
+					request.writeBytes("Content-Disposition: form-data; name=\"" + param.name + "\"\r\n\r\n")
+					request.write(param.valueAsBytes())
+					request.writeBytes("\r\n")
 				}
 			}
 			request.writeBytes("--$BOUNDARY--\r\n")
@@ -137,10 +126,10 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 		return connection
 	}
 
-	private fun stripNulls(vararg nameValuePairs: NameValuePair?): List<NameValuePair> {
+	private fun stripNulls(vararg nameValuePairs: NameValuePair): List<NameValuePair> {
 		val params: MutableList<NameValuePair> = ArrayList()
 		for (param in nameValuePairs) {
-			if (param?.value != null && param.value != "") {
+			if (!param.emptyValue()) {
 				params.add(param)
 			}
 		}

@@ -249,7 +249,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
                 case 0:
                     return barcodeKanojo.android_register_device(setting.getUUID(), setting.getDeviceToken());
                 case 1:
-                    Response<BarcodeKanojoModel> android_verify = barcodeKanojo.verify("", "", ((BarcodeKanojoApp) getApplication()).getUUID());
+                    Response<BarcodeKanojoModel> android_verify = barcodeKanojo.verify("", new byte[0], ((BarcodeKanojoApp) getApplication()).getUUID());
                     if (android_verify == null) {
                         return android_verify;
                     }

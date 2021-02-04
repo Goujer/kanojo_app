@@ -6,6 +6,8 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.goujer.utils.StringUtilsKt.decodeHexString;
+
 public class UserParser extends AbstractJSONParser<User> {
     protected User parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         User res = new User();
@@ -71,7 +73,7 @@ public class UserParser extends AbstractJSONParser<User> {
                 res.setEmail(object.getString("email"));
             }
             if (object.has("password") && !object.getString("password").equals("null")) {
-                res.setCurrentPassword(object.getString("password"));
+                res.setCurrentPassword(decodeHexString(object.getString("password")));
             }
             return res;
         } catch (JSONException e) {

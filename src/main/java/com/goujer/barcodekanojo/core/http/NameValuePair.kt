@@ -1,10 +1,9 @@
 package com.goujer.barcodekanojo.core.http
 
-import java.net.URLEncoder
+abstract class NameValuePair(internal val name: String) {
+	abstract override fun toString(): String
 
-open class NameValuePair(internal val name: String, internal val value: String?) {
+	abstract fun valueAsBytes(): ByteArray?
 
-	fun encode(): String {
-		return URLEncoder.encode(name, "UTF-8")+'='+URLEncoder.encode(value, "UTF-8")
-	}
+	abstract fun emptyValue(): Boolean
 }

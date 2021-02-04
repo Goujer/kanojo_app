@@ -18,7 +18,7 @@ public class User implements BarcodeKanojoModel, Parcelable {
     private int birth_day;
     private int birth_month;
     private int birth_year;
-    private String currentPassword;
+    private byte[] currentPassword;
     private String email;
     private int enemy_count;
     private final String[] genderList;
@@ -29,7 +29,7 @@ public class User implements BarcodeKanojoModel, Parcelable {
     private int level;
     private int money;
     private String name;
-    private String password;
+    private byte[] password;
     private String profile_image_url;
     private int relation_status;
     private final String[] requestList;
@@ -47,7 +47,7 @@ public class User implements BarcodeKanojoModel, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
         dest.writeString(this.email);
-        dest.writeString(this.password);
+        dest.writeByteArray(this.password);
         dest.writeString(this.name);
         dest.writeString(this.profile_image_url);
         dest.writeString(this.sex);
@@ -66,7 +66,7 @@ public class User implements BarcodeKanojoModel, Parcelable {
         dest.writeInt(this.birth_year);
         dest.writeInt(this.relation_status);
         dest.writeInt(this.tickets);
-        dest.writeString(this.currentPassword);
+        dest.writeByteArray(this.currentPassword);
     }
 
     private User(Parcel in) {
@@ -74,7 +74,8 @@ public class User implements BarcodeKanojoModel, Parcelable {
         this.requestList = new String[]{"male", "female", "not sure"};
         this.id = in.readInt();
         this.email = in.readString();
-        this.password = in.readString();
+        password = new byte[64];
+        in.readByteArray(this.password);
         this.name = in.readString();
         this.profile_image_url = in.readString();
         this.sex = in.readString();
@@ -95,7 +96,8 @@ public class User implements BarcodeKanojoModel, Parcelable {
         this.birth_year = in.readInt();
         this.relation_status = in.readInt();
         this.tickets = in.readInt();
-        this.currentPassword = in.readString();
+		currentPassword = new byte[64];
+        in.readByteArray(this.currentPassword);
     }
 
     /* synthetic */ User(Parcel parcel, User user) {
@@ -115,11 +117,11 @@ public class User implements BarcodeKanojoModel, Parcelable {
         this.email = email2;
     }
 
-    public String getPassword() {
+    public byte[] getPassword() {
         return this.password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(byte[] password) {
         this.password = password;
     }
 
@@ -365,11 +367,11 @@ public class User implements BarcodeKanojoModel, Parcelable {
         this.birth_year = birth_year2;
     }
 
-    public String getCurrentPassword() {
+    public byte[] getCurrentPassword() {
         return this.currentPassword;
     }
 
-    public void setCurrentPassword(String currentPassword2) {
+    public void setCurrentPassword(byte[] currentPassword2) {
         this.currentPassword = currentPassword2;
     }
 }

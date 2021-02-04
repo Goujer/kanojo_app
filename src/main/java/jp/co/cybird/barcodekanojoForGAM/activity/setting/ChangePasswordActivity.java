@@ -11,9 +11,11 @@ import android.widget.EditText;
 import com.goujer.barcodekanojo.activity.base.BaseEditActivity;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
@@ -24,7 +26,7 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
     private static final String TAG = "ChangePasswordActivity";
     private Button btnClose;
     private Button btnSave;
-    private String encodedCurrentPassword;
+    private byte[] encodedCurrentPassword;
     private boolean isNewEmail;
     private EditItemView txtCurrent;
     private EditItemView txtPassword;
@@ -36,8 +38,8 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             this.isNewEmail = bundle.getBoolean("new_email", false);
-            this.encodedCurrentPassword = bundle.getString("encodedCurrentPassword");
-            if (this.encodedCurrentPassword != null && this.encodedCurrentPassword.equals("")) {
+            this.encodedCurrentPassword = bundle.getByteArray("encodedCurrentPassword");
+            if (this.encodedCurrentPassword != null && this.encodedCurrentPassword.length == 0) {
                 this.encodedCurrentPassword = null;
             }
         }
@@ -101,14 +103,14 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
 			} else {
 				try {
 					Intent intent = new Intent();
-					String current_password;
-					String new_password;
+					byte[] current_password;
+					byte[] new_password;
 					if (Build.VERSION.SDK_INT < 19) {
-						current_password = new String(MessageDigest.getInstance("SHA-512").digest(this.txtCurrent.getValue().getBytes("UTF-8")));
-						new_password = new String(MessageDigest.getInstance("SHA-512").digest(this.txtPassword.getValue().getBytes("UTF-8")));
+						current_password = MessageDigest.getInstance("SHA-512").digest(this.txtCurrent.getValue().getBytes("UTF-8"));
+						new_password = MessageDigest.getInstance("SHA-512").digest(this.txtPassword.getValue().getBytes("UTF-8"));
 					} else {
-						current_password = new String(MessageDigest.getInstance("SHA-512").digest(this.txtCurrent.getValue().getBytes(StandardCharsets.UTF_8)));
-						new_password = new String(MessageDigest.getInstance("SHA-512").digest(this.txtPassword.getValue().getBytes(StandardCharsets.UTF_8)));
+						current_password = MessageDigest.getInstance("SHA-512").digest(this.txtCurrent.getValue().getBytes(StandardCharsets.UTF_8));
+						new_password = MessageDigest.getInstance("SHA-512").digest(this.txtPassword.getValue().getBytes(StandardCharsets.UTF_8));
 					}
 					intent.putExtra("new_password", new_password);
 					if (!this.isNewEmail) {
@@ -128,14 +130,13 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
     private boolean checkCurrentPassword() {
         if (this.encodedCurrentPassword != null) {
             try {
-				String encodeString;
+				byte[] encodeString;
 				if (Build.VERSION.SDK_INT < 19) {
-					encodeString = new String(MessageDigest.getInstance("SHA-512").digest(this.txtCurrent.getValue().getBytes("UTF-8")));
+					encodeString = MessageDigest.getInstance("SHA-512").digest(this.txtCurrent.getValue().getBytes("UTF-8"));
 				} else {
-					encodeString = new String(MessageDigest.getInstance("SHA-512").digest(this.txtCurrent.getValue().getBytes(StandardCharsets.UTF_8)));
+					encodeString = MessageDigest.getInstance("SHA-512").digest(this.txtCurrent.getValue().getBytes(StandardCharsets.UTF_8));
 				}
-                Log.d(TAG, "old: " + encodeString + " new:" + this.encodedCurrentPassword);
-                return this.encodedCurrentPassword.equals(encodeString);
+                return Arrays.equals(this.encodedCurrentPassword, encodeString);
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             } catch (UnsupportedEncodingException e) {

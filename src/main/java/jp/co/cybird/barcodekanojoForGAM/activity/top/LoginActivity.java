@@ -39,9 +39,9 @@ public class LoginActivity extends BaseEditActivity implements View.OnClickListe
         if (user.getEmail() != null) {
             this.txtEmail.setValue(user.getEmail());
         }
-        if (user.getPassword() != null) {
-            this.txtPassword.setValue(user.getPassword());
-        }
+        //if (user.getPassword() != null) {
+        //    this.txtPassword.setValue(user.getPassword());
+        //}
 
 		this.txtPassword.setOnClickListener(this);
 		this.btnLogin.setOnClickListener(this);
@@ -70,9 +70,9 @@ public class LoginActivity extends BaseEditActivity implements View.OnClickListe
 			} else {
 				try {
 					if (Build.VERSION.SDK_INT < 19) {
-						user.setPassword(new String(MessageDigest.getInstance("SHA-512").digest(this.txtPassword.getValue().getBytes("UTF-8"))));
+						user.setPassword(MessageDigest.getInstance("SHA-512").digest(this.txtPassword.getValue().getBytes("UTF-8")));
 					} else {
-						user.setPassword(new String(MessageDigest.getInstance("SHA-512").digest(this.txtPassword.getValue().getBytes(StandardCharsets.UTF_8))));
+						user.setPassword(MessageDigest.getInstance("SHA-512").digest(this.txtPassword.getValue().getBytes(StandardCharsets.UTF_8)));
 					}
 				} catch (NoSuchAlgorithmException e) {
 					e.printStackTrace();

@@ -1,9 +1,7 @@
 package com.goujer.barcodekanojo.core
 
 import com.google.android.gms.maps.model.LatLng
-import com.goujer.barcodekanojo.core.http.HttpApi
-import com.goujer.barcodekanojo.core.http.NameValueOrFilePair
-import com.goujer.barcodekanojo.core.http.NameValuePair
+import com.goujer.barcodekanojo.core.http.*
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel
@@ -51,25 +49,25 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	//}
 
-	fun verify(email: String?, password: String?, uuid: String?): Response<BarcodeKanojoModel?>? {
+	fun verify(email: String?, password: ByteArray?, uuid: String?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY,
-				NameValuePair("uuid", uuid),
-				NameValuePair("email", email),
-				NameValuePair("password", password))
+				NameStringPair("uuid", uuid),
+				NameStringPair("email", email),
+				NameBytesPair("password", password))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
-	fun signup(uuid: String, name: String?, password: String?, email: String?, birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
+	fun signup(uuid: String, name: String?, password: ByteArray, email: String?, birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_SIGNUP,
-				NameValueOrFilePair("uuid", uuid),
-				NameValueOrFilePair("name", name),
-				NameValueOrFilePair("password", password),
-				NameValueOrFilePair("email", email),
-				NameValueOrFilePair("birth_year", birth_year.toString()),
-				NameValueOrFilePair("birth_month", birth_month.toString()),
-				NameValueOrFilePair("birth_day", birth_day.toString()),
-				NameValueOrFilePair("sex", sex),
-				NameValueOrFilePair("profile_image_data", profile_image_data))
+				NameStringPair("uuid", uuid),
+				NameStringPair("name", name),
+				NameBytesPair("password", password),
+				NameStringPair("email", email),
+				NameStringPair("birth_year", birth_year.toString()),
+				NameStringPair("birth_month", birth_month.toString()),
+				NameStringPair("birth_day", birth_day.toString()),
+				NameStringPair("sex", sex),
+				NameFilePair("profile_image_data", profile_image_data))
 		return  mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
@@ -118,53 +116,82 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun current_kanojos(user_id: Int, index: Int, limit: Int, search: String?): Response<BarcodeKanojoModel?>? {
-		val httpPost: HttpURLConnection = mHttpApi.createHttpGet(URL_API_USER_CURRENT_KANOJOS, NameValuePair("user_id", user_id.toString()), NameValuePair("index", index.toString()), NameValuePair("limit", limit.toString()), NameValuePair("search", search))
+		val httpPost: HttpURLConnection = mHttpApi.createHttpGet(URL_API_USER_CURRENT_KANOJOS,
+				NameStringPair("user_id", user_id.toString()),
+				NameStringPair("index", index.toString()),
+				NameStringPair("limit", limit.toString()),
+				NameStringPair("search", search))
 		return mHttpApi.executeHttpRequest(httpPost, ResponseParser(ModelListParser("current_kanojos", KanojoParser()), ModelParser("user", UserParser()), ModelParser("search_result", SearchResultParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun friend_kanojos(user_id: Int, index: Int, limit: Int, search: String?): Response<BarcodeKanojoModel?>? {
-		val connection: HttpURLConnection = mHttpApi.createHttpGet(URL_API_USER_FRIEND_KANOJOS, NameValuePair("user_id", user_id.toString()), NameValuePair("index", index.toString()), NameValuePair("limit", limit.toString()), NameValuePair("search", search))
+		val connection: HttpURLConnection = mHttpApi.createHttpGet(URL_API_USER_FRIEND_KANOJOS,
+				NameStringPair("user_id", user_id.toString()),
+				NameStringPair("index", index.toString()),
+				NameStringPair("limit", limit.toString()),
+				NameStringPair("search", search))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("friend_kanojos", KanojoParser()), ModelParser("user", UserParser()), ModelParser("search_result", SearchResultParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun like_ranking(index: Int, limit: Int): Response<BarcodeKanojoModel?>? {
-		val connection: HttpURLConnection = mHttpApi.createHttpGet(URL_API_KANOJO_LIKE_RANKING, NameValuePair("index", index.toString()), NameValuePair("limit", limit.toString()))
+		val connection: HttpURLConnection = mHttpApi.createHttpGet(URL_API_KANOJO_LIKE_RANKING,
+				NameStringPair("index", index.toString()),
+				NameStringPair("limit", limit.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("like_ranking_kanojos", KanojoParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun show(kanojo_id: Int, screen: Boolean): Response<BarcodeKanojoModel?>? {
 		val connection: HttpURLConnection = mHttpApi.createHttpGet(URL_API_KANOJO_SHOW,
-				NameValuePair("kanojo_id", kanojo_id.toString()),
-				NameValuePair("screen", if (screen) "live2d" else ""))
+				NameStringPair("kanojo_id", kanojo_id.toString()),
+				NameStringPair("screen", if (screen) "live2d" else ""))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), MessageParser(MessageModel.NOTIFY_AMENDMENT_INFORMATION), ModelParser("kanojo", KanojoParser()), ModelParser("owner_user", UserParser()), ModelParser("product", ProductParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun vote_like(kanojo_id: Int, like: Boolean): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpPost(URL_API_KANOJO_VOTE_LIKE,
-				NameValuePair("kanojo_id", kanojo_id.toString()),
-				NameValuePair("like", like.toString()))
+				NameStringPair("kanojo_id", kanojo_id.toString()),
+				NameStringPair("like", like.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("kanojo", KanojoParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun query(barcode: String?, geo: LatLng?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_API_BARCODE_QUERY, NameValuePair("barcode", barcode), NameValuePair("geo", GeoUtil.geoToString(geo)))
+		val connection = mHttpApi.createHttpGet(URL_API_BARCODE_QUERY,
+				NameStringPair("barcode", barcode),
+				NameStringPair("geo", GeoUtil.geoToString(geo)))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("barcode", BarcodeParser()), ModelParser("product", ProductParser()), ModelParser("scan_history", ScanHistoryParser()), MessageParser(MessageModel.NOTIFY_AMENDMENT_INFORMATION, MessageModel.DO_GENERATE_KANOJO, MessageModel.DO_ADD_FRIEND, MessageModel.INFORM_GIRLFRIEND, MessageModel.INFORM_FRIEND)))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun scan(barcode: String?, company_name: String?, product_name: String?, product_category_id: Int, product_comment: String?, product_image_data: File?, product_geo: LatLng?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpMultipartPost(URL_API_BARCODE_SCAN, NameValueOrFilePair("barcode", barcode), NameValueOrFilePair("company_name", company_name), NameValueOrFilePair("product_name", product_name), NameValueOrFilePair("product_category_id", product_category_id.toString()), NameValueOrFilePair("product_comment", product_comment), NameValueOrFilePair("product_image_data", product_image_data), NameValueOrFilePair("product_geo", GeoUtil.geoToString(product_geo)))
+		val connection = mHttpApi.createHttpMultipartPost(URL_API_BARCODE_SCAN,
+				NameStringPair("barcode", barcode),
+				NameStringPair("company_name", company_name),
+				NameStringPair("product_name", product_name),
+				NameStringPair("product_category_id", product_category_id.toString()),
+				NameStringPair("product_comment", product_comment),
+				NameFilePair("product_image_data", product_image_data),
+				NameStringPair("product_geo", GeoUtil.geoToString(product_geo)))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("kanojo", KanojoParser()), ModelParser("scan_history", ScanHistoryParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun scan(barcode: String?, company_name: String?, comapny_name_textid: String?, product_name: String?, product_name_textid: String?, product_category_id: Int, product_comment: String?, product_comment_textid: String?, product_image_data: File?, product_geo: LatLng?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpMultipartPost(URL_API_BARCODE_SCAN, NameValueOrFilePair("barcode", barcode), NameValueOrFilePair("company_name", company_name), NameValueOrFilePair("company_name_textid", comapny_name_textid), NameValueOrFilePair("product_name", product_name), NameValueOrFilePair("product_name_textid", product_name_textid), NameValueOrFilePair("product_category_id", product_category_id.toString()), NameValueOrFilePair("product_comment", product_comment), NameValueOrFilePair("product_comment_textid", product_comment_textid), NameValueOrFilePair("product_image_data", product_image_data), NameValueOrFilePair("product_geo", GeoUtil.geoToString(product_geo)))
+	fun scan(barcode: String?, company_name: String?, company_name_textid: String?, product_name: String?, product_name_textid: String?, product_category_id: Int, product_comment: String?, product_comment_textid: String?, product_image_data: File?, product_geo: LatLng?): Response<BarcodeKanojoModel?>? {
+		val connection = mHttpApi.createHttpMultipartPost(URL_API_BARCODE_SCAN,
+				NameStringPair("barcode", barcode),
+				NameStringPair("company_name", company_name),
+				NameStringPair("company_name_textid", company_name_textid),
+				NameStringPair("product_name", product_name),
+				NameStringPair("product_name_textid", product_name_textid),
+				NameStringPair("product_category_id", product_category_id.toString()),
+				NameStringPair("product_comment", product_comment),
+				NameStringPair("product_comment_textid", product_comment_textid),
+				NameFilePair("product_image_data", product_image_data),
+				NameStringPair("product_geo", GeoUtil.geoToString(product_geo)))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("kanojo", KanojoParser()), ModelParser("scan_history", ScanHistoryParser())))
 	}
 
@@ -186,122 +213,154 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun scan_and_generate(barcode: String?, company_name: String?, company_name_textid: String?, kanojo_name: String?, kanojo_name_textid: String?, kanojo_profile_image_data: File?, product_name: String?, product_name_textid: String?, product_category_id: Int, product_comment: String?, product_comment_textid: String?, product_image_data: File?, product_geo: LatLng?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_BARCODE_SCAN_AND_GENERATE,
-				NameValueOrFilePair("barcode", barcode),
-				NameValueOrFilePair("company_name", company_name),
-				NameValueOrFilePair("company_name_textid", company_name_textid),
-				NameValueOrFilePair("kanojo_name", kanojo_name),
-				NameValueOrFilePair("kanojo_name_textid", kanojo_name_textid),
-				NameValueOrFilePair("kanojo_profile_image_data", kanojo_profile_image_data),
-				NameValueOrFilePair("product_name", product_name),
-				NameValueOrFilePair("product_name_textid", product_name_textid),
-				NameValueOrFilePair("product_category_id", product_category_id.toString()),
-				NameValueOrFilePair("product_comment", product_comment),
-				NameValueOrFilePair("product_comment_textid", product_comment_textid),
-				NameValueOrFilePair("product_image_data", product_image_data),
-				NameValueOrFilePair("product_geo", GeoUtil.geoToString(product_geo)))
+				NameStringPair("barcode", barcode),
+				NameStringPair("company_name", company_name),
+				NameStringPair("company_name_textid", company_name_textid),
+				NameStringPair("kanojo_name", kanojo_name),
+				NameStringPair("kanojo_name_textid", kanojo_name_textid),
+				NameFilePair("kanojo_profile_image_data", kanojo_profile_image_data),
+				NameStringPair("product_name", product_name),
+				NameStringPair("product_name_textid", product_name_textid),
+				NameStringPair("product_category_id", product_category_id.toString()),
+				NameStringPair("product_comment", product_comment),
+				NameStringPair("product_comment_textid", product_comment_textid),
+				NameFilePair("product_image_data", product_image_data),
+				NameStringPair("product_geo", GeoUtil.geoToString(product_geo)))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("scan_history", ScanHistoryParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun decrease_generating(barcode: String?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_API_BARCODE_DECREASE_GENERATING, NameValuePair("barcode", barcode))
+		val connection = mHttpApi.createHttpGet(URL_API_BARCODE_DECREASE_GENERATING,
+				NameStringPair("barcode", barcode))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser()), ModelParser("product", ProductParser())))
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun update(barcode: String?, company_name: String?, product_name: String?, product_category_id: Int, product_comment: String?, product_image_data: File?, product_geo: LatLng?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_BARCODE_UPDATE,
-				NameValueOrFilePair("barcode", barcode),
-				NameValueOrFilePair("company_name", company_name),
-				NameValueOrFilePair("product_name", product_name),
-				NameValueOrFilePair("product_category_id", product_category_id.toString()),
-				NameValueOrFilePair("product_comment", product_comment),
-				NameValueOrFilePair("product_image_data", product_image_data),
-				NameValueOrFilePair("product_geo", GeoUtil.geoToString(product_geo)))
+				NameStringPair("barcode", barcode),
+				NameStringPair("company_name", company_name),
+				NameStringPair("product_name", product_name),
+				NameStringPair("product_category_id", product_category_id.toString()),
+				NameStringPair("product_comment", product_comment),
+				NameFilePair("product_image_data", product_image_data),
+				NameStringPair("product_geo", GeoUtil.geoToString(product_geo)))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser()))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun gift_menu(kanojo_id: Int, type_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_GIFT_MENU, NameValuePair("kanojo_id", kanojo_id.toString()), NameValuePair("type_id", type_id.toString()))
+		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_GIFT_MENU,
+				NameStringPair("kanojo_id", kanojo_id.toString()),
+				NameStringPair("type_id", type_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(1))))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun permanent_item_gift_menu(item_class: Int, item_category_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_PERMANENT_ITEM_GIFT_MENU, NameValuePair("item_class", item_class.toString()), NameValuePair("item_category_id", item_category_id.toString()))
+		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_PERMANENT_ITEM_GIFT_MENU,
+				NameStringPair("item_class", item_class.toString()),
+				NameStringPair("item_category_id", item_category_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(item_class))))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun permanent_sub_item_gift_menu(item_class: Int, item_category_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_PERMANENT_SUB_ITEM_GIFT_MENU, NameValuePair("item_class", item_class.toString()), NameValuePair("item_category_id", item_category_id.toString()))
+		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_PERMANENT_SUB_ITEM_GIFT_MENU,
+				NameStringPair("item_class", item_class.toString()),
+				NameStringPair("item_category_id", item_category_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(item_class))))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun date_and_gift_menu(kanojo_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_DATE_AND_GIFT_MENU, NameValuePair("kanojo_id", kanojo_id.toString()))
+		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_DATE_AND_GIFT_MENU,
+				NameStringPair("kanojo_id", kanojo_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(1))))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun date_menu(kanojo_id: Int, type_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_DATE_MENU, NameValuePair("kanojo_id", kanojo_id.toString()), NameValuePair("type_id", type_id.toString()))
+		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_DATE_MENU,
+				NameStringPair("kanojo_id", kanojo_id.toString()),
+				NameStringPair("type_id", type_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(2))))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun has_items(item_class: Int, item_category_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_HAS_ITEMS, NameValuePair("item_class", item_class.toString()), NameValuePair("item_category_id", item_category_id.toString()))
+		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_HAS_ITEMS,
+				NameStringPair("item_class", item_class.toString()),
+				NameStringPair("item_category_id", item_category_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(item_class))))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun store_items(item_class: Int, item_category_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_STORE_ITEMS, NameValuePair("item_class", item_class.toString()), NameValuePair("item_category_id", item_category_id.toString()))
+		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_STORE_ITEMS,
+				NameStringPair("item_class", item_class.toString()),
+				NameStringPair("item_category_id", item_category_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(item_class))))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun do_date(kanojo_id: Int, basic_item_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_DO_DATE, NameValuePair("kanojo_id", kanojo_id.toString()), NameValuePair("basic_item_id", basic_item_id.toString()))
+		val connection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_DO_DATE,
+				NameStringPair("kanojo_id", kanojo_id.toString()),
+				NameStringPair("basic_item_id", basic_item_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun do_extend_date(kanojo_id: Int, extend_item_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_DO_EXTEND_DATE, NameValuePair("kanojo_id", kanojo_id.toString()), NameValuePair("extend_item_id", extend_item_id.toString()))
+		val connection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_DO_EXTEND_DATE,
+				NameStringPair("kanojo_id", kanojo_id.toString()),
+				NameStringPair("extend_item_id", extend_item_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun do_gift(kanojo_id: Int, basic_item_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_DO_GIFT, NameValuePair("kanojo_id", kanojo_id.toString()), NameValuePair("basic_item_id", basic_item_id.toString()))
+		val connection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_DO_GIFT,
+				NameStringPair("kanojo_id", kanojo_id.toString()),
+				NameStringPair("basic_item_id", basic_item_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun do_extend_gift(kanojo_id: Int, extend_item_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_DO_EXTEND_GIFT, NameValuePair("kanojo_id", kanojo_id.toString()), NameValuePair("extend_item_id", extend_item_id.toString()))
+		val connection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_DO_EXTEND_GIFT,
+				NameStringPair("kanojo_id", kanojo_id.toString()),
+				NameStringPair("extend_item_id", extend_item_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun play_on_live2d(kanojo_id: Int, actions: String?): Response<BarcodeKanojoModel?>? {
-		val connection: HttpURLConnection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_PLAY_ON_LIVE2D, NameValuePair("kanojo_id", kanojo_id.toString()), NameValuePair("actions", actions))
+		val connection: HttpURLConnection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_PLAY_ON_LIVE2D,
+				NameStringPair("kanojo_id", kanojo_id.toString()),
+				NameStringPair("actions", actions))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun user_timeline(user_id: Int, since_id: Int, index: Int, limit: Int): Response<BarcodeKanojoModel?>? {
-		val connection: HttpURLConnection = mHttpApi.createHttpGet(URL_API_ACTIVITY_USER_TIMELINE, NameValuePair("user_id", user_id.toString()), NameValuePair("since_id", since_id.toString()), NameValuePair("index", index.toString()), NameValuePair("limit", limit.toString()))
+		val connection: HttpURLConnection = mHttpApi.createHttpGet(URL_API_ACTIVITY_USER_TIMELINE,
+				NameStringPair("user_id", user_id.toString()),
+				NameStringPair("since_id", since_id.toString()),
+				NameStringPair("index", index.toString()),
+				NameStringPair("limit", limit.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("activities", ActivityParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun scanned_timeline(barcode: String?, since_id: Int, index: Int, limit: Int): Response<BarcodeKanojoModel?>? {
-		val connection: HttpURLConnection = mHttpApi.createHttpGet(URL_API_ACTIVITY_SCANNED_TIMELINE, NameValuePair("barcode", barcode), NameValuePair("since_id", since_id.toString()), NameValuePair("index", index.toString()), NameValuePair("limit", limit.toString()))
+		val connection: HttpURLConnection = mHttpApi.createHttpGet(URL_API_ACTIVITY_SCANNED_TIMELINE,
+				NameStringPair("barcode", barcode),
+				NameStringPair("since_id", since_id.toString()),
+				NameStringPair("index", index.toString()),
+				NameStringPair("limit", limit.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("activities", ActivityParser())))
 	}
 
@@ -323,19 +382,22 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun getURLWebView(uuid: String?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_WEBVIEW, NameValuePair("uuid", uuid))
+		val connection = mHttpApi.createHttpGet(URL_WEBVIEW,
+				NameStringPair("uuid", uuid))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), WebViewParser()))
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun getURLRadarWebView(kanojo_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_RADAR_WEBVIEW, NameValuePair("kanojo_id", kanojo_id.toString()))
+		val connection = mHttpApi.createHttpGet(URL_RADAR_WEBVIEW,
+				NameStringPair("kanojo_id", kanojo_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), WebViewParser()))
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun delete(user_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_DELETE, NameValuePair("user_id", user_id.toString()))
+		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_DELETE,
+				NameStringPair("user_id", user_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
@@ -371,7 +433,9 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun android_register_device(uuid: String?, device_token: String?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpMultipartPost(URL_API_REGISTER_TOKEN, NameValueOrFilePair("uuid", uuid), NameValueOrFilePair(Preferences.PREFERENCE_DEVICE_TOKEN, device_token))
+		val connection = mHttpApi.createHttpMultipartPost(URL_API_REGISTER_TOKEN,
+				NameStringPair("uuid", uuid),
+				NameStringPair(Preferences.PREFERENCE_DEVICE_TOKEN, device_token))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
@@ -382,46 +446,58 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun android_uuid_verify(email: String?, password: String?, uuid: String?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpPost(URL_API_VERIFY_UUID, NameValuePair("email", email), NameValuePair("password", password), NameValuePair("uuid", uuid))
+	fun android_uuid_verify(email: String?, password: ByteArray?, uuid: String?): Response<BarcodeKanojoModel?>? {
+		val connection = mHttpApi.createHttpPost(URL_API_VERIFY_UUID,
+				NameStringPair("email", email),
+				NameBytesPair("password", password),
+				NameStringPair("uuid", uuid))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun update(name: String?, current_password: String?, new_password: String?, email: String?, birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
+	fun update(name: String?, current_password: ByteArray?, new_password: ByteArray?, email: String?, birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_UPDATE,
-				NameValueOrFilePair("name", name),
-				NameValueOrFilePair("current_password", current_password),
-				NameValueOrFilePair("new_password", new_password),
-				NameValueOrFilePair("email", email),
-				NameValueOrFilePair("birth_month", birth_month.toString()),
-				NameValueOrFilePair("birth_day", birth_day.toString()),
-				NameValueOrFilePair("birth_year", birth_year.toString()),
-				NameValueOrFilePair("sex", sex),
-				NameValueOrFilePair("profile_image_data", profile_image_data))
+				NameStringPair("name", name),
+				NameBytesPair("current_password", current_password),
+				NameBytesPair("new_password", new_password),
+				NameStringPair("email", email),
+				NameStringPair("birth_month", birth_month.toString()),
+				NameStringPair("birth_day", birth_day.toString()),
+				NameStringPair("birth_year", birth_year.toString()),
+				NameStringPair("sex", sex),
+				NameFilePair("profile_image_data", profile_image_data))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun android_get_transaction_id(store_item_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_CONFIRM_PURCHASE_ITEM, NameValuePair("store_item_id", store_item_id.toString()))
+		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_CONFIRM_PURCHASE_ITEM,
+				NameStringPair("store_item_id", store_item_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(PurchaseItemParser()))
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun android_verify_purchased(store_item_id: Int, google_transaction_id: Int, receipt_data: String): Response<BarcodeKanojoModel?>? {
-		val connection: HttpURLConnection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_VERIFY_PURCHASED_ITEM, NameValuePair("store_item_id", store_item_id.toString()), NameValuePair("google_transaction_id", google_transaction_id.toString()), NameValuePair("receipt_data", receipt_data))
+		val connection: HttpURLConnection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_VERIFY_PURCHASED_ITEM,
+				NameStringPair("store_item_id", store_item_id.toString()),
+				NameStringPair("google_transaction_id", google_transaction_id.toString()),
+				NameStringPair("receipt_data", receipt_data))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser()))
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun android_check_ticket(price: Int, store_item_id: Int): Response<BarcodeKanojoModel?>? {
-		return mHttpApi.executeHttpRequest(mHttpApi.createHttpPost(URL_API_SHOPPING_COMPARE_PRICE, NameValuePair("price", price.toString()), NameValuePair("store_item_id", store_item_id.toString())), ResponseParser())
+		val connection: HttpURLConnection = mHttpApi.createHttpPost(URL_API_SHOPPING_COMPARE_PRICE,
+				NameStringPair("price", price.toString()),
+				NameStringPair("store_item_id", store_item_id.toString()))
+		return mHttpApi.executeHttpRequest(connection, ResponseParser())
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun do_ticket(store_item_id: Int, use_tickets: Int): Response<BarcodeKanojoModel?>? {
-		val connection: HttpURLConnection = mHttpApi.createHttpPost(URL_API_SHOPPING_VERIFY_TICKET, NameValuePair("store_item_id", store_item_id.toString()), NameValuePair("use_tickets", use_tickets.toString()))
+		val connection: HttpURLConnection = mHttpApi.createHttpPost(URL_API_SHOPPING_VERIFY_TICKET,
+				NameStringPair("store_item_id", store_item_id.toString()),
+				NameStringPair("use_tickets", use_tickets.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser()))
 	}
 

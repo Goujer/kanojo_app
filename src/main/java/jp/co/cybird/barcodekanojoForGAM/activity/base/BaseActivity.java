@@ -488,7 +488,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         @Override
         protected Response<?> doInBackground(Void... params) {
             try {
-				return ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().verify("", "", ((BarcodeKanojoApp) getApplication()).getUUID());
+				return ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().verify("", null, ((BarcodeKanojoApp) getApplication()).getUUID());
             } catch (Exception e) {
                 this.mReason = e;
                 return null;
