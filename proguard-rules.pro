@@ -5,3 +5,4 @@
 -dontpreverify
 -verbose
 -optimizations !code/simplification/arithmetic,!field/*,!class/merging/*,!code/allocation/variable
+-keep class org.apache.http.impl.client.**

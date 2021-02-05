@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="@string/LIB_GCM_PREF_CATEGORY1_TITLE">
         <CheckBoxPreference android:title="@string/LIB_GCM_PREF_KEY_WILLSENDNOTIFICATION_TITLE" android:key="@string/LIB_GCM_PREF_KEY_WILLSENDNOTIFICATION" android:defaultValue="true"/>
         <CheckBoxPreference android:title="@string/LIB_GCM_PREF_KEY_WILLPLAYSOUND_TITLE" android:key="@string/LIB_GCM_PREF_KEY_WILLPLAYSOUND" android:summary="@string/LIB_GCM_PREF_KEY_WILLPLAYSOUND_SUMMARY" android:dependency="@string/LIB_GCM_PREF_KEY_WILLSENDNOTIFICATION" android:defaultValue="true"/>

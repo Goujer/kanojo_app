@@ -24,8 +24,8 @@ android {
 
 	defaultConfig {
 		applicationId 'com.goujer.barcodekanojo'
-		versionCode 2
-		versionName "0.1.4"
+		versionCode 3
+		versionName "0.2"
 		minSdkVersion 9
 		targetSdkVersion 27
 	}
@@ -45,6 +45,15 @@ android {
 			shrinkResources true
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 			signingConfig signingConfigs.release
+		}
+		prerelease {
+			debuggable true
+			minifyEnabled true
+			shrinkResources true
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+			signingConfig signingConfigs.release
+			applicationIdSuffix '.PRERELEASE'
+			versionNameSuffix '.pr'
 		}
 		debug {
 			debuggable true

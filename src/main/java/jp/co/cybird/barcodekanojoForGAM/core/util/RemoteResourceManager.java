@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Observable;
 import java.util.Observer;
-import jp.co.cybird.barcodekanojoForGAM.core.util.BaseDiskCache;
 
 public class RemoteResourceManager extends Observable {
 

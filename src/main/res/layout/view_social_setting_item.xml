@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res/jp.co.cybird.barcodekanojoForGAM">
+<merge xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res-auto">
     <ImageView android:id="@+id/view_social_left_img" android:layout_width="@dimen/row_setting_icon_height" android:layout_height="@dimen/row_setting_icon_height" android:layout_margin="@dimen/row_setting_icon_margin"/>
     <TextView android:id="@+id/edit_item_key" android:singleLine="true" style="@style/txt_kanojo_edit_key"/>
     <TextView android:ellipsize="end" android:gravity="right" android:id="@+id/edit_item_value" android:layout_marginLeft="10dp" android:singleLine="true" android:layout_weight="1" style="@style/txt_kanojo_edit_value"/>

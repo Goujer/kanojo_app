@@ -42,7 +42,7 @@ public class LoginActivity extends BaseEditActivity implements View.OnClickListe
         //if (user.getPassword() != null) {
         //    this.txtPassword.setValue(user.getPassword());
         //}
-
+		this.btnClose.setOnClickListener(this);
 		this.txtPassword.setOnClickListener(this);
 		this.btnLogin.setOnClickListener(this);
 
@@ -52,6 +52,7 @@ public class LoginActivity extends BaseEditActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
 		super.onDestroy();
+		this.btnClose.setOnClickListener(null);
         this.txtPassword.setOnClickListener(null);
         this.btnLogin.setOnClickListener(null);
     }

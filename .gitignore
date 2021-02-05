@@ -89,3 +89,4 @@ release.jks
 modern/release/output-metadata.json
 gradle.properties
 release.jks
+release/output-metadata.json

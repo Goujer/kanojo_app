@@ -116,16 +116,16 @@ public class EditItemView extends LinearLayout {
     }
 
 //    public void showIcon() {
-////        this.mIcon.setVisibility(VISIBLE);
-////    }
-////
-////    public void hideIcon() {
-////        this.mIcon.setVisibility(INVISIBLE);
-////    }
-////
-////    public ImageView getRightIcon() {
-////        return this.mAdd;
-////    }
+//        this.mIcon.setVisibility(VISIBLE);
+//    }
+//
+//    public void hideIcon() {
+//        this.mIcon.setVisibility(INVISIBLE);
+//    }
+//
+//    public ImageView getRightIcon() {
+//        return this.mAdd;
+//    }
 
 	//public void showIconAdd() {
 	//	this.mAdd.setVisibility(VISIBLE);

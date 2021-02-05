@@ -37,9 +37,9 @@ public class BarcodeService extends IntentService {
 	private static PowerManager.WakeLock sWakeLock;
 	private final String[] mSenderIds;
 
-	/*protected BarcodeService() {
+	protected BarcodeService() {
 		this(getName("DynamicSenderIds"), null);
-	}*/
+	}
 
 	/*protected BarcodeService(String... senderIds) {
 		this(getName(senderIds), senderIds);
@@ -50,18 +50,18 @@ public class BarcodeService extends IntentService {
 		this.mSenderIds = senderIds;
 	}
 
-	/*private static String getName(String senderId) {
+	private static String getName(String senderId) {
 		StringBuilder append = new StringBuilder().append("GCMIntentService-").append(senderId).append("-");
 		int i = sCounter + 1;
 		sCounter = i;
 		String name = append.append(i).toString();
 		Log.v(TAG, "Intent service name: " + name);
 		return name;
-	}*/
+	}
 
-	/*private static String getName(String[] senderIds) {
-		return getName(GCMRegistrar.getFlatSenderIds(senderIds));
-	}*/
+	private static String getName(String[] senderIds) {
+		return null;//getName(GCMRegistrar.getFlatSenderIds(senderIds));
+	}
 
 	protected String[] getSenderIds(Context context) {
 		if (this.mSenderIds != null) {
