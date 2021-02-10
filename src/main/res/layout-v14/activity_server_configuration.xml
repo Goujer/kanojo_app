@@ -24,7 +24,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="@dimen/row_kanojo_edit_txt_height"
 			android:layout_marginTop="@dimen/row_kanojo_edit_separator_height"
-			android:background="@drawable/row_kanojo_edit_bg_top"
+			android:background="@drawable/row_kanojo_edit_bg_name"
 			android:text="@string/use_https"
 			android:paddingLeft="@dimen/row_setting_icon_margin"
 			android:paddingStart="@dimen/row_setting_icon_margin"/>
@@ -32,7 +32,8 @@
 			android:id="@+id/setting_server_url"
 			android:layout_width="match_parent"
 			android:layout_height="@dimen/row_kanojo_edit_txt_height"
-			android:background="@drawable/row_kanojo_edit_bg_middle"
+			android:layout_marginTop="@dimen/row_kanojo_edit_separator_height"
+			android:background="@drawable/row_kanojo_edit_bg_top"
 			EditItemView:key="@string/server_url" />
 		<jp.co.cybird.barcodekanojoForGAM.view.EditItemView
 			android:id="@+id/setting_server_port"

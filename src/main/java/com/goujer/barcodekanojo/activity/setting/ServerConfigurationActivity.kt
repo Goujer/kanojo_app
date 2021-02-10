@@ -11,6 +11,7 @@ import android.widget.EditText
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp
 import jp.co.cybird.barcodekanojoForGAM.R
 import com.goujer.barcodekanojo.preferences.ApplicationSetting
+import jp.co.cybird.barcodekanojoForGAM.Defs
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView
 
 class ServerConfigurationActivity : Activity(), View.OnClickListener {
@@ -26,6 +27,9 @@ class ServerConfigurationActivity : Activity(), View.OnClickListener {
 		btnClose.setOnClickListener(this)
 		switchHttp = findViewById(R.id.setting_server_https)
 		switchHttp.isChecked = ApplicationSetting(this).getServerHttps()
+		if (!Defs.DEBUG) {
+			switchHttp.visibility = View.GONE
+		}
 		txtURL = findViewById(R.id.setting_server_url)
 		txtURL.setOnClickListener(this)
 		txtURL.value = ApplicationSetting(this).getServerURL()
