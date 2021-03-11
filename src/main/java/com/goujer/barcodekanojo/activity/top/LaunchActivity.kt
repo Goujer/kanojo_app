@@ -18,10 +18,7 @@ import jp.co.cybird.barcodekanojoForGAM.activity.top.LoginActivity
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.net.ConnectException
 
 class LaunchActivity : BaseActivity() {
@@ -31,7 +28,8 @@ class LaunchActivity : BaseActivity() {
 	private lateinit var mServerConfig: View
 	private lateinit var mServerName: TextView
 	private lateinit var settings: ApplicationSetting
-	private lateinit var scope: CoroutineScope
+
+	private var loginJob: Job? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -46,7 +44,6 @@ class LaunchActivity : BaseActivity() {
 
 	override fun onStart() {
 		super.onStart()
-		scope = CoroutineScope(Dispatchers.Main)
 
 		//Set Button Listeners
 		mLogIn.setOnClickListener {
@@ -75,13 +72,13 @@ class LaunchActivity : BaseActivity() {
 			mSignUp.visibility = View.INVISIBLE
 			mServerConfig.visibility = View.INVISIBLE
 			//Attempt log in / verify server
-			scope.launch(Dispatchers.IO) {
+			loginJob = GlobalScope.launch(Dispatchers.IO) {
 				try {
 					if (verifyUser()) {
 						finish()
 						startActivity(Intent().setClass(this@LaunchActivity, KanojosActivity::class.java))
 					} else {
-						runOnUiThread {
+						withContext(Dispatchers.Main) {
 							mProgressbar.visibility = View.GONE
 							mLogIn.visibility = View.VISIBLE
 							mSignUp.visibility = View.VISIBLE
@@ -89,7 +86,7 @@ class LaunchActivity : BaseActivity() {
 						}
 					}
 				} catch (e: ConnectException) {
-					runOnUiThread {
+					withContext(Dispatchers.Main) {
 						mProgressbar.visibility = View.GONE
 						mServerConfig.visibility = View.VISIBLE
 					}
@@ -105,7 +102,9 @@ class LaunchActivity : BaseActivity() {
 
 	override fun onStop() {
 		super.onStop()
-		scope.cancel()
+		if (loginJob != null && !loginJob!!.isCompleted) {
+			loginJob!!.cancel()
+		}
 
 		//Set Button Listeners
 		mLogIn.setOnClickListener(null)
@@ -122,7 +121,7 @@ class LaunchActivity : BaseActivity() {
 
 	}
 
-	private suspend fun verifyUser(): Boolean {
+	private fun verifyUser(): Boolean {
 		val response: Response<BarcodeKanojoModel>
 		try {
 			response = bootTaskProcess()
@@ -146,7 +145,7 @@ class LaunchActivity : BaseActivity() {
 		}
 	}
 
-	private suspend fun bootTaskProcess(): Response<BarcodeKanojoModel> {
+	private fun bootTaskProcess(): Response<BarcodeKanojoModel> {
 		val barcodeKanojo = (application as BarcodeKanojoApp).barcodeKanojo
 		val user = barcodeKanojo.user
 		val android_verify = barcodeKanojo.verify(user.email, user.password, (application as BarcodeKanojoApp).uuid)
