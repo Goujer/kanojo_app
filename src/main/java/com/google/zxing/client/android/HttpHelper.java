@@ -28,7 +28,6 @@ import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import jp.co.cybird.app.android.lib.commons.file.DownloadHelper;
 
 public final class HttpHelper {
 	private static /* synthetic */ int[] $SWITCH_TABLE$com$google$zxing$client$android$HttpHelper$ContentType;

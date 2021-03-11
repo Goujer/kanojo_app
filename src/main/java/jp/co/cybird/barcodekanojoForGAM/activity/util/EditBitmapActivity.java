@@ -197,62 +197,59 @@ public class EditBitmapActivity extends Activity implements BaseInterface, View.
     // JADX made a booboo
 	public void onClick(View v) {
 		Throwable th;
-		switch (v.getId()) {
-			case R.id.edit_bitmap_retake:
-				startPhotoActivity(this.mode);
-				return;
-			case R.id.edit_bitmap_ok:
-				try{
-					this.mView.saveBitmap(FILENAME);
-					OutputStream outputStream = null;
-					try {
-						File dir = new File(this.mRootDir.getPath());
-						if (!dir.exists()) {
-							dir.mkdirs();
-						}
-						File file = new File(dir, FILENAME);
-						if (file.exists()) {
-							Bitmap resized = loadBitmap(file, 200, 200);
-							OutputStream outputStream2 = new FileOutputStream(file);
-							if (resized != null) {
-								resized.compress(Bitmap.CompressFormat.JPEG, 100, outputStream2);
-								outputStream = outputStream2;
-							}
+		int id = v.getId();
+		if (id == R.id.edit_bitmap_retake) {
+			startPhotoActivity(this.mode);
+			return;
+		} else if (id == R.id.edit_bitmap_ok) {
+			try {
+				this.mView.saveBitmap(FILENAME);
+				OutputStream outputStream = null;
+				try {
+					File dir = new File(this.mRootDir.getPath());
+					if (!dir.exists()) {
+						dir.mkdirs();
+					}
+					File file = new File(dir, FILENAME);
+					if (file.exists()) {
+						Bitmap resized = loadBitmap(file, 200, 200);
+						OutputStream outputStream2 = new FileOutputStream(file);
+						if (resized != null) {
+							resized.compress(Bitmap.CompressFormat.JPEG, 100, outputStream2);
 							outputStream = outputStream2;
 						}
-						if (outputStream != null) {
-							try {
-								outputStream.close();
-							} catch (Throwable th5) {
-							}
-						}
-					} catch (FileNotFoundException e2) {
-						if (outputStream != null) {
+						outputStream = outputStream2;
+					}
+					if (outputStream != null) {
+						try {
 							outputStream.close();
+						} catch (Throwable th5) {
 						}
-						setResult(-1);
-						finish();
-						return;
-					} catch (Throwable th6) {
-						th = th6;
-						if (outputStream != null) {
-							outputStream.close();
-						}
-						throw th;
-					}}
-				catch(IOException e){
-					e.printStackTrace();
+					}
+				} catch (FileNotFoundException e2) {
+					if (outputStream != null) {
+						outputStream.close();
+					}
+					setResult(-1);
+					finish();
+					return;
+				} catch (Throwable th6) {
+					th = th6;
+					if (outputStream != null) {
+						outputStream.close();
+					}
+					throw th;
 				}
-				catch (Throwable th2)
-				{
-					th2.printStackTrace();
-				}
-				setResult(-1);
-				finish();
-				return;
-			default:
-				return;
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (Throwable th2) {
+				th2.printStackTrace();
+			}
+			setResult(-1);
+			finish();
+			return;
 		}
+		return;
 	}
 
     public static File getEditedFile() {
