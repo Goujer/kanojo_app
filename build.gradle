@@ -26,8 +26,8 @@ android {
 		applicationId 'com.goujer.barcodekanojo'
 		versionCode 3
 		versionName "0.2"
-		minSdkVersion 9
-		targetSdkVersion 27
+		//minSdkVersion 9
+		//targetSdkVersion 27
 	}
 
 	signingConfigs {
@@ -62,25 +62,29 @@ android {
 		}
 	}
 
-	/*flavorDimensions "default"
+	flavorDimensions "default"
 	productFlavors {
-		minApi14 {
+		/*minApi14 {
 			minSdkVersion 14
+			targetSdkVersion 27
+		}*/
+		minApi12 {
+			minSdkVersion 12
 			targetSdkVersion 27
 		}
 		minApi9 {
 			minSdkVersion 9
-			targetSdkVersion 13
+			targetSdkVersion 11
 		}
-		minApi7 {
+		/*minApi7 {
 			minSdkVersion 7
 			targetSdkVersion 8
 		}
 		minApi4 {
 			minSdkVersion 4
 			targetSdkVersion 6
-		}
-	}*/
+		}*/
+	}
 
 	lintOptions {
 		abortOnError false
@@ -101,7 +105,7 @@ android {
 dependencies {
 	//Support Libraries (Newest for API>=14, 25.4.0 for API>=9, 24.1.1 for API>=4)
 	//androidxImplementation 'androidx.appcompat:appcompat:1.2.0'
-	//minApi9Implementation 'com.android.support:appcompat-v7:25.4.0'
+	minApi9Implementation 'com.android.support:appcompat-v7:25.4.0'
 	//minApi7Implementation 'com.android.support:appcompat-v7:24.1.1'
 
 	//Maps
@@ -122,7 +126,7 @@ dependencies {
 	//implementation 'com.google.zxing:android-integration:3.2.1'
 
 	//Other
-    implementation 'org.apache.httpcomponents:httpmime:4.3.6'
+    //implementation 'org.apache.httpcomponents:httpmime:4.3.6'
     implementation files('libs/live2d_android.jar')
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.0'
