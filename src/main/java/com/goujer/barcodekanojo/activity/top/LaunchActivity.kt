@@ -1,6 +1,5 @@
 package com.goujer.barcodekanojo.activity.top
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -29,6 +28,7 @@ class LaunchActivity : BaseActivity() {
 	private lateinit var mServerName: TextView
 	private lateinit var settings: ApplicationSetting
 
+	private var scope = CoroutineScope(Dispatchers.IO) + CoroutineName(TAG)
 	private var loginJob: Job? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,11 +72,13 @@ class LaunchActivity : BaseActivity() {
 			mSignUp.visibility = View.INVISIBLE
 			mServerConfig.visibility = View.INVISIBLE
 			//Attempt log in / verify server
-			loginJob = GlobalScope.launch(Dispatchers.IO) {
+			loginJob = scope.launch {
 				try {
 					if (verifyUser()) {
 						finish()
-						startActivity(Intent().setClass(this@LaunchActivity, KanojosActivity::class.java))
+						withContext(Dispatchers.Main) {
+							startActivity(Intent().setClass(this@LaunchActivity, KanojosActivity::class.java))
+						}
 					} else {
 						withContext(Dispatchers.Main) {
 							mProgressbar.visibility = View.GONE
@@ -115,6 +117,11 @@ class LaunchActivity : BaseActivity() {
 		mLogIn.visibility = View.INVISIBLE
 		mSignUp.visibility = View.INVISIBLE
 		mServerConfig.visibility = View.INVISIBLE
+	}
+
+	override fun onDestroy() {
+		super.onDestroy()
+		scope.cancel()
 	}
 
 	override fun onBackPressed() {
