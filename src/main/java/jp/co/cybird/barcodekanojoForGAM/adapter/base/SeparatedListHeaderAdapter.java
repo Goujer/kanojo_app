@@ -146,7 +146,7 @@ public class SeparatedListHeaderAdapter extends BaseAdapter implements Observabl
         int sectionnum = 0;
         for (Object section : this.sections.keySet()) {
             Adapter adapter = this.sections.get(section);
-            int extraCount = this.mExtraItemCount.get(section).intValue();
+            int extraCount = this.mExtraItemCount.get(section);
             int size = adapter.getCount() + extraCount;
             if (extraCount == 2) {
                 if (position == 0) {

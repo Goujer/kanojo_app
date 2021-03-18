@@ -37,7 +37,7 @@ public class FileUtil {
     public static final String PRODUCT_TEMP = "";
     public static final String PROFILE_TEMP = "";
     public static final String TAG = FileUtil.class.getSimpleName();
-    private static byte[] _fileIOBuffer = new byte[32768];
+    private static final byte[] _fileIOBuffer = new byte[32768];
 
 	public static String getRealPathFromURI(Activity activity, Uri contentUri) {
 		Cursor cursor = activity.managedQuery(contentUri, new String[]{"_data"}, null, null, null);

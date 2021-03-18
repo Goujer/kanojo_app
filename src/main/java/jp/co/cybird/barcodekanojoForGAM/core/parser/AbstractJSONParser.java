@@ -35,8 +35,8 @@ public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implement
     public static JSONObject createJSONObject(InputStream is) {
 		try {
 			StringBuilder objJson = new StringBuilder();
+			BufferedReader objBuf = new BufferedReader(new InputStreamReader(is));
 			try {
-				BufferedReader objBuf = new BufferedReader(new InputStreamReader(is));
 				String sLine;
 				while ((sLine = objBuf.readLine()) != null) {
 					//new JSONObject(sLine);
@@ -47,6 +47,7 @@ public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implement
 				return new JSONObject(objJson.toString());
 			} catch (Exception e) {
 				is.close();
+				objBuf.close();
 				if (Defs.DEBUG) {
 					Log.w(TAG, "Length: " + objJson.length() + " Downloaded: " + objJson.toString());
 					Throwable t = e.getCause();
