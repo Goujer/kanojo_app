@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.goujer.barcodekanojo.core.util.DynamicImageCache;
+
 import java.util.ArrayList;
 import java.util.List;
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
@@ -17,10 +20,9 @@ import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.adapter.EnemyAdapter;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
-import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 import jp.co.cybird.barcodekanojoForGAM.listitem.EnemyListItem;
 import jp.co.cybird.barcodekanojoForGAM.view.MoreView;
-import jp.co.cybird.barcodekanojoForGAM.view.UserProfileView;
+import com.goujer.barcodekanojo.view.UserProfileView;
 
 public class EnemyActivity extends BaseActivity implements MoreView.OnMoreClickListener {
     private final int MORE_KANOJOS = 10;
@@ -33,7 +35,7 @@ public class EnemyActivity extends BaseActivity implements MoreView.OnMoreClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enemy);
-        RemoteResourceManager rrm = ((BarcodeKanojoApp) getApplication()).getRemoteResourceManager();
+        DynamicImageCache dic = ((BarcodeKanojoApp) getApplication()).getImageCache();
         ((Button) findViewById(R.id.enemy_close)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 EnemyActivity.this.finish();
@@ -42,7 +44,7 @@ public class EnemyActivity extends BaseActivity implements MoreView.OnMoreClickL
         this.mEnemy = (User) getIntent().getExtras().get(BaseInterface.EXTRA_USER);
         if (this.mEnemy != null) {
             this.mProfileView = (UserProfileView) findViewById(R.id.common_enemy_profile);
-            this.mProfileView.setUser(this.mEnemy, rrm);
+            this.mProfileView.setUser(this.mEnemy, dic);
             TextView txtTitle = (TextView) findViewById(R.id.row_selection_title);
             if (txtTitle != null) {
                 txtTitle.setText(getResources().getString(R.string.enemy_your_enemies));
@@ -59,6 +61,12 @@ public class EnemyActivity extends BaseActivity implements MoreView.OnMoreClickL
             this.mListView.setAdapter(this.adapter);
         }
     }
+
+    @Override
+	protected void onDestroy() {
+    	super.onDestroy();
+		mProfileView.destroy();
+	}
 
     public View getClientView() {
         View leyout = getLayoutInflater().inflate(R.layout.activity_enemy, (ViewGroup) null);

@@ -18,7 +18,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Product;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
-import jp.co.cybird.barcodekanojoForGAM.view.ProductAndKanojoView;
+import com.goujer.barcodekanojo.view.ProductAndKanojoView;
 
 public class ScanOthersEditActivity extends BaseKanojoEditActivity implements View.OnClickListener {
     private static final String TAG = "ScanOthersEditActivity";
@@ -76,7 +76,7 @@ public class ScanOthersEditActivity extends BaseKanojoEditActivity implements Vi
             if (!this.mKanojoName.isEmpty() && !this.mCompanyName.isEmpty() && !this.mProductName.isEmpty()) {
                 this.btnSave.setEnabled(true);
             }
-            this.mProductAndKanojo.executeLoadImgTask(((BarcodeKanojoApp) getApplication()).getRemoteResourceManager(), this.mProduct.getProduct_image_url(), this.mKanojo);
+            this.mProductAndKanojo.executeLoadImgTask(((BarcodeKanojoApp) getApplication()).getImageCache(), this.mProduct.getProduct_image_url(), this.mKanojo);
         }
     }
 
@@ -104,7 +104,7 @@ public class ScanOthersEditActivity extends BaseKanojoEditActivity implements Vi
 
     @Override
     protected void onDestroy() {
-        this.mProductAndKanojo.clear();
+        this.mProductAndKanojo.destroy();
         super.onDestroy();
     }
 

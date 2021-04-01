@@ -141,11 +141,7 @@ public class Product implements BarcodeKanojoModel, Parcelable {
     }
 
     public String getProduct_image_url() {
-        return this.product_image_url;
-    }
-
-    public void setProduct_image_url(String productImageUrl) {
-        this.product_image_url = productImageUrl;
+		return "/product_images/barcode/" + barcode + "/" + product + ".png";
     }
 
     public int getScan_count() {

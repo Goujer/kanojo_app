@@ -78,6 +78,23 @@ class ApplicationSetting(context: Context) {
 		editor.apply()
 	}
 
+	//TODO: Change cache size actually in app.
+	fun commitCacheSize(size: Int) {
+		val editor = setting.edit()
+		editor.putInt(Preferences.PREFERENCE_CACHE_SIZE, size)
+		editor.apply()
+	}
+
+	fun getCacheSize(): Int {
+		return setting.getInt(Preferences.PREFERENCE_CACHE_SIZE, (Runtime.getRuntime().maxMemory() / 1024).toInt() / 8)
+	}
+
+	fun clearCacheSize() {
+		val editor = setting.edit()
+		editor.remove(Preferences.PREFERENCE_CACHE_SIZE)
+		editor.apply()
+	}
+
 	fun clearDataVersion() {
 		val editor = setting.edit()
 		editor.remove(Preferences.PREFERENCE_ANDROID_ID)

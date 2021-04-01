@@ -10,15 +10,15 @@ public interface DiskCache {
 
     void clear();
 
-    String encode(Uri uri);
+    //String encode(Uri uri);
 
     boolean exists(String str);
 
-    File getFile(String str);
+    File getFile(String str) throws IOException;
 
     InputStream getInputStream(String str) throws IOException;
 
     void invalidate(String str);
 
-    void store(String str, InputStream inputStream);
+    void store(String str, InputStream inputStream) throws IOException;
 }

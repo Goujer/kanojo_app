@@ -20,7 +20,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Product;
 import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
-import jp.co.cybird.barcodekanojoForGAM.view.ProductAndKanojoView;
+import com.goujer.barcodekanojo.view.ProductAndKanojoView;
 
 public class KanojoEditActivity extends BaseKanojoEditActivity implements View.OnClickListener {
     private static final String TAG = "KanojoEditActivity";
@@ -78,7 +78,7 @@ public class KanojoEditActivity extends BaseKanojoEditActivity implements View.O
             if (!this.mCompanyName.isEmpty() && !this.mProductName.isEmpty()) {
                 this.btnSave.setEnabled(true);
             }
-            this.mProductAndKanojo.executeLoadImgTask(((BarcodeKanojoApp) getApplication()).getRemoteResourceManager(), this.mProduct.getProduct_image_url(), this.mKanojo);
+            this.mProductAndKanojo.executeLoadImgTask(((BarcodeKanojoApp) getApplication()).getImageCache(), this.mProduct.getProduct_image_url(), this.mKanojo);
             if (this.mMessage != null) {
                 showNoticeDialog(this.mMessage, new DialogInterface.OnDismissListener() {
                     public void onDismiss(DialogInterface arg0) {
@@ -129,7 +129,7 @@ public class KanojoEditActivity extends BaseKanojoEditActivity implements View.O
     @Override
     protected void onDestroy() {
         unBindEvent();
-        this.mProductAndKanojo.clear();
+        this.mProductAndKanojo.destroy();
         super.onDestroy();
     }
 

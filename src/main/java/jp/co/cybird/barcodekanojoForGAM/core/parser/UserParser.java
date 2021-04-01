@@ -18,9 +18,6 @@ public class UserParser extends AbstractJSONParser<User> {
             if (object.has("name")) {
                 res.setName(object.getString("name"));
             }
-            if (object.has("profile_image_url")) {
-                res.setProfile_image_url(object.getString("profile_image_url"));
-            }
             if (object.has("sex")) {
                 res.setSex(object.getString("sex"));
             }

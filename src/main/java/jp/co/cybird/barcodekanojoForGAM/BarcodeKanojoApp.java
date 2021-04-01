@@ -10,7 +10,8 @@ import jp.co.cybird.barcodekanojoForGAM.billing.util.PurchaseApi;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.location.BestLocationListener;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
-import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
+
+import com.goujer.barcodekanojo.core.util.DynamicImageCache;
 import com.goujer.barcodekanojo.preferences.ApplicationSetting;
 
 public class BarcodeKanojoApp extends Application {
@@ -20,9 +21,9 @@ public class BarcodeKanojoApp extends Application {
     private static final String TAG = "BarcodeKanojo";
     private BarcodeKanojo mBarcodeKanojo;
     private ApplicationSetting settings;
+    private DynamicImageCache imageCache;
     private BestLocationListener mBestLocationListener = new BestLocationListener();
     private PurchaseApi mPurchaseApi;
-    private RemoteResourceManager mRemoteResourceManager;
     private String[] mUserGenderList;
 
 	@Override
@@ -30,15 +31,15 @@ public class BarcodeKanojoApp extends Application {
         super.onCreate();
         this.mBarcodeKanojo = new BarcodeKanojo();
         this.mBarcodeKanojo.setUser(new User());
-        loadResourceManagers();
         this.mPurchaseApi = new PurchaseApi(getApplicationContext());
         this.mUserGenderList = getResources().getStringArray(R.array.user_account_gender_list);
 
-		if (Integer.parseInt(Build.VERSION.SDK) < Build.VERSION_CODES.FROYO) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
 			System.setProperty("http.keepAlive", "false");
 		}
 		settings = new ApplicationSetting(this);
 		mBarcodeKanojo.createHttpApi(settings.getServerHttps(), settings.getServerURL(), settings.getServerPort(), Defs.USER_AGENT(), Defs.USER_LANGUAGE());
+		imageCache = new DynamicImageCache(settings.getCacheSize(), getBaseContext(), mBarcodeKanojo.getHttpApi());
     }
 
     public void changeLocate() {
@@ -73,13 +74,9 @@ public class BarcodeKanojoApp extends Application {
 		return settings;
 	}
 
-	public RemoteResourceManager getRemoteResourceManager() {
-        return this.mRemoteResourceManager;
-    }
-
-    public void loadResourceManagers() {
-        this.mRemoteResourceManager = new RemoteResourceManager(getApplicationContext());
-    }
+    public DynamicImageCache getImageCache() {
+		return imageCache;
+	}
 
     public void logged_out() {
         sendBroadcast(new Intent(INTENT_ACTION_LOGGED_OUT));

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jp.co.cybird.barcodekanojoForGAM.view.UserProfileView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:EditItemView="http://schemas.android.com/apk/res-auto" android:id="@+id/common_enemy_profile" android:background="@drawable/enemyprofile_bg" android:layout_width="match_parent" android:layout_height="@dimen/profile_height">
+<com.goujer.barcodekanojo.view.UserProfileView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:EditItemView="http://schemas.android.com/apk/res-auto" android:id="@+id/common_enemy_profile" android:background="@drawable/enemyprofile_bg" android:layout_width="match_parent" android:layout_height="@dimen/profile_height">
     <FrameLayout android:id="@+id/common_profile_layout_img" android:padding="4dp" android:layout_width="wrap_content" android:layout_height="match_parent">
         <ImageView android:layout_width="wrap_content" android:layout_height="match_parent" android:src="@drawable/dummy_face_90" android:scaleType="fitXY" android:adjustViewBounds="true"/>
         <ImageView android:id="@+id/common_profile_img" android:layout_width="wrap_content" android:layout_height="match_parent" android:src="@drawable/enemyprofile_cover" android:scaleType="fitXY" android:adjustViewBounds="true"/>
@@ -22,4 +22,4 @@
             <TextView android:id="@+id/common_profile_b_coin" style="@style/txt_enemyprofile.digit"/>
         </LinearLayout>
     </LinearLayout>
-</jp.co.cybird.barcodekanojoForGAM.view.UserProfileView>
+</com.goujer.barcodekanojo.view.UserProfileView>

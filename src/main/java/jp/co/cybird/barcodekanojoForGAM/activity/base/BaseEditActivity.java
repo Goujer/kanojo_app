@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.DatePicker;
@@ -31,16 +30,14 @@ import jp.co.cybird.barcodekanojoForGAM.activity.util.EditBitmapActivity;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
-import jp.co.cybird.barcodekanojoForGAM.core.model.Category;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
-import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Product;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import jp.co.cybird.barcodekanojoForGAM.core.util.FileUtil;
 import jp.co.cybird.barcodekanojoForGAM.core.util.GeoUtil;
 import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
-import jp.co.cybird.barcodekanojoForGAM.view.ProductAndKanojoView;
+import com.goujer.barcodekanojo.view.ProductAndKanojoView;
 
 public abstract class BaseEditActivity extends BaseActivity implements BaseInterface {
     protected static final String TAG = "BaseEditActivity";

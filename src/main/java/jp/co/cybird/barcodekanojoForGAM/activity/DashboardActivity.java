@@ -19,6 +19,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.goujer.barcodekanojo.core.util.DynamicImageCache;
+
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
@@ -29,8 +31,8 @@ import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseKanojosActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.GreeBaseActivity;
-import jp.co.cybird.barcodekanojoForGAM.activity.setting.OptionActivity;
-import jp.co.cybird.barcodekanojoForGAM.adapter.DashboardAdapter;
+
+import com.goujer.barcodekanojo.adapter.DashboardAdapter;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.ActivityModel;
@@ -39,9 +41,8 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
-import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 import jp.co.cybird.barcodekanojoForGAM.view.DashboardHeaderView;
-import jp.co.cybird.barcodekanojoForGAM.view.UserProfileView;
+import com.goujer.barcodekanojo.view.UserProfileView;
 
 public class DashboardActivity extends BaseKanojosActivity implements View.OnClickListener, AbsListView.OnScrollListener, DashboardAdapter.OnKanojoClickListener {
     private static final int DEFAULT_LIMIT = 6;
@@ -59,7 +60,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
     private UserProfileView mProfileView;
     private ReadActivitiesTask mReadActivitiesTask;
     private RemoteResourceManagerObserver mResourcesObserver;
-    private RemoteResourceManager mRrm;
+    private DynamicImageCache mDic;
     private boolean readAllFlg = false;
     private boolean test = false;
 
@@ -73,13 +74,13 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
 			setActionBar((Toolbar) findViewById(R.id.toolbar_primary));
 			getActionBar().setDisplayShowTitleEnabled(false);
 		}
-        this.mRrm = ((BarcodeKanojoApp) getApplication()).getRemoteResourceManager();
-        this.mProfileView = findViewById(R.id.common_profile);
+        this.mDic = ((BarcodeKanojoApp) getApplication()).getImageCache();
+		this.mProfileView = findViewById(R.id.common_profile);
         this.mListView = findViewById(R.id.list_activities);
         this.mFooter = getLayoutInflater().inflate(R.layout.row_footer, (ViewGroup) null, false);
         this.mHeader = new DashboardHeaderView(this);
         this.mResourcesObserver = new RemoteResourceManagerObserver(this, (RemoteResourceManagerObserver) null);
-        this.mDashboardAdapter = new DashboardAdapter(this, this.mRrm, this.mResourcesObserver);
+        this.mDashboardAdapter = new DashboardAdapter(this, this.mDic, this.mResourcesObserver);
         this.mDashboardAdapter.setOnKanojoClickListener(this);
         this.mListView.addHeaderView(this.mHeader);
         this.mListView.addFooterView(this.mFooter);
@@ -131,6 +132,13 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         this.readAllFlg = false;
         super.onStop();
     }
+
+    @Override
+	public void onDestroy() {
+    	super.onDestroy();
+		mDashboardAdapter.destroy();
+		mProfileView.destroy();
+	}
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -229,7 +237,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
             executeLogInTask();
             return;
         }
-        this.mProfileView.setUser(mUser, this.mRrm);
+        this.mProfileView.setUser(mUser, this.mDic);
         this.mHeader.setUser(mUser);
     }
 

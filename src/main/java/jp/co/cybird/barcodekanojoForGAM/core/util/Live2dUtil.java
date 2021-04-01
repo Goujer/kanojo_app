@@ -17,7 +17,7 @@ public class Live2dUtil {
     public static final int DEFAULT_LOVE_GAUGE = 85;
     public static final float ICON_OFFSET_Y = -0.3f;
     public static final float ICON_SCALE = 0.78f;
-    public static final int ICON_SIZE = 400;	//Export size should be 1024
+    public static final int ICON_SIZE = 420;	//Export size should be 1024
     public static final float PREICON_OFFSET_Y = 0.2f;
     public static final float PREICON_SCALE = 1.3f;
     private static final int REQUEST_MAX = 5;
@@ -26,7 +26,7 @@ public class Live2dUtil {
     private KanojoLive2D mKanojoLive2D;
     private Live2dDiskCache mLive2dDisk;
     private Observer mRrObserver;
-    private RemoteResourceManager mRrm;
+    //private RemoteResourceManager mRrm;
     private HashMap<String, Integer> map = new HashMap<>();
 
     public Live2dUtil(KanojoLive2D kanojoLive2d, Context context) {
@@ -40,9 +40,9 @@ public class Live2dUtil {
     }
 
     public void removeObserver() {
-        if (this.mRrm != null && this.mRrObserver != null) {
-            this.mRrm.deleteObserver(this.mRrObserver);
-        }
+        //if (this.mRrm != null && this.mRrObserver != null) {
+        //    this.mRrm.deleteObserver(this.mRrObserver);
+        //}
     }
 
     public boolean setLive2DKanojoPartsAndRequest(KanojoSetting setting, Kanojo kanojo) {
@@ -73,11 +73,11 @@ public class Live2dUtil {
             this.map.put(partsUrl, 0);
         }
         this.mLive2dDisk = new Live2dDiskCache(this.mContext, AVATAR_DATA_CACHE_DIR, partsID);
-        this.mRrm = new RemoteResourceManager(this.mLive2dDisk);
-        if (this.mRrObserver != null) {
-            this.mRrm.addObserver(this.mRrObserver);
-        }
-        ImageCache.requestImage(partsUrl, this.mRrm);
+//        this.mRrm = new RemoteResourceManager(this.mLive2dDisk);
+//        if (this.mRrObserver != null) {
+//            this.mRrm.addObserver(this.mRrObserver);
+//        }
+//        ImageCache.requestImage(partsUrl, this.mRrm);
         return false;
     }
 
@@ -100,20 +100,21 @@ public class Live2dUtil {
             this.map.put(StringUrl, 0);
         }
         Uri backUri = Uri.parse(StringUrl);
-        this.mRrm = new RemoteResourceManager(new Live2dDiskCache(this.mContext, AVATAR_DATA_CACHE_DIR, BACKGROUND_DIR));
-        if (this.mRrm.exists(backUri)) {
-            this.mKanojoLive2D.setBackgroundImage(this.mRrm.getFile(backUri).getAbsolutePath(), true);
-            return true;
-        }
-        if (this.mRrObserver != null) {
-            this.mRrm.addObserver(this.mRrObserver);
-        }
-        ImageCache.requestImage(StringUrl, this.mRrm);
+        //this.mRrm = new RemoteResourceManager(new Live2dDiskCache(this.mContext, AVATAR_DATA_CACHE_DIR, BACKGROUND_DIR));
+        //if (this.mRrm.exists(backUri)) {
+        //    this.mKanojoLive2D.setBackgroundImage(this.mRrm.getFile(backUri).getAbsolutePath(), true);
+        //    return true;
+        //}
+        //if (this.mRrObserver != null) {
+        //    this.mRrm.addObserver(this.mRrObserver);
+        //}
+        //ImageCache.requestImage(StringUrl, this.mRrm);
         return false;
     }
 
     public boolean exists(Uri uri) {
-        return this.mRrm.exists(uri);
+        //return this.mRrm.exists(uri);
+		return false;
     }
 
     public static Bitmap createNormalIcon(Context context, Kanojo kanojo, int emotion_status) {

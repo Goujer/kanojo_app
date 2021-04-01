@@ -5,6 +5,8 @@
 	android:background="@color/default_bg"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content">
-    <jp.co.cybird.barcodekanojoForGAM.view.KanojoView android:id="@+id/row_kanojos_left" android:layout_width="0dp" android:layout_height="@dimen/row_kanojos_height" android:layout_weight="1"/>
-    <jp.co.cybird.barcodekanojoForGAM.view.KanojoView android:id="@+id/row_kanojos_right" android:layout_width="0dp" android:layout_height="@dimen/row_kanojos_height" android:layout_weight="1"/>
+    <com.goujer.barcodekanojo.view.KanojoView
+		android:id="@+id/row_kanojos_left" android:layout_width="0dp" android:layout_height="@dimen/row_kanojos_height" android:layout_weight="1"/>
+    <com.goujer.barcodekanojo.view.KanojoView
+		android:id="@+id/row_kanojos_right" android:layout_width="0dp" android:layout_height="@dimen/row_kanojos_height" android:layout_weight="1"/>
 </LinearLayout>

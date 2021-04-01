@@ -20,4 +20,5 @@ object Preferences {
 	const val SERVER_HTTPS = "server_https"
 	const val SERVER_URL = "server_url"
 	const val SERVER_PORT = "server_port"
+	const val PREFERENCE_CACHE_SIZE = "cache_size"
 }

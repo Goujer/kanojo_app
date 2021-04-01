@@ -45,7 +45,9 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoItemCategory;
 import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
-import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
+
+import com.goujer.barcodekanojo.activity.kanojo.KanojoItemDetailActivity;
+import com.goujer.barcodekanojo.core.util.DynamicImageCache;
 import com.goujer.barcodekanojo.preferences.ApplicationSetting;
 import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
 
@@ -79,7 +81,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
     private CustomLoadingView mLoadingView;
     private PurchaseApi mPurchaseAPI;
     private int mRequestCode;
-    private RemoteResourceManager mRrm;
+    private DynamicImageCache mDic;
     final Handler mTaskEndHandler = new Handler() {
     	@Override
         public void handleMessage(Message msg) {
@@ -112,7 +114,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int dWidth = displayMetrics.widthPixels;
         Resources r = getResources();
-        this.mRrm = ((BarcodeKanojoApp) getApplication()).getRemoteResourceManager();
+        this.mDic = ((BarcodeKanojoApp) getApplication()).getImageCache();
         this.mPurchaseAPI = ((BarcodeKanojoApp) getApplication()).getPurchaseApi();
         Button btnClose = findViewById(R.id.kanojo_items_close);
         btnClose.setOnClickListener(this);
@@ -381,12 +383,12 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    private void updateListItem(Response<?> response) {
-        updateListItem(response.getKanojoItemCategoryModelList());
-    }
+    //private void updateListItem(Response<?> response) {
+    //    updateListItem(response.getKanojoItemCategoryModelList());
+    //}
 
     private void addSection(String title, boolean flag, ModelList<KanojoItem> list) {
-        KanojoItemAdapter adapter = new KanojoItemAdapter(this, this.mRrm);
+        KanojoItemAdapter adapter = new KanojoItemAdapter(this, this.mDic);
         adapter.setUserLevel(this.mUserLevel);
         adapter.setModelList(list);
         adapter.setMode(this.mode);

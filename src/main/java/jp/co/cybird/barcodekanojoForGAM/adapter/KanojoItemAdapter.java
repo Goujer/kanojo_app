@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.goujer.barcodekanojo.core.util.DynamicImageCache;
+
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
@@ -17,8 +20,6 @@ import jp.co.cybird.barcodekanojoForGAM.adapter.base.ObservableAdapter;
 import jp.co.cybird.barcodekanojoForGAM.core.model.ActivityModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoItem;
 import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList;
-import jp.co.cybird.barcodekanojoForGAM.core.util.ImageCache;
-import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 
 public class KanojoItemAdapter extends BaseKanojoItemAdapter implements ObservableAdapter {
 
@@ -34,7 +35,7 @@ public class KanojoItemAdapter extends BaseKanojoItemAdapter implements Observab
         }
     };
     private RemoteResourceManagerObserver mResourcesObserver;
-    private RemoteResourceManager mRrm;
+    private DynamicImageCache mDic;
     private Runnable mRunnableLoadPhotos = new Runnable() {
         public void run() {
             if (KanojoItemAdapter.this.mLoadedPhotoIndex < KanojoItemAdapter.this.getCount()) {
@@ -43,8 +44,8 @@ public class KanojoItemAdapter extends BaseKanojoItemAdapter implements Observab
                 int access$0 = kanojoItemAdapter2.mLoadedPhotoIndex;
                 kanojoItemAdapter2.mLoadedPhotoIndex = access$0 + 1;
                 ActivityModel a = (ActivityModel) kanojoItemAdapter.getItem(access$0);
-                ImageCache.requestImage(a.getLeftImgUrl(), KanojoItemAdapter.this.mRrm);
-                ImageCache.requestImage(a.getRightImgUrl(), KanojoItemAdapter.this.mRrm);
+				mDic.requestBitmap(a.getLeftImgUrl());
+				mDic.requestBitmap(a.getRightImgUrl());
                 KanojoItemAdapter.this.mHandler.postDelayed(KanojoItemAdapter.this.mRunnableLoadPhotos, 200);
             }
         }
@@ -52,13 +53,13 @@ public class KanojoItemAdapter extends BaseKanojoItemAdapter implements Observab
     private int mode;
     private int userLevel;
 
-    public KanojoItemAdapter(Context context, RemoteResourceManager rrm) {
+    public KanojoItemAdapter(Context context, DynamicImageCache dic) {
         super(context);
         this.mInflater = LayoutInflater.from(context);
-        this.mRrm = rrm;
+        this.mDic = dic;
         this.mHandler = new Handler();
         this.mResourcesObserver = new RemoteResourceManagerObserver(this, (RemoteResourceManagerObserver) null);
-        this.mRrm.addObserver(this.mResourcesObserver);
+        this.mDic.addObserver(this.mResourcesObserver);
     }
 
     public void setUserLevel(int userLevel2) {
@@ -103,16 +104,15 @@ public class KanojoItemAdapter extends BaseKanojoItemAdapter implements Observab
         } else {
             holder.layoutUplevel.setVisibility(View.GONE);
         }
-        ImageCache.setImage(holder.img, item.getImage_thumbnail_url(), this.mRrm, R.drawable.common_noimage_product);
+        mDic.loadBitmapASync(holder.img, item.getImage_thumbnail_url(), R.drawable.common_noimage_product);
         return view;
     }
 
     public void setModelList(ModelList<KanojoItem> l) {
         super.setModelList(l);
-        Iterator it = l.iterator();
-        while (it.hasNext()) {
-            ImageCache.requestImage(((KanojoItem) it.next()).getImage_thumbnail_url(), this.mRrm);
-        }
+		for (KanojoItem kanojoItem : l) {
+			mDic.requestBitmap(kanojoItem.getImage_thumbnail_url());
+		}
     }
 
     public void addModelList(ModelList<KanojoItem> l) {
@@ -122,7 +122,7 @@ public class KanojoItemAdapter extends BaseKanojoItemAdapter implements Observab
     public void removeObserver() {
         this.mHandler.removeCallbacks(this.mNotifyThread);
         this.mHandler.removeCallbacks(this.mRunnableLoadPhotos);
-        this.mRrm.deleteObserver(this.mResourcesObserver);
+        this.mDic.deleteObserver(this.mResourcesObserver);
     }
 
     private class RemoteResourceManagerObserver implements Observer {

@@ -14,7 +14,8 @@ import java.io.IOException
 import java.net.HttpURLConnection
 
 class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort: Int, mClientVersion: String?, mClientLanguage: String?) {
-	private var mHttpApi: HttpApi = HttpApi(useHttps, mApiBaseUrl, mApiBasePort, mClientVersion, mClientLanguage)
+	var mHttpApi: HttpApi = HttpApi(useHttps, mApiBaseUrl, mApiBasePort, mClientVersion, mClientLanguage)
+		private set
 
 	fun updateApiBase(useHttps: Boolean, newBaseUrl: String, newBasePort: Int, newClientVersion: String?, newClientLanguage: String?) {
 		mHttpApi = HttpApi(useHttps, newBaseUrl, newBasePort, newClientVersion, newClientLanguage)

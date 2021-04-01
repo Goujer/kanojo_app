@@ -16,13 +16,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
+
+import com.goujer.barcodekanojo.core.util.DynamicImageCache;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -34,7 +35,7 @@ import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseKanojosActivity;
-import jp.co.cybird.barcodekanojoForGAM.adapter.KanojoAdapter;
+import com.goujer.barcodekanojo.adapter.KanojoAdapter;
 import jp.co.cybird.barcodekanojoForGAM.adapter.base.SeparatedListHeaderAdapter;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
@@ -44,10 +45,9 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import jp.co.cybird.barcodekanojoForGAM.core.model.SearchResult;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 import jp.co.cybird.barcodekanojoForGAM.core.util.FirstbootUtil;
-import jp.co.cybird.barcodekanojoForGAM.core.util.RemoteResourceManager;
 import jp.co.cybird.barcodekanojoForGAM.provider.KanojoSearchSuggestionsProvider;
 import jp.co.cybird.barcodekanojoForGAM.view.MoreBtnView;
-import jp.co.cybird.barcodekanojoForGAM.view.UserProfileView;
+import com.goujer.barcodekanojo.view.UserProfileView;
 
 public class KanojosActivity extends BaseKanojosActivity implements View.OnClickListener, MoreBtnView.OnMoreClickListener, KanojoAdapter.OnKanojoClickListener {
     private static final int DEFAULT_LIMIT = 6;
@@ -67,7 +67,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
     private LogInTask mLogInTask;
     private UserProfileView mProfileView;
     private StatusHolder mRanking;
-    private RemoteResourceManager mRrm;
+    private DynamicImageCache mDic;
     private String mSearchWord = null;
     final Handler mTaskEndHandler = new Handler() {
         @Override
@@ -94,7 +94,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 			setActionBar((Toolbar) findViewById(R.id.toolbar_primary));
 			getActionBar().setDisplayShowTitleEnabled(false);
 		}
-        this.mRrm = ((BarcodeKanojoApp) getApplication()).getRemoteResourceManager();
+        this.mDic = ((BarcodeKanojoApp) getApplication()).getImageCache();
         this.mProfileView = findViewById(R.id.common_profile);
         this.mKanojosListView = findViewById(R.id.kanojos_list);
         this.mYourKanojos = new StatusHolder();
@@ -171,6 +171,12 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
     }
 
     @Override
+	protected void onDestroy() {
+    	super.onDestroy();
+		mProfileView.destroy();
+	}
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode) {
@@ -205,6 +211,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
     public void onClick(View v) {
     }
 
@@ -237,21 +244,20 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_kanojos_refresh:
-                if (this.isSearch) {
-                    executeListTask(true);
-                    return true;
-                }
-                executeListTask(false);
-                return true;
-            case R.id.menu_kanojos_search:
-                onSearchRequested();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_kanojos_refresh) {
+			if (this.isSearch) {
+				executeListTask(true);
+				return true;
+			}
+			executeListTask(false);
+			return true;
+		} else if (itemId == R.id.menu_kanojos_search) {
+			onSearchRequested();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -286,7 +292,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
             executeLogInTask();
             return;
         }
-        this.mProfileView.setUser(this.mUser, this.mRrm);
+        this.mProfileView.setUser(this.mUser, this.mDic);
         if (!this.isSearch) {
             if (this.mYourKanojos.txtNumber != null) {
                 this.mYourKanojos.txtNumber.setText(String.valueOf(this.mUser.getKanojo_count()));
@@ -307,7 +313,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         list.more = new MoreBtnView(getApplicationContext());
         list.more.setOnMoreClickListener(id, this);
         list.displayed = 0;
-        list.adapter = new KanojoAdapter(getApplicationContext(), this.mRrm);
+        list.adapter = new KanojoAdapter(getApplicationContext(), this.mDic);
         list.adapter.setKanojosModelList(new ModelList());
         list.adapter.setOnKanojoClickListener(this);
         list.key = key;
@@ -576,8 +582,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         TextView txtNumber;
         int what;
 
-        StatusHolder() {
-        }
+
     }
 
     protected void executeLogInTask() {

@@ -28,7 +28,7 @@ import jp.co.cybird.barcodekanojoForGAM.Defs;
 import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
-import jp.co.cybird.barcodekanojoForGAM.activity.scan.ScanKanojoGenerateActivity;
+import com.goujer.barcodekanojo.activity.scan.ScanKanojoGenerateActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.scan.ScanOthersEditActivity;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;

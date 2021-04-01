@@ -5,7 +5,8 @@
     <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
 		<include layout="@layout/toolbar_primary"/>
         <jp.co.cybird.barcodekanojoForGAM.view.CustomToolBarView android:layout_width="match_parent" android:layout_height="wrap_content"/>
-        <jp.co.cybird.barcodekanojoForGAM.view.UserProfileView android:id="@+id/common_profile" android:background="@drawable/userprofile_bg" android:layout_width="match_parent" android:layout_height="@dimen/profile_height"/>
+        <com.goujer.barcodekanojo.view.UserProfileView
+			android:id="@+id/common_profile" android:background="@drawable/userprofile_bg" android:layout_width="match_parent" android:layout_height="@dimen/profile_height"/>
         <ListView android:id="@+id/kanojos_list" android:background="@color/default_bg" android:layout_width="match_parent" android:layout_height="match_parent" android:divider="#555555"/>
     </LinearLayout>
     <RelativeLayout android:id="@+id/kanojo_firstboot" android:paddingLeft="@dimen/common_firstboot_left" android:paddingTop="@dimen/common_firstboot_top" android:paddingRight="@dimen/common_firstboot_right" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent"

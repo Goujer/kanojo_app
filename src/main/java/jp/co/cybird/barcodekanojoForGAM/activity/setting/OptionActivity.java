@@ -8,9 +8,9 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.goujer.barcodekanojo.activity.setting.ServerConfigurationActivity;
+import com.goujer.barcodekanojo.activity.setting.UserModifyActivity;
 import com.goujer.barcodekanojo.activity.top.LaunchActivity;
 
 import java.io.File;
@@ -25,7 +25,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
-import jp.co.cybird.barcodekanojoForGAM.core.util.ImageCache;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 
 public class OptionActivity extends BaseActivity implements View.OnClickListener {
@@ -117,28 +116,20 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
 		int id = v.getId();
 		if (id == R.id.kanojo_option_server_config) {
 			startServerConfig();
-			return;
 		} else if (id == R.id.kanojo_option_account_modify) {
 			startAccountModify();
-			return;
 		} else if (id == R.id.kanojo_option_privacy) {
 			showPrivacy();
-			return;
 		} else if (id == R.id.kanojo_option_terms) {
 			showTerms();
-			return;
 		} else if (id == R.id.kanojo_option_rules) {
 			showRules();
-			return;
 		} else if (id == R.id.kanojo_option_barcodekanojo) {
 			showBarcodeKanojo();
-			return;
 		} else if (id == R.id.kanojo_option_team) {
 			showTeam();
-			return;
 		} else if (id == R.id.kanojo_option_mail) {
 			showMail();
-			return;
 		} else if (id == R.id.kanojo_option_kddi) {
 			showKDDI();
 		}
@@ -244,13 +235,13 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         Response<?> modify_user() throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) OptionActivity.this.getApplication()).getBarcodeKanojo();
             User user = barcodeKanojo.getUser();
-            if (OptionActivity.this.modifiedUser.getPassword().equals("")) {
+            if (OptionActivity.this.modifiedUser.getPassword().length == 0) {
                 OptionActivity.this.modifiedUser.setPassword(user.getPassword());
             }
             Response<BarcodeKanojoModel> android_update = barcodeKanojo.update(OptionActivity.this.modifiedUser.getName(), user.getPassword(), OptionActivity.this.modifiedUser.getPassword(), OptionActivity.this.modifiedUser.getEmail(), OptionActivity.this.modifiedUser.getBirth_year(), OptionActivity.this.modifiedUser.getBirth_month(), OptionActivity.this.modifiedUser.getBirth_day(), OptionActivity.this.modifiedUser.getSex(), OptionActivity.this.modifiedPhoto);
             barcodeKanojo.init_product_category_list();
             User user2 = barcodeKanojo.getUser();
-            ImageCache.requestImage(user2.getProfile_image_url(), ((BarcodeKanojoApp) OptionActivity.this.getApplication()).getRemoteResourceManager());
+			((BarcodeKanojoApp) OptionActivity.this.getApplication()).getImageCache().requestBitmap(user2.getProfile_image_url());
             return android_update;
         }
     }

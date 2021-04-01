@@ -1,5 +1,7 @@
 package com.goujer.utils
 
+import java.net.URLEncoder
+
 //Count how many times ch is in s
 fun countOccurrences(s: String, ch: Char): Int {
 	return s.filter { it == ch }.count()
@@ -29,4 +31,9 @@ private fun toDigit(hexChar: Char): Int {
 	val digit = Character.digit(hexChar, 16)
 	require(digit != -1) { "Invalid Hexadecimal Character: $hexChar" }
 	return digit
+}
+
+//Encode String for use in a URL
+fun encodeForUrl(input: String): String {
+	return URLEncoder.encode(input, "UTF-8").replace("+", "%20").replace("%2F", "/")
 }

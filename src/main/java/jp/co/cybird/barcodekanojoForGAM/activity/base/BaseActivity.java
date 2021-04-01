@@ -1,7 +1,5 @@
 package jp.co.cybird.barcodekanojoForGAM.activity.base;
 
-import android.accounts.Account;
-import android.accounts.OnAccountsUpdateListener;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -39,7 +37,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
-import jp.co.cybird.barcodekanojoForGAM.core.util.PhoneInfo;
 import com.goujer.barcodekanojo.preferences.ApplicationSetting;
 
 public abstract class BaseActivity extends GreeBaseActivity implements BaseInterface, DialogInterface.OnDismissListener {

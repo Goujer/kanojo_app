@@ -3,7 +3,8 @@
     <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
         <include layout="@layout/toolbar_primary"/>
         <jp.co.cybird.barcodekanojoForGAM.view.CustomToolBarView android:layout_width="match_parent" android:layout_height="wrap_content"/>
-        <jp.co.cybird.barcodekanojoForGAM.view.UserProfileView android:id="@+id/common_profile" android:background="@drawable/userprofile_bg" android:layout_width="match_parent" android:layout_height="@dimen/profile_height"/>
+        <com.goujer.barcodekanojo.view.UserProfileView
+			android:id="@+id/common_profile" android:background="@drawable/userprofile_bg" android:layout_width="match_parent" android:layout_height="@dimen/profile_height"/>
         <ListView android:id="@+id/list_activities" android:background="@color/default_bg" android:layout_width="match_parent" android:layout_height="match_parent" android:divider="#555555"/>
     </LinearLayout>
     <RelativeLayout android:id="@+id/dashboard_firstboot" android:background="@color/firstboot_bg" android:paddingTop="@dimen/common_firstboot_top" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent">

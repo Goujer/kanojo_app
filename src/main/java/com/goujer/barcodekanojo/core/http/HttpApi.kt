@@ -1,17 +1,18 @@
 package com.goujer.barcodekanojo.core.http
 
+import android.util.Log
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
 import jp.co.cybird.barcodekanojoForGAM.core.parser.AbstractJSONParser
 import jp.co.cybird.barcodekanojoForGAM.core.parser.JSONParser
+import jp.co.cybird.barcodekanojoForGAM.core.util.DiskCache
 import java.io.DataOutputStream
-import java.io.FileInputStream
-import java.io.InputStream
 import java.net.*
 
 class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: Int, clientVersion: String?, clientLanguage: String?) {
-	private var mApiBaseProtocol: String = if (useHttps) "https" else "http"
+	internal var mApiBaseProtocol: String = if (useHttps) "https" else "http"
+		private set
 	internal var mApiBaseUrl: String = mApiBaseUrl
 		private set
 	private val mClientVersion = if (clientVersion != null) clientVersion else DEFAULT_CLIENT_VERSION
@@ -53,16 +54,51 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 		}
 	}
 
+	fun executeHttpRequest(connection: HttpURLConnection, cache: DiskCache, key: String) {
+		connection.connect()
+		val statusCode = connection.responseCode
+		when (statusCode) {
+			HttpURLConnection.HTTP_OK -> {
+				try {
+					Log.d(TAG, connection.url.file)
+					return cache.store(key, connection.inputStream)
+				} finally {
+					connection.disconnect()
+				}
+			}
+			HttpURLConnection.HTTP_BAD_REQUEST -> {
+				val message = connection.responseMessage
+				connection.disconnect()
+				throw BarcodeKanojoException(message)
+			}
+			HttpURLConnection.HTTP_UNAUTHORIZED, HttpURLConnection.HTTP_NOT_FOUND -> {
+				connection.disconnect()
+				throw BarcodeKanojoException(connection.responseMessage)
+			}
+			HttpURLConnection.HTTP_INTERNAL_ERROR -> {
+				connection.disconnect()
+				throw BarcodeKanojoException("Server is down. Try again later.")
+			}
+			else -> {
+				connection.disconnect()
+				throw BarcodeKanojoException("Error connecting to Server: $statusCode. Try again later.")
+			}
+		}
+	}
+
 	fun createHttpGet(fileIn: String, vararg nameValuePairs: NameValuePair): HttpURLConnection {
 		var file: String = fileIn
 		val connection: HttpURLConnection
 		if (nameValuePairs.isEmpty()) {
 			connection = URL(mApiBaseProtocol, mApiBaseUrl, mApiBasePort, file).openConnection() as HttpURLConnection
 		} else {
-			file += '?'
 			val parameters = StringBuilder()
 			for (pair in stripNulls(*nameValuePairs)) {
-				if (parameters.length != 0) parameters.append('&')
+				if (parameters.isNotEmpty()) {
+					parameters.append('&')
+				} else {
+					parameters.append('?')
+				}
 				parameters.append(pair.toString())
 			}
 			file += parameters.toString()
@@ -142,5 +178,6 @@ class HttpApi(useHttps: Boolean, mApiBaseUrl: String, private var mApiBasePort: 
 		private const val DEFAULT_CLIENT_LANGUAGE = "en"
 		private const val DEFAULT_CLIENT_VERSION = "jp.co.cybrid.barcodekanojo"
 		private const val BOUNDARY = "0xKhTmLbOuNdArY"
+		private const val TAG = "HttpApi"
 	}
 }

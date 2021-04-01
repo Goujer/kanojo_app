@@ -11,13 +11,17 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
+import java.net.ProtocolException;
 
-public class BaseDiskCache implements DiskCache {
+import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp;
+import jp.co.cybird.barcodekanojoForGAM.Defs;
+
+public final class BaseDiskCache implements DiskCache {
 
     private static final int EXTERNAL_MEMORY_AVAILABLE = 1;
     private static final int INTERNAL_MEMORY_AVAILABLE = 2;
@@ -29,7 +33,7 @@ public class BaseDiskCache implements DiskCache {
     private Digest mDigest;
     private File mStorageDirectory;
 
-    BaseDiskCache(Context context) {
+    public BaseDiskCache(Context context) {
         File storageDirectory = FileUtil.getCacheDirectory(context);
         this.mContext = context;
 		if (FileUtil.isCacheDirectoryFull(context)) {
@@ -53,38 +57,35 @@ public class BaseDiskCache implements DiskCache {
 //    }
 
     public boolean exists(String key) {
-        return getFile(key).exists();
+        return new File(createDirectory().toString() + File.separator + key).exists();
     }
 
-    public File getFile(String hash) {
-		return getFile(createDirectory(), hash);
+	public File getFile(String key) throws IOException {
+		File result = new File(createDirectory().toString() + File.separator + key);
+		if (!result.exists()) {
+			result.getParentFile().mkdirs();
+			result.createNewFile();
+		}
+		return result;
+	}
+
+    public File getReadOnlyFile(String key) {
+		return new File(createDirectory().toString() + File.separator + key);
+	}
+
+    public InputStream getInputStream(String key) throws IOException {
+        return new FileInputStream(getReadOnlyFile(key));
     }
 
-    public File getFile(File root, String hash) {
-        File result = new File(root.toString() + File.separator + hash);
-        if (result == null || !result.exists()) {
-        }
-        return result;
-    }
+    public OutputStream getOutputStream(String key) throws IOException {
+    	return new BufferedOutputStream(new FileOutputStream(getReadOnlyFile(key)));
+	}
 
-    public File getFile(String hash, boolean isReadOnly) {
-        File mTempStorageDirectory;
-        if (isReadOnly) {
-            return getFile(hash);
-        }
-        mTempStorageDirectory = createDirectory();
-        return new File(mTempStorageDirectory.toString() + File.separator + hash);
-    }
-
-    public InputStream getInputStream(String hash) throws IOException {
-        return new FileInputStream(getFile(hash));
-    }
-
-    public void store(String key, InputStream is) {
+    public void store(String key, InputStream is) throws IOException {
         if (hasAvailableStorge(this.mContext) != 0) {
             BufferedInputStream bufferedInputStream = new BufferedInputStream(is);
+			OutputStream os = new BufferedOutputStream(new FileOutputStream(getFile(key)));
             try {
-                OutputStream os = new BufferedOutputStream(new FileOutputStream(getFile(key, false)));
                 byte[] b = new byte[2048];
                 int total = 0;
                 while (true) {
@@ -95,31 +96,56 @@ public class BaseDiskCache implements DiskCache {
                     os.write(b, 0, count);
                     total += count;
                 }
-                os.close();
-                BufferedInputStream bufferedInputStream2 = bufferedInputStream;
             } catch (IOException e) {
-            	Log.e(TAG, "Error while saving cache file.");
-            	e.printStackTrace();
-                BufferedInputStream bufferedInputStream3 = bufferedInputStream;
-            }
-        }
+				if (Defs.DEBUG) {
+					Log.e(TAG, "Error while saving cache file.");
+					e.printStackTrace();
+				}
+				File deadFile = getReadOnlyFile(key);
+				deadFile.delete();
+			} finally {
+            	os.close();
+				bufferedInputStream.close();
+			}
+		}
     }
 
     public void invalidate(String key) {
-        getFile(key).delete();
+		getReadOnlyFile(key).delete();
     }
 
     public void cleanup() {
-        String[] children = this.mStorageDirectory.list();
-        if (children != null) {
-            for (String file : children) {
-                File child = new File(this.mStorageDirectory, file);
-                if (!child.equals(new File(this.mStorageDirectory, NOMEDIA)) && child.length() <= MIN_FILE_SIZE_IN_BYTES) {
-                    child.delete();
-                }
-            }
-        }
+    	cleanup(mStorageDirectory);
+        //String[] children = this.mStorageDirectory.list();
+        //if (children != null) {
+        //    for (String file : children) {
+        //        File child = new File(this.mStorageDirectory, file);
+        //        if (!child.equals(new File(this.mStorageDirectory, NOMEDIA)) && child.length() <= MIN_FILE_SIZE_IN_BYTES) {
+        //            child.delete();
+        //        }
+        //    }
+        //}
     }
+
+    private void cleanup(File parent) {
+		String[] children = parent.list();
+		if (children != null) {
+			for (String file : children) {
+				File child = new File(parent, file);
+				if (child.isDirectory()) {
+					if (child.list().length == 0) {
+						child.delete();
+					} else {
+						cleanup(child);
+					}
+				} else if (child.isFile()) {
+					if (!child.equals(new File(this.mStorageDirectory, NOMEDIA)) && child.length() <= MIN_FILE_SIZE_IN_BYTES) {
+						child.delete();
+					}
+				}
+			}
+		}
+	}
 
 //    public void cleanupSimple() {
 //        String[] children = this.mStorageDirectory.list();
@@ -179,28 +205,28 @@ public class BaseDiskCache implements DiskCache {
         }
     }
 
-    public String encode(Uri uri) {
-        return getDigest().hex(uri.toString());
-    }
+    //public String encode(Uri uri) {
+    //    return getDigest().hex(uri.toString());
+    //}
 
-    private Digest getDigest() {
-        if (this.mDigest == null) {
-            this.mDigest = new Digest(Digest.SHA256);
-        }
-        return this.mDigest;
-    }
+    //private Digest getDigest() {
+    //    if (this.mDigest == null) {
+    //        this.mDigest = new Digest(Digest.SHA256);
+    //    }
+    //    return this.mDigest;
+    //}
 
     private int hasAvailableStorge(Context context) {
         boolean isAvailableExternalMemory = FileUtil.isAvailableExternalSDMemory();
         boolean isAvailableInternalMemory = FileUtil.isAvailableInternalMemory();
         if (isAvailableExternalMemory) {
-            return 1;
+            return EXTERNAL_MEMORY_AVAILABLE;
         }
         if (isAvailableInternalMemory) {
-            return 2;
+            return INTERNAL_MEMORY_AVAILABLE;
         }
         context.sendBroadcast(new Intent(BarcodeKanojoApp.INTENT_ACTION_FULL_STORAGE));
-        return 0;
+        return STORAGE_NOT_AVAILABLE;
     }
 
     private File createDirectory() {

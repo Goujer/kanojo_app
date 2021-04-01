@@ -58,7 +58,6 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
     private int nose_type;
     private boolean on_advertising;
     private int possession;
-    private String profile_image_url; //TODO: Implement a native icon lookup
     private int race_type;
     private int recognition;
     private int relation_status;
@@ -116,7 +115,6 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
         dest.writeInt(this.birth_year);
         dest.writeInt(this.birth_month);
         dest.writeInt(this.birth_day);
-        dest.writeString(this.profile_image_url);
         dest.writeInt(this.race_type);
         dest.writeInt(this.eye_type);
         dest.writeInt(this.nose_type);
@@ -164,7 +162,6 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
         this.birth_year = in.readInt();
         this.birth_month = in.readInt();
         this.birth_day = in.readInt();
-        this.profile_image_url = in.readString();
         this.race_type = in.readInt();
         this.eye_type = in.readInt();
         this.nose_type = in.readInt();
@@ -284,12 +281,8 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
     }
 
     public String getProfile_image_url() {
-        return profile_image_url;
+		return "/profile_images/kanojo/" + id + "/" + name + ".png";
 	}
-
-    public void setProfile_image_url(String profileImageUrl) {
-        this.profile_image_url = profileImageUrl;
-    }
 
     public int getRace_type() {
         return this.race_type;

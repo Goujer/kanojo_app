@@ -17,7 +17,8 @@
 			android:orientation="vertical"
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp">
-            <jp.co.cybird.barcodekanojoForGAM.view.ProductAndKanojoView android:id="@+id/scan_generate_photo" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_photo_height"/>
+            <com.goujer.barcodekanojo.view.ProductAndKanojoView
+				android:id="@+id/scan_generate_photo" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_photo_height"/>
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/scan_generate_1_kanojo_name" android:background="@drawable/row_kanojo_edit_bg_name" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/common_product_kanojo_name" EditItemView:textColor="@color/editable_color"/>
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/scan_generate_2_company_name" android:background="@drawable/row_kanojo_edit_bg_top" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/common_product_company" EditItemView:textColor="@color/editable_color"/>
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/scan_generate_3_product_name" android:background="@drawable/row_kanojo_edit_bg_middle" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/common_product_name" EditItemView:textColor="@color/editable_color"/>

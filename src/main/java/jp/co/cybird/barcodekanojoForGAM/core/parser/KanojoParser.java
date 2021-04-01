@@ -35,9 +35,6 @@ public class KanojoParser extends AbstractJSONParser<Kanojo> {
             if (object.has("birth_day")) {
                 res.setBirth_day(object.getInt("birth_day"));
             }
-            if (object.has("profile_image_url")) {
-                res.setProfile_image_url(object.getString("profile_image_url"));
-            }
             if (object.has("race_type")) {
                 res.setRace_type(object.getInt("race_type"));
             }

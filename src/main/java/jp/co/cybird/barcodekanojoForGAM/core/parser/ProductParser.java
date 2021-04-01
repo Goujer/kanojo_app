@@ -32,9 +32,6 @@ public class ProductParser extends AbstractJSONParser<Product> {
             if (object.has("location")) {
                 res.setLocation(object.getString("location"));
             }
-            if (object.has("product_image_url")) {
-                res.setProduct_image_url(object.getString("product_image_url"));
-            }
             if (object.has("scan_count")) {
                 res.setScan_count(object.getInt("scan_count"));
             }

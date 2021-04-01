@@ -12,7 +12,7 @@ import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp
 import jp.co.cybird.barcodekanojoForGAM.R
 import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface
-import jp.co.cybird.barcodekanojoForGAM.activity.setting.UserModifyActivity
+import com.goujer.barcodekanojo.activity.setting.UserModifyActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.top.LoginActivity
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel

@@ -2,7 +2,6 @@ package jp.co.cybird.barcodekanojoForGAM.core.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import jp.co.cybird.barcodekanojoForGAM.Defs;
 
 public class User implements BarcodeKanojoModel, Parcelable {
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
@@ -142,11 +141,7 @@ public class User implements BarcodeKanojoModel, Parcelable {
     }
 
     public String getProfile_image_url() {
-        return this.profile_image_url;
-    }
-
-    public void setProfile_image_url(String profileImageUrl) {
-        this.profile_image_url = profileImageUrl;
+		return "/profile_images/user/" + id + "/" + name + ".png";
     }
 
     public String getSex() {

@@ -6,15 +6,18 @@ import jp.co.cybird.barcodekanojoForGAM.Defs;
 import com.google.android.gms.maps.model.LatLng;
 
 import com.goujer.barcodekanojo.core.BarcodeKanojoHttpApi;
+import com.goujer.barcodekanojo.core.http.HttpApi;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Category;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList;
+import jp.co.cybird.barcodekanojoForGAM.core.model.Product;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 
@@ -512,5 +515,9 @@ public class BarcodeKanojo {
 
 	public boolean getIsUserLoggedIn() {
     	return userLoggedIn;
+	}
+
+	public HttpApi getHttpApi() {
+    	return mBCKApi.getMHttpApi();
 	}
 }
