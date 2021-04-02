@@ -5,33 +5,37 @@
 			style="@style/txt_stats"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_gravity="left"
+			android:layout_gravity="start"
+			android:paddingStart="10dp"
 			android:paddingLeft="10dp"
 			android:paddingTop="2dp"
-			android:text="@string/row_stats_kanjos" />
+			android:text="@string/row_stats_kanjos"/>
         <TextView
 			android:id="@+id/row_stats_kanjos"
 			style="@style/txt_stats_number"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_gravity="right"
-			android:paddingRight="12dp" />
+			android:layout_gravity="end"
+			android:paddingEnd="12dp"
+			android:paddingRight="12dp"/>
     </LinearLayout>
     <LinearLayout android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_weight="1">
         <TextView
 			style="@style/txt_stats"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_gravity="left"
+			android:layout_gravity="start"
+			android:paddingStart="32dp"
 			android:paddingLeft="32dp"
 			android:paddingTop="2dp"
-			android:text="@string/row_stats_scanned" />
+			android:text="@string/row_stats_scanned"/>
         <TextView
 			android:id="@+id/row_stats_scanned"
 			style="@style/txt_stats_number"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_gravity="right"
-			android:paddingRight="8dp" />
+			android:layout_gravity="end"
+			android:paddingEnd="8dp"
+			android:paddingRight="8dp"/>
     </LinearLayout>
 </merge>

@@ -133,10 +133,6 @@ class DashboardAdapter(context: Context?, private val mDic: DynamicImageCache, o
 		}
 	}
 
-	override fun notifyDataSetInvalidated() {
-		super.notifyDataSetInvalidated()
-	}
-
 	override fun notifyDataSetChanged() {
 		super.notifyDataSetChanged()
 		mHandler.removeCallbacks(mNotifyThread)
