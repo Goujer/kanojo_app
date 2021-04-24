@@ -1,8 +1,11 @@
 package jp.co.cybird.barcodekanojoForGAM.view;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +21,11 @@ import jp.co.cybird.barcodekanojoForGAM.activity.setting.OptionActivity;
 public class CustomToolBarView extends LinearLayout implements View.OnClickListener {
 
     private Context mContext;
-    private LinearLayout mDashboard;
-    private LinearLayout mKanojos;
-    private LinearLayout mScan;
-    private LinearLayout mSetting;
-    private LinearLayout mWebView;
+    private final LinearLayout mDashboard;
+    private final LinearLayout mKanojos;
+    private final LinearLayout mScan;
+    private final LinearLayout mSetting;
+    private final LinearLayout mWebView;
 
     public CustomToolBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -36,7 +39,11 @@ public class CustomToolBarView extends LinearLayout implements View.OnClickListe
         this.mKanojos = findViewById(R.id.top_menu_kanojos);
         this.mKanojos.setOnClickListener(this);
         this.mScan = findViewById(R.id.top_menu_scan);
-        this.mScan.setOnClickListener(this);
+        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+			this.mScan.setOnClickListener(this);
+		} else {
+        	mScan.setVisibility(View.GONE);
+		}
         this.mWebView = findViewById(R.id.top_menu_webview);
         this.mWebView.setOnClickListener(this);
         this.mSetting = findViewById(R.id.top_menu_setting);
@@ -47,23 +54,18 @@ public class CustomToolBarView extends LinearLayout implements View.OnClickListe
     @Override
     public void onClick(View v) {
         lock();
-        switch (v.getId()) {
-            case R.id.top_menu_kanojos:
-                changeTab(this.mContext, KanojosActivity.class);
-                break;
-            case R.id.top_menu_webview:
-                changeTab(this.mContext, WebViewTabActivity.class);
-                break;
-            case R.id.top_menu_scan:
-                changeTabForResult(this.mContext, ScanActivity.class, BaseInterface.REQUEST_SCAN_ACTIVITY);
-                break;
-            case R.id.top_menu_dashboard:
-                changeTab(this.mContext, DashboardActivity.class);
-                break;
-            case R.id.top_menu_setting:
-                changeTabForResult(this.mContext, OptionActivity.class, BaseInterface.REQUEST_OPTION_ACTIVITY);
-                break;
-        }
+		int id = v.getId();
+		if (id == R.id.top_menu_kanojos) {
+			changeTab(this.mContext, KanojosActivity.class);
+		} else if (id == R.id.top_menu_webview) {
+			changeTab(this.mContext, WebViewTabActivity.class);
+		} else if (id == R.id.top_menu_scan) {
+			changeTabForResult(this.mContext, ScanActivity.class, BaseInterface.REQUEST_SCAN_ACTIVITY);
+		} else if (id == R.id.top_menu_dashboard) {
+			changeTab(this.mContext, DashboardActivity.class);
+		} else if (id == R.id.top_menu_setting) {
+			changeTabForResult(this.mContext, OptionActivity.class, BaseInterface.REQUEST_OPTION_ACTIVITY);
+		}
         unlock();
     }
 
@@ -90,17 +92,23 @@ public class CustomToolBarView extends LinearLayout implements View.OnClickListe
     }
 
     protected void setActive() {
-        if (this.mContext.getClass().getSimpleName().equals("DashboardActivity")) {
-            this.mDashboard.setSelected(true);
-        } else if (this.mContext.getClass().getSimpleName().equals(KanojosActivity.TAG)) {
-            this.mKanojos.setSelected(true);
-        } else if (this.mContext.getClass().getSimpleName().equals("ScanActivity")) {
-            this.mScan.setSelected(true);
-        } else if (this.mContext.getClass().getSimpleName().equals("OptionActivity")) {
-            this.mSetting.setSelected(true);
-        } else if (this.mContext.getClass().getSimpleName().equals("WebViewTabActivity")) {
-            this.mWebView.setSelected(true);
-        }
+		switch (this.mContext.getClass().getSimpleName()) {
+			case "DashboardActivity":
+				this.mDashboard.setSelected(true);
+				break;
+			case KanojosActivity.TAG:
+				this.mKanojos.setSelected(true);
+				break;
+			case "ScanActivity":
+				this.mScan.setSelected(true);
+				break;
+			case "OptionActivity":
+				this.mSetting.setSelected(true);
+				break;
+			case "WebViewTabActivity":
+				this.mWebView.setSelected(true);
+				break;
+		}
     }
 
     protected void unlock() {
