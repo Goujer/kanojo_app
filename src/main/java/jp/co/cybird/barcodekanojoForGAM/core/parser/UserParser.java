@@ -6,7 +6,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.goujer.utils.StringUtilsKt.decodeHexString;
+import static com.goujer.utils.StringUtilKt.decodeHexString;
 
 public class UserParser extends AbstractJSONParser<User> {
     protected User parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {

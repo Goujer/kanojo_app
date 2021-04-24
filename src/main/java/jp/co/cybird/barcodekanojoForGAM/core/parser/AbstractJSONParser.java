@@ -2,7 +2,7 @@ package jp.co.cybird.barcodekanojoForGAM.core.parser;
 
 import android.util.Log;
 
-import com.goujer.utils.StringUtilsKt;
+import com.goujer.utils.StringUtilKt;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implement
 					e.printStackTrace();
 				}
 				String json = objJson.toString();
-				int missingBrackets = StringUtilsKt.countOccurrences(json, '{') - StringUtilsKt.countOccurrences(json, '}');
+				int missingBrackets = StringUtilKt.countOccurrences(json, '{') - StringUtilKt.countOccurrences(json, '}');
 				for (int i = 0; i < missingBrackets; i++) {
 					objJson.append("}");
 				}

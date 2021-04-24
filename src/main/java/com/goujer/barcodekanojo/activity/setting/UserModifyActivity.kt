@@ -16,13 +16,13 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
-import com.goujer.barcodekanojo.activity.setting.UserModifyActivity
+
 import com.goujer.barcodekanojo.activity.top.LaunchActivity
 import com.goujer.barcodekanojo.core.util.DynamicImageCache
 import com.goujer.barcodekanojo.preferences.ApplicationSetting
+
 import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp
 import jp.co.cybird.barcodekanojoForGAM.R
-import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity.OnDialogDismissListener
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.setting.ChangePasswordActivity

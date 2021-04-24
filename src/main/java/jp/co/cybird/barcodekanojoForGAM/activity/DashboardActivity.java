@@ -89,9 +89,9 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
     }
 
     public View getClientView() {
-        View leyout = getLayoutInflater().inflate(R.layout.activity_dashboard, (ViewGroup) null);
+        View layout = getLayoutInflater().inflate(R.layout.activity_dashboard, (ViewGroup) null);
         FrameLayout appLayoutRoot = new FrameLayout(this);
-        appLayoutRoot.addView(leyout);
+        appLayoutRoot.addView(layout);
         return appLayoutRoot;
     }
 
