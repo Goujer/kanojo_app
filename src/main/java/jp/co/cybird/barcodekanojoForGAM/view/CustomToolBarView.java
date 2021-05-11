@@ -39,7 +39,9 @@ public class CustomToolBarView extends LinearLayout implements View.OnClickListe
         this.mKanojos = findViewById(R.id.top_menu_kanojos);
         this.mKanojos.setOnClickListener(this);
         this.mScan = findViewById(R.id.top_menu_scan);
-        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+        if ((Build.VERSION.SDK_INT >= 17 && context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY))
+			|| (Build.VERSION.SDK_INT >= 7 && context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA))
+			|| Build.VERSION.SDK_INT < 7) {
 			this.mScan.setOnClickListener(this);
 		} else {
         	mScan.setVisibility(View.GONE);
