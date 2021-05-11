@@ -1,9 +1,8 @@
 package jp.co.cybird.barcodekanojoForGAM.core.model;
 
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.google.android.gms.maps.model.LatLng;
 
 import jp.co.cybird.barcodekanojoForGAM.core.util.GeoUtil;
 
@@ -41,7 +40,7 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
     private int face_type;
     private int follower_count;
     private int fringe_type;
-    private LatLng geo;
+    private Location geo;
     private int glasses_type;
     private int hair_color;
     private int hair_type;
@@ -69,7 +68,7 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
     private boolean voted_like;
 
     public Kanojo() {
-        this.geo = new LatLng(0, 0);
+        this.geo = GeoUtil.doublesToGeo(0, 0);
     }
 
     public Kanojo(Barcode in) {
@@ -157,7 +156,7 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
         this.id = in.readInt();
         this.name = in.readString();
         this.barcode = in.readString();
-        this.geo = new LatLng(in.readDouble(), in.readDouble());
+        this.geo = GeoUtil.doublesToGeo(in.readDouble(), in.readDouble());
         this.location = in.readString();
         this.birth_year = in.readInt();
         this.birth_month = in.readInt();
@@ -232,11 +231,11 @@ public class Kanojo implements BarcodeKanojoModel, Parcelable {
         this.barcode = barcode2;
     }
 
-    public LatLng getGeo() {
+    public Location getGeo() {
         return this.geo;
     }
 
-    public void setGeo(LatLng geo2) {
+    public void setGeo(Location geo2) {
         this.geo = geo2;
     }
 

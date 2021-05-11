@@ -13,10 +13,6 @@ import jp.co.cybird.barcodekanojoForGAM.R
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo
 import jp.co.cybird.barcodekanojoForGAM.core.model.Product
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
-import java.util.*
 
 class ScanKanojoGenerateActivity : BaseKanojoEditActivity(), View.OnClickListener, DialogInterface.OnDismissListener {
 	private lateinit var btnSave: Button
@@ -143,7 +139,7 @@ class ScanKanojoGenerateActivity : BaseKanojoEditActivity(), View.OnClickListene
 				dic.requestBitmap(mProduct!!.product_image_url)
 				file = dic.getFile(mProduct!!.product_image_url)
 			}
-			executeInspectionAndGenerateTask(mKanojo!!.barcode, mCompanyName.value, mKanojoName!!.value, mProductName!!.value, mProduct!!.category_id, mComment!!.value, null, mKanojo)
+			executeInspectionAndGenerateTask(mKanojo!!.barcode, mCompanyName.value, mKanojoName.value, mProductName.value, mProduct!!.category_id, mComment.value, null, mKanojo)
 		}
 	}
 

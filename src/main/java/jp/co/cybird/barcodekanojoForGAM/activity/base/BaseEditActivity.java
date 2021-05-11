@@ -16,8 +16,6 @@ import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -331,7 +329,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         }
     }
 
-    protected void executeInspectionAndGenerateTask(String barcode, String company_name, String kanojo_name, String product_name, int product_category_id, String product_comment, LatLng product_geo, Kanojo kanojo) {
+    protected void executeInspectionAndGenerateTask(String barcode, String company_name, String kanojo_name, String product_name, int product_category_id, String product_comment, Location product_geo, Kanojo kanojo) {
         HashMap<String, String> param = new HashMap<>();
         param.put(GreeDefs.BARCODE, barcode);
         param.put(GreeDefs.KANOJO_NAME, kanojo_name);
@@ -467,7 +465,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                     }
                     loc = barcodeKanojoApp.getLastKnownLocation();
                 }
-                return barcodeKanojo.scan_and_generate(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.COMPANY_NAME_TEXTID), this.mParam.get(GreeDefs.KANOJO_NAME), this.mParam.get(GreeDefs.KANOJO_NAME_TEXTID), iconFile, this.mParam.get(GreeDefs.PRODUCT_NAME), this.mParam.get(GreeDefs.PRODUCT_NAME_TEXTID), Integer.parseInt(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)), this.mParam.get(GreeDefs.PRODUCT_COMMENT), this.mParam.get(GreeDefs.PRODUCT_COMMENT_TEXTID), contextRef.get().getFile(), GeoUtil.LocationToGeo(loc));
+                return barcodeKanojo.scan_and_generate(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.COMPANY_NAME_TEXTID), this.mParam.get(GreeDefs.KANOJO_NAME), this.mParam.get(GreeDefs.KANOJO_NAME_TEXTID), iconFile, this.mParam.get(GreeDefs.PRODUCT_NAME), this.mParam.get(GreeDefs.PRODUCT_NAME_TEXTID), Integer.parseInt(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)), this.mParam.get(GreeDefs.PRODUCT_COMMENT), this.mParam.get(GreeDefs.PRODUCT_COMMENT_TEXTID), contextRef.get().getFile(), loc);
             } else if (this.mAction == 4) {
                 return barcodeKanojo.update(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.COMPANY_NAME_TEXTID), this.mParam.get(GreeDefs.PRODUCT_NAME), this.mParam.get(GreeDefs.PRODUCT_NAME_TEXTID), Integer.parseInt(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)), this.mParam.get(GreeDefs.PRODUCT_COMMENT), this.mParam.get(GreeDefs.PRODUCT_COMMENT_TEXTID), contextRef.get().getFile(), GeoUtil.stringToGeo(this.mParam.get(GreeDefs.GEOPOINT)));
             } else if (this.mAction == 3) {
@@ -488,12 +486,12 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                         if (task.barcode == null || task.product == null) {
                             return null;
                         }
-                        return barcodeKanojo.scan(task.barcode, task.product.getCompany_name(), task.companyNameTextId, task.product.getName(), task.productNameTextId, task.product.getCategory_id(), task.product.getComment(), task.productCommentTextId, contextRef.get().getFile(), GeoUtil.LocationToGeo(loc2));
+                        return barcodeKanojo.scan(task.barcode, task.product.getCompany_name(), task.companyNameTextId, task.product.getName(), task.productNameTextId, task.product.getCategory_id(), task.product.getComment(), task.productCommentTextId, contextRef.get().getFile(), loc2);
                     case 2:
                         if (task.barcode == null || task.product == null) {
                             return null;
                         }
-                        return barcodeKanojo.update(task.barcode, task.product.getCompany_name(), task.companyNameTextId, task.product.getName(), task.productNameTextId, task.product.getCategory_id(), task.product.getComment(), task.productCommentTextId, contextRef.get().getFile(), GeoUtil.LocationToGeo(loc2));
+                        return barcodeKanojo.update(task.barcode, task.product.getCompany_name(), task.companyNameTextId, task.product.getName(), task.productNameTextId, task.product.getCategory_id(), task.product.getComment(), task.productCommentTextId, contextRef.get().getFile(), loc2);
                     default:
                         return null;
                 }

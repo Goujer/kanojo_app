@@ -16,35 +16,35 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
+//import com.google.android.gms.maps.CameraUpdateFactory;
+//import com.google.android.gms.maps.GoogleMap;
+//import com.google.android.gms.maps.MapFragment;
+//import com.google.android.gms.maps.MapView;
+//import com.google.android.gms.maps.model.CameraPosition;
+//import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 
 //TODO: Get this working and put it somewhere.
 public class MapKanojosActivity extends /*Fragment*/Activity implements View.OnClickListener {
-    private LatLng here;
-    private GoogleMap googleMap;
+    //private LatLng here;
+    //private GoogleMap googleMap;
     //MapController mapController;
-    private MapView mapView;
+    //private MapView mapView;
     //private MyLocationOverlay overlay;
 
     /* JADX WARNING: type inference failed for: r6v0, types: [android.content.Context, jp.co.cybird.barcodekanojoForGAM.activity.MapKanojosActivity, com.google.android.maps.MapActivity] */
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-		if (googleMap == null) {
-			googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+		//if (googleMap == null) {
+			//googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
 			// check if map is created successfully or not
-			if (googleMap == null) {
-				Toast.makeText(getApplicationContext(), "Sorry! unable to create maps", Toast.LENGTH_LONG).show();
-			}
-		}
+			//if (googleMap == null) {
+			//	Toast.makeText(getApplicationContext(), "Sorry! unable to create maps", Toast.LENGTH_LONG).show();
+			//}
+		//}
 //		savedInstanceState.
 //		KanojoItemizedOverlay kanojoOverlay = new KanojoItemizedOverlay(resizeIcon(getResources().getDrawable(R.drawable.dummy_face_90)));
 //		kanojoOverlay.setDataList(null);
@@ -80,8 +80,8 @@ public class MapKanojosActivity extends /*Fragment*/Activity implements View.OnC
 
     protected void onPause() {
         //this.overlay.disableMyLocation();
-		googleMap.setMyLocationEnabled(false);
-		googleMap.clear();	//this.mapView.getOverlays().remove(this.overlay);
+		//googleMap.setMyLocationEnabled(false);
+		//googleMap.clear();	//this.mapView.getOverlays().remove(this.overlay);
 		super.onPause();
     }
 
