@@ -15,12 +15,23 @@ open class BaseActivity: Activity() {
 		}
 	}
 
-	protected fun showNoticeDialog(message: String?) {
-		if (this.mCommondialog == null) {
-			this.mCommondialog = AlertDialog.Builder(this).setTitle(R.string.app_name).setIcon(R.drawable.icon_72).setMessage(message).setPositiveButton(R.string.common_dialog_ok, DialogInterface.OnClickListener { dialog, which -> }).create()
+	protected fun showNoticeDialog(message: String) {
+		showNoticeDialog(message, null)
+	}
+
+	protected fun showNoticeDialog(message: String, listener: DialogInterface.OnDismissListener?) {
+		if (mCommondialog == null) {
+			mCommondialog = AlertDialog.Builder(this)
+					.setTitle(R.string.app_name)
+					.setIcon(R.drawable.icon_72)
+					.setMessage(message)
+					.setPositiveButton(R.string.common_dialog_ok) { dialog, which -> }.create()
 		}
-		this.mCommondialog?.setMessage(message)
-		this.mCommondialog?.setCanceledOnTouchOutside(false)
-		this.mCommondialog?.show()
+		mCommondialog?.setMessage(message)
+		mCommondialog?.setCanceledOnTouchOutside(false)
+		if (listener != null) {
+			mCommondialog?.setOnDismissListener(listener)
+		}
+		mCommondialog?.show()
 	}
 }
