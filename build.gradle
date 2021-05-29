@@ -6,7 +6,7 @@ buildscript {
 		jcenter()
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:4.2.0'
+		classpath 'com.android.tools.build:gradle:4.2.1'
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 	}
 }
@@ -67,11 +67,11 @@ android {
 	productFlavors {
 		/*minApi14 {
 			minSdkVersion 14
-			targetSdkVersion 28
+			targetSdkVersion 27
 		}*/
 		minApi12 {
 			minSdkVersion 12
-			targetSdkVersion 28
+			targetSdkVersion 27	//Need HTTPS before going to 28
 		}
 		minApi9 {
 			minSdkVersion 9
