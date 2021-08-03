@@ -18,7 +18,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
 import kotlinx.coroutines.*
-import java.net.ConnectException
+import java.net.SocketException
 
 class LaunchActivity : BaseActivity() {
 	private lateinit var mProgressbar: View
@@ -87,8 +87,9 @@ class LaunchActivity : BaseActivity() {
 							mServerConfig.visibility = View.VISIBLE
 						}
 					}
-				} catch (e: ConnectException) {
+				} catch (e: SocketException) {
 					withContext(Dispatchers.Main) {
+						showNoticeDialog(e.message)
 						mProgressbar.visibility = View.GONE
 						mServerConfig.visibility = View.VISIBLE
 					}
