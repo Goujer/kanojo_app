@@ -25,6 +25,7 @@ import jp.co.cybird.barcodekanojoForGAM.BarcodeKanojoApp
 import jp.co.cybird.barcodekanojoForGAM.R
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity.OnDialogDismissListener
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity
+import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface
 import jp.co.cybird.barcodekanojoForGAM.activity.setting.ChangePasswordActivity
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
@@ -39,7 +40,6 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
 
-//import com.google.android.gcm.GCMRegistrar;
 class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 	private var app: BarcodeKanojoApp? = null
 	private lateinit var btnClose: Button
@@ -83,7 +83,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		val bundle2 = intent.extras
 		if (bundle2 != null) {
 			mRequestCode = bundle2.getInt(EXTRA_REQUEST_CODE, REQUEST_SOCIAL_CONFIG_SETTING)
-			if (mRequestCode == 1102) {
+			if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
 				modifiedUser = bundle2.getParcelable("user")
 				user = modifiedUser
 				setAutoRefreshSession(false)
@@ -105,7 +105,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		btnSave.isEnabled = true
 		if (mRequestCode == 1103) {
 			btnSave.setText(R.string.edit_account_update_btn)
-		} else if (mRequestCode == 1102) {
+		} else if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
 			btnSave.setText(R.string.user_register_btn)
 		}
 		txtName = findViewById(R.id.kanojo_user_modify_name)
@@ -113,7 +113,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		txtName.setTextChangeListner(mTextChangeListener)
 		if (user!!.name != null && user!!.name != "null") {
 			txtName.value = user!!.name
-		} else if (mRequestCode == 1102) {
+		} else if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
 			txtName.setHoverDescription(getString(R.string.blank_name_L012))
 		} else {
 			txtName.setHoverDescription(getString(R.string.blank_name))
@@ -157,7 +157,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		}
 		mTextChangeListener = EditItemViewCallback { v, value ->
 			btnSave.isEnabled = isReadyForUpdate
-			btnSave.isEnabled = !(txtName.value.isEmpty() && txtEmail.value.isEmpty() && mRequestCode != 1102)
+			btnSave.isEnabled = !(txtName.value.isEmpty() && txtEmail.value.isEmpty() && mRequestCode != BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
 		}
 		switchLayout()
 		mLoadingView = findViewById(R.id.loadingView)
@@ -168,7 +168,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		user!!.name = txtName.value
 		user!!.setBirthFromText(txtBirthday.value)
 		user!!.setSexFromText(txtGender.value)
-		//if ((mRequestCode != 1102 || user!!.profile_image_url == null) && file != null) {
+		//if ((mRequestCode != BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST || user!!.profile_image_url == null) && file != null) {
 		//    user.setProfile_image_url(file.absolutePath);
 		//}
 		outState.putParcelable("user", user)
@@ -179,7 +179,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		super.onDismiss(dialog, code)
 		when (code) {
 			200 -> updateAndClose()
-			400 -> if (mRequestCode == 1102) {
+			400 -> if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
 				updateAndClose()
 			}
 		}
@@ -355,7 +355,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 				modifiedUser!!.setBirthFromText(txtBirthday.value)
 			}
 			backupUser(modifiedUser)
-			if (mRequestCode != 1102 || user!!.profile_image_url == null) {
+			if (mRequestCode != BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST || user!!.profile_image_url == null) {
 				modifiedPhoto = file
 			} else {
 				modifiedPhoto = mDic.getFile(user!!.profile_image_url)
@@ -391,22 +391,21 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		var loading = false
 
 		companion object {
-			const val DELETE_USER_TASK = 8
-			const val REGISTER_FB_TASK = 4
-			const val REGISTER_SUKIYA_TASK = 6
-
-			//public static final int REGISTER_TOKEN_TASK = 3;
-			const val REGISTER_TWITTER_TASK = 5
+			const val SIGNUP_TASK = 0
 			const val SAVING_COMMON_INFO_TASK = 1
 			const val SAVING_DEVICE_ACCOUNT_TASK = 2
-			const val SIGNUP_TASK = 0
+			//public static final int REGISTER_TOKEN_TASK = 3;
+			const val REGISTER_FB_TASK = 4
+			const val REGISTER_TWITTER_TASK = 5
+			const val REGISTER_SUKIYA_TASK = 6
 			const val UPDATE_TASK = 7
+			const val DELETE_USER_TASK = 8
 			const val VERIFY_TASK = 9
 		}
 	}
 
 	private val queue: Queue<StatusHolder?>?
-		private get() {
+		get() {
 			if (mTaskQueue == null) {
 				mTaskQueue = LinkedList<StatusHolder?>()
 			}
@@ -430,15 +429,15 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 	private fun executeAutoLoginListTask() {
 		clearQueue()
 		val mSignUpHolder = StatusHolder()
-		mSignUpHolder.key = 0
-		StatusHolder().key = 7
+		mSignUpHolder.key = StatusHolder.SIGNUP_TASK
+		StatusHolder().key = StatusHolder.UPDATE_TASK
 		//new StatusHolder().key = StatusHolder.REGISTER_TOKEN_TASK;
 		val mSaveCommonInfoHolder = StatusHolder()
-		mSaveCommonInfoHolder.key = 1
+		mSaveCommonInfoHolder.key = StatusHolder.SAVING_COMMON_INFO_TASK
 		val mSaveDeviceHolder = StatusHolder()
-		mSaveDeviceHolder.key = 2
-		StatusHolder().key = 9
-		if (mRequestCode == 1102) {
+		mSaveDeviceHolder.key = StatusHolder.SAVING_DEVICE_ACCOUNT_TASK
+		StatusHolder().key = StatusHolder.VERIFY_TASK
+		if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
 			queue!!.offer(mSignUpHolder)
 		}
 		if (mResultCode == 210 || mResultCode == 212) {
@@ -488,7 +487,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 				when (mList!!.key) {
 					StatusHolder.SIGNUP_TASK -> barcodeKanojo.signup((application as BarcodeKanojoApp).uuid, modifiedUser!!.name, modifiedUser!!.password, modifiedUser!!.email, modifiedUser!!.birth_year, modifiedUser!!.birth_month, modifiedUser!!.birth_day, modifiedUser!!.sex, modifiedPhoto)
 					StatusHolder.SAVING_COMMON_INFO_TASK -> {
-						if (modifiedUser!!.password.size == 0) {
+						if (modifiedUser!!.password.isEmpty()) {
 							modifiedUser!!.password = user.password
 						}
 						if (cPassword == null) {
@@ -596,7 +595,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 			if (txtEmail.value != "" && txtEmail.value.equals(user!!.email, ignoreCase = true) && txtPassword.value != "" && Arrays.equals(password, user!!.password)) {
 				mCount++
 			}
-			if (mRequestCode == 1102) {
+			if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
 				mCount++
 			}
 			return mCount > 0
@@ -622,7 +621,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 	}
 
 	override fun startCheckSession() {
-		if (mRequestCode != 1102) {
+		if (mRequestCode != BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
 			super.startCheckSession()
 			showProgressDialog()
 		}
