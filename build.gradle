@@ -1,12 +1,12 @@
 buildscript {
-	ext.kotlin_version = '1.5.0'
+	ext.kotlin_version = '1.5.21'
 	repositories {
 		google()
 		mavenCentral()
 		jcenter()
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:4.2.1'
+		classpath 'com.android.tools.build:gradle:7.0.1'
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 	}
 }
@@ -16,19 +16,18 @@ apply plugin: 'kotlin-android'
 repositories {
 	google()
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
 	jcenter()
 }
 
 android {
-	compileSdkVersion 29
+	compileSdkVersion 30
 	buildToolsVersion '30.0.2'
 
 	defaultConfig {
 		applicationId 'com.goujer.barcodekanojo'
 		versionCode 3
 		versionName "0.2"
-		//minSdkVersion 9
-		//targetSdkVersion 27
 	}
 
 	signingConfigs {
@@ -65,26 +64,28 @@ android {
 
 	flavorDimensions "default"
 	productFlavors {
-		/*minApi14 {
+		minApi14 {
+			//setProperty('android.useAndroidX', true)
+			//setProperty('android.enableJetifier', true)
 			minSdkVersion 14
-			targetSdkVersion 27
-		}*/
+			targetSdkVersion 27	//Need HTTPS before going to 28
+		}
 		minApi12 {
 			minSdkVersion 12
-			targetSdkVersion 27	//Need HTTPS before going to 28
+			targetSdkVersion 13
 		}
 		minApi9 {
 			minSdkVersion 9
 			targetSdkVersion 11
 		}
-		/*minApi7 {
-			minSdkVersion 7
+		minApi8 {
+			minSdkVersion 8
 			targetSdkVersion 8
 		}
-		minApi4 {
-			minSdkVersion 4
-			targetSdkVersion 6
-		}*/
+		//minApi4 {
+		//	minSdkVersion 4
+		//	targetSdkVersion 7
+		//}
 	}
 
 	lintOptions {
@@ -106,20 +107,34 @@ android {
 dependencies {
 	//Support Libraries (Newest for API>=14, 25.4.0 for API>=9, 24.1.1 for API>=4)
 	//androidxImplementation 'androidx.appcompat:appcompat:1.2.0'
+	//minApi12Implementation "com.android.support:support-compat:25.4.0"
 	minApi9Implementation 'com.android.support:support-compat:25.4.0'
-	//minApi7Implementation 'com.android.support:appcompat-v7:24.1.1'
+	minApi8Implementation 'com.android.support:support-v4:24.1.1'
+
+	//SwipeRefreshLayout
+	minApi14Implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+	minApi12Implementation "com.android.support:support-core-ui:25.4.0"
+	minApi9Implementation "com.android.support:support-core-ui:25.4.0"
+
+	//Core-Utils, FileProvider
+	minApi12Implementation "com.android.support:support-core-utils:25.4.0"
+	minApi9Implementation 'com.android.support:support-core-utils:25.4.0'
+
+	//AndroidX Core
+	minApi14Implementation "androidx.core:core-ktx:1.6.0"
 
 	//Maps
-	//minApi14Implementation 'com.google.android.gms:play-services-maps:17.0.0'
-	//minApi9Implementation 'com.google.android.gms:play-services-maps:10.0.1'
-	//implementation 'com.google.android.gms:play-services-maps:8.4.0'
-	//implementation 'com.google.android.maps:maps:15_r2'
-	//implementation 'com.google.android.maps:maps:7_r1'
+	minApi14Implementation 'org.osmdroid:osmdroid-android:6.1.11'
+	minApi12Implementation 'org.osmdroid:osmdroid-android:6.1.11'
+	minApi9Implementation 'org.osmdroid:osmdroid-android:6.1.11'
+	minApi8Implementation 'org.osmdroid:osmdroid-android:6.1.11'
+	//minApi4Implementation 'org.osmdroid:osmdroid-android:4.3'
 
-	//Billing
-	implementation 'com.android.billingclient:billing:2.0.3'
-	//minApi14Implementation 'com.android.billingclient:billing:2.0.3'
-	//minApi9Implementation 'com.android.billingclient:billing:2.0.3'
+	//Charts
+	minApi14Implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+	minApi12Implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+	minApi9Implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+	minApi8Implementation 'com.github.PhilJay:MPAndroidChart:v2.2.5'
 
 	//ZXing
 	implementation 'com.google.zxing:core:3.2.1'
@@ -127,7 +142,6 @@ dependencies {
 	//implementation 'com.google.zxing:android-integration:3.2.1'
 
 	//Other
-    //implementation 'org.apache.httpcomponents:httpmime:4.3.6'
     implementation files('libs/live2d_android.jar')
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.0'

@@ -1,4 +1,4 @@
-package com.goujer.android.support.util
+package com.goujer.android.util
 
 import android.support.v4.util.LruCache
 
