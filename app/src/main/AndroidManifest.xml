@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="jp.co.cybird.barcodekanojoForGAM"
+	android:installLocation="auto">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.front" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.flash" android:required="false"/>
+    <uses-feature android:name="android.hardware.screen.landscape" android:required="false"/>
+    <uses-feature android:name="android.hardware.wifi" android:required="false"/>
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+    <uses-permission android:name="com.android.vending.BILLING"/>
+    <application
+		android:name="com.goujer.barcodekanojo.BarcodeKanojoApp"
+		android:allowBackup="true"
+		android:configChanges="locale|keyboardHidden|orientation"
+		android:icon="@mipmap/ic_launcher"
+		android:roundIcon="@mipmap/ic_launcher_round"
+		android:label="@string/app_name"
+		android:screenOrientation="portrait"
+		android:supportsRtl="true"
+		android:theme="@style/AppTheme">
+        <activity android:label="@string/app_name" android:name="com.goujer.barcodekanojo.activity.top.LaunchActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="app" android:host="com.goujer.barcodekanojo"/>
+            </intent-filter>
+        </activity>
+        <activity android:label="@string/app_name" android:name="jp.co.cybird.barcodekanojoForGAM.billing.TestBillingActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name=".activity.top.PrivacyInfoActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name=".activity.top.LoginActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name=".live2d.SampleActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name=".activity.DashboardActivity" android:launchMode="singleTask" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name=".activity.KanojosActivity" android:launchMode="singleTask" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
+        </activity>
+        <activity android:label="@string/app_name" android:name=".activity.WebViewTabActivity" android:launchMode="singleTask" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name=".activity.ScanActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/setting_name" android:name=".activity.setting.OptionActivity" android:launchMode="singleTask" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name=".activity.CustomWebViewActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name=".activity.kanojo.KanojoEditActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name="com.goujer.barcodekanojo.activity.kanojo.KanojoInfoActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name=".activity.kanojo.KanojoRoomActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name=".activity.kanojo.KanojoItemsActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name="com.goujer.barcodekanojo.activity.kanojo.KanojoItemDetailActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name="com.goujer.barcodekanojo.activity.scan.ScanKanojoGenerateActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name=".activity.scan.ScanOthersEditActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/setting_name" android:name=".activity.setting.SettingActivity" android:launchMode="singleTask" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/setting_name" android:name=".activity.setting.WebViewActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/setting_name" android:name="com.goujer.barcodekanojo.activity.setting.UserModifyActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/setting_name" android:name=".activity.setting.ChangePasswordActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name=".activity.util.EditBitmapActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name=".activity.kanojo.KanojoPaymentActivity" android:screenOrientation="portrait" android:configChanges="locale|keyboardHidden|orientation"/>
+        <activity android:label="@string/app_name" android:name=".push.BarcodePushActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:name="com.google.zxing.client.android.CaptureActivity" android:process=":capture" android:clearTaskOnLaunch="true" android:stateNotNeeded="true" android:screenOrientation="landscape" android:configChanges="locale|keyboardHidden|orientation" android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:name="jp.co.cybird.android.lib.gcm.PrefsActivity" android:launchMode="singleTask"/>
+		<activity android:name="com.goujer.barcodekanojo.activity.setting.ServerConfigurationActivity"
+			android:label="@string/setting_name"
+			android:screenOrientation="sensorPortrait"/>
+		<provider
+			android:name=".provider.KanojoSearchSuggestionsProvider"
+			android:authorities="${applicationId}.provider.KanojoSearchSuggestionsProvider"
+			android:syncable="false"/>
+		<provider
+			android:name="androidx.core.content.FileProvider"
+			android:authorities="${applicationId}.fileprovider"
+			android:exported="false"
+			android:grantUriPermissions="true">
+			<meta-data
+				android:name="android.support.FILE_PROVIDER_PATHS"
+				android:resource="@xml/file_paths"/>
+		</provider>
+		<meta-data android:name="GAP_Publisher_ID" android:value="NjA4NA%3D%3D%0A"/>
+		<receiver android:label="MediaMountReceiver" android:name=".receiver.MediaMountReceiver" android:enabled="true" android:exported="true">
+			<intent-filter>
+				<action android:name="android.intent.action.MEDIA_MOUNTED"/>
+				<action android:name="android.intent.action.MEDIA_EJECT"/>
+				<data android:scheme="file"/>
+			</intent-filter>
+		</receiver>
+		<service android:name="jp.co.cybird.barcodekanojoForGAM.push.BarcodeService"/>
+    </application>
+</manifest>
