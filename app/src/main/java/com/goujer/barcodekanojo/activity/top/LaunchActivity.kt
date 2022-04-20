@@ -1,76 +1,78 @@
 package com.goujer.barcodekanojo.activity.top
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
+
 import com.goujer.barcodekanojo.activity.base.BaseActivity
 import com.goujer.barcodekanojo.activity.setting.ServerConfigurationActivity
+import com.goujer.barcodekanojo.activity.setting.UserModifyActivity
 import com.goujer.barcodekanojo.preferences.ApplicationSetting
 import com.goujer.barcodekanojo.BarcodeKanojoApp
+
 import jp.co.cybird.barcodekanojoForGAM.R
 import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface
-import com.goujer.barcodekanojo.activity.setting.UserModifyActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.top.LoginActivity
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
+import jp.co.cybird.barcodekanojoForGAM.databinding.ActivityBootBinding
+
 import kotlinx.coroutines.*
+
 import java.net.SocketException
+import kotlin.random.Random
 
 class LaunchActivity : BaseActivity() {
-	private lateinit var mProgressbar: View
-	private lateinit var mLogIn: View
-	private lateinit var mSignUp: View
-	private lateinit var mServerConfig: View
-	private lateinit var mServerName: TextView
 	private lateinit var settings: ApplicationSetting
+
+	private lateinit var binding: ActivityBootBinding
 
 	private var scope = CoroutineScope(Dispatchers.IO) + CoroutineName(TAG)
 	private var loginJob: Job? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_boot)
+		binding = ActivityBootBinding.inflate(layoutInflater)
+		setContentView(binding.root)
 		settings = (application as BarcodeKanojoApp).settings
-		mProgressbar = findViewById(R.id.progressbar)
-		mLogIn = findViewById(R.id.top_log_in)
-		mSignUp = findViewById(R.id.top_sign_up)
-		mServerConfig = findViewById(R.id.top_config_server)
-		mServerName = findViewById(R.id.top_server_name)
+		if (Random.nextInt(0, 101) == 100) {
+			binding.root.setBackgroundResource(R.drawable.top_bg_blue)
+		}
 	}
 
 	override fun onStart() {
 		super.onStart()
 
 		//Set Button Listeners
-		mLogIn.setOnClickListener {
+		binding.topLogIn.setOnClickListener {
 			val logInIntent = Intent().setClass(this, LoginActivity::class.java)
 			logInIntent.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
 			startActivityForResult(logInIntent, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
 		}
-		mSignUp.setOnClickListener {
+		binding.topSignUp.setOnClickListener {
 			val signUp = Intent().setClass(this, UserModifyActivity::class.java)
 			signUp.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
 			startActivity(signUp)
 		}
-		mServerConfig.setOnClickListener {
+		binding.topConfigServer.setOnClickListener {
 			startActivity(Intent(this, ServerConfigurationActivity::class.java))
 		}
 
 		//Set visibilities
 		if (settings.getServerURL() == "") {
-			mProgressbar.visibility = View.GONE
-			mLogIn.visibility = View.INVISIBLE
-			mSignUp.visibility = View.INVISIBLE
-			mServerConfig.visibility = View.VISIBLE
+			binding.progressbar.visibility = View.GONE
+			binding.topLogIn.visibility = View.INVISIBLE
+			binding.topSignUp.visibility = View.INVISIBLE
+			binding.topConfigServer.visibility = View.VISIBLE
 		} else {
-			mProgressbar.visibility = View.VISIBLE
-			mLogIn.visibility = View.INVISIBLE
-			mSignUp.visibility = View.INVISIBLE
-			mServerConfig.visibility = View.INVISIBLE
+			binding.progressbar.visibility = View.VISIBLE
+			binding.topLogIn.visibility = View.INVISIBLE
+			binding.topSignUp.visibility = View.INVISIBLE
+			binding.topConfigServer.visibility = View.INVISIBLE
 			//Attempt log in / verify server
 			loginJob = scope.launch {
 				try {
@@ -81,17 +83,17 @@ class LaunchActivity : BaseActivity() {
 						}
 					} else {
 						withContext(Dispatchers.Main) {
-							mProgressbar.visibility = View.GONE
-							mLogIn.visibility = View.VISIBLE
-							mSignUp.visibility = View.VISIBLE
-							mServerConfig.visibility = View.VISIBLE
+							binding.progressbar.visibility = View.GONE
+							binding.topLogIn.visibility = View.VISIBLE
+							binding.topSignUp.visibility = View.VISIBLE
+							binding.topConfigServer.visibility = View.VISIBLE
 						}
 					}
 				} catch (e: SocketException) {
 					withContext(Dispatchers.Main) {
 						showNoticeDialog(e.message)
-						mProgressbar.visibility = View.GONE
-						mServerConfig.visibility = View.VISIBLE
+						binding.progressbar.visibility = View.GONE
+						binding.topConfigServer.visibility = View.VISIBLE
 					}
 				}
 			}
@@ -100,7 +102,7 @@ class LaunchActivity : BaseActivity() {
 
 	override fun onResume() {
 		super.onResume()
-		mServerName.text = settings.getServerURL()
+		binding.topServerName.text = settings.getServerURL()
 	}
 
 	override fun onStop() {
@@ -111,14 +113,14 @@ class LaunchActivity : BaseActivity() {
 		}
 
 		//Set Button Listeners
-		mLogIn.setOnClickListener(null)
-		mSignUp.setOnClickListener(null)
-		mServerConfig.setOnClickListener(null)
+		binding.topLogIn.setOnClickListener(null)
+		binding.topSignUp.setOnClickListener(null)
+		binding.topConfigServer.setOnClickListener(null)
 
-		mProgressbar.visibility = View.VISIBLE
-		mLogIn.visibility = View.INVISIBLE
-		mSignUp.visibility = View.INVISIBLE
-		mServerConfig.visibility = View.INVISIBLE
+		binding.progressbar.visibility = View.VISIBLE
+		binding.topLogIn.visibility = View.INVISIBLE
+		binding.topSignUp.visibility = View.INVISIBLE
+		binding.topConfigServer.visibility = View.INVISIBLE
 	}
 
 	override fun onDestroy() {
@@ -147,11 +149,11 @@ class LaunchActivity : BaseActivity() {
 				return false
 			}
 		}
-		if (response.code == Response.CODE_SUCCESS) {
-			return true
+		return if (response.code == Response.CODE_SUCCESS) {
+			true
 		} else {
 			Log.d(TAG, "Unknown response code: " + response.code + "\n" + response.message)
-			return false
+			false
 		}
 	}
 

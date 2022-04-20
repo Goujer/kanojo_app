@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/progress">
         <clip>
-            <bitmap android:src="@drawable/row_kanojos_bar_progress_red"/>
+            <bitmap android:src="@drawable/kanojo_lovebar_blue"/>
         </clip>
     </item>
 </layer-list>

@@ -14,7 +14,7 @@ public class CustomTabView extends FrameLayout {
 
     public CustomTabView(Context context) {
         super(context);
-        this.inflater = (LayoutInflater) context.getSystemService("layout_inflater");
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public CustomTabView(Context context, String title, int icon) {
