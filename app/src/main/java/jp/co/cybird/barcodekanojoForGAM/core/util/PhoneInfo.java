@@ -55,7 +55,7 @@ public class PhoneInfo {
     }
 
     public String getAndroidID() {
-        this.androidid = Settings.Secure.getString(this.context.getContentResolver(), Preferences.PREFERENCE_ANDROID_ID);
+        this.androidid = Settings.Secure.getString(this.context.getContentResolver(), Preferences.DEVICE_UUID);
         if (this.androidid == null) {
             return "";
         }

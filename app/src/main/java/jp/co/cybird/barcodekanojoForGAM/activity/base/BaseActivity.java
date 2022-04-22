@@ -8,12 +8,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -26,8 +24,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Locale;
@@ -36,14 +32,12 @@ import com.goujer.barcodekanojo.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.Defs;
 import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.CustomWebViewActivity;
-import jp.co.cybird.barcodekanojoForGAM.activity.util.EditBitmapActivity;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
-import jp.co.cybird.barcodekanojoForGAM.core.model.User;
+import com.goujer.barcodekanojo.core.model.User;
 
-import com.goujer.barcodekanojo.base.PermissionRequestCode;
 import com.goujer.barcodekanojo.preferences.ApplicationSetting;
 
 public abstract class BaseActivity extends GreeBaseActivity implements BaseInterface, DialogInterface.OnDismissListener {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content">
+	android:layout_height="match_parent">
 
 	<LinearLayout
 		android:layout_width="match_parent"
@@ -24,9 +24,9 @@
 				style="@style/txt_toolbar_title"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_weight="1"
 				android:layout_marginEnd="10dp"
-				android:layout_marginRight="10dp"/>
+				android:layout_marginRight="10dp"
+				android:layout_weight="1"/>
 
 			<ImageButton
 				android:id="@+id/kanojo_room_info"
@@ -39,7 +39,7 @@
 		</LinearLayout>
 		<RelativeLayout
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="0dp"
 			android:layout_weight="1">
 			<RelativeLayout
 				android:id="@+id/kanojo_room_live2d"
@@ -56,9 +56,7 @@
 				android:layout_marginTop="40dp"
 				android:background="@drawable/btn_kanojo_like"
 				android:textOff=""
-				android:textOn=""
-				android:layout_alignParentStart="true"
-				android:layout_marginStart="15dp" />
+				android:textOn=""/>
 			<Button
 				android:id="@+id/kanojo_room_items_btn"
 				android:layout_width="70dp"
@@ -127,7 +125,7 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:paddingLeft="5dp"
-						android:paddingRight="5dp" />
+						android:paddingRight="5dp"/>
 				</ScrollView>
 			</LinearLayout>
 			<LinearLayout
@@ -149,7 +147,7 @@
 					android:src="@drawable/kanojo_room_heart" />
 				<FrameLayout
 					android:layout_width="0dp"
-					android:layout_height="6dp"
+					android:layout_height="@dimen/row_kanojos_bar_height"
 					android:layout_marginRight="10dp"
 					android:layout_weight="1"
 					android:background="@drawable/kanojo_room_status_bar_bg">
@@ -159,9 +157,8 @@
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
 						android:max="100"
-						android:paddingLeft="2dp"
-						android:paddingRight="2dp"
-						android:progressDrawable="@drawable/row_kanojos_bar_less" />
+						android:padding="1dp"
+						android:progressDrawable="@drawable/progress_bar_pink" />
 					<ImageView
 						android:id="@+id/kanojo_room_status_bar_cover"
 						android:layout_width="match_parent"
@@ -250,6 +247,7 @@
 						android:textStyle="bold"/>
 				</LinearLayout>
 			</RelativeLayout>
+
 			<RelativeLayout
 				android:id="@+id/dialog_frame_all"
 				android:layout_width="match_parent"
@@ -257,13 +255,16 @@
 				android:layout_above="@+id/kanojo_room_message_banner"
 				android:background="@android:color/transparent"
 				android:visibility="visible">
+
 				<RelativeLayout
 					android:id="@+id/dialog_frame"
 					android:layout_width="match_parent"
 					android:layout_height="150dp"
 					android:layout_alignParentBottom="true"
 					android:layout_margin="5dp"
+					android:alwaysDrawnWithCache="true"
 					android:background="@drawable/dialog_frame">
+
 					<jp.co.cybird.barcodekanojoForGAM.view.DialogTextView
 						android:id="@+id/dialog_message"
 						android:layout_width="match_parent"
@@ -276,10 +277,10 @@
 		android:id="@+id/kanojo_room_firstboot"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:background="@color/firstboot_bg"
 		android:paddingLeft="@dimen/kanojo_room_firstboot_left"
 		android:paddingRight="@dimen/kanojo_room_firstboot_right"
-		android:visibility="visible"
-		android:background="@color/firstboot_bg">
+		android:visibility="visible">
 		<ImageView
 			android:id="@+id/ticket_instruction"
 			android:layout_width="match_parent"

@@ -9,7 +9,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache
 import jp.co.cybird.barcodekanojoForGAM.R
-import jp.co.cybird.barcodekanojoForGAM.core.model.User
+import com.goujer.barcodekanojo.core.model.User
 import kotlinx.coroutines.*
 
 class UserProfileView(context: Context?, attrs: AttributeSet?) : RelativeLayout(context, attrs) {

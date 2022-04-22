@@ -1,5 +1,7 @@
 package jp.co.cybird.barcodekanojoForGAM.core.model;
 
+import com.goujer.barcodekanojo.core.model.User;
+
 public class ActivityModel implements BarcodeKanojoModel {
     public static final String TAG = "ActivityModel";
     private String activity;

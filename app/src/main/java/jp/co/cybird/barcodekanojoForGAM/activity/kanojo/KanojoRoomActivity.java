@@ -58,7 +58,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.LoveIncrement;
 import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Product;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
-import jp.co.cybird.barcodekanojoForGAM.core.model.User;
+import com.goujer.barcodekanojo.core.model.User;
 import jp.co.cybird.barcodekanojoForGAM.core.model.WebViewData;
 import jp.co.cybird.barcodekanojoForGAM.core.util.FileUtil;
 import jp.co.cybird.barcodekanojoForGAM.core.util.FirstbootUtil;

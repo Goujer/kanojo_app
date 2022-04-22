@@ -53,7 +53,12 @@
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/row_kanojo_edit_txt_height"
 				EditItemView:key="@string/setting_about_barcodekanojo"/>
-            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_team" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/setting_about_team"/>
+            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+				android:id="@+id/kanojo_option_team"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/row_kanojo_edit_txt_height"
+				android:background="@drawable/row_kanojo_edit_bg_bottom"
+				EditItemView:key="@string/setting_about_team"/>
 			<TextView
 				style="@style/txt_notice_input"
 				android:layout_width="match_parent"
@@ -62,7 +67,19 @@
 				android:gravity="start"
 				android:text="@string/setting_support" />
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_mail" android:background="@drawable/row_kanojo_edit_bg_name" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" android:layout_marginBottom="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/setting_support_mail"/>
-            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_kddi" android:background="@drawable/row_kanojo_edit_bg_bottom" android:visibility="gone" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/setting_support_kddi"/>
+            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+				android:id="@+id/kanojo_option_kddi"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/row_kanojo_edit_txt_height"
+				android:background="@drawable/row_kanojo_edit_bg_bottom"
+				android:visibility="gone"
+				EditItemView:key="@string/setting_support_kddi"/>
+			<TextView
+				style="@style/txt_notice_input"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:text="Dedicated to Luvlitchi" />
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>

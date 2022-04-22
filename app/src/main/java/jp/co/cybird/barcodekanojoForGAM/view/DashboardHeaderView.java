@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import jp.co.cybird.barcodekanojoForGAM.R;
-import jp.co.cybird.barcodekanojoForGAM.core.model.User;
+import com.goujer.barcodekanojo.core.model.User;
 
 public class DashboardHeaderView extends LinearLayout {
     private final StatsView statsView;

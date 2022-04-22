@@ -1,21 +1,17 @@
 package jp.co.cybird.barcodekanojoForGAM.activity.top;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
+import com.goujer.barcodekanojo.core.Password;
+
 import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
-import jp.co.cybird.barcodekanojoForGAM.core.model.User;
+import com.goujer.barcodekanojo.core.model.User;
 import jp.co.cybird.barcodekanojoForGAM.view.EditTextView;
 
 public class LoginActivity extends BaseEditActivity implements View.OnClickListener {
@@ -64,22 +60,12 @@ public class LoginActivity extends BaseEditActivity implements View.OnClickListe
 			finish();
 		} else if (id == R.id.kanojo_log_in_btn) {
 			User user = ((BarcodeKanojoApp) getApplication()).getUser();
-			if (this.txtPassword.getValue().equals("")) {
+			/*if (this.txtPassword.getValue().equals("")) {
 				showNoticeDialog(this.r.getString(R.string.error_no_password));
-			} else if (this.txtEmail.getValue().equals("")) {
+			} else*/ if (this.txtEmail.getValue().equals("")) {
 				showNoticeDialog(this.r.getString(R.string.error_no_email));
 			} else {
-				try {
-					if (Build.VERSION.SDK_INT < 19) {
-						user.setPassword(MessageDigest.getInstance("SHA-512").digest(this.txtPassword.getValue().getBytes("UTF-8")));
-					} else {
-						user.setPassword(MessageDigest.getInstance("SHA-512").digest(this.txtPassword.getValue().getBytes(StandardCharsets.UTF_8)));
-					}
-				} catch (NoSuchAlgorithmException e) {
-					e.printStackTrace();
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
+				user.setPassword(Password.Companion.hashPassword(this.txtPassword.getValue(), ""));
 				user.setEmail(this.txtEmail.getValue().replaceAll(" ", ""));
 				setResult(BaseInterface.RESULT_LOG_IN, (Intent) null);
 				finish();

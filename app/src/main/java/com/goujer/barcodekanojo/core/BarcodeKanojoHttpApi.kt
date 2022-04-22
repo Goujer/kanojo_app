@@ -42,19 +42,19 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	//}
 
-	fun verify(email: String?, password: ByteArray?, uuid: String?): Response<BarcodeKanojoModel?>? {
+	fun verify(uuid: String, email: String?, password: Password?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY,
 				NameStringPair("uuid", uuid),
 				NameStringPair("email", email),
-				NameBytesPair("password", password))
+				NameStringPair("password", password?.hashedPassword ?: ""))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
-	fun signup(uuid: String, name: String?, password: ByteArray, email: String?, birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
+	fun signup(uuid: String, name: String?, password: Password, email: String, birth_year: Int?, birth_month: Int?, birth_day: Int?, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_SIGNUP,
 				NameStringPair("uuid", uuid),
 				NameStringPair("name", name),
-				NameBytesPair("password", password),
+				NameStringPair("password", password.hashedPassword),
 				NameStringPair("email", email),
 				NameStringPair("birth_year", birth_year.toString()),
 				NameStringPair("birth_month", birth_month.toString()),
@@ -230,7 +230,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun update(barcode: String?, company_name: String?, product_name: String?, product_category_id: Int, product_comment: String?, product_image_data: File?, product_geo: Location?): Response<BarcodeKanojoModel?>? {
+	fun account_update(barcode: String?, company_name: String?, product_name: String?, product_category_id: Int, product_comment: String?, product_image_data: File?, product_geo: Location?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_BARCODE_UPDATE,
 				NameStringPair("barcode", barcode),
 				NameStringPair("company_name", company_name),
@@ -438,21 +438,22 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(KanojoMessageParser()))
 	}
 
+	//TODO: This appears to be unused
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun android_uuid_verify(email: String?, password: ByteArray?, uuid: String?): Response<BarcodeKanojoModel?>? {
+	fun android_uuid_verify(email: String?, password: Password?, uuid: String): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpPost(URL_API_VERIFY_UUID,
 				NameStringPair("email", email),
-				NameBytesPair("password", password),
+				NameStringPair("password", password?.hashedPassword ?: ""),
 				NameStringPair("uuid", uuid))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun update(name: String?, current_password: ByteArray?, new_password: ByteArray?, email: String?, birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
+	fun account_update(name: String?, current_password: Password?, new_password: Password?, email: String?, birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_UPDATE,
 				NameStringPair("name", name),
-				NameBytesPair("current_password", current_password),
-				NameBytesPair("new_password", new_password),
+				NameStringPair("current_password", current_password?.hashedPassword ?: ""),
+				NameStringPair("new_password", new_password?.hashedPassword ?: ""),
 				NameStringPair("email", email),
 				NameStringPair("birth_month", birth_month.toString()),
 				NameStringPair("birth_day", birth_day.toString()),

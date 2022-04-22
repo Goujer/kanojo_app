@@ -1,15 +1,15 @@
 package jp.co.cybird.barcodekanojoForGAM.core.parser;
 
-import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoParseException;
-import jp.co.cybird.barcodekanojoForGAM.core.model.User;
+import com.goujer.barcodekanojo.core.model.User;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.goujer.utils.StringUtilKt.decodeHexString;
+import com.goujer.barcodekanojo.core.Password;
 
 public class UserParser extends AbstractJSONParser<User> {
-    protected User parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
+    protected User parseInner(JSONObject object) throws BarcodeKanojoParseException {
         User res = new User();
         try {
             if (object.has("id")) {
@@ -70,7 +70,11 @@ public class UserParser extends AbstractJSONParser<User> {
                 res.setEmail(object.getString("email"));
             }
             if (object.has("password") && !object.getString("password").equals("null")) {
-                res.setCurrentPassword(decodeHexString(object.getString("password")));
+            	String salt = "";
+				if (object.has("salt") && !object.getString("salt").equals("null")) {
+					salt = object.getString("salt");
+				}
+                res.setCurrentPassword(Password.Companion.saveHashedPassword(object.getString("password"), salt));
             }
             return res;
         } catch (JSONException e) {

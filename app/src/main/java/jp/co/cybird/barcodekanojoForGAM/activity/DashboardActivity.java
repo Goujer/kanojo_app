@@ -40,7 +40,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
-import jp.co.cybird.barcodekanojoForGAM.core.model.User;
+import com.goujer.barcodekanojo.core.model.User;
 import jp.co.cybird.barcodekanojoForGAM.view.DashboardHeaderView;
 import com.goujer.barcodekanojo.view.UserProfileView;
 

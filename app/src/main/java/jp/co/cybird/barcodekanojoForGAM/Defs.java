@@ -21,8 +21,6 @@ public class Defs {
     public static final String MAIL_BUSINESS = "tieup@barcodekanojo.com";
     public static final String MAIL_SUPPORT = "help@barcodekanojo.com";
     private static final String TAG = "Defs";
-    public static final String TWITTER_CONSUME_KEY = "cHlQYys6chgINc0tjGmNoQ";
-    public static final String TWITTER_CONSUME_SECRET = "dQRurmZKZoTM2MZOQPmypmDvg7piH01rby3H8ryg0";
     public static final String URL_ABOUT_BARCODEKANOJO = "/resource/about_barcodekanojo.html";
     public static final String URL_ABOUT_RULES = "/resource/about_rules.html";
     public static final String URL_ABOUT_TEAM = "/resource/about_team.html";

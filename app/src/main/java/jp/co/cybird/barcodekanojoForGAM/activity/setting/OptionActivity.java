@@ -5,9 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.LinearLayout;
 
 import com.goujer.barcodekanojo.activity.setting.ServerConfigurationActivity;
@@ -27,7 +27,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
-import jp.co.cybird.barcodekanojoForGAM.core.model.User;
+import com.goujer.barcodekanojo.core.model.User;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 
 public class OptionActivity extends BaseActivity implements View.OnClickListener {
@@ -57,7 +57,7 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(1);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_option);
         this.server_btn = findViewById(R.id.kanojo_option_server_config);
         this.server_btn.setOnClickListener(this);
@@ -229,14 +229,13 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         Response<?> modify_user() throws BarcodeKanojoException, IllegalStateException, IOException {
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) OptionActivity.this.getApplication()).getBarcodeKanojo();
             User user = barcodeKanojo.getUser();
-            if (OptionActivity.this.modifiedUser.getPassword().length == 0) {
-                OptionActivity.this.modifiedUser.setPassword(user.getPassword());
+            if (modifiedUser.getPassword().getHashedPassword().length() == 0) {
+                modifiedUser.setPassword(user.getPassword());
             }
             Response<BarcodeKanojoModel> android_update = barcodeKanojo.update(OptionActivity.this.modifiedUser.getName(), user.getPassword(), OptionActivity.this.modifiedUser.getPassword(), OptionActivity.this.modifiedUser.getEmail(), OptionActivity.this.modifiedUser.getBirth_year(), OptionActivity.this.modifiedUser.getBirth_month(), OptionActivity.this.modifiedUser.getBirth_day(), OptionActivity.this.modifiedUser.getSex(), OptionActivity.this.modifiedPhoto);
             barcodeKanojo.init_product_category_list();
             User user2 = barcodeKanojo.getUser();
 			((BarcodeKanojoApp) OptionActivity.this.getApplication()).getImageCache().evict(user2.getProfile_image_url());
-			Log.d(TAG, "Removed2 " + user2.getProfile_image_url());
             return android_update;
         }
     }
@@ -372,7 +371,7 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
 
 	private void startWebViewActivity(String url) {
 		Intent intent = new Intent(this, WebViewActivity.class);
-		intent.putExtra(WebViewActivity.INTENT_EXTRA_URL, HttpApi.Companion.get().getMApiBaseUrl$app_release() + url);
+		intent.putExtra(WebViewActivity.INTENT_EXTRA_URL, HttpApi.Companion.get().getMApiBaseUrl() + url);
 		startActivity(intent);
 	}
 }

@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import jp.co.cybird.barcodekanojoForGAM.R;
-import jp.co.cybird.barcodekanojoForGAM.core.model.User;
+import com.goujer.barcodekanojo.core.model.User;
 
 public class StatsView extends LinearLayout {
     private final TextView txtKanojos;

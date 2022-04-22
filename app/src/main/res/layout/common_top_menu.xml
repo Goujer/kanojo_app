@@ -23,6 +23,15 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
     </LinearLayout>
+	<LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/top_menu_dashboard" android:background="@drawable/tab_bg" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
+		<ImageView android:id="@+id/tab_icon_dashboard" android:layout_width="@dimen/tab_icon_width" android:layout_height="@dimen/tab_icon_height" android:src="@drawable/tab_icon_account"/>
+		<TextView
+			android:id="@+id/tab_text_dashboard"
+			style="@style/txt_tab"
+			android:text="@string/tab_dashboard"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+	</LinearLayout>
     <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/top_menu_scan" android:background="@drawable/tab_bg" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
         <ImageView android:id="@+id/tab_icon_scan" android:layout_width="@dimen/tab_icon_width" android:layout_height="@dimen/tab_icon_height" android:src="@drawable/tab_icon_scan"/>
         <TextView
@@ -32,15 +41,24 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
     </LinearLayout>
-    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/top_menu_dashboard" android:background="@drawable/tab_bg" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
-        <ImageView android:id="@+id/tab_icon_dashboard" android:layout_width="@dimen/tab_icon_width" android:layout_height="@dimen/tab_icon_height" android:src="@drawable/tab_icon_account"/>
-        <TextView
-			android:id="@+id/tab_text_dashboard"
+	<LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/top_menu_enemybook" android:background="@drawable/tab_bg" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
+		<ImageView android:id="@+id/tab_icon_enemybook" android:layout_width="@dimen/tab_icon_width" android:layout_height="@dimen/tab_icon_height" android:src="@drawable/tab_icon_enemybook"/>
+		<TextView
+			android:id="@+id/tab_text_enemybook"
 			style="@style/txt_tab"
-			android:text="@string/tab_dashboard"
+			android:text="@string/tab_enemy"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
-    </LinearLayout>
+	</LinearLayout>
+	<LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/top_menu_map" android:background="@drawable/tab_bg" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
+		<ImageView android:id="@+id/tab_icon_map" android:layout_width="@dimen/tab_icon_width" android:layout_height="@dimen/tab_icon_height" android:src="@drawable/tab_icon_map"/>
+		<TextView
+			android:id="@+id/tab_text_map"
+			style="@style/txt_tab"
+			android:text="@string/tab_map"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+	</LinearLayout>
     <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/top_menu_setting" android:background="@drawable/tab_bg" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
         <ImageView android:id="@+id/tab_icon_setting" android:layout_width="@dimen/tab_icon_width" android:layout_height="@dimen/tab_icon_height" android:src="@drawable/tab_icon_setting"/>
         <TextView

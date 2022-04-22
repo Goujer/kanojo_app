@@ -13,6 +13,6 @@ open class NameStringPair(name: String, internal val value: String?): NameValueP
 	}
 
 	override fun emptyValue(): Boolean {
-		return (value == null || value == "")
+		return (value == null || value == "" || value == "null")
 	}
 }

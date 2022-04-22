@@ -7,10 +7,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import android.os.AsyncTask
-import android.os.Bundle
-import android.os.Handler
-import android.os.Message
+import android.os.*
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -23,6 +20,7 @@ import com.goujer.barcodekanojo.core.cache.DynamicImageCache
 import com.goujer.barcodekanojo.preferences.ApplicationSetting
 
 import com.goujer.barcodekanojo.BarcodeKanojoApp
+import com.goujer.barcodekanojo.core.Password
 import jp.co.cybird.barcodekanojoForGAM.R
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity.OnDialogDismissListener
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity
@@ -30,7 +28,7 @@ import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface
 import jp.co.cybird.barcodekanojoForGAM.activity.setting.ChangePasswordActivity
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
-import jp.co.cybird.barcodekanojoForGAM.core.model.User
+import com.goujer.barcodekanojo.core.model.User
 import jp.co.cybird.barcodekanojoForGAM.databinding.ActivityUserModifyBinding
 import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView
@@ -43,8 +41,7 @@ import java.io.File
 import java.util.*
 
 class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
-	private var app: BarcodeKanojoApp? = null
-	private var currentPassword: ByteArray? = null
+	private lateinit var app: BarcodeKanojoApp
 	private lateinit var imgAvatar: ImageView
 	private var mAutoLoginTask: AutoLoginTask? = null
 	private var mChangeDeviceLayout: LinearLayout? = null
@@ -64,7 +61,8 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 	private var modifiedPhoto: File? = null
 	private var modifiedUser: User? = null
 	private var user: User? = null
-	private var password: ByteArray? = null
+	private var password: Password? = null
+	private var currentPassword: Password? = null
 
     private lateinit var binding: ActivityUserModifyBinding
 	private val mScope = MainScope()
@@ -90,9 +88,9 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 			user = modifiedUser
 		}
 		if (user == null) {
-			user = app!!.user
+			user = app.user
 		}
-		mDic = app!!.imageCache
+		mDic = app.imageCache
 
         binding.kanojoUserUpdateBtn.isEnabled = true
 		if (mRequestCode == 1103) {
@@ -118,7 +116,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 
 		binding.kanojoUserModifyGender.setTextChangeListner(mTextChangeListener)
 		if (user!!.sex != null) {
-            binding.kanojoUserModifyGender.value = user!!.getSexText(app!!.userGenderList)
+            binding.kanojoUserModifyGender.value = user!!.getSexText(app.userGenderList)
 		}
 
 		binding.kanojoUserModifyBirthday.setTextChangeListner(mTextChangeListener)
@@ -273,8 +271,8 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		}
 		if (requestCode == BaseInterface.REQUEST_CHANGE_PASWORD && resultCode == BaseInterface.RESULT_CHANGED) {
             binding.kanojoUserModifyPassword.value = "********"
-			password = data?.getByteArrayExtra("new_password")
-			currentPassword = data?.getByteArrayExtra("currentPassword")
+			password = data?.getParcelableExtra<Password>("new_password")
+			currentPassword = data?.getParcelableExtra<Password>("current_Password")
 			binding.kanojoUserUpdateBtn.isEnabled = true
 		}
 	}
@@ -298,10 +296,10 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		val intent = Intent().setClass(this, ChangePasswordActivity::class.java)
 		if (user!!.email == null || !(application as BarcodeKanojoApp).barcodeKanojo.isUserLoggedIn) {
 			intent.putExtra("new_email", true)
-			intent.putExtra("encodedCurrentPassword", ByteArray(0))
+			intent.putExtra("current_password", null as Parcelable)
 		} else {
 			intent.putExtra("new_email", false)
-			intent.putExtra("encodedCurrentPassword", user!!.currentPassword)
+			intent.putExtra("current_password", user!!.currentPassword)
 		}
 		startActivityForResult(intent, REQUEST_CHANGE_PASWORD)
 	}
@@ -479,11 +477,11 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 				if (mList == null) {
 					throw BarcodeKanojoException("process:StatusHolder is null!")
 				}
-				var cPassword: ByteArray? = currentPassword
+				var cPassword = currentPassword
 				when (mList!!.key) {
 					StatusHolder.SIGNUP_TASK -> barcodeKanojo.signup((application as BarcodeKanojoApp).uUID, modifiedUser!!.name, modifiedUser!!.password, modifiedUser!!.email, modifiedUser!!.birth_year, modifiedUser!!.birth_month, modifiedUser!!.birth_day, modifiedUser!!.sex, modifiedPhoto)
 					StatusHolder.SAVING_COMMON_INFO_TASK -> {
-						if (modifiedUser!!.password != null && modifiedUser!!.password.isEmpty()) {
+						if (modifiedUser!!.password != null && modifiedUser!!.password?.hashedPassword ?: "" == "") {
 							modifiedUser!!.password = user.password
 						}
 						if (cPassword == null) {
@@ -491,7 +489,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 						}
 						barcodeKanojo.update(modifiedUser!!.name, cPassword, modifiedUser!!.password, modifiedUser!!.email, modifiedUser!!.birth_year, modifiedUser!!.birth_month, modifiedUser!!.birth_day, modifiedUser!!.sex, modifiedPhoto)
 					}
-					StatusHolder.SAVING_DEVICE_ACCOUNT_TASK -> barcodeKanojo.android_uuid_verify(modifiedUser!!.email, modifiedUser!!.password, (this@UserModifyActivity.application as BarcodeKanojoApp).uUID)
+					StatusHolder.SAVING_DEVICE_ACCOUNT_TASK -> barcodeKanojo.verify(modifiedUser!!.email, modifiedUser!!.password, (this@UserModifyActivity.application as BarcodeKanojoApp).uUID)
 					StatusHolder.REGISTER_SUKIYA_TASK -> null
 					StatusHolder.UPDATE_TASK -> {
 						if (cPassword == null) {
@@ -500,7 +498,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 						barcodeKanojo.update(modifiedUser!!.name, cPassword, modifiedUser!!.password, modifiedUser!!.email, modifiedUser!!.birth_year, modifiedUser!!.birth_month, modifiedUser!!.birth_day, modifiedUser!!.sex, modifiedPhoto)
 					}
 					StatusHolder.DELETE_USER_TASK -> barcodeKanojo.android_delete_account(user.id)
-					StatusHolder.VERIFY_TASK -> barcodeKanojo.verify("", ByteArray(0), (application as BarcodeKanojoApp).uUID)
+					StatusHolder.VERIFY_TASK -> barcodeKanojo.verify("", null, (application as BarcodeKanojoApp).uUID)
 					else -> null
 				}
 			} catch (e: Exception) {
@@ -573,6 +571,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 	//        close();
 	//        dismissProgressDialog();
 	//    }
+
 	private val isReadyForUpdate: Boolean
 		get() {
 			var mCount = 0
@@ -588,7 +587,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 			if (imgAvatar.drawable != null) {
 				mCount++
 			}
-			if (binding.kanojoUserModifyEmail.value != "" && binding.kanojoUserModifyEmail.value.equals(user!!.email, ignoreCase = true) && binding.kanojoUserModifyPassword.value != "" && Arrays.equals(password, user!!.password)) {
+			if (binding.kanojoUserModifyEmail.value != "" && binding.kanojoUserModifyEmail.value.equals(user!!.email, ignoreCase = true) && binding.kanojoUserModifyPassword.value != "" && password == user!!.password) {
 				mCount++
 			}
 			if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {

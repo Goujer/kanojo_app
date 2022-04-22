@@ -1,6 +1,9 @@
 package jp.co.cybird.barcodekanojoForGAM.core.model;
 
 import android.util.Log;
+
+import com.goujer.barcodekanojo.core.model.User;
+
 import java.util.Collection;
 
 import jp.co.cybird.barcodekanojoForGAM.core.util.GeoUtil;

@@ -3,7 +3,11 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@drawable/top_bg">
-	<LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center_horizontal"
+		android:orientation="vertical">
 		<View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="2.5"/>
 		<TextView
 			android:id="@+id/top_server_name"

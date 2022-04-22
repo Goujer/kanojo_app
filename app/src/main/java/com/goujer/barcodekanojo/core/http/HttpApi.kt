@@ -12,7 +12,8 @@ import java.net.*
 
 class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBasePort: Int?, clientVersion: String?, clientLanguage: String?) {
 	internal var mApiBaseProtocol: String = if (useHttps) "https" else "http"
-	internal var mApiBaseUrl: String = apiBaseUrl
+	var mApiBaseUrl: String = apiBaseUrl
+		internal set
 	internal var mApiBasePort: Int = if (apiBasePort != null && apiBasePort > 0) {
 		apiBasePort
 	} else if (useHttps) {

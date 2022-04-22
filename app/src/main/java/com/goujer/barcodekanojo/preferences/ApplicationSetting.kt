@@ -60,56 +60,37 @@ class ApplicationSetting(context: Context) {
 
 	fun commitUUID(uuid: String?) {
 		val editor = setting.edit()
-		editor.putString(Preferences.PREFERENCE_ANDROID_ID, uuid)
+		editor.putString(Preferences.DEVICE_UUID, uuid)
 		editor.apply()
 	}
 
 	fun getUUID(): String? {
 		//TODO: This is shit, fix it.
-		val uuid = setting.getString(Preferences.PREFERENCE_ANDROID_ID, UUID.randomUUID().toString())
+		val uuid = setting.getString(Preferences.DEVICE_UUID, UUID.randomUUID().toString())
 		commitUUID(uuid)
 		return uuid
 	}
 
 	fun clearUUID() {
 		val editor = setting.edit()
-		editor.remove(Preferences.PREFERENCE_ANDROID_ID)
-		editor.apply()
-	}
-
-	//TODO: Change cache size actually in app.
-	fun commitMemoryCacheSize(size: Int) {
-		val editor = setting.edit()
-		editor.putInt(Preferences.PREFERENCE_MEMORY_CACHE_SIZE, size)
-		editor.apply()
-	}
-
-	fun getMemoryCacheSize(): Int {
-		return setting.getInt(Preferences.PREFERENCE_MEMORY_CACHE_SIZE, (Runtime.getRuntime().maxMemory() / 1024L).toInt() / 8)
-	}
-
-	fun clearMemoryCacheSize() {
-		val editor = setting.edit()
-		editor.remove(Preferences.PREFERENCE_MEMORY_CACHE_SIZE)
+		editor.remove(Preferences.DEVICE_UUID)
 		editor.apply()
 	}
 
 	fun clearDataVersion() {
 		val editor = setting.edit()
-		editor.remove(Preferences.PREFERENCE_ANDROID_ID)
+		editor.remove(Preferences.DEVICE_UUID)
 		editor.apply()
 	}
 
 	fun removeUser() {
 		val editor = setting.edit()
-		editor.remove(Preferences.PREFERENCE_USER_ICCID)
-		editor.remove(Preferences.PREFERENCE_ANDROID_ID)
-		editor.remove(Preferences.PREFERENCE_USER_IMEI)
+		editor.remove(Preferences.DEVICE_UUID)
 		editor.apply()
 	}
 
 	fun getDataVersion(): String? {
-		return setting.getString(Preferences.PREFERENCE_ANDROID_ID, null)
+		return setting.getString(Preferences.DEVICE_UUID, null)
 	}
 
 	fun commitDeviceToken(deviceToken: String?) {

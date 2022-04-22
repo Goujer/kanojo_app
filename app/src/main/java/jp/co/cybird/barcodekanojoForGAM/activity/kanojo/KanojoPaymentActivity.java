@@ -14,7 +14,7 @@ import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoItem;
-import jp.co.cybird.barcodekanojoForGAM.core.model.User;
+import com.goujer.barcodekanojo.core.model.User;
 
 public class KanojoPaymentActivity extends BaseEditActivity implements View.OnClickListener {
 

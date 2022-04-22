@@ -24,6 +24,8 @@ import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
+
+import com.goujer.barcodekanojo.core.Password;
 import com.goujer.barcodekanojo.preferences.ApplicationSetting;
 
 public class BarcodePushActivity extends BaseKanojosActivity {
@@ -249,9 +251,9 @@ public class BarcodePushActivity extends BaseKanojosActivity {
                 case 0:
                     return barcodeKanojo.android_register_device(setting.getUUID(), setting.getDeviceToken());
                 case 1:
-                    Response<BarcodeKanojoModel> android_verify = barcodeKanojo.verify("", new byte[0], ((BarcodeKanojoApp) getApplication()).getUUID());
+                    Response<BarcodeKanojoModel> android_verify = barcodeKanojo.verify("", Password.Companion.saveHashedPassword("", ""), ((BarcodeKanojoApp) getApplication()).getUUID());
                     if (android_verify == null) {
-                        return android_verify;
+                        return null;
                     }
                     barcodeKanojo.init_product_category_list();
                     return android_verify;

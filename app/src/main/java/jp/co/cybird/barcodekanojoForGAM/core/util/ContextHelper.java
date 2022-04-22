@@ -2,9 +2,7 @@ package jp.co.cybird.barcodekanojoForGAM.core.util;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
 import android.content.Context;
-import android.os.Handler;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import jp.co.cybird.barcodekanojoForGAM.preferences.Preferences;
@@ -43,7 +41,7 @@ public final class ContextHelper {
         }
 
         public String getAndroidId() {
-            return Settings.Secure.getString(this.context.getContentResolver(), Preferences.PREFERENCE_ANDROID_ID);
+            return Settings.Secure.getString(this.context.getContentResolver(), Preferences.DEVICE_UUID);
         }
 
         public String getICCID() {

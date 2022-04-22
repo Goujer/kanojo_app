@@ -213,7 +213,7 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
 
     public boolean setBackgroundImage(String filepath, boolean isCache, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh) {
 		this.backSrcR.setRect(sx, sy, sw, sh);
-		this.backDstR.setRect(sx, sy, sw, sh);	//TODO: This might not be the correct parameters
+		this.backDstR.setRect(dx, dy, dw, dh);
         if (filepath == null) {
             filepath = "back256.png";
         }

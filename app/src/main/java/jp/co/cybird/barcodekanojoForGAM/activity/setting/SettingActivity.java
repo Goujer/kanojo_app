@@ -73,7 +73,7 @@ public class SettingActivity extends PreferenceActivity implements BaseInterface
 
     private void startWebViewActivity(String url) {
         Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra(WebViewActivity.INTENT_EXTRA_URL, HttpApi.Companion.get().getMApiBaseUrl$app_release() + url);
+        intent.putExtra(WebViewActivity.INTENT_EXTRA_URL, HttpApi.Companion.get().getMApiBaseUrl() + url);
         startActivity(intent);
     }
 

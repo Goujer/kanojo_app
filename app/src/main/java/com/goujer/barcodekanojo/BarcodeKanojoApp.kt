@@ -11,7 +11,7 @@ import android.location.Location
 import android.location.LocationManager
 import jp.co.cybird.barcodekanojoForGAM.Defs
 import jp.co.cybird.barcodekanojoForGAM.R
-import jp.co.cybird.barcodekanojoForGAM.core.model.User
+import com.goujer.barcodekanojo.core.model.User
 
 class BarcodeKanojoApp : Application() {
 	lateinit var barcodeKanojo: BarcodeKanojo
@@ -33,7 +33,7 @@ class BarcodeKanojoApp : Application() {
 		mUserGenderList = resources.getStringArray(R.array.user_account_gender_list)
 		settings = ApplicationSetting(this)
 		barcodeKanojo.createHttpApi(settings.getServerHttps(), settings.getServerURL(), settings.getServerPort(), Defs.USER_AGENT(), Defs.USER_LANGUAGE())
-		imageCache = DynamicImageCache(settings.getMemoryCacheSize(), baseContext)
+		imageCache = DynamicImageCache((Runtime.getRuntime().maxMemory() / 1024L).toInt() / 6, baseContext)
 	}
 
 	override fun onLowMemory() {

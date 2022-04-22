@@ -1,6 +1,5 @@
 package com.goujer.barcodekanojo.activity.base
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.widget.EditText

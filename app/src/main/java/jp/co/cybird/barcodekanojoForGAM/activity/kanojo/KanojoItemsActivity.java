@@ -44,7 +44,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoItem;
 import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoItemCategory;
 import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
-import jp.co.cybird.barcodekanojoForGAM.core.model.User;
+import com.goujer.barcodekanojo.core.model.User;
 
 import com.goujer.barcodekanojo.activity.kanojo.KanojoItemDetailActivity;
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache;

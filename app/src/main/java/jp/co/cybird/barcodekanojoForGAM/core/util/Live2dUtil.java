@@ -92,7 +92,7 @@ public class Live2dUtil {
         if (this.map.containsKey(StringUrl)) {
             int count = this.map.get(StringUrl);
             if (count > REQUEST_MAX) {
-                this.mKanojoLive2D.setBackgroundImage((String) null, false);
+                this.mKanojoLive2D.setBackgroundImage(null, false);
                 return true;
             }
             this.map.put(StringUrl, count + 1);

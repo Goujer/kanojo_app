@@ -5,6 +5,7 @@ import android.util.Log;
 import jp.co.cybird.barcodekanojoForGAM.Defs;
 
 import com.goujer.barcodekanojo.core.BarcodeKanojoHttpApi;
+import com.goujer.barcodekanojo.core.Password;
 import com.goujer.barcodekanojo.core.http.HttpApi;
 
 import java.io.File;
@@ -16,7 +17,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.Category;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
-import jp.co.cybird.barcodekanojoForGAM.core.model.User;
+import com.goujer.barcodekanojo.core.model.User;
 
 public class BarcodeKanojo {
     private static final String TAG = "BarcodeKanojo";
@@ -42,7 +43,7 @@ public class BarcodeKanojo {
         this.mUser = new User();
     }
 
-    public Response<BarcodeKanojoModel> signup(String uuid, String name, byte[] password, String email, int birth_year, int birth_month, int birth_day, String sex, File profile_image_data) {
+    public Response<BarcodeKanojoModel> signup(String uuid, String name, Password password, String email, int birth_year, int birth_month, int birth_day, String sex, File profile_image_data) {
 		if (email != null) {
 			email = email.toLowerCase();
 		}
@@ -80,11 +81,11 @@ public class BarcodeKanojo {
 //        return response;
 //    }
 
-	public Response<BarcodeKanojoModel> verify(String email, byte[] password, String uuid) throws BarcodeKanojoException {
+	public Response<BarcodeKanojoModel> verify(String email, Password password, String uuid) throws BarcodeKanojoException {
     	if (email != null) {
 			email = email.toLowerCase();
 		}
-		Response<BarcodeKanojoModel> response = this.mBCKApi.verify(email, password, uuid);
+		Response<BarcodeKanojoModel> response = this.mBCKApi.verify(uuid, email, password);
 		User user = (User) response.get(User.class);
 		if (user == null) {
 			userLoggedIn = false;
@@ -262,11 +263,11 @@ public class BarcodeKanojo {
     }
 
     public Response<BarcodeKanojoModel> update(String barcode, String company_name, String product_name, int product_category_id, String product_comment, File product_image_data, Location product_geo) throws BarcodeKanojoException, IOException {
-        return this.mBCKApi.update(barcode, company_name, product_name, product_category_id, product_comment, product_image_data, product_geo);
+        return this.mBCKApi.account_update(barcode, company_name, product_name, product_category_id, product_comment, product_image_data, product_geo);
     }
 
     public Response<BarcodeKanojoModel> update(String barcode, String company_name, String company_name_textid, String product_name, String product_name_textid, int product_category_id, String product_comment, String product_comment_textid, File product_image_data, Location product_geo) throws BarcodeKanojoException, IOException {
-        return this.mBCKApi.update(barcode, company_name, product_name, product_category_id, product_comment, product_image_data, product_geo);
+        return this.mBCKApi.account_update(barcode, company_name, product_name, product_category_id, product_comment, product_image_data, product_geo);
     }
 
     public Response<BarcodeKanojoModel> my_user_timeline(int since_id, int index, int limit) throws IllegalStateException, BarcodeKanojoException, IOException {
@@ -453,7 +454,7 @@ public class BarcodeKanojo {
         return this.mBCKApi.show_dialog();
     }
 
-    public Response<BarcodeKanojoModel> android_uuid_verify(String email, byte[] password, String uuid) throws IllegalStateException, BarcodeKanojoException, IOException {
+    public Response<BarcodeKanojoModel> android_uuid_verify(String email, Password password, String uuid) throws IllegalStateException, BarcodeKanojoException, IOException {
 		if (email != null) {
 			email = email.toLowerCase();
 		}
@@ -464,11 +465,11 @@ public class BarcodeKanojo {
         }
     }
 
-    public Response<BarcodeKanojoModel> update(String name, byte[] current_password, byte[] new_password, String email, int birth_year, int birth_month, int birth_day, String sex, File profile_image_data) throws BarcodeKanojoException, IOException {
+    public Response<BarcodeKanojoModel> update(String name, Password current_password, Password new_password, String email, int birth_year, int birth_month, int birth_day, String sex, File profile_image_data) throws BarcodeKanojoException, IOException {
 		if (email != null) {
 			email = email.toLowerCase();
 		}
-    	Response<BarcodeKanojoModel> response = this.mBCKApi.update(name, current_password, new_password, email, birth_year, birth_month, birth_day, sex, profile_image_data);
+    	Response<BarcodeKanojoModel> response = this.mBCKApi.account_update(name, current_password, new_password, email, birth_year, birth_month, birth_day, sex, profile_image_data);
         User user = (User) response.get(User.class);
         if (user != null) {
             setUser(user);
