@@ -252,11 +252,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             } else if (listener == null) {
                 showAlertDialog(alert, this);
             } else {
-                showAlertDialog(alert, new DialogInterface.OnDismissListener() {
-                    public void onDismiss(DialogInterface dialog) {
-                        listener.onDismiss(dialog, BaseActivity.this.code);
-                    }
-                });
+                showAlertDialog(alert, dialog -> listener.onDismiss(dialog, BaseActivity.this.code));
             }
         }
         switch (this.code) {
@@ -271,7 +267,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             case 500:
             case 503:
                 if (Defs.DEBUG) {
-                    showToast("code:" + this.code + " ");
+                    showToast("code:" + this.code);
                     break;
                 }
                 break;

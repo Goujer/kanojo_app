@@ -64,6 +64,10 @@ class Password: Parcelable {
 			false
 	}
 
+	fun isEmpty(): Boolean {
+		return (hashedPassword == "" && mSalt == "")
+	}
+
 	companion object {
 		@JvmField
 		val CREATOR : Parcelable.Creator<Password> = object : Parcelable.Creator<Password> {
@@ -83,6 +87,12 @@ class Password: Parcelable {
 		fun saveHashedPassword(hashedPassword: String, salt: String = "") : Password {
 			val newPassword = Password(hashedPassword)
 			newPassword.mSalt = salt
+			return newPassword
+		}
+
+		fun emptyPassword() : Password {
+			val newPassword = Password("")
+			newPassword.mSalt = ""
 			return newPassword
 		}
 	}

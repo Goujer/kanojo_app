@@ -62,8 +62,8 @@ class User : BarcodeKanojoModel, Parcelable {
 		dest.writeInt(birth_year)
 		dest.writeInt(relation_status)
 		dest.writeInt(tickets)
-		dest.writeString(currentPassword!!.hashedPassword)
-		dest.writeString(currentPassword!!.mSalt)
+		dest.writeString(currentPassword?.hashedPassword ?: "")
+		dest.writeString(currentPassword?.mSalt ?: "")
 	}
 
 	private constructor(`in`: Parcel) {

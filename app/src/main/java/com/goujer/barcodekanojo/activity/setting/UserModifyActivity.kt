@@ -124,9 +124,8 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		imgAvatar = binding.kanojoUserModifyIcon.avatar
 		imgAvatar.visibility = View.VISIBLE
 		mChangeDeviceLayout = findViewById(R.id.kanojo_user_account_device_layout)
-		if (user!!.profile_image_url != null) {
-			imageJob = mScope.launch { mDic.loadBitmap(imgAvatar, user!!.profile_image_url, R.drawable.common_noimage, null) }
-		}
+		//TODO: This Imagejob may not need to be run during a registration as there will be no profile picture to get from the server.
+		imageJob = mScope.launch { mDic.loadBitmap(imgAvatar, user!!.profile_image_url, R.drawable.common_noimage, null) }
 		mListener2 = OnDialogDismissListener { dialogInterface, code ->
 			if (code == 200) {
 				deleteUser()
@@ -271,8 +270,8 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		}
 		if (requestCode == BaseInterface.REQUEST_CHANGE_PASWORD && resultCode == BaseInterface.RESULT_CHANGED) {
             binding.kanojoUserModifyPassword.value = "********"
-			password = data?.getParcelableExtra<Password>("new_password")
-			currentPassword = data?.getParcelableExtra<Password>("current_Password")
+			password = data?.getParcelableExtra("new_password")
+			currentPassword = data?.getParcelableExtra("current_Password")
 			binding.kanojoUserUpdateBtn.isEnabled = true
 		}
 	}
@@ -296,7 +295,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		val intent = Intent().setClass(this, ChangePasswordActivity::class.java)
 		if (user!!.email == null || !(application as BarcodeKanojoApp).barcodeKanojo.isUserLoggedIn) {
 			intent.putExtra("new_email", true)
-			intent.putExtra("current_password", null as Parcelable)
+			intent.putExtra("current_password", Password.emptyPassword())
 		} else {
 			intent.putExtra("new_email", false)
 			intent.putExtra("current_password", user!!.currentPassword)
@@ -388,9 +387,6 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 			const val SAVING_COMMON_INFO_TASK = 1
 			const val SAVING_DEVICE_ACCOUNT_TASK = 2
 			//public static final int REGISTER_TOKEN_TASK = 3;
-			//const val REGISTER_FB_TASK = 4
-			//const val REGISTER_TWITTER_TASK = 5
-			const val REGISTER_SUKIYA_TASK = 6
 			const val UPDATE_TASK = 7
 			const val DELETE_USER_TASK = 8
 			const val VERIFY_TASK = 9
@@ -434,10 +430,10 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
 			queue!!.offer(mSignUpHolder)
 		}
-		if (mResultCode == 210 || mResultCode == 212) {
+		if (mResultCode == BaseInterface.RESULT_MODIFIED_COMMON || mResultCode == BaseInterface.RESULT_MODIFIED_ALL) {
 			queue!!.offer(mSaveCommonInfoHolder)
 		}
-		if (mResultCode == 211 || mResultCode == 212) {
+		if (mResultCode == BaseInterface.RESULT_MODIFIED_DEVICE || mResultCode == BaseInterface.RESULT_MODIFIED_ALL) {
 			queue!!.offer(mSaveDeviceHolder)
 		}
 		if (!isQueueEmpty) {
@@ -481,7 +477,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 				when (mList!!.key) {
 					StatusHolder.SIGNUP_TASK -> barcodeKanojo.signup((application as BarcodeKanojoApp).uUID, modifiedUser!!.name, modifiedUser!!.password, modifiedUser!!.email, modifiedUser!!.birth_year, modifiedUser!!.birth_month, modifiedUser!!.birth_day, modifiedUser!!.sex, modifiedPhoto)
 					StatusHolder.SAVING_COMMON_INFO_TASK -> {
-						if (modifiedUser!!.password != null && modifiedUser!!.password?.hashedPassword ?: "" == "") {
+						if (modifiedUser!!.password != null && (modifiedUser!!.password?.hashedPassword ?: "") == "") {
 							modifiedUser!!.password = user.password
 						}
 						if (cPassword == null) {
@@ -490,7 +486,6 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 						barcodeKanojo.update(modifiedUser!!.name, cPassword, modifiedUser!!.password, modifiedUser!!.email, modifiedUser!!.birth_year, modifiedUser!!.birth_month, modifiedUser!!.birth_day, modifiedUser!!.sex, modifiedPhoto)
 					}
 					StatusHolder.SAVING_DEVICE_ACCOUNT_TASK -> barcodeKanojo.verify(modifiedUser!!.email, modifiedUser!!.password, (this@UserModifyActivity.application as BarcodeKanojoApp).uUID)
-					StatusHolder.REGISTER_SUKIYA_TASK -> null
 					StatusHolder.UPDATE_TASK -> {
 						if (cPassword == null) {
 							cPassword = user.password
@@ -517,13 +512,11 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 				if (response == null) {
 					throw BarcodeKanojoException("""response is null! \n${mReason}""".trimIndent())
 				}
-				code = if (!isQueueEmpty) {
-					response.code
-				} else if (mList!!.key == StatusHolder.DELETE_USER_TASK) {
-					this@UserModifyActivity.getCodeAndShowAlert(response, mReason, this@UserModifyActivity.mListener2)
-				} else {
-					this@UserModifyActivity.getCodeAndShowAlert(response, mReason)
-				}
+				code = if (mList!!.key == StatusHolder.DELETE_USER_TASK) {
+						getCodeAndShowAlert(response, mReason, mListener2)
+					} else {
+						getCodeAndShowAlert(response, mReason)
+					}
 				when (code) {
 					Response.CODE_SUCCESS -> {
 						if (mList!!.key == StatusHolder.SIGNUP_TASK) {
@@ -537,7 +530,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 							mTaskEndHandler.sendEmptyMessage(0)
 						}
 					}
-					Response.CODE_ERROR_BAD_REQUEST, Response.CODE_ERROR_UNAUTHORIZED, 403, 404, 500, 503 -> {
+					Response.CODE_ERROR_BAD_REQUEST, Response.CODE_ERROR_UNAUTHORIZED, Response.CODE_ERROR_FORBIDDEN, Response.CODE_ERROR_NOT_FOUND, Response.CODE_ERROR_SERVER, Response.CODE_ERROR_SERVICE_UNAVAILABLE -> {
 						dismissProgressDialog()
 						bindEvent()
 						clearQueue()
@@ -597,7 +590,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		}
 
 	override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-		if (keyCode != 4 || !mLoadingView!!.isShow) {
+		if (keyCode != KeyEvent.KEYCODE_BACK || !mLoadingView!!.isShow) {
 			return super.onKeyDown(keyCode, event)
 		}
 		mLoadingView!!.setMessage(getString(R.string.requesting_cant_cancel))

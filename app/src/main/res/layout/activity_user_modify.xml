@@ -31,7 +31,11 @@
                 <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_user_modify_email" android:background="@drawable/row_kanojo_edit_bg_top" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/user_account_email" EditItemView:textColor="@color/editable_color"/>
                 <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_user_modify_password" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/user_account_password" EditItemView:textColor="@color/editable_color" EditItemView:arrowDrawable="@drawable/arrow_setting"/>
                 <LinearLayout android:orientation="vertical" android:id="@+id/kanojo_user_account_device_layout" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content"/>
-                <Button android:id="@+id/kanojo_user_update_btn" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" android:text="@string/edit_account_update_btn" style="@style/btn_default"/>
+                <Button
+					android:id="@+id/kanojo_user_update_btn"
+					style="@style/btn_default"
+					android:layout_marginTop="@dimen/row_kanojo_edit_separator_height"
+					android:text="@string/edit_account_update_btn"/>
                 <Button android:id="@+id/kanojo_user_delete_btn" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" android:layout_marginBottom="@dimen/row_kanojo_edit_separator_height" android:text="@string/edit_account_delete_btn" style="@style/btn_default"/>
             </LinearLayout>
         </ScrollView>

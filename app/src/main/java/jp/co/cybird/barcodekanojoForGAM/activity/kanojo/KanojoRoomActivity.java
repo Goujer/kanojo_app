@@ -429,7 +429,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 		radarView.getXAxis().setTextColor(0xFFFFFFFF);
 		radarView.getXAxis().setTextSize(8.5f);
 
-		radarView.setWebColor(0xFF7F7F7F);
+		radarView.setWebColor(0xFF9F9F9F);
 		radarView.setWebColorInner(0xFFFFFFFF);
 		radarView.setWebLineWidthInner(1.5f);
 
