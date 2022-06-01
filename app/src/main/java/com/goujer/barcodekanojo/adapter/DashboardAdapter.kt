@@ -12,7 +12,7 @@ import jp.co.cybird.barcodekanojoForGAM.R
 import jp.co.cybird.barcodekanojoForGAM.adapter.base.BaseActivityModelAdapter
 import jp.co.cybird.barcodekanojoForGAM.adapter.base.ObservableAdapter
 import jp.co.cybird.barcodekanojoForGAM.core.model.ActivityModel
-import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo
+import com.goujer.barcodekanojo.core.model.Kanojo
 import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList
 import kotlinx.coroutines.*
 import java.lang.Runnable

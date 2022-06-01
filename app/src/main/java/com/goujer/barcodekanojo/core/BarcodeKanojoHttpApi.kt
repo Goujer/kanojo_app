@@ -388,7 +388,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun delete(user_id: Int): Response<BarcodeKanojoModel?>? {
+	fun account_delete(user_id: Int): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_DELETE,
 				NameStringPair("user_id", user_id.toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))

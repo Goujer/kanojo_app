@@ -4,17 +4,14 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.os.Bundle;
 //import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.widget.Toast;
 
 //import com.google.android.gms.maps.CameraUpdateFactory;
 //import com.google.android.gms.maps.GoogleMap;
@@ -22,9 +19,7 @@ import android.widget.Toast;
 //import com.google.android.gms.maps.MapView;
 //import com.google.android.gms.maps.model.CameraPosition;
 //import com.google.android.gms.maps.model.LatLng;
-import java.util.List;
 import jp.co.cybird.barcodekanojoForGAM.R;
-import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
 
 //TODO: Get this working and put it somewhere.
 public class MapKanojosActivity extends /*Fragment*/Activity implements View.OnClickListener {

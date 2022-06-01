@@ -16,6 +16,7 @@ import jp.co.cybird.barcodekanojoForGAM.R
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.kanojo.KanojoEditActivity
 import com.goujer.barcodekanojo.adapter.KanojoInfoImgAdapter
+import com.goujer.barcodekanojo.core.model.Kanojo
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.*
 import jp.co.cybird.barcodekanojoForGAM.core.util.HttpUtil

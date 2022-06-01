@@ -2,7 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
     <TextView
 		style="@style/txt_selection"
-		android:text="@string/dashboard_stats"/>
+		android:text="@string/stats"/>
     <jp.co.cybird.barcodekanojoForGAM.view.StatsView
 		android:id="@+id/dashboard_header_stats"
 		android:layout_width="match_parent"

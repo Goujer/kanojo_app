@@ -71,7 +71,7 @@
     <string name="tab_scan">Scan</string>
     <string name="tab_webview">Notice</string>
     <string name="tab_setting">Setting</string>
-    <string name="dashboard_stats">Stats</string>
+    <string name="stats">Stats</string>
     <string name="dashboard_activities">Activities</string>
     <string name="menu_dashboard_settings">Options</string>
     <string name="kanojos_your_kanojos">Your Kanojos</string>
@@ -380,4 +380,9 @@
 	<string name="setting_category_user">User Settings</string>
 	<string name="setting_category_miscellaneous">Miscellaneous</string>
 	<string name="error_user_not_found">User not found.</string>
+	<string name="stat_recognition">Celebrity</string>
+	<string name="stat_possession">Jealousy</string>
+	<string name="stat_consumption">Dedication</string>
+	<string name="stat_sexual">Sexual</string>
+	<string name="stat_flirtable">Flirtable</string>
 </resources>

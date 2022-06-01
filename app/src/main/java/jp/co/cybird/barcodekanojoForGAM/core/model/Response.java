@@ -2,6 +2,7 @@ package jp.co.cybird.barcodekanojoForGAM.core.model;
 
 import android.util.Log;
 
+import com.goujer.barcodekanojo.core.model.Kanojo;
 import com.goujer.barcodekanojo.core.model.User;
 
 import java.util.Collection;

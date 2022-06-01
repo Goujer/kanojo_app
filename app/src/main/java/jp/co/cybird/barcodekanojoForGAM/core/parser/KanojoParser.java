@@ -2,8 +2,8 @@ package jp.co.cybird.barcodekanojoForGAM.core.parser;
 
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoParseException;
-import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
-import jp.co.cybird.barcodekanojoForGAM.gree.core.model.Inspection;
+import com.goujer.barcodekanojo.core.model.Kanojo;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -107,6 +107,9 @@ public class KanojoParser extends AbstractJSONParser<Kanojo> {
             if (object.has("sexual")) {
                 res.setSexual(object.getInt("sexual"));
             }
+			if (object.has("flirtable")) {
+				res.setFlirtable(object.getInt("flirtable"));
+			}
             if (object.has("love_gauge")) {
                 res.setLove_gauge(object.getInt("love_gauge"));
             }

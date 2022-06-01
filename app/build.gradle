@@ -6,6 +6,7 @@ android {
 
 	defaultConfig {
 		applicationId 'com.goujer.barcodekanojo'
+		//noinspection ExpiredTargetSdkVersion
 		targetSdkVersion 27	//Need HTTPS before going to 28
 		minSdkVersion 14
 		versionCode 14000301
@@ -47,6 +48,7 @@ android {
 			versionNameSuffix '.d'
 		}
 	}
+
 	packagingOptions {
 		jniLibs {
 			excludes += ['META-INF/*']
@@ -60,6 +62,7 @@ android {
 	lint {
 		abortOnError false
 	}
+	namespace 'jp.co.cybird.barcodekanojoForGAM'
 }
 
 dependencies {

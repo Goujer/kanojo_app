@@ -39,6 +39,7 @@ public class Barcode implements BarcodeKanojoModel, Parcelable {
     private int sexual;
     private int skin_color;
     private int spot_type;
+	private int flirtable;
 
     public int describeContents() {
         return 0;
@@ -306,4 +307,12 @@ public class Barcode implements BarcodeKanojoModel, Parcelable {
     public void setSexual(int sexual2) {
         this.sexual = sexual2;
     }
+
+	public int getFlirtable() {
+		return flirtable;
+	}
+
+	public void setFlirtable(int flirtable) {
+		this.flirtable = flirtable;
+	}
 }

@@ -11,7 +11,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache
 import jp.co.cybird.barcodekanojoForGAM.R
-import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo
+import com.goujer.barcodekanojo.core.model.Kanojo
 import kotlinx.coroutines.Job
 
 class KanojoView(context: Context?, attrs: AttributeSet?) : RelativeLayout(context, attrs) {

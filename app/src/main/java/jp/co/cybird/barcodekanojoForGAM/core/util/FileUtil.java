@@ -19,9 +19,8 @@ import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import jp.co.cybird.barcodekanojoForGAM.BuildConfig;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
-import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
+import com.goujer.barcodekanojo.core.model.Kanojo;
 
 public class FileUtil {
     public static final int AT_LEAST_AVAILABLE_SPACE = 10;

@@ -73,6 +73,9 @@ public class BarcodeParser extends AbstractJSONParser<Barcode> {
             if (object.has("eye_color")) {
                 res.setEye_color(object.getInt("eye_color"));
             }
+			if (object.has("flirtable")) {
+				res.setFlirtable(object.getInt("flirtable"));
+			}
             if (object.has("possession")) {
                 res.setPossession(object.getInt("possession"));
             }

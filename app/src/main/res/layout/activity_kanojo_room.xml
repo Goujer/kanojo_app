@@ -100,33 +100,18 @@
 				android:layout_alignParentTop="true"
 				android:background="@color/kanojo_room_status_bg"
 				android:orientation="vertical">
-				<RelativeLayout
-					android:id="@+id/progressbar_radar_view"
+				<com.github.mikephil.charting.charts.RadarChart
+					android:id="@+id/radar_view"
 					android:layout_width="match_parent"
 					android:layout_height="220dp"
-					android:visibility="gone">
-					<ProgressBar
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_centerInParent="true" />
-				</RelativeLayout>
-				<WebView
-					android:id="@+id/radar_webview"
-					android:layout_width="match_parent"
-					android:layout_height="220dp"
-					android:scrollbars="none"
 					android:visibility="gone" />
-				<ScrollView
+				<TextView
+					android:id="@+id/kanojo_room_status_txt"
+					style="@style/txt_kanojo_room_status"
 					android:layout_width="match_parent"
-					android:layout_height="match_parent">
-					<TextView
-						android:id="@+id/kanojo_room_status_txt"
-						style="@style/txt_kanojo_room_status"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:paddingLeft="5dp"
-						android:paddingRight="5dp"/>
-				</ScrollView>
+					android:layout_height="wrap_content"
+					android:paddingLeft="5dp"
+					android:paddingRight="5dp" />
 			</LinearLayout>
 			<LinearLayout
 				android:id="@+id/kanojo_room_status_bar_layout"

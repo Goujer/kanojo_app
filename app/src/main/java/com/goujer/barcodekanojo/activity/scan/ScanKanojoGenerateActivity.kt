@@ -10,7 +10,7 @@ import com.goujer.barcodekanojo.activity.base.BaseKanojoEditActivity
 import com.goujer.barcodekanojo.view.ProductAndKanojoView
 import com.goujer.barcodekanojo.BarcodeKanojoApp
 import jp.co.cybird.barcodekanojoForGAM.R
-import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo
+import com.goujer.barcodekanojo.core.model.Kanojo
 import jp.co.cybird.barcodekanojoForGAM.core.model.Product
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView
 

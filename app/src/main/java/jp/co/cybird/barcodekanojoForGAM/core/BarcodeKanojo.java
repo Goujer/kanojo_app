@@ -14,7 +14,7 @@ import java.io.IOException;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Category;
-import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
+import com.goujer.barcodekanojo.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 import com.goujer.barcodekanojo.core.model.User;
@@ -418,7 +418,7 @@ public class BarcodeKanojo {
     }
 
     public Response<BarcodeKanojoModel> android_delete_account(int user_id) throws BarcodeKanojoException, IOException {
-        return this.mBCKApi.delete(user_id);
+        return this.mBCKApi.account_delete(user_id);
     }
 
     public Response<BarcodeKanojoModel> android_register_device(String uuid, String strDeviceToken) throws BarcodeKanojoException {

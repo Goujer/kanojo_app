@@ -9,14 +9,10 @@ import com.goujer.barcodekanojo.core.cache.DynamicImageCache
 import jp.co.cybird.barcodekanojoForGAM.R
 import jp.co.cybird.barcodekanojoForGAM.adapter.base.BaseKanojoPairAdapter
 import jp.co.cybird.barcodekanojoForGAM.adapter.base.ObservableAdapter
-import jp.co.cybird.barcodekanojoForGAM.core.model.ActivityModel
-import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo
+import com.goujer.barcodekanojo.core.model.Kanojo
 import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoPair
 import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList
 import com.goujer.barcodekanojo.view.KanojoView
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import java.util.*
 
 class KanojoAdapter(context: Context?, private val mDic: DynamicImageCache) : BaseKanojoPairAdapter(context), ObservableAdapter {

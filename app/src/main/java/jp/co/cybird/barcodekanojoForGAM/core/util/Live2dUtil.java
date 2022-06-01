@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Observer;
 import jp.co.cybird.barcodekanojoForGAM.Defs;
-import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
+import com.goujer.barcodekanojo.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.live2d.KanojoLive2D;
 import jp.co.cybird.barcodekanojoForGAM.live2d.KanojoSetting;
 

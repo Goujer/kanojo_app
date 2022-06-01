@@ -1,5 +1,7 @@
 package jp.co.cybird.barcodekanojoForGAM.core.model;
 
+import com.goujer.barcodekanojo.core.model.Kanojo;
+
 public class KanojoPair implements BarcodeKanojoModel {
     private Kanojo left;
     private Kanojo right;

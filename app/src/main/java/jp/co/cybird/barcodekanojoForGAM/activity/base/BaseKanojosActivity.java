@@ -9,7 +9,7 @@ import jp.co.cybird.barcodekanojoForGAM.activity.kanojo.KanojoRoomActivity;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
-import jp.co.cybird.barcodekanojoForGAM.core.model.Kanojo;
+import com.goujer.barcodekanojo.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
 
 public abstract class BaseKanojosActivity extends BaseActivity {

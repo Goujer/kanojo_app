@@ -40,7 +40,7 @@
     <string name="tab_scan">Scan</string>
     <string name="tab_webview">Notice</string>
     <string name="tab_setting">Setting</string>
-    <string name="dashboard_stats">Stats</string>
+    <string name="stats">Stats</string>
     <string name="dashboard_activities">Activities</string>
     <string name="menu_dashboard_settings">Options</string>
     <string name="kanojos_your_kanojos">Your Kanojos</string>

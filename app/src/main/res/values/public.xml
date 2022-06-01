@@ -459,7 +459,6 @@
     <public type="string" name="tab_scan" id="2131165279" />
     <public type="string" name="tab_webview" id="2131165280" />
     <public type="string" name="tab_setting" id="2131165281" />
-    <public type="string" name="dashboard_stats" id="2131165282" />
     <public type="string" name="dashboard_activities" id="2131165283" />
     <public type="string" name="menu_dashboard_settings" id="2131165284" />
     <public type="string" name="kanojos_your_kanojos" id="2131165285" />
