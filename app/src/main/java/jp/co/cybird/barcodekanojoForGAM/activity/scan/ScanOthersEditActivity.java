@@ -119,48 +119,43 @@ public class ScanOthersEditActivity extends BaseKanojoEditActivity implements Vi
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.edit_close:
-                close();
-                return;
-            case R.id.scan_others_2_company_name:
-                showEditTextDialog(this.r.getString(R.string.common_product_company), this.mCompanyName);
-                return;
-            case R.id.scan_others_3_product_name:
-                showEditTextDialog(this.r.getString(R.string.common_product_name), this.mProductName);
-                return;
-            case R.id.scan_others_4_category:
-                showListDialog(this.r.getString(R.string.common_product_category), this.mProduct, this.mCategoryName);
-                return;
-            case R.id.scan_others_8_photo:
-                showImagePickerDialog(this.r.getString(R.string.common_product_photo));
-                return;
-            case R.id.scan_others_9_comment:
-                showEditTextDialog(this.r.getString(R.string.common_product_comment), this.mComment, 4);
-                return;
-            case R.id.scan_others_btn_save:
-                this.mProduct.setCompany_name(this.mCompanyName.getValue());
-                this.mProduct.setName(this.mProductName.getValue());
-                this.mProduct.setComment(this.mComment.getValue());
-                if (this.mKanojo.getRelation_status() == 1) {
-                    this.mApiTask = new ApiTask(1, this.mProduct.getBarcode(), this.mProduct);
-                    executeInspectionAndScanOthersTask(this.mApiTask);
-                    return;
-                }
-                this.mApiTask = new ApiTask(2, this.mProduct.getBarcode(), this.mProduct);
-                executeInspectionAndScanOthersTask(this.mApiTask);
-                return;
-            default:
+		int id = v.getId();
+		if (id == R.id.edit_close) {
+			close();
+			return;
+		} else if (id == R.id.scan_others_2_company_name) {
+			showEditTextDialog(this.r.getString(R.string.common_product_company), this.mCompanyName);
+			return;
+		} else if (id == R.id.scan_others_3_product_name) {
+			showEditTextDialog(this.r.getString(R.string.common_product_name), this.mProductName);
+			return;
+		} else if (id == R.id.scan_others_4_category) {
+			showListDialog(this.r.getString(R.string.common_product_category), this.mProduct, this.mCategoryName);
+			return;
+		} else if (id == R.id.scan_others_8_photo) {
+			showImagePickerDialog(this.r.getString(R.string.common_product_photo));
+			return;
+		} else if (id == R.id.scan_others_9_comment) {
+			showEditTextDialog(this.r.getString(R.string.common_product_comment), this.mComment, 4);
+			return;
+		} else if (id == R.id.scan_others_btn_save) {
+			this.mProduct.setCompany_name(this.mCompanyName.getValue());
+			this.mProduct.setName(this.mProductName.getValue());
+			this.mProduct.setComment(this.mComment.getValue());
+			if (this.mKanojo.getRelation_status() == Kanojo.RELATION_OTHER) {
+				this.mApiTask = new ApiTask(1, this.mProduct.getBarcode(), this.mProduct);
+				executeInspectionAndScanOthersTask(this.mApiTask);
+				return;
+			}
+			this.mApiTask = new ApiTask(2, this.mProduct.getBarcode(), this.mProduct);
+			executeInspectionAndScanOthersTask(this.mApiTask);
+			return;
 		}
     }
 
     @Override
     public void onDismiss(DialogInterface dialog, int code) {
-        if (this.mCompanyName.isEmpty() || this.mProductName.isEmpty()) {
-            this.btnSave.setEnabled(false);
-        } else {
-            this.btnSave.setEnabled(true);
-        }
+		this.btnSave.setEnabled(!this.mCompanyName.isEmpty() && !this.mProductName.isEmpty());
 		if (code == 200) {
 			if (this.mApiTask == null) {
 				return;

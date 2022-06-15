@@ -330,12 +330,12 @@ public class BarcodeKanojo {
         if (this.mPlayLive2d == null) {
             return null;
         }
-        Kanojo kanojo = this.mPlayLive2d.kanojo;
-        if (kanojo.getRelation_status() != 2 && kanojo.getRelation_status() != 3) {
-            return null;
-        }
-        String actions = this.mPlayLive2d.actions;
-        if (kanojo == null || actions == null) {
+		Kanojo kanojo = this.mPlayLive2d.kanojo;
+		String actions = this.mPlayLive2d.actions;
+		if (kanojo == null || actions == null) {
+			return null;
+		}
+        if (kanojo.getRelation_status() != Kanojo.RELATION_KANOJO && kanojo.getRelation_status() != Kanojo.RELATION_FRIEND) {
             return null;
         }
         return this.mBCKApi.play_on_live2d(kanojo.getId(), actions);
@@ -344,11 +344,11 @@ public class BarcodeKanojo {
     public void setPlayLive2d(Kanojo kanojo, int[] actions) {
         initPlayLive2d();
         this.mPlayLive2d.kanojo = kanojo;
-        String s = "";
-        for (int i = 0; i < actions.length; i++) {
-            s = s + actions[i] + "|";
-        }
-        this.mPlayLive2d.actions = s;
+        StringBuilder s = new StringBuilder();
+		for (int action : actions) {
+			s.append(action).append("|");
+		}
+        this.mPlayLive2d.actions = s.toString();
     }
 
     private void initPlayLive2d() {
@@ -374,15 +374,15 @@ public class BarcodeKanojo {
         }
         int code = product_category_list.getCode();
         switch (code) {
-            case 200:
+			case Response.CODE_SUCCESS:
                 this.mCategories = product_category_list.getCategoryModelList();
                 return;
-            case 400:
-            case 401:
-            case 403:
-            case 404:
-            case 500:
-            case 503:
+			case Response.CODE_ERROR_BAD_REQUEST:
+            case Response.CODE_ERROR_UNAUTHORIZED:
+			case Response.CODE_ERROR_FORBIDDEN:
+            case Response.CODE_ERROR_NOT_FOUND:
+            case Response.CODE_ERROR_SERVER:
+            case Response.CODE_ERROR_SERVICE_UNAVAILABLE:
                 throw new BarcodeKanojoException("Error: Code: " + code + " Category list not initialized!");
             default:
 
@@ -412,9 +412,6 @@ public class BarcodeKanojo {
     static class PlayLive2d {
         String actions;
         Kanojo kanojo;
-
-        PlayLive2d() {
-        }
     }
 
     public Response<BarcodeKanojoModel> android_delete_account(int user_id) throws BarcodeKanojoException, IOException {
@@ -441,14 +438,14 @@ public class BarcodeKanojo {
         }
     }
 
-    public Response<BarcodeKanojoModel> getURLRadarWebView(int kanojo_id) {
-        try {
-            return this.mBCKApi.getURLRadarWebView(kanojo_id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+    //public Response<BarcodeKanojoModel> getURLRadarWebView(int kanojo_id) {
+    //    try {
+    //        return this.mBCKApi.getURLRadarWebView(kanojo_id);
+    //    } catch (Exception e) {
+    //        e.printStackTrace();
+    //        return null;
+    //    }
+    //}
 
     public Response<BarcodeKanojoModel> show_dialog() throws IllegalStateException, BarcodeKanojoException, IOException {
         return this.mBCKApi.show_dialog();

@@ -414,15 +414,15 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                             }
                         } else {
                             switch (ScanActivity.this.mKanojo.getRelation_status()) {
-                                case 1:
+								case Kanojo.RELATION_OTHER:
                                     ScanActivity.this.result = 4;
                                     ScanActivity.this.mStringMessage = ScanActivity.this.mMessages.get(MessageModel.DO_ADD_FRIEND);
                                     break;
-                                case 2:
+								case Kanojo.RELATION_KANOJO:
                                     ScanActivity.this.result = 2;
                                     ScanActivity.this.mStringMessage = ScanActivity.this.mMessages.get(MessageModel.INFORM_GIRLFRIEND);
                                     break;
-                                case 3:
+								case Kanojo.RELATION_FRIEND:
                                     ScanActivity.this.result = 3;
                                     ScanActivity.this.mStringMessage = ScanActivity.this.mMessages.get(MessageModel.INFORM_FRIEND);
                                     break;

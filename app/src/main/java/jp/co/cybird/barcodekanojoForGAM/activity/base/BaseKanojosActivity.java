@@ -29,13 +29,13 @@ public abstract class BaseKanojosActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1000) {
-            if (resultCode != 209) {
+        if (requestCode == BaseInterface.REQUEST_KANOJO) {
+            if (resultCode != BaseInterface.RESULT_KANOJO_GOOD_BYE) {
                 executeLive2dTask();
             }
-        } else if (resultCode == 103) {
+        } else if (resultCode == BaseInterface.RESULT_ADD_FRIEND) {
             Log.e(TAG, "resultCode == RESULT_ADD_FRIEND");
-        } else if (resultCode == 102) {
+        } else if (resultCode == BaseInterface.RESULT_GENERATE_KANOJO) {
             Log.e(TAG, "resultCode == RESULT_GENERATE_KANOJO");
         }
     }
@@ -44,7 +44,7 @@ public abstract class BaseKanojosActivity extends BaseActivity {
         if (kanojo != null) {
             Intent intent = new Intent().setClass(this, KanojoRoomActivity.class);
 			intent.putExtra(BaseInterface.EXTRA_KANOJO, kanojo);
-			startActivityForResult(intent, 1000);
+			startActivityForResult(intent, BaseInterface.REQUEST_KANOJO);
         }
     }
 

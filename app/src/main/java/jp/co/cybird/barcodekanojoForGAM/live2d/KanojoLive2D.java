@@ -19,11 +19,13 @@ public class KanojoLive2D implements KanojoResource {
     public static final int ICON_FLAG_FIXED_STYLE = 2;
     public static final int ICON_FLAG_SILHOUETTE = 1;
     public static final int USER_ACTION_COUNT = 20;
+
+	public static final int USER_ACTION_NADERU = 10;
     public static final int USER_ACTION_FURU = 11;
+	public static final int USER_ACTION_TSUTSUKU = 12;
     public static final int USER_ACTION_KISS = 20;
     public static final int USER_ACTION_MUNE = 21;
-    public static final int USER_ACTION_NADERU = 10;
-    public static final int USER_ACTION_TSUTSUKU = 12;
+
     private AccelHelper accelHelper;
     private int curUserActionNo = -1;
     private boolean dirtyFlag = true;
@@ -62,18 +64,16 @@ public class KanojoLive2D implements KanojoResource {
         }
         if (this.accelHelper == null) {
             this.accelHelper = new AccelHelper(a);
-            this.accelHelper.setAccelListener(new AccelHelper.AccelListener() {
-                public void accelUpdated(float a1, float a2, float a3) {
-                    AndroidES1Renderer ren;
-                    try {
-                        if (KanojoLive2D.this.glView != null && (ren = KanojoLive2D.this.glView.getMyRenderer()) != null) {
-                            ren.setCurAccel(a1, a2, a3);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            this.accelHelper.setAccelListener((a1, a2, a3) -> {
+				AndroidES1Renderer ren;
+				try {
+					if (KanojoLive2D.this.glView != null && (ren = KanojoLive2D.this.glView.getMyRenderer()) != null) {
+						ren.setCurAccel(a1, a2, a3);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
         }
         return this.glView;
     }
@@ -281,18 +281,16 @@ public class KanojoLive2D implements KanojoResource {
         if (!isInRoom()) {
             return false;
         }
-        switch (state) {
-            case 1:
-                return false;
-            default:
-                this.curUserActionNo = (this.curUserActionNo + 1) % 20;
-                this.userActions[this.curUserActionNo] = userAction;
-                if (this.kanojoRoomActivity != null) {
-                    this.kanojoRoomActivity.callUserAction(userAction);
-                }
-                return true;
-        }
-    }
+		if (state == 1) {
+			return false;
+		}
+		this.curUserActionNo = (this.curUserActionNo + 1) % 20;
+		this.userActions[this.curUserActionNo] = userAction;
+		if (this.kanojoRoomActivity != null) {
+			this.kanojoRoomActivity.callUserAction(userAction);
+		}
+		return true;
+	}
 
     public void addPositionTouch(float x, float y, int type) {
         if (this.kanojoRoomActivity != null) {

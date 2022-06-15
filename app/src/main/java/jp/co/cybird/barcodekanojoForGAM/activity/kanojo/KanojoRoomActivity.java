@@ -223,7 +223,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
             this.mKanojoDialogMessage.setListener(mListener);
             executeKanojoRoomTask();
             this.mFirstBoot = findViewById(R.id.kanojo_room_firstboot);
-            if (this.mKanojo.getRelation_status() == 1) {
+            if (this.mKanojo.getRelation_status() == Kanojo.RELATION_OTHER) {
                 this.mIsFirstBoot = false;
                 this.mFirstBoot.setVisibility(View.GONE);
                 cleanupView(this.mFirstBoot);
@@ -908,16 +908,11 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     class Live2dTask extends AsyncTask<Void, Void, Response<BarcodeKanojoModel>> {
         private Exception mReason = null;
 
-        Live2dTask() {
-        }
-
         public void onPreExecute() {
             KanojoLive2D kanojoLive2D = KanojoRoomActivity.this.getLive2D();
             BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) KanojoRoomActivity.this.getApplication()).getBarcodeKanojo();
-            if (barcodeKanojo != null) {
-                barcodeKanojo.setPlayLive2d(KanojoRoomActivity.this.mKanojo, kanojoLive2D.getUserActions());
-            }
-        }
+			barcodeKanojo.setPlayLive2d(KanojoRoomActivity.this.mKanojo, kanojoLive2D.getUserActions());
+		}
 
         public Response<BarcodeKanojoModel> doInBackground(Void... params) {
             try {
@@ -939,7 +934,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
                         e.printStackTrace();
                     }
                 }
-				if (code == 200) {
+				if (code == Response.CODE_SUCCESS) {
 					KanojoRoomActivity.this.mKanojo = (Kanojo) response.get(Kanojo.class);
 					KanojoRoomActivity.this.updateUser(response);
 					KanojoRoomActivity.this.setAutoRefreshLoveGageAction();

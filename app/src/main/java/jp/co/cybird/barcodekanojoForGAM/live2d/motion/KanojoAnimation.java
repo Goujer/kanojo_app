@@ -244,7 +244,7 @@ public class KanojoAnimation {
     }
 
     public void shakeEvent() {
-        if (UtSystem.getTimeMSec() - lastShakeEvent >= 3000 && this.kanojoLive2D.addUserAction_notForClientCall(11)) {
+        if (UtSystem.getTimeMSec() - lastShakeEvent >= 3000 && this.kanojoLive2D.addUserAction_notForClientCall(KanojoLive2D.USER_ACTION_FURU)) {
             this.mainMotionMgr.startMotion(this.motionKurakuraList.get(rand() % this.motionKurakuraList.size()), false);
         }
     }
