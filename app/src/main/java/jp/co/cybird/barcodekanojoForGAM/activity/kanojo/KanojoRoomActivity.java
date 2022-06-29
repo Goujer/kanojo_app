@@ -387,9 +387,9 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 
 	private void radarChartUpdate() {
 		List<RadarEntry> entries = new ArrayList<>();
-		entries.add(new RadarEntry(mKanojo.getRecognition()));
-		entries.add(new RadarEntry(mKanojo.getPossession()));
 		entries.add(new RadarEntry(mKanojo.getConsumption()));
+		entries.add(new RadarEntry(mKanojo.getPossession()));
+		entries.add(new RadarEntry(mKanojo.getRecognition()));
 		entries.add(new RadarEntry(mKanojo.getSexual()));
 		entries.add(new RadarEntry(mKanojo.getFlirtable()));
 
@@ -425,7 +425,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 		radarView.getYAxis().setDrawLabels(false);
 		radarView.getYAxis().setTextSize(6f);
 
-		radarView.getXAxis().setValueFormatter(new IndexAxisValueFormatter(new String[]{getString(R.string.stat_recognition), getString(R.string.stat_possession), getString(R.string.stat_consumption), getString(R.string.stat_sexual), getString(R.string.stat_flirtable)}));
+		radarView.getXAxis().setValueFormatter(new IndexAxisValueFormatter(new String[]{getString(R.string.stat_consumption), getString(R.string.stat_possession), getString(R.string.stat_recognition), getString(R.string.stat_sexual), getString(R.string.stat_flirtable)}));
 		radarView.getXAxis().setTextColor(0xFFFFFFFF);
 		radarView.getXAxis().setTextSize(8.5f);
 
