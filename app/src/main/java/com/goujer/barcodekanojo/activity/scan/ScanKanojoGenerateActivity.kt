@@ -57,9 +57,9 @@ class ScanKanojoGenerateActivity : BaseKanojoEditActivity(), View.OnClickListene
 			var leftimgurl: String? = null
 			val dic = (application as BarcodeKanojoApp).imageCache
 			if (isDetailByAmazon) {
-				mKanojoName.value = mProduct!!.name
+				mKanojoName.value = mKanojo!!.name
 				mCompanyName.value = mProduct!!.company_name
-				mProductName.value = mProduct!!.product
+				mProductName.value = mProduct!!.name
 				val category_id = checkCategoryID(mProduct!!.category)
 				mProduct!!.category_id = category_id
 				mCategoryName.value = mCategoryList[category_id - 1]
