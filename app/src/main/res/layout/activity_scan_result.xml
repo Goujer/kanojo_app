@@ -5,9 +5,15 @@
             <ImageView android:layout_width="wrap_content" android:layout_height="@dimen/common_title_logo_height" android:src="@drawable/common_logo" android:scaleType="fitCenter" android:adjustViewBounds="true" android:layout_centerInParent="true"/>
             <Button android:id="@+id/scan_result_close" android:text="@string/scan_result_close" android:layout_alignParentLeft="true" style="@style/btn_navi"/>
         </RelativeLayout>
-        <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1">
+        <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
             <RelativeLayout android:gravity="center_horizontal" android:padding="4dp" android:layout_width="match_parent" android:layout_height="match_parent">
-                <RelativeLayout android:gravity="center" android:id="@+id/scan_result_layout_thumb" android:background="@drawable/scan_result_thumb_bg" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true"/>
+                <RelativeLayout
+					android:id="@+id/scan_result_layout_thumb"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_alignParentTop="true"
+					android:background="@drawable/scan_result_thumb_bg"
+					android:gravity="center"/>
                 <TextView android:id="@+id/scan_result_message" android:paddingLeft="15dp" android:paddingRight="15dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="13dp" android:layout_below="@+id/scan_result_layout_thumb" style="@style/txt_scan_result_message"/>
                 <Button android:id="@+id/scan_result_btn_01" android:layout_marginTop="13dp" android:text="@string/scan_others_add_friend" android:layout_below="@+id/scan_result_message" android:layout_centerHorizontal="true" style="@style/btn_default"/>
                 <Button android:id="@+id/scan_result_btn_02" android:layout_marginTop="13dp" android:text="@string/scan_others_edit_productinfo" android:layout_below="@+id/scan_result_btn_01" android:layout_centerHorizontal="true" style="@style/btn_default"/>

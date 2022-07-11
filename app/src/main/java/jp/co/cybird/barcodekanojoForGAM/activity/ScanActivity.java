@@ -90,22 +90,10 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         this.inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         this.mLoadingView = findViewById(R.id.loadingView);
 		if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-			//if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-			//	showNoticeDialog("Camera Permission needed to scan Kanojo.");
-			//	//TODO: Make this actual string
-			//}
 			requestPermissions(new String[] { Manifest.permission.CAMERA }, PermissionRequestCode.SCAN_ACTIVITY);
 		} else {
 			startCaptureActivity();
 		}
-    }
-
-    @Override
-    protected View getClientView() {
-        View layout = getLayoutInflater().inflate(R.layout.activity_scan_result, null);
-        LinearLayout appLayoutRoot = new LinearLayout(this);
-        appLayoutRoot.addView(layout);
-        return appLayoutRoot;
     }
 
     @Override
@@ -269,6 +257,14 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
 				}
 				return;
 		}
+	}
+
+	@Override
+	protected View getClientView() {
+		View layout = getLayoutInflater().inflate(R.layout.activity_scan_result, null);
+		LinearLayout appLayoutRoot = new LinearLayout(this);
+		appLayoutRoot.addView(layout);
+		return appLayoutRoot;
 	}
 
     private void updateViews() {
@@ -496,7 +492,33 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         @Override
         protected Response<?> doInBackground(Void... params) {
             try {
-                return process(this.mTask);
+				BarcodeKanojoApp barcodeKanojoApp = (BarcodeKanojoApp) ScanActivity.this.getApplication();
+				BarcodeKanojo barcodeKanojo = barcodeKanojoApp.getBarcodeKanojo();
+				Location loc = barcodeKanojoApp.getLastKnownLocation();
+				if (loc == null) {
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException ignored) {
+					}
+					loc = barcodeKanojoApp.getLastKnownLocation();
+				}
+				if (this.mTask == null) {
+					throw new BarcodeKanojoException("Task is null");
+				}
+				switch (this.mTask.what) {
+					case ApiTask.API_SCAN:
+						if (this.mTask.barcode == null || this.mTask.product == null) {
+							return null;
+						}
+						return barcodeKanojo.scan(this.mTask.barcode, this.mTask.product.getCompany_name(), this.mTask.product.getName(), this.mTask.product.getCategory_id(), null, null, loc);
+					case ApiTask.API_DECREASE:
+						if (this.mTask.barcode != null) {
+							return barcodeKanojo.decrease_generating(this.mTask.barcode);
+						}
+						return null;
+					default:
+						return null;
+				}
             } catch (Exception e) {
                 this.mReason = e;
                 return null;
@@ -506,27 +528,21 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         @Override
         protected void onPostExecute(Response<?> response) {
             try {
-                Log.d(ScanActivity.TAG, String.valueOf(response.getCode()));
-                Log.d(ScanActivity.TAG, String.valueOf(response.getAlert()));
-                if (response.getCode() != 200 || response.getAlert() == null) {
+                if (response.getCode() != Response.CODE_SUCCESS || response.getAlert() == null) {
                     ScanActivity.this.code = ScanActivity.this.getCodeAndShowAlert(response, this.mReason);
                 } else {
-                    ScanActivity.this.code = ScanActivity.this.getCodeAndShowAlert(response, this.mReason, new BaseActivity.OnDialogDismissListener() {
-                        public void onDismiss(DialogInterface dialog, int code) {
-                            finish();
-                        }
-                    });
+                    ScanActivity.this.code = ScanActivity.this.getCodeAndShowAlert(response, this.mReason, (dialog, code) -> finish());
                 }
                 switch (ScanActivity.this.code) {
-                    case 200:
+					case Response.CODE_SUCCESS:
                         User user = (User) response.get(User.class);
                         if (user != null) {
                             ((BarcodeKanojoApp) ScanActivity.this.getApplication()).getBarcodeKanojo().setUser(user);
                         }
                         ScanActivity.this.dismissProgressDialog();
-                        if (this.mTask.what != 2) {
-                            if (this.mTask.what == 1) {
-                                ScanActivity.this.setResult(103);
+                        if (this.mTask.what != ApiTask.API_DECREASE) {
+                            if (this.mTask.what == ApiTask.API_SCAN) {
+                                ScanActivity.this.setResult(BaseInterface.RESULT_ADD_FRIEND);
                                 if (response.getAlert() == null) {
                                     finish();
                                     break;
@@ -558,7 +574,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                         ScanActivity.this.dismissProgressDialog();
                         break;
                 }
-            } catch (BarcodeKanojoException e) {
+            } catch (BarcodeKanojoException ignored) {
             } finally {
                 ScanActivity.this.dismissProgressDialog();
             }
@@ -567,36 +583,6 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         @Override
         protected void onCancelled() {
             ScanActivity.this.dismissProgressDialog();
-        }
-
-        Response<?> process(ApiTask task) throws BarcodeKanojoException, IllegalStateException, IOException {
-            BarcodeKanojoApp barcodeKanojoApp = (BarcodeKanojoApp) ScanActivity.this.getApplication();
-            BarcodeKanojo barcodeKanojo = barcodeKanojoApp.getBarcodeKanojo();
-            Location loc = barcodeKanojoApp.getLastKnownLocation();
-            if (loc == null) {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                }
-                loc = barcodeKanojoApp.getLastKnownLocation();
-            }
-            if (task == null) {
-                throw new BarcodeKanojoException("Task is null");
-            }
-            switch (task.what) {
-                case 1:
-                    if (task.barcode == null || task.product == null) {
-                        return null;
-                    }
-                    return barcodeKanojo.scan(task.barcode, task.product.getCompany_name(), task.product.getName(), task.product.getCategory_id(), null, null, loc);
-                case 2:
-                    if (task.barcode != null) {
-                        return barcodeKanojo.decrease_generating(task.barcode);
-                    }
-                    return null;
-                default:
-                    return null;
-            }
         }
     }
 

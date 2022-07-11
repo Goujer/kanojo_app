@@ -255,26 +255,15 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
                 showAlertDialog(alert, dialog -> listener.onDismiss(dialog, BaseActivity.this.code));
             }
         }
-        switch (this.code) {
-            case 200:
-                updateUser(response);
-                break;
-            case Response.CODE_ERROR_NOT_ENOUGH_TICKET:
-            case 400:
-            case 401:
-            case 403:
-            case 404:
-            case 500:
-            case 503:
-                if (Defs.DEBUG) {
-                    showToast("code:" + this.code);
-                    break;
-                }
-                break;
-            default:
-                showToast(getResources().getString(R.string.error_internet));
-                break;
-        }
+		if (this.code == Response.CODE_SUCCESS) {
+			updateUser(response);
+		} else {
+			if (Defs.DEBUG) {
+				showToast("code: " + this.code);
+			} else {
+				showToast(getResources().getString(R.string.error_internet));
+			}
+		}
         return this.code;
     }
 
