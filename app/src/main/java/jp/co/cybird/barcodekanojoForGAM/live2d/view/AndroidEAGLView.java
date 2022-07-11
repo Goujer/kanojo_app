@@ -1,6 +1,7 @@
 package jp.co.cybird.barcodekanojoForGAM.live2d.view;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -95,15 +96,21 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
 
     public boolean onTouchEvent(MotionEvent event) {
         boolean ret = false;
-        switch (event.getAction()) {
-            case 0:
+		int action;
+		if (Build.VERSION.SDK_INT >= 8) {
+			action = event.getActionMasked();
+		} else {
+			action = event.getAction() & MotionEvent.ACTION_MASK;
+		}
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
                 ret = true;
                 touchesBegan(event);
                 break;
-            case 1:
+			case MotionEvent.ACTION_UP:
                 touchesEnded(event);
                 break;
-            case 2:
+			case MotionEvent.ACTION_MOVE:
                 touchesMoved(event);
                 break;
         }
