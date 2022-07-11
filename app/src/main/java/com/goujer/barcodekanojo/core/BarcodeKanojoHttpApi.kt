@@ -160,7 +160,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun scan(barcode: String?, company_name: String?, product_name: String?, product_category_id: Int, product_comment: String?, product_image_data: File?, product_geo: Location?): Response<BarcodeKanojoModel?>? {
+	fun scan(barcode: String, company_name: String?, product_name: String?, product_category_id: Int, product_comment: String?, product_image_data: File?, product_geo: Location?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_BARCODE_SCAN,
 				NameStringPair("barcode", barcode),
 				NameStringPair("company_name", company_name),
@@ -172,21 +172,21 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("kanojo", KanojoParser()), ModelParser("scan_history", ScanHistoryParser())))
 	}
 
-	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun scan(barcode: String?, company_name: String?, company_name_textid: String?, product_name: String?, product_name_textid: String?, product_category_id: Int, product_comment: String?, product_comment_textid: String?, product_image_data: File?, product_geo: Location?): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpMultipartPost(URL_API_BARCODE_SCAN,
-				NameStringPair("barcode", barcode),
-				NameStringPair("company_name", company_name),
-				NameStringPair("company_name_textid", company_name_textid),
-				NameStringPair("product_name", product_name),
-				NameStringPair("product_name_textid", product_name_textid),
-				NameStringPair("product_category_id", product_category_id.toString()),
-				NameStringPair("product_comment", product_comment),
-				NameStringPair("product_comment_textid", product_comment_textid),
-				NameFilePair("product_image_data", product_image_data),
-				NameStringPair("product_geo", GeoUtil.geoToString(product_geo)))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("kanojo", KanojoParser()), ModelParser("scan_history", ScanHistoryParser())))
-	}
+	//@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
+	//fun scan(barcode: String, company_name: String?, company_name_textid: String?, product_name: String?, product_name_textid: String?, product_category_id: Int, product_comment: String?, product_comment_textid: String?, product_image_data: File?, product_geo: Location?): Response<BarcodeKanojoModel?>? {
+	//	val connection = mHttpApi.createHttpMultipartPost(URL_API_BARCODE_SCAN,
+	//			NameStringPair("barcode", barcode),
+	//			NameStringPair("company_name", company_name),
+	//			NameStringPair("company_name_textid", company_name_textid),
+	//			NameStringPair("product_name", product_name),
+	//			NameStringPair("product_name_textid", product_name_textid),
+	//			NameStringPair("product_category_id", product_category_id.toString()),
+	//			NameStringPair("product_comment", product_comment),
+	//			NameStringPair("product_comment_textid", product_comment_textid),
+	//			NameFilePair("product_image_data", product_image_data),
+	//			NameStringPair("product_geo", GeoUtil.geoToString(product_geo)))
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("kanojo", KanojoParser()), ModelParser("scan_history", ScanHistoryParser())))
+	//}
 
 	/*@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun scan_and_generate(barcode: String?, company_name: String?, kanojo_name: String?, kanojo_profile_image_data: File?, product_name: String?, product_category_id: Int, product_comment: String?, product_image_data: File?, product_geo: Location?): Response<BarcodeKanojoModel?>? {
@@ -204,19 +204,15 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	}*/
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun scan_and_generate(barcode: String?, company_name: String?, company_name_textid: String?, kanojo_name: String?, kanojo_name_textid: String?, kanojo_profile_image_data: File?, product_name: String?, product_name_textid: String?, product_category_id: Int, product_comment: String?, product_comment_textid: String?, product_image_data: File?, product_geo: Location?): Response<BarcodeKanojoModel?>? {
+	fun scan_and_generate(barcode: String?, company_name: String?, kanojo_name: String?, kanojo_profile_image_data: File?, product_name: String?, product_category_id: Int, product_comment: String?, product_image_data: File?, product_geo: Location?): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_BARCODE_SCAN_AND_GENERATE,
 				NameStringPair("barcode", barcode),
 				NameStringPair("company_name", company_name),
-				NameStringPair("company_name_textid", company_name_textid),
 				NameStringPair("kanojo_name", kanojo_name),
-				NameStringPair("kanojo_name_textid", kanojo_name_textid),
 				NameFilePair("kanojo_profile_image_data", kanojo_profile_image_data),
 				NameStringPair("product_name", product_name),
-				NameStringPair("product_name_textid", product_name_textid),
 				NameStringPair("product_category_id", product_category_id.toString()),
 				NameStringPair("product_comment", product_comment),
-				NameStringPair("product_comment_textid", product_comment_textid),
 				NameFilePair("product_image_data", product_image_data),
 				NameStringPair("product_geo", GeoUtil.geoToString(product_geo)))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("scan_history", ScanHistoryParser())))

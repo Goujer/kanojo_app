@@ -246,27 +246,27 @@ public class BarcodeKanojo {
         return this.mBCKApi.scan(barcode, company_name, product_name, product_category_id, product_comment, product_image_data, product_geo);
     }
 
-    public Response<BarcodeKanojoModel> scan(String barcode, String company_name, String company_name_textid, String product_name, String product_name_textid, int product_category_id, String product_comment, String product_comment_textid, File product_image_data, Location product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
-        return this.mBCKApi.scan(barcode, company_name, company_name_textid, product_name, product_name_textid, product_category_id, product_comment, product_comment_textid, product_image_data, product_geo);
-    }
+    //public Response<BarcodeKanojoModel> scan(String barcode, String company_name, String company_name_textid, String product_name, String product_name_textid, int product_category_id, String product_comment, String product_comment_textid, File product_image_data, Location product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
+    //    return this.mBCKApi.scan(barcode, company_name, company_name_textid, product_name, product_name_textid, product_category_id, product_comment, product_comment_textid, product_image_data, product_geo);
+    //}
 
 //    public Response<BarcodeKanojoModel> scan_and_generate(String barcode, String company_name, String kanojo_name, File kanojo_profile_image_data, String product_name, int product_category_id, String product_comment, File product_image_data, LatLng product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
 //        return this.mBCKApi.scan_and_generate(barcode, company_name, kanojo_name, kanojo_profile_image_data, product_name, product_category_id, product_comment, product_image_data, product_geo);
 //    }
 
-    public Response<BarcodeKanojoModel> scan_and_generate(String barcode, String company_name, String company_name_textid, String kanojo_name, String kanojo_name_textid, File kanojo_profile_image_data, String product_name, String product_name_textid, int product_category_id, String product_comment, String product_comment_textid, File product_image_data, Location product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
-        return this.mBCKApi.scan_and_generate(barcode, company_name, company_name_textid, kanojo_name, kanojo_name_textid, kanojo_profile_image_data, product_name, product_name_textid, product_category_id, product_comment, product_comment_textid, product_image_data, product_geo);
+    public Response<BarcodeKanojoModel> scan_and_generate(String barcode, String company_name, String kanojo_name, File kanojo_profile_image_data, String product_name, int product_category_id, String product_comment, File product_image_data, Location product_geo) throws IllegalStateException, BarcodeKanojoException, IOException {
+        return this.mBCKApi.scan_and_generate(barcode, company_name, kanojo_name, kanojo_profile_image_data, product_name, product_category_id, product_comment, product_image_data, product_geo);
     }
 
     public Response<BarcodeKanojoModel> decrease_generating(String barcode) throws IllegalStateException, BarcodeKanojoException, IOException {
         return this.mBCKApi.decrease_generating(barcode);
     }
 
-    public Response<BarcodeKanojoModel> update(String barcode, String company_name, String product_name, int product_category_id, String product_comment, File product_image_data, Location product_geo) throws BarcodeKanojoException, IOException {
-        return this.mBCKApi.account_update(barcode, company_name, product_name, product_category_id, product_comment, product_image_data, product_geo);
-    }
+    //public Response<BarcodeKanojoModel> update(String barcode, String company_name, String product_name, int product_category_id, String product_comment, File product_image_data, Location product_geo) throws BarcodeKanojoException, IOException {
+    //    return this.mBCKApi.account_update(barcode, company_name, product_name, product_category_id, product_comment, product_image_data, product_geo);
+    //}
 
-    public Response<BarcodeKanojoModel> update(String barcode, String company_name, String company_name_textid, String product_name, String product_name_textid, int product_category_id, String product_comment, String product_comment_textid, File product_image_data, Location product_geo) throws BarcodeKanojoException, IOException {
+    public Response<BarcodeKanojoModel> update(String barcode, String company_name, String product_name, int product_category_id, String product_comment, File product_image_data, Location product_geo) throws BarcodeKanojoException, IOException {
         return this.mBCKApi.account_update(barcode, company_name, product_name, product_category_id, product_comment, product_image_data, product_geo);
     }
 

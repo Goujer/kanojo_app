@@ -66,7 +66,6 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 		when (statusCode) {
 			HttpURLConnection.HTTP_OK -> {
 				try {
-					Log.d(TAG, connection.url.file)
 					return cache.put(key, connection.inputStream)
 				} finally {
 					connection.disconnect()

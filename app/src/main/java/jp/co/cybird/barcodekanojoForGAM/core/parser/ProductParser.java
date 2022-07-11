@@ -44,9 +44,9 @@ public class ProductParser extends AbstractJSONParser<Product> {
             if (object.has("price")) {
                 res.setPrice(object.getString("price"));
             }
-            if (object.has("product")) {
-                res.setProduct(object.getString("product"));
-            }
+            //if (object.has("product")) {
+            //    res.setProduct(object.getString("product"));
+            //}
             return res;
         } catch (JSONException e) {
 			if (Defs.DEBUG) {

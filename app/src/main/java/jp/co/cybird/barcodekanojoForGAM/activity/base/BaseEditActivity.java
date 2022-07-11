@@ -416,15 +416,15 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                     }
                     loc = barcodeKanojoApp.getLastKnownLocation();
                 }
-                return barcodeKanojo.scan_and_generate(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.COMPANY_NAME_TEXTID), this.mParam.get(GreeDefs.KANOJO_NAME), this.mParam.get(GreeDefs.KANOJO_NAME_TEXTID), iconFile, this.mParam.get(GreeDefs.PRODUCT_NAME), this.mParam.get(GreeDefs.PRODUCT_NAME_TEXTID), Integer.parseInt(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)), this.mParam.get(GreeDefs.PRODUCT_COMMENT), this.mParam.get(GreeDefs.PRODUCT_COMMENT_TEXTID), contextRef.get().getFile(), loc);
+                return barcodeKanojo.scan_and_generate(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.KANOJO_NAME), iconFile, this.mParam.get(GreeDefs.PRODUCT_NAME), Integer.parseInt(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)), this.mParam.get(GreeDefs.PRODUCT_COMMENT), contextRef.get().getFile(), loc);
             } else if (this.mAction == 4) {
-                return barcodeKanojo.update(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.COMPANY_NAME_TEXTID), this.mParam.get(GreeDefs.PRODUCT_NAME), this.mParam.get(GreeDefs.PRODUCT_NAME_TEXTID), Integer.parseInt(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)), this.mParam.get(GreeDefs.PRODUCT_COMMENT), this.mParam.get(GreeDefs.PRODUCT_COMMENT_TEXTID), contextRef.get().getFile(), GeoUtil.stringToGeo(this.mParam.get(GreeDefs.GEOPOINT)));
+                return barcodeKanojo.update(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.PRODUCT_NAME), Integer.parseInt(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)), this.mParam.get(GreeDefs.PRODUCT_COMMENT), contextRef.get().getFile(), GeoUtil.stringToGeo(this.mParam.get(GreeDefs.GEOPOINT)));
             } else if (this.mAction == 3) {
                 Location loc2 = barcodeKanojoApp.getLastKnownLocation();
                 if (loc2 == null) {
                     try {
                         Thread.sleep(3000);
-                    } catch (InterruptedException e2) {
+                    } catch (InterruptedException ignored) {
                     }
                     loc2 = barcodeKanojoApp.getLastKnownLocation();
                 }
@@ -437,12 +437,12 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                         if (task.barcode == null || task.product == null) {
                             return null;
                         }
-                        return barcodeKanojo.scan(task.barcode, task.product.getCompany_name(), task.companyNameTextId, task.product.getName(), task.productNameTextId, task.product.getCategory_id(), task.product.getComment(), task.productCommentTextId, contextRef.get().getFile(), loc2);
+                        return barcodeKanojo.scan(task.barcode, task.product.getCompany_name(), task.product.getName(), task.product.getCategory_id(), task.product.getComment(), contextRef.get().getFile(), loc2);
                     case 2:
                         if (task.barcode == null || task.product == null) {
                             return null;
                         }
-                        return barcodeKanojo.update(task.barcode, task.product.getCompany_name(), task.companyNameTextId, task.product.getName(), task.productNameTextId, task.product.getCategory_id(), task.product.getComment(), task.productCommentTextId, contextRef.get().getFile(), loc2);
+                        return barcodeKanojo.update(task.barcode, task.product.getCompany_name(), task.product.getName(), task.product.getCategory_id(), task.product.getComment(), contextRef.get().getFile(), loc2);
                     default:
                         return null;
                 }
