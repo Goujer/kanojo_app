@@ -145,22 +145,23 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 		connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=$BOUNDARY")
 		try {
 			val request = DataOutputStream(connection.outputStream)
-			for (param in stripNulls(*nameValuePairs)) {
-				if (param is NameFilePair) {
-					request.writeBytes("--$BOUNDARY\r\n")
-					request.writeBytes("Content-Disposition: form-data; name=\"" + param.name + "\"; filename=\"image.png\"\r\nContent-Type: application/octet-stream\r\n\r\n")
-					request.write(param.valueAsBytes())
-					request.writeBytes("\r\n")
-				} else {
-					request.writeBytes("--$BOUNDARY\r\n")
-					request.writeBytes("Content-Disposition: form-data; name=\"" + param.name + "\"\r\n\r\n")
-					request.write(param.valueAsBytes())
-					request.writeBytes("\r\n")
+			request.use {
+				for (param in stripNulls(*nameValuePairs)) {
+					if (param is NameFilePair) {
+						it.writeBytes("--$BOUNDARY\r\n")
+						it.writeBytes("Content-Disposition: form-data; name=\"" + param.name + "\"; filename=\"image.png\"\r\nContent-Type: application/octet-stream\r\n\r\n")
+						it.write(param.valueAsBytes())
+						it.writeBytes("\r\n")
+					} else {
+						it.writeBytes("--$BOUNDARY\r\n")
+						it.writeBytes("Content-Disposition: form-data; name=\"" + param.name + "\"\r\n\r\n")
+						it.write(param.valueAsBytes())
+						it.writeBytes("\r\n")
+					}
 				}
+				it.writeBytes("--$BOUNDARY--\r\n")
+				it.flush()
 			}
-			request.writeBytes("--$BOUNDARY--\r\n")
-			request.flush()
-			request.close()
 		} catch (e: Exception) {
 			e.printStackTrace()
 		}
