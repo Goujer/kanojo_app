@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.List;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.billing.util.IabHelper;
 import jp.co.cybird.barcodekanojoForGAM.billing.util.IabResult;
 import jp.co.cybird.barcodekanojoForGAM.billing.util.Inventory;

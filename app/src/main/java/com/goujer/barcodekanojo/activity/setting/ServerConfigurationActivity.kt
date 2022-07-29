@@ -9,7 +9,7 @@ import android.widget.Button
 import android.widget.CompoundButton
 import android.widget.EditText
 import com.goujer.barcodekanojo.core.http.HttpApi
-import jp.co.cybird.barcodekanojoForGAM.R
+import com.goujer.barcodekanojo.R
 import com.goujer.barcodekanojo.preferences.ApplicationSetting
 import jp.co.cybird.barcodekanojoForGAM.Defs
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView

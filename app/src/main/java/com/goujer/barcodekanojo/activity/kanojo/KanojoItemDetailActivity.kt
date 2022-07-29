@@ -21,7 +21,7 @@ import com.goujer.barcodekanojo.core.cache.DynamicImageCache
 import com.goujer.barcodekanojo.BarcodeKanojoApp
 import com.goujer.barcodekanojo.core.model.Kanojo
 import com.goujer.barcodekanojo.core.model.User
-import jp.co.cybird.barcodekanojoForGAM.R
+import com.goujer.barcodekanojo.R
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.kanojo.KanojoItemsActivity
 import jp.co.cybird.barcodekanojoForGAM.billing.util.Inventory

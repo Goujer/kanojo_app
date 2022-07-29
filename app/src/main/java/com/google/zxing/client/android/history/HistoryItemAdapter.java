@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.zxing.Result;
 import java.util.ArrayList;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 final class HistoryItemAdapter extends ArrayAdapter<HistoryItem> {
     private final Activity activity;

@@ -30,7 +30,7 @@ import java.util.Locale;
 
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.Defs;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.CustomWebViewActivity;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;

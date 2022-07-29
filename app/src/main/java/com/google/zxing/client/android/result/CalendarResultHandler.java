@@ -8,7 +8,7 @@ import com.google.zxing.client.result.CalendarParsedResult;
 import com.google.zxing.client.result.ParsedResult;
 import java.text.DateFormat;
 import java.util.Date;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public final class CalendarResultHandler extends ResultHandler {
     private static final String TAG = CalendarResultHandler.class.getSimpleName();

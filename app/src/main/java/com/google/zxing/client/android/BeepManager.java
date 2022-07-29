@@ -10,7 +10,7 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import java.io.IOException;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 final class BeepManager {
     private static final float BEEP_VOLUME = 0.1f;

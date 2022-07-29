@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import java.util.List;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import com.goujer.barcodekanojo.core.model.User;
 
 public class EnemyBookAdapter extends ArrayAdapter<User> {

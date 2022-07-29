@@ -18,7 +18,7 @@ package com.google.zxing.client.android.share;
 
 import java.util.List;
 
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;

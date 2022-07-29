@@ -1,24 +1,17 @@
 package jp.co.cybird.barcodekanojoForGAM.activity.setting;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 
+import com.goujer.barcodekanojo.R;
 import com.goujer.barcodekanojo.activity.base.BaseEditActivity;
 import com.goujer.barcodekanojo.core.Password;
+import com.goujer.barcodekanojo.databinding.ActivityChangePasswordBinding;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-
-import jp.co.cybird.barcodekanojoForGAM.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
-import jp.co.cybird.barcodekanojoForGAM.databinding.ActivityChangePasswordBinding;
 
 public class ChangePasswordActivity extends BaseEditActivity implements View.OnClickListener {
 

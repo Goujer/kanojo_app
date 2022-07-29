@@ -24,7 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.regex.Pattern;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public final class EncodeActivity extends Activity {
     private static final int MAX_BARCODE_FILENAME_LENGTH = 24;
@@ -62,26 +62,25 @@ public final class EncodeActivity extends Activity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean z = false;
-        switch (item.getItemId()) {
-            case R.id.menu_share:
-                share();
-                return true;
-            case R.id.menu_encode:
-                Intent intent = getIntent();
-                if (intent == null) {
-                    return false;
-                }
-                if (!this.qrCodeEncoder.isUseVCard()) {
-                    z = true;
-                }
-                intent.putExtra(USE_VCARD_KEY, z);
-                startActivity(intent);
-                finish();
-                return true;
-            default:
-                return false;
-        }
-    }
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_share) {
+			share();
+			return true;
+		} else if (itemId == R.id.menu_encode) {
+			Intent intent = getIntent();
+			if (intent == null) {
+				return false;
+			}
+			if (!this.qrCodeEncoder.isUseVCard()) {
+				z = true;
+			}
+			intent.putExtra(USE_VCARD_KEY, z);
+			startActivity(intent);
+			finish();
+			return true;
+		}
+		return false;
+	}
 
     private void share() {
         QRCodeEncoder encoder = qrCodeEncoder;

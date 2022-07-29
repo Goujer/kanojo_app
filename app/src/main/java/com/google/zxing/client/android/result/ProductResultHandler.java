@@ -6,7 +6,7 @@ import com.google.zxing.Result;
 import com.google.zxing.client.result.ExpandedProductParsedResult;
 import com.google.zxing.client.result.ParsedResult;
 import com.google.zxing.client.result.ProductParsedResult;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public final class ProductResultHandler extends ResultHandler {
     private static final int[] buttons = {R.string.button_product_search, R.string.button_web_search, R.string.button_custom_product_search};

@@ -10,7 +10,6 @@ import android.content.Intent
 import android.location.Location
 import android.location.LocationManager
 import jp.co.cybird.barcodekanojoForGAM.Defs
-import jp.co.cybird.barcodekanojoForGAM.R
 import com.goujer.barcodekanojo.core.model.User
 
 class BarcodeKanojoApp : Application() {

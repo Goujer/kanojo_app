@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import jp.co.cybird.android.lib.gcm.Const;
 import jp.co.cybird.app.android.lib.commons.log.DLog;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public class BarcodeService extends IntentService {
 	//TODO: This and Notifications in general

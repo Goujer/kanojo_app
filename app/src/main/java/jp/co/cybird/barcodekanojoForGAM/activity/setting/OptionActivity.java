@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.Defs;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;

@@ -28,7 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.adapter.KanojoItemAdapter;
@@ -418,20 +418,19 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.kanojo_items_close /*2131296322*/:
-                close();
-                return;
-            case R.id.kanojo_tab_items_store /*2131296326*/:
-                onTabType(1);
-                return;
-            case R.id.kanojo_tab_items_list /*2131296327*/:
-                onTabType(2);
-                return;
-            default:
-                return;
-        }
-    }
+		int id = v.getId();
+		if (id == R.id.kanojo_items_close) { /*2131296322*/
+			close();
+			return;
+		} else if (id == R.id.kanojo_tab_items_store) { /*2131296326*/
+			onTabType(1);
+			return;
+		} else if (id == R.id.kanojo_tab_items_list) { /*2131296327*/
+			onTabType(2);
+			return;
+		}
+		return;
+	}
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

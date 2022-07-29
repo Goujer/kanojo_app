@@ -11,7 +11,7 @@ import com.goujer.barcodekanojo.activity.base.BaseKanojoEditActivity;
 
 import java.io.File;
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.activity.util.ApiTask;
 import com.goujer.barcodekanojo.core.model.Kanojo;

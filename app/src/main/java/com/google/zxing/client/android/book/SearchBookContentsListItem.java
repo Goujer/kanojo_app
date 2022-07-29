@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.Locale;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public final class SearchBookContentsListItem extends LinearLayout {
     private TextView pageNumberView;

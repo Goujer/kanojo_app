@@ -13,7 +13,7 @@ import com.goujer.barcodekanojo.activity.base.BaseKanojoEditActivity;
 
 import java.io.File;
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import com.goujer.barcodekanojo.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel;
@@ -144,36 +144,34 @@ public class KanojoEditActivity extends BaseKanojoEditActivity implements View.O
 
     public void onClick(View v) {
         unBindEvent();
-        switch (v.getId()) {
-            case R.id.edit_close:
-                close();
-                return;
-            case R.id.kanojo_edit_1_kanojo_name:
-            case R.id.kanojo_edit_5_location:
-                bindEvent();
-                return;
-            case R.id.kanojo_edit_2_company_name:
-                showEditTextDialog(this.r.getString(R.string.common_product_company), this.mCompanyName);
-                return;
-            case R.id.kanojo_edit_3_product_name:
-                showEditTextDialog(this.r.getString(R.string.common_product_name), this.mProductName);
-                return;
-            case R.id.kanojo_edit_4_category:
-                showListDialog(this.r.getString(R.string.common_product_category), this.mProduct, this.mCategoryName);
-                return;
-            case R.id.kanojo_edit_6_photo:
-                showImagePickerDialog(this.r.getString(R.string.common_product_photo));
-                return;
-            case R.id.kanojo_edit_7_comment:
-                showEditTextDialog(this.r.getString(R.string.common_product_comment), this.mComment, 4);
-                return;
-            case R.id.kanojo_edit_btn_save:
-                executeInspectionAndUpdateTask(this.mProduct.getBarcode(), this.mCompanyName.getValue(), this.mProductName.getValue(), this.mProduct.getCategory_id(), this.mComment.getValue());
-                return;
-            default:
-                return;
-        }
-    }
+		int id = v.getId();
+		if (id == R.id.edit_close) {
+			close();
+			return;
+		} else if (id == R.id.kanojo_edit_1_kanojo_name || id == R.id.kanojo_edit_5_location) {
+			bindEvent();
+			return;
+		} else if (id == R.id.kanojo_edit_2_company_name) {
+			showEditTextDialog(this.r.getString(R.string.common_product_company), this.mCompanyName);
+			return;
+		} else if (id == R.id.kanojo_edit_3_product_name) {
+			showEditTextDialog(this.r.getString(R.string.common_product_name), this.mProductName);
+			return;
+		} else if (id == R.id.kanojo_edit_4_category) {
+			showListDialog(this.r.getString(R.string.common_product_category), this.mProduct, this.mCategoryName);
+			return;
+		} else if (id == R.id.kanojo_edit_6_photo) {
+			showImagePickerDialog(this.r.getString(R.string.common_product_photo));
+			return;
+		} else if (id == R.id.kanojo_edit_7_comment) {
+			showEditTextDialog(this.r.getString(R.string.common_product_comment), this.mComment, 4);
+			return;
+		} else if (id == R.id.kanojo_edit_btn_save) {
+			executeInspectionAndUpdateTask(this.mProduct.getBarcode(), this.mCompanyName.getValue(), this.mProductName.getValue(), this.mProduct.getCategory_id(), this.mComment.getValue());
+			return;
+		}
+		return;
+	}
 
     public void onDismiss(DialogInterface dialog, int code) {
         if (this.mCompanyName.isEmpty() || this.mProductName.isEmpty()) {

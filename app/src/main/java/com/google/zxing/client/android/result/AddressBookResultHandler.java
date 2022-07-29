@@ -12,7 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public final class AddressBookResultHandler extends ResultHandler {
     private static final int[] BUTTON_TEXTS = {R.string.button_add_contact, R.string.button_show_map, R.string.button_dial, R.string.button_email};

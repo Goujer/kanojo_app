@@ -14,7 +14,7 @@ import com.goujer.barcodekanojo.core.cache.DynamicImageCache;
 import java.util.ArrayList;
 import java.util.List;
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.adapter.EnemyAdapter;

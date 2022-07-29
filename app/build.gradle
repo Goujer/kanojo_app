@@ -7,8 +7,9 @@ android {
 	defaultConfig {
 		applicationId 'com.goujer.barcodekanojo'
 		//noinspection ExpiredTargetSdkVersion
-		targetSdkVersion 27	//Need HTTPS before going to 28
+		targetSdkVersion 29
 		minSdkVersion 14
+		//VersionCode Scheme AABBBBBB	A=minSDK, B=Version of App (BB.BB.BB)
 		versionCode 14000303
 		versionName "0.3.3"
 	}
@@ -33,15 +34,6 @@ android {
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 			signingConfig signingConfigs.release
 		}
-		prerelease {
-			debuggable true
-			minifyEnabled true
-			shrinkResources true
-			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-			signingConfig signingConfigs.release
-			applicationIdSuffix '.PRERELEASE'
-			versionNameSuffix '.pr'
-		}
 		debug {
 			debuggable true
 			applicationIdSuffix '.DEBUG'
@@ -58,16 +50,16 @@ android {
 		}
 	}
 
-
 	lint {
 		abortOnError false
 	}
-	namespace 'jp.co.cybird.barcodekanojoForGAM'
+
+	namespace 'com.goujer.barcodekanojo'
 }
 
 dependencies {
 	//AndroidX Core
-	implementation "androidx.core:core-ktx:1.7.0"
+	implementation "androidx.core:core-ktx:1.8.0"
 
 	//SwipeRefreshLayout
 	implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
@@ -76,7 +68,7 @@ dependencies {
 	implementation "androidx.collection:collection-ktx:1.2.0"
 
 	//Maps
-	implementation 'org.osmdroid:osmdroid-android:6.1.11'
+	implementation 'org.osmdroid:osmdroid-android:6.1.13'
 
 	//Charts
 	implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
@@ -87,9 +79,9 @@ dependencies {
 	//implementation 'com.google.zxing:android-integration:3.2.1'
 
 	//Live2D
-    implementation files('libs/live2d_android.jar')
+	implementation files('libs/live2d_android.jar')
 
 	//Kotlin
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
+	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
 }

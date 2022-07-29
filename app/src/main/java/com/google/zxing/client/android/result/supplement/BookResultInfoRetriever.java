@@ -24,7 +24,7 @@ import com.google.zxing.client.android.history.HistoryManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

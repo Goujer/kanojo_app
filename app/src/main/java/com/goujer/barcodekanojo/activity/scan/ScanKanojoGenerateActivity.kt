@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import com.goujer.barcodekanojo.activity.base.BaseKanojoEditActivity
 import com.goujer.barcodekanojo.view.ProductAndKanojoView
 import com.goujer.barcodekanojo.BarcodeKanojoApp
-import jp.co.cybird.barcodekanojoForGAM.R
+import com.goujer.barcodekanojo.R
 import com.goujer.barcodekanojo.core.model.Kanojo
 import jp.co.cybird.barcodekanojoForGAM.core.model.Product
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView

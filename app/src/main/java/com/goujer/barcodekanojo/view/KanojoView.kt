@@ -10,7 +10,7 @@ import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache
-import jp.co.cybird.barcodekanojoForGAM.R
+import com.goujer.barcodekanojo.R
 import com.goujer.barcodekanojo.core.model.Kanojo
 import kotlinx.coroutines.Job
 

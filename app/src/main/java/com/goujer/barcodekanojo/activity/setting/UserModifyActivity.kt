@@ -21,7 +21,7 @@ import com.goujer.barcodekanojo.preferences.ApplicationSetting
 
 import com.goujer.barcodekanojo.BarcodeKanojoApp
 import com.goujer.barcodekanojo.core.Password
-import jp.co.cybird.barcodekanojoForGAM.R
+import com.goujer.barcodekanojo.R
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity.OnDialogDismissListener
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface
@@ -29,7 +29,7 @@ import jp.co.cybird.barcodekanojoForGAM.activity.setting.ChangePasswordActivity
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
 import com.goujer.barcodekanojo.core.model.User
-import jp.co.cybird.barcodekanojoForGAM.databinding.ActivityUserModifyBinding
+import com.goujer.barcodekanojo.databinding.ActivityUserModifyBinding
 import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView.EditItemViewCallback

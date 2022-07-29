@@ -13,7 +13,7 @@ import com.goujer.barcodekanojo.core.cache.DynamicImageCache;
 
 import java.util.Observable;
 import java.util.Observer;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.adapter.base.BaseKanojoItemAdapter;
 import jp.co.cybird.barcodekanojoForGAM.adapter.base.ObservableAdapter;
 import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoItem;

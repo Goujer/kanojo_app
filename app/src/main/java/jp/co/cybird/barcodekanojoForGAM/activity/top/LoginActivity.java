@@ -8,7 +8,7 @@ import android.widget.Button;
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
 import com.goujer.barcodekanojo.core.Password;
 
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import com.goujer.barcodekanojo.core.model.User;

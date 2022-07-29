@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public class GroupFieldControls extends LinearLayout {
     public static final int HOUR_SELECT_WITH_IMAGE_TYPE = 2;

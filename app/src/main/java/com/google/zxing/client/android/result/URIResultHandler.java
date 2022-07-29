@@ -5,7 +5,7 @@ import com.google.zxing.client.android.LocaleManager;
 import com.google.zxing.client.result.ParsedResult;
 import com.google.zxing.client.result.URIParsedResult;
 import java.util.Locale;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public final class URIResultHandler extends ResultHandler {
     private static final String[] SECURE_PROTOCOLS = {"otpauth:"};

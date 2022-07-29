@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache
-import jp.co.cybird.barcodekanojoForGAM.R
+import com.goujer.barcodekanojo.R
 import jp.co.cybird.barcodekanojoForGAM.adapter.base.BaseKanojoPairAdapter
 import jp.co.cybird.barcodekanojoForGAM.adapter.base.ObservableAdapter
 import com.goujer.barcodekanojo.core.model.Kanojo

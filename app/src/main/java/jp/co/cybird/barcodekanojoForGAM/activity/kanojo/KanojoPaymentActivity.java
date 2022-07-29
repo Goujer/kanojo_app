@@ -10,7 +10,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.Defs;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoItem;
@@ -69,12 +69,10 @@ public class KanojoPaymentActivity extends BaseEditActivity implements View.OnCl
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.kanojo_payment_close:
-                close();
-                return;
-            default:
-                return;
-        }
-    }
+		if (v.getId() == R.id.kanojo_payment_close) {
+			close();
+			return;
+		}
+		return;
+	}
 }

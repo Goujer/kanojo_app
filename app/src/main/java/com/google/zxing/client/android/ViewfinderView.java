@@ -12,7 +12,7 @@ import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.camera.CameraManager;
 import java.util.ArrayList;
 import java.util.List;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public final class ViewfinderView extends View {
     private static final long ANIMATION_DELAY = 80;

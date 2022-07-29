@@ -25,7 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Locale;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public abstract class ResultHandler {
     private static final String[] ADDRESS_TYPE_STRINGS = {"home", "work"};

@@ -12,7 +12,7 @@ import com.goujer.barcodekanojo.adapter.KanojoInfoAdapter
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache
 import com.goujer.barcodekanojo.BarcodeKanojoApp
 import jp.co.cybird.barcodekanojoForGAM.Defs
-import jp.co.cybird.barcodekanojoForGAM.R
+import com.goujer.barcodekanojo.R
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.kanojo.KanojoEditActivity
 import com.goujer.barcodekanojo.adapter.KanojoInfoImgAdapter

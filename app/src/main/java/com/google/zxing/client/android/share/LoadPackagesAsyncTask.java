@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 final class LoadPackagesAsyncTask extends AsyncTask<Void, Void, List<AppInfo>> {
     private static final String[] PKG_PREFIX_BLACKLIST = {"com.android.", "android", "com.google.android.", "com.htc"};

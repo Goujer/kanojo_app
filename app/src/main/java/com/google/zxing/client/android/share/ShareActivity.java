@@ -17,7 +17,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.android.Contents;
 import com.google.zxing.client.android.Intents;
 import jp.co.cybird.app.android.lib.commons.log.ApplicationLogDB;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public final class ShareActivity extends Activity {
     private static final int PICK_APP = 2;

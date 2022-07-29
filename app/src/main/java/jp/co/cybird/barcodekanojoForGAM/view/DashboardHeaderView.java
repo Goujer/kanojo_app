@@ -3,7 +3,7 @@ package jp.co.cybird.barcodekanojoForGAM.view;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import com.goujer.barcodekanojo.core.model.User;
 
 public class DashboardHeaderView extends LinearLayout {

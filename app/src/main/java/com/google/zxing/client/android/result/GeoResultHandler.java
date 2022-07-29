@@ -3,7 +3,7 @@ package com.google.zxing.client.android.result;
 import android.app.Activity;
 import com.google.zxing.client.result.GeoParsedResult;
 import com.google.zxing.client.result.ParsedResult;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public final class GeoResultHandler extends ResultHandler {
     private static final int[] buttons = {R.string.button_show_map, R.string.button_get_directions};

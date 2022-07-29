@@ -3,7 +3,7 @@ package com.google.zxing.client.android.result;
 import android.app.Activity;
 import com.google.zxing.client.result.EmailAddressParsedResult;
 import com.google.zxing.client.result.ParsedResult;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public final class EmailAddressResultHandler extends ResultHandler {
     private static final int[] buttons = {R.string.button_email, R.string.button_add_contact};

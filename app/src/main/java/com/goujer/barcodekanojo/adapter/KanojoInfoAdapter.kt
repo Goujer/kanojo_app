@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache
-import jp.co.cybird.barcodekanojoForGAM.R
+import com.goujer.barcodekanojo.R
 import jp.co.cybird.barcodekanojoForGAM.adapter.base.BaseActivityModelAdapter
 import jp.co.cybird.barcodekanojoForGAM.core.model.ActivityModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList

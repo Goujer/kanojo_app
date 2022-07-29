@@ -15,7 +15,7 @@ import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 final class DecodeHandler extends Handler {
     private static final String TAG = DecodeHandler.class.getSimpleName();
@@ -30,18 +30,16 @@ final class DecodeHandler extends Handler {
 
     public void handleMessage(Message message) {
         if (this.running) {
-            switch (message.what) {
-                case R.id.decode:
-                    decode((byte[]) message.obj, message.arg1, message.arg2);
-                    return;
-                case R.id.quit:
-                    this.running = false;
-                    Looper.myLooper().quit();
-                    return;
-                default:
-                    return;
-            }
-        }
+			if (message.what == R.id.decode) {
+				decode((byte[]) message.obj, message.arg1, message.arg2);
+				return;
+			} else if (message.what == R.id.quit) {
+				this.running = false;
+				Looper.myLooper().quit();
+				return;
+			}
+			return;
+		}
     }
 
     private void decode(byte[] data, int width, int height) {

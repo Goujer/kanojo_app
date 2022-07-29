@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.util.ApiTask;
 import jp.co.cybird.barcodekanojoForGAM.activity.util.EditBitmapActivity;
 import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;

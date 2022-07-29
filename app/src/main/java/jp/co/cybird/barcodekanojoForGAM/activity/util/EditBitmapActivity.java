@@ -48,8 +48,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
-import jp.co.cybird.barcodekanojoForGAM.BuildConfig;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.BuildConfig;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.core.util.FileUtil;
 import jp.co.cybird.barcodekanojoForGAM.view.EditBitmapView;

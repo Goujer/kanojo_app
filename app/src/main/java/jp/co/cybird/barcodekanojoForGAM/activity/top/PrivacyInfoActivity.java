@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 
@@ -32,17 +32,16 @@ public class PrivacyInfoActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.kanojo_privacy_ok:
-                startSignUp();
-                return;
-            case R.id.kanojo_privacy_no:
-                close();
-                return;
-            default:
-                return;
-        }
-    }
+		int id = v.getId();
+		if (id == R.id.kanojo_privacy_ok) {
+			startSignUp();
+			return;
+		} else if (id == R.id.kanojo_privacy_no) {
+			close();
+			return;
+		}
+		return;
+	}
 
     private void startSignUp() {
         setResult(BaseInterface.RESULT_PRIVACY_OK, (Intent) null);

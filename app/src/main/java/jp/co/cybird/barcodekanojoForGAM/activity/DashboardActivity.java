@@ -27,7 +27,7 @@ import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseKanojosActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.GreeBaseActivity;

@@ -9,7 +9,7 @@ import com.google.zxing.client.android.common.executor.AsyncTaskExecManager;
 import com.google.zxing.client.android.wifi.WifiConfigManager;
 import com.google.zxing.client.result.ParsedResult;
 import com.google.zxing.client.result.WifiParsedResult;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public final class WifiResultHandler extends ResultHandler {
     private final CaptureActivity parent;

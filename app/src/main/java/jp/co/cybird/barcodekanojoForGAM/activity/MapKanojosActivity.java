@@ -19,7 +19,7 @@ import android.view.View;
 //import com.google.android.gms.maps.MapView;
 //import com.google.android.gms.maps.model.CameraPosition;
 //import com.google.android.gms.maps.model.LatLng;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 //TODO: Get this working and put it somewhere.
 public class MapKanojosActivity extends /*Fragment*/Activity implements View.OnClickListener {

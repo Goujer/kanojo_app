@@ -12,14 +12,14 @@ import com.goujer.barcodekanojo.activity.setting.UserModifyActivity
 import com.goujer.barcodekanojo.preferences.ApplicationSetting
 import com.goujer.barcodekanojo.BarcodeKanojoApp
 
-import jp.co.cybird.barcodekanojoForGAM.R
+import com.goujer.barcodekanojo.R
 import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface
 import jp.co.cybird.barcodekanojoForGAM.activity.top.LoginActivity
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
-import jp.co.cybird.barcodekanojoForGAM.databinding.ActivityBootBinding
+import com.goujer.barcodekanojo.databinding.ActivityBootBinding
 
 import kotlinx.coroutines.*
 

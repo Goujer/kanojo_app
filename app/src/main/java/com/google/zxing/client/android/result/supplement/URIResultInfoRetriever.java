@@ -8,7 +8,7 @@ import com.google.zxing.client.result.URIParsedResult;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 final class URIResultInfoRetriever extends SupplementalInfoRetriever {
     private static final int MAX_REDIRECTS = 5;

@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.telephony.PhoneNumberUtils;
 import com.google.zxing.client.result.ParsedResult;
 import com.google.zxing.client.result.SMSParsedResult;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 
 public final class SMSResultHandler extends ResultHandler {
     private static final int[] buttons = {R.string.button_sms, R.string.button_mms};

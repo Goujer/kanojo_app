@@ -3,7 +3,7 @@ package com.goujer.barcodekanojo.activity.base
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
-import jp.co.cybird.barcodekanojoForGAM.R
+import com.goujer.barcodekanojo.R
 
 open class BaseActivity: Activity() {
 	private var mCommondialog: AlertDialog? = null

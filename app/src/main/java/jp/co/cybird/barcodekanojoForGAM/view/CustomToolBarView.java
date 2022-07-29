@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 
 import com.goujer.barcodekanojo.base.PermissionRequestCode;
 
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.DashboardActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.ScanActivity;

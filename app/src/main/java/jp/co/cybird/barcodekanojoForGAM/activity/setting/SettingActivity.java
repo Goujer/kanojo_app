@@ -15,7 +15,7 @@ import com.goujer.barcodekanojo.core.http.HttpApi;
 
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.Defs;
-import jp.co.cybird.barcodekanojoForGAM.R;
+import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.core.util.ViewUtil;
 import jp.co.cybird.barcodekanojoForGAM.preferences.Preferences;
