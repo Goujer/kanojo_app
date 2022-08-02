@@ -1,16 +1,16 @@
 package com.goujer.barcodekanojo
 
 import android.app.Application
-import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo
-import com.goujer.barcodekanojo.preferences.ApplicationSetting
-import com.goujer.barcodekanojo.core.cache.DynamicImageCache
-import jp.co.cybird.barcodekanojoForGAM.core.location.BestLocationListener
-import jp.co.cybird.barcodekanojoForGAM.billing.util.PurchaseApi
 import android.content.Intent
 import android.location.Location
 import android.location.LocationManager
-import jp.co.cybird.barcodekanojoForGAM.Defs
+import com.goujer.barcodekanojo.core.cache.DynamicImageCache
 import com.goujer.barcodekanojo.core.model.User
+import com.goujer.barcodekanojo.preferences.ApplicationSetting
+import jp.co.cybird.barcodekanojoForGAM.Defs
+import jp.co.cybird.barcodekanojoForGAM.billing.util.PurchaseApi
+import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo
+import jp.co.cybird.barcodekanojoForGAM.core.location.BestLocationListener
 
 class BarcodeKanojoApp : Application() {
 	lateinit var barcodeKanojo: BarcodeKanojo
