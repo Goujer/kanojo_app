@@ -24,6 +24,7 @@ import com.goujer.barcodekanojo.databinding.ActivityBootBinding
 import kotlinx.coroutines.*
 
 import java.net.SocketException
+import java.net.UnknownHostException
 import kotlin.random.Random
 
 class LaunchActivity : BaseActivity() {
@@ -145,9 +146,18 @@ class LaunchActivity : BaseActivity() {
 				return false
 			} else {
 				Log.d(TAG, "Unknown error has occurred during verify")
+				runOnUiThread {
+					showNoticeDialog(e.localizedMessage);
+				}
 				e.printStackTrace()
 				return false
 			}
+		} catch (e: UnknownHostException) {
+			e.printStackTrace()
+			runOnUiThread {
+				showNoticeDialog(getString(R.string.error_unknown_host_exception))
+			}
+			return false
 		}
 		return if (response.code == Response.CODE_SUCCESS) {
 			true

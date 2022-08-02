@@ -218,4 +218,5 @@
 	<string name="stat_consumption">Celebrity</string>
 	<string name="stat_sexual">Sexual</string>
 	<string name="stat_flirtable">Flirtable</string>
+	<string name="error_unknown_host_exception">Error: Host name could not be resolved. Please check internet connection.</string>
 </resources>
