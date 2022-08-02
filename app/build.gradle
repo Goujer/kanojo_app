@@ -67,6 +67,9 @@ dependencies {
 	//LruCache
 	implementation "androidx.collection:collection-ktx:1.2.0"
 
+	//ExifInterface
+	implementation 'androidx.exifinterface:exifinterface:1.3.3'
+
 	//Maps
 	implementation 'org.osmdroid:osmdroid-android:6.1.13'
 

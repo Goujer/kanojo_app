@@ -14,7 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,7 +33,11 @@ import android.widget.TextView;
 import android.widget.ZoomControls;
 
 import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 
+import com.goujer.barcodekanojo.BarcodeKanojoApp;
+import com.goujer.barcodekanojo.BuildConfig;
+import com.goujer.barcodekanojo.R;
 import com.goujer.barcodekanojo.activity.base.BaseActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -47,9 +50,6 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.goujer.barcodekanojo.BarcodeKanojoApp;
-import com.goujer.barcodekanojo.BuildConfig;
-import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.core.util.FileUtil;
 import jp.co.cybird.barcodekanojoForGAM.view.EditBitmapView;
