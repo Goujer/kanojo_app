@@ -49,10 +49,10 @@ public class SeparatedListAdapter extends BaseAdapter implements ObservableAdapt
         this.mode = mode2;
     }
 
-    public void addSection(String section, boolean flag2, Adapter adapter) {
+    public void addSection(String section, boolean flag, Adapter adapter) {
         this.headers.add(section);
         this.sections.put(section, adapter);
-        this.flag.add(Boolean.valueOf(flag2));
+        this.flag.add(flag);
         adapter.registerDataSetObserver(this.mDataSetObserver);
         notifyDataSetChanged();
     }
@@ -124,8 +124,9 @@ public class SeparatedListAdapter extends BaseAdapter implements ObservableAdapt
         return false;
     }
 
+	@Override
     public boolean isEnabled(int position) {
-        if (this.mode == 4 || this.mode == 5) {
+        if (this.mode == MODE_EXTEND_DATE || this.mode == MODE_EXTEND_GIFT) {
             if (getItemViewType(position) == 0 || !checkLevel(position)) {
                 return false;
             }
@@ -156,7 +157,7 @@ public class SeparatedListAdapter extends BaseAdapter implements ObservableAdapt
             int size = adapter.getCount() + 1;
             if (position == 0) {
                 View header = this.headers.getView(sectionnum, convertView, parent);
-                if (this.flag.get(sectionnum).booleanValue()) {
+                if (this.flag.get(sectionnum)) {
                     header.setBackgroundResource(R.drawable.common_sectionheaderbg_blue);
                     return header;
                 }

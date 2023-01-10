@@ -4,6 +4,7 @@ import android.location.Location
 import com.goujer.barcodekanojo.core.http.*
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
+import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoItem
 import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
 import jp.co.cybird.barcodekanojoForGAM.core.parser.*
@@ -42,7 +43,8 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	//}
 
-	fun verify(uuid: String, email: String?, password: Password?): Response<BarcodeKanojoModel?>? {
+	//Attempt Login
+	fun verify(uuid: String, email: String?, password: Password?): Response<BarcodeKanojoModel?> {
 		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY,
 				NameStringPair("uuid", uuid),
 				NameStringPair("email", email),
@@ -50,7 +52,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
-	fun signup(uuid: String, name: String?, password: Password, email: String, birth_year: Int?, birth_month: Int?, birth_day: Int?, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?>? {
+	fun signup(uuid: String, name: String?, password: Password, email: String, birth_year: Int?, birth_month: Int?, birth_day: Int?, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?> {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_SIGNUP,
 				NameStringPair("uuid", uuid),
 				NameStringPair("name", name),
@@ -64,11 +66,11 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		return  mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
-//	@Throws(BarcodeKanojoException::class, IOException::class)
-//	fun verify(gree_id: Int, verify_key: String?): Response<BarcodeKanojoModel?>? {
-//		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY, NameValuePair("gree_id", gree_id.toString()), NameValuePair("verify_key", verify_key))
-//		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-//	}
+	//@Throws(BarcodeKanojoException::class, IOException::class)
+	//fun verify(gree_id: Int, verify_key: String?): Response<BarcodeKanojoModel?>? {
+	//	val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY, NameValuePair("gree_id", gree_id.toString()), NameValuePair("verify_key", verify_key))
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	//}
 
 	//@Throws(BarcodeKanojoException::class, IOException::class)
 	//fun iphone_verify(email: String?, password: String?, udid: String?): Response<BarcodeKanojoModel?>? {
@@ -108,7 +110,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	//}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun current_kanojos(user_id: Int, index: Int, limit: Int, search: String?): Response<BarcodeKanojoModel?>? {
+	fun current_kanojos(user_id: Int, index: Int, limit: Int, search: String?): Response<BarcodeKanojoModel?> {
 		val httpPost: HttpURLConnection = mHttpApi.createHttpGet(URL_API_USER_CURRENT_KANOJOS,
 				NameStringPair("user_id", user_id.toString()),
 				NameStringPair("index", index.toString()),
@@ -118,7 +120,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun friend_kanojos(user_id: Int, index: Int, limit: Int, search: String?): Response<BarcodeKanojoModel?>? {
+	fun friend_kanojos(user_id: Int, index: Int, limit: Int, search: String?): Response<BarcodeKanojoModel?> {
 		val connection: HttpURLConnection = mHttpApi.createHttpGet(URL_API_USER_FRIEND_KANOJOS,
 				NameStringPair("user_id", user_id.toString()),
 				NameStringPair("index", index.toString()),
@@ -243,7 +245,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_GIFT_MENU,
 				NameStringPair("kanojo_id", kanojo_id.toString()),
 				NameStringPair("type_id", type_id.toString()))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(1))))
+		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(KanojoItem.GIFT_ITEM_CLASS))))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
@@ -266,7 +268,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	fun date_and_gift_menu(kanojo_id: Int): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_DATE_AND_GIFT_MENU,
 				NameStringPair("kanojo_id", kanojo_id.toString()))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(1))))
+		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(KanojoItem.GIFT_ITEM_CLASS))))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
@@ -274,7 +276,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_DATE_MENU,
 				NameStringPair("kanojo_id", kanojo_id.toString()),
 				NameStringPair("type_id", type_id.toString()))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(2))))
+		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(KanojoItem.DATE_ITEM_CLASS))))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
@@ -377,13 +379,6 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
-	fun getURLRadarWebView(kanojo_id: Int): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpGet(URL_RADAR_WEBVIEW,
-				NameStringPair("kanojo_id", kanojo_id.toString()))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), WebViewParser()))
-	}
-
-	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun account_delete(user_id: Int): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_DELETE,
 				NameStringPair("user_id", user_id.toString()))
@@ -395,30 +390,6 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		val connection = mHttpApi.createHttpGet(URL_API_ACCOUNT_SHOW)
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
-
-	//@Throws(BarcodeKanojoException::class, IOException::class)
-	//fun android_register_fb(facebookid: String?, facebookToken: String?): Response<BarcodeKanojoModel?>? {
-	//	val connection = mHttpApi.createHttpPost(URL_API_FACEBOOK_CONNECT, NameValuePair("FACEBOOK_ID", facebookid), NameValuePair("FACEBOOK_TOKEN", facebookToken))
-	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	//}
-
-	//@Throws(BarcodeKanojoException::class, IOException::class)
-	//fun android_disconnect_fb(): Response<BarcodeKanojoModel?>? {
-	//	val connection = mHttpApi.createHttpGet(URL_API_FACEBOOK_DISCONNECT)
-	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	//}
-
-	//@Throws(BarcodeKanojoException::class, IOException::class)
-	//fun android_register_twitter(access_token: String?, access_secret: String?): Response<BarcodeKanojoModel?>? {
-	//	val connection = mHttpApi.createHttpPost(URL_API_TWITTER_CONNECT, NameValuePair("access_token", access_token), NameValuePair("access_secret", access_secret))
-	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	//}
-
-	//@Throws(BarcodeKanojoException::class, IOException::class)
-	//fun android_disconnect_twitter(): Response<BarcodeKanojoModel?>? {
-	//	val connection = mHttpApi.createHttpGet(URL_API_TWITTER_DISCONNECT)
-	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	//}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun android_register_device(uuid: String?, device_token: String?): Response<BarcodeKanojoModel?>? {
@@ -432,16 +403,6 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	fun show_dialog(): Response<BarcodeKanojoModel?>? {
 		val connection = mHttpApi.createHttpGet(URL_API_MESSAGE_DIALOG)
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(KanojoMessageParser()))
-	}
-
-	//TODO: This appears to be unused
-	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun android_uuid_verify(email: String?, password: Password?, uuid: String): Response<BarcodeKanojoModel?>? {
-		val connection = mHttpApi.createHttpPost(URL_API_VERIFY_UUID,
-				NameStringPair("email", email),
-				NameStringPair("password", password?.hashedPassword ?: ""),
-				NameStringPair("uuid", uuid))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)

@@ -8,10 +8,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class KanojoItemParser extends AbstractJSONParser<KanojoItem> {
-    private int item_class;
+    private final int item_class;
 
-    public KanojoItemParser(int item_class2) {
-        this.item_class = item_class2;
+    public KanojoItemParser(int item_class) {
+        this.item_class = item_class;
     }
 
     protected KanojoItem parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {

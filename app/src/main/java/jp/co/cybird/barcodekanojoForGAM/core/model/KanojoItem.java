@@ -6,17 +6,19 @@ import android.os.Parcelable;
 public class KanojoItem implements BarcodeKanojoModel, Parcelable {
     public static final Parcelable.Creator<KanojoItem> CREATOR = new Parcelable.Creator<KanojoItem>() {
         public KanojoItem createFromParcel(Parcel in) {
-            return new KanojoItem(in, (KanojoItem) null);
+            return new KanojoItem(in, null);
         }
 
         public KanojoItem[] newArray(int size) {
             return new KanojoItem[size];
         }
     };
+
+	public static final int GIFT_ITEM_CLASS = 1;
     public static final int DATE_ITEM_CLASS = 2;
-    public static final int GIFT_ITEM_CLASS = 1;
+	public static final int TICKET_ITEM_CLASS = 3;
+
     public static final String TAG = "KanojoItems";
-    public static final int TICKET_ITEM_CLASS = 3;
     private boolean category;
     private String confirm_purchase_message;
     private String confirm_use_message;

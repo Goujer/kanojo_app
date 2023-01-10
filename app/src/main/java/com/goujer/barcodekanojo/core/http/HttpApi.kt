@@ -29,13 +29,13 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 	}
 
 	//TODO Copied and modified from core.http.HttpApi.executeHttpRequest() which JADX did not decompile correctly.
-	fun executeHttpRequest(connection: HttpURLConnection, parser: JSONParser<out BarcodeKanojoModel?>): Response<BarcodeKanojoModel?>? {
+	fun executeHttpRequest(connection: HttpURLConnection, parser: JSONParser<out BarcodeKanojoModel?>): Response<BarcodeKanojoModel?> {
 		connection.connect()
 		val statusCode = connection.responseCode
 		when (statusCode) {
 			HttpURLConnection.HTTP_OK -> {
 				try {
-					return parser.parse(AbstractJSONParser.createJSONObject(connection.inputStream)) as Response<BarcodeKanojoModel?>?
+					return parser.parse(AbstractJSONParser.createJSONObject(connection.inputStream)) as Response<BarcodeKanojoModel?>
 				} finally {
 					connection.disconnect()
 				}
