@@ -9,9 +9,9 @@ import android.widget.EditText;
 import com.goujer.barcodekanojo.R;
 import com.goujer.barcodekanojo.activity.base.BaseEditActivity;
 import com.goujer.barcodekanojo.core.Password;
-import com.goujer.barcodekanojo.databinding.ActivityChangePasswordBinding;
 
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
+import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 
 public class ChangePasswordActivity extends BaseEditActivity implements View.OnClickListener {
 
@@ -19,12 +19,9 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
     private Password currentPassword;
     private boolean isNewEmail;
 
-	private ActivityChangePasswordBinding binding;
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		binding = ActivityChangePasswordBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_change_password);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             this.isNewEmail = bundle.getBoolean("new_email", false);
@@ -33,34 +30,34 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
                 this.currentPassword = null;
             }
         }
-        binding.passwordChangeCloseBtn.setOnClickListener(this);
+        findViewById(R.id.password_change_close_btn).setOnClickListener(this);
 
-        binding.passwordChangeCurrent.setOnClickListener(this);
-        binding.passwordChangeCurrent.hideText();
+        findViewById(R.id.password_change_current).setOnClickListener(this);
+		((EditItemView) findViewById(R.id.password_change_current)).hideText();
 
-        binding.passwordChangeNew.setOnClickListener(this);
-        binding.passwordChangeNew.hideText();
+		findViewById(R.id.password_change_new).setOnClickListener(this);
+		((EditItemView) findViewById(R.id.password_change_new)).hideText();
 
-        binding.passwordChangeReNew.setOnClickListener(this);
-        binding.passwordChangeReNew.hideText();
+		findViewById(R.id.password_change_re_new).setOnClickListener(this);
+		((EditItemView) findViewById(R.id.password_change_re_new)).hideText();
 
-        binding.passwordChangeCheckBtn.setOnClickListener(this);
+        findViewById(R.id.password_change_check_btn).setOnClickListener(this);
         if (this.isNewEmail) {
-            binding.passwordChangeCurrent.setVisibility(View.GONE);
-            binding.passwordChangeNew.setBackgroundResource(R.drawable.row_kanojo_edit_bg_top);
+            findViewById(R.id.password_change_current).setVisibility(View.GONE);
+			findViewById(R.id.password_change_new).setBackgroundResource(R.drawable.row_kanojo_edit_bg_top);
             return;
         }
-        binding.passwordChangeCurrent.setVisibility(View.VISIBLE);
-        binding.passwordChangeNew.setBackgroundResource(R.drawable.row_kanojo_edit_bg_middle);
+        findViewById(R.id.password_change_current).setVisibility(View.VISIBLE);
+		findViewById(R.id.password_change_new).setBackgroundResource(R.drawable.row_kanojo_edit_bg_middle);
     }
 
     @Override
     protected void onDestroy() {
-        binding.passwordChangeCloseBtn.setOnClickListener(null);
-        binding.passwordChangeCurrent.setOnClickListener(null);
-        binding.passwordChangeNew.setOnClickListener(null);
-        binding.passwordChangeReNew.setOnClickListener(null);
-        binding.passwordChangeCheckBtn.setOnClickListener(null);
+		findViewById(R.id.password_change_close_btn).setOnClickListener(null);
+        findViewById(R.id.password_change_current).setOnClickListener(null);
+		findViewById(R.id.password_change_new).setOnClickListener(null);
+		findViewById(R.id.password_change_re_new).setOnClickListener(null);
+		findViewById(R.id.password_change_check_btn).setOnClickListener(null);
         super.onDestroy();
     }
 
@@ -71,28 +68,28 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
 			finish();
 		} else if (v.getId() == R.id.password_change_current) {
 			input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-			showEditTextDialog(getResources().getString(R.string.password_change_current), binding.passwordChangeCurrent, input);
+			showEditTextDialog(getResources().getString(R.string.password_change_current), findViewById(R.id.password_change_current), input);
 		} else if (v.getId() == R.id.password_change_new) {
 			input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-			showEditTextDialog(getResources().getString(R.string.password_change_password), binding.passwordChangeNew, input);
+			showEditTextDialog(getResources().getString(R.string.password_change_password), findViewById(R.id.password_change_new), input);
 		} else if (v.getId() == R.id.password_change_re_new) {
 			input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-			showEditTextDialog(getResources().getString(R.string.password_change_re_password), binding.passwordChangeReNew, input);
+			showEditTextDialog(getResources().getString(R.string.password_change_re_password), findViewById(R.id.password_change_re_new), input);
 		} else if (v.getId() == R.id.password_change_check_btn) {
-			if (!this.isNewEmail && binding.passwordChangeCurrent.getValue().equals("")) {
+			if (!this.isNewEmail && ((EditItemView) findViewById(R.id.password_change_current)).getValue().equals("")) {
 				showNoticeDialog(getResources().getString(R.string.error_no_old_password));
 			} else if (!this.isNewEmail && !checkCurrentPassword()) {
 				showNoticeDialog(getResources().getString(R.string.error_unmatch_current_password));
-			} else if (binding.passwordChangeNew.getValue().equals("")) {
+			} else if (((EditItemView) findViewById(R.id.password_change_new)).getValue().equals("")) {
 				showNoticeDialog(getResources().getString(R.string.error_no_new_password));
-			} else if (binding.passwordChangeNew.getValue().length() < 6 || 16 < binding.passwordChangeNew.getValue().length()) {
+			} else if (((EditItemView) findViewById(R.id.password_change_new)).getValue().length() < 6 || 16 < ((EditItemView) findViewById(R.id.password_change_new)).getValue().length()) {
 				showNoticeDialog(getResources().getString(R.string.error_password_length));
-			} else if (!binding.passwordChangeNew.getValue().equals(binding.passwordChangeReNew.getValue())) {
+			} else if (!((EditItemView) findViewById(R.id.password_change_new)).getValue().equals(((EditItemView) findViewById(R.id.password_change_re_new)).getValue())) {
 				showNoticeDialog(getResources().getString(R.string.error_unmatch_new_password));
 			} else {
 				Intent intent = new Intent();
-				Password current_password = Password.Companion.hashPassword(binding.passwordChangeCurrent.getValue(), "");
-				Password new_password = Password.Companion.hashPassword(binding.passwordChangeNew.getValue(), "");
+				Password current_password = Password.Companion.hashPassword(((EditItemView) findViewById(R.id.password_change_current)).getValue(), "");
+				Password new_password = Password.Companion.hashPassword(((EditItemView) findViewById(R.id.password_change_new)).getValue(), "");
 
 				intent.putExtra("new_password", new_password);
 				if (!this.isNewEmail) {
@@ -106,7 +103,7 @@ public class ChangePasswordActivity extends BaseEditActivity implements View.OnC
 
     private boolean checkCurrentPassword() {
         if (this.currentPassword != null) {
-        	Password inputCurrentPassword = Password.Companion.hashPassword(binding.passwordChangeCurrent.getValue(), currentPassword.getMSalt());
+        	Password inputCurrentPassword = Password.Companion.hashPassword(((EditItemView)findViewById(R.id.password_change_current)).getValue(), currentPassword.getMSalt());
         	return this.currentPassword.equals(inputCurrentPassword);
         }
         return false;

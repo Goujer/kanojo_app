@@ -4,9 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.support.v4.util.LruCache
 import android.util.Log
 import android.widget.ImageView
-import androidx.collection.LruCache
 import com.goujer.barcodekanojo.core.http.HttpApi
 import com.goujer.utils.encodeForUrl
 import jp.co.cybird.barcodekanojoForGAM.Defs
@@ -49,7 +49,11 @@ class DynamicImageCache(cacheSize: Int, context: Context): LruCache<String, Bitm
         val sizeBytes: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             bitmap.allocationByteCount
         } else {
-            bitmap.byteCount
+	        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+		        bitmap.byteCount
+	        } else {
+		        bitmap.rowBytes * bitmap.height
+	        }
         }
         return sizeBytes / 1024
     }
@@ -95,7 +99,7 @@ class DynamicImageCache(cacheSize: Int, context: Context): LruCache<String, Bitm
 			endRunnable?.run()
 		} else {
 			//Setup
-			var bitmap: Bitmap?
+			var bitmap: Bitmap? = null
 
 			withContext(Dispatchers.IO) {
 				cacheMutex.withLock {
