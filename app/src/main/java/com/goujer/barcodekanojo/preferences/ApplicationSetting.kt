@@ -2,13 +2,12 @@ package com.goujer.barcodekanojo.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import com.goujer.barcodekanojo.core.Password
 import jp.co.cybird.barcodekanojoForGAM.preferences.Preferences
 import java.util.*
 
 class ApplicationSetting(context: Context) {
-	private var mContext: Context = context
-	private var setting: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+	private var setting: SharedPreferences = context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
 
 	fun getServerHttps(): Boolean {
 		return setting.getBoolean(Preferences.SERVER_HTTPS, false)
@@ -26,8 +25,8 @@ class ApplicationSetting(context: Context) {
 		editor.apply()
 	}
 
-	fun getServerURL(): String? {
-		return setting.getString(Preferences.SERVER_URL, "")
+	fun getServerURL(): String {
+		return setting.getString(Preferences.SERVER_URL, "")!!
 	}
 
 	fun commitServerURL(url: String?) {
@@ -58,16 +57,17 @@ class ApplicationSetting(context: Context) {
 		editor.apply()
 	}
 
-	fun commitUUID(uuid: String?) {
+	fun setUUID(uuid: String?) {
 		val editor = setting.edit()
 		editor.putString(Preferences.DEVICE_UUID, uuid)
 		editor.apply()
 	}
 
-	fun getUUID(): String? {
-		//TODO: This is shit, fix it.
-		val uuid = setting.getString(Preferences.DEVICE_UUID, UUID.randomUUID().toString())
-		commitUUID(uuid)
+	fun getUUID(): String {
+		var uuid = setting.getString(Preferences.DEVICE_UUID, null)
+		if (uuid == null)
+			uuid = UUID.randomUUID().toString()
+			setUUID(uuid)
 		return uuid
 	}
 
@@ -77,20 +77,36 @@ class ApplicationSetting(context: Context) {
 		editor.apply()
 	}
 
-	fun clearDataVersion() {
+	fun setEmail(email: String) {
 		val editor = setting.edit()
-		editor.remove(Preferences.DEVICE_UUID)
+		editor.putString(Preferences.USER_EMAIL, email.replace(" ", "").lowercase())
 		editor.apply()
 	}
 
-	fun removeUser() {
+	fun getEmail(): String {
+		return setting.getString(Preferences.USER_EMAIL, "")!!
+	}
+
+	fun clearEmail() {
 		val editor = setting.edit()
-		editor.remove(Preferences.DEVICE_UUID)
+		editor.remove(Preferences.USER_EMAIL)
 		editor.apply()
 	}
 
-	fun getDataVersion(): String? {
-		return setting.getString(Preferences.DEVICE_UUID, null)
+	fun setPassword(password: Password) {
+		val editor = setting.edit()
+		editor.putString(Preferences.USER_PASSWORD_HASH, password.hashedPassword)
+		editor.apply()
+	}
+
+	fun getPassword(): Password {
+		return Password.saveHashedPassword(setting.getString(Preferences.USER_PASSWORD_HASH, "") ?: "")
+	}
+
+	fun clearPassword() {
+		val editor = setting.edit()
+		editor.remove(Preferences.USER_PASSWORD_HASH)
+		editor.apply()
 	}
 
 	fun commitDeviceToken(deviceToken: String?) {
@@ -109,10 +125,19 @@ class ApplicationSetting(context: Context) {
 		editor.apply()
 	}
 
+	fun logout() {
+		clearEmail()
+		clearPassword()
+		clearUUID()
+	}
+
 	fun reset() {
 		clearServerHttps()
 		clearServerURL()
 		clearServerPort()
-		clearDataVersion()
+		clearUUID()
+		clearEmail()
+		clearPassword()
+		clearDeviceToken()
 	}
 }

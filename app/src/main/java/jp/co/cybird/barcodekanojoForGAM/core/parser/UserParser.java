@@ -6,8 +6,6 @@ import com.goujer.barcodekanojo.core.model.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.goujer.barcodekanojo.core.Password;
-
 public class UserParser extends AbstractJSONParser<User> {
     protected User parseInner(JSONObject object) throws BarcodeKanojoParseException {
         User res = new User();
@@ -17,9 +15,6 @@ public class UserParser extends AbstractJSONParser<User> {
             }
             if (object.has("name")) {
                 res.setName(object.getString("name"));
-            }
-            if (object.has("sex")) {
-                res.setSex(object.getString("sex"));
             }
             if (object.has("language")) {
                 res.setLanguage(object.getString("language"));
@@ -66,16 +61,16 @@ public class UserParser extends AbstractJSONParser<User> {
             if (object.has("birth_year")) {
                 res.setBirth_year(object.getInt("birth_year"));
             }
-            if (object.has("email") && !object.getString("email").equals("null")) {
-                res.setEmail(object.getString("email"));
-            }
-            if (object.has("password") && !object.getString("password").equals("null")) {
-            	String salt = "";
-				if (object.has("salt") && !object.getString("salt").equals("null")) {
-					salt = object.getString("salt");
-				}
-                res.setCurrentPassword(Password.Companion.saveHashedPassword(object.getString("password"), salt));
-            }
+            //if (object.has("email") && !object.getString("email").equals("null")) {
+            //    res.setEmail(object.getString("email"));
+            //}
+            //if (object.has("password") && !object.getString("password").equals("null")) {
+            //	String salt = "";
+			//	if (object.has("salt") && !object.getString("salt").equals("null")) {
+			//		salt = object.getString("salt");
+			//	}
+            //    res.setCurrentPassword(Password.Companion.saveHashedPassword(object.getString("password"), salt));
+            //}
             return res;
         } catch (JSONException e) {
             throw new BarcodeKanojoParseException(e.toString());

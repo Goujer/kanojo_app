@@ -7,7 +7,7 @@
     </RelativeLayout>
     <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
         <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@drawable/bg_full_setting" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="15dp">
-            <TextView android:id="@+id/kanojo_user_account_mode_text" android:layout_marginTop="28dp" android:text="@string/setting_account" style="@style/txt_notice_input"/>
+            <TextView android:id="@+id/user_account_mode_text" android:layout_marginTop="28dp" android:text="@string/setting_account" style="@style/txt_notice_input"/>
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_account_modify" android:background="@drawable/row_kanojo_edit_bg_top" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/setting_account_change"/>
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_log_out" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/setting_log_out"/>
             <TextView android:layout_marginTop="28dp" android:text="@string/setting_legal" style="@style/txt_notice_input"/>

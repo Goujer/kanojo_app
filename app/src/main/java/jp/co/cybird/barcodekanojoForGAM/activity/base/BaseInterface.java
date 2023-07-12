@@ -44,8 +44,8 @@ public interface BaseInterface {
     public static final int REQUEST_USER_MODIFY_ACTIVITY = 1051;
 	public static final int REQUEST_GALLERY = 1100;
 	public static final int REQUEST_CAMERA = 1101;
-	public static final int REQUEST_SOCIAL_CONFIG_FIRST = 1102;
-	public static final int REQUEST_SOCIAL_CONFIG_SETTING = 1103;
+	public static final int REQUEST_SOCIAL_CONFIG_FIRST = 1102;		//Signup
+	public static final int REQUEST_SOCIAL_CONFIG_SETTING = 1103;	//Edit User
 	public static final int REQUEST_SOCIAL_SUKIYA_SETTING = 1104;
 	public static final int REQUEST_SYNC_SETTING = 1105;
 	public static final int REQUEST_KANOJO_ITEMS = 2114;

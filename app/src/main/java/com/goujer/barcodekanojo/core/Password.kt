@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.util.Locale
 
 class Password: Parcelable {
 	lateinit var mSalt: String
@@ -40,7 +41,7 @@ class Password: Parcelable {
 		for (b in rawHashedPassword) {
 			sb.append(String.format("%02X", b))
 		}
-		this.hashedPassword = sb.toString()
+		this.hashedPassword = sb.toString().uppercase(Locale.ENGLISH)
 	}
 
 	constructor(parcel: Parcel) {

@@ -1,5 +1,7 @@
 package jp.co.cybird.barcodekanojoForGAM.activity.base;
 
+import static kotlinx.coroutines.CoroutineScopeKt.CoroutineScope;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -27,7 +29,7 @@ import com.goujer.barcodekanojo.BarcodeKanojoApp;
 import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.util.ApiTask;
 import jp.co.cybird.barcodekanojoForGAM.activity.util.EditBitmapActivity;
-import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
+import com.goujer.barcodekanojo.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
 import com.goujer.barcodekanojo.core.model.Kanojo;
@@ -37,6 +39,8 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.FileUtil;
 import jp.co.cybird.barcodekanojoForGAM.core.util.GeoUtil;
 import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
+import kotlinx.coroutines.Dispatchers;
+import kotlinx.coroutines.Job;
 
 import com.goujer.barcodekanojo.base.PermissionRequestCode;
 import com.goujer.barcodekanojo.view.ProductAndKanojoView;
@@ -181,10 +185,9 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
     }
 
     protected void showImagePickerDialog(String title) {
-        AlertDialog dialog = new AlertDialog.Builder(this).setTitle(title).setItems(this.r.getStringArray(R.array.common_product_photo_dialog), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int position) {
-                switch (position) {
-                    case 0:
+        AlertDialog dialog = new AlertDialog.Builder(this).setTitle(title).setItems(this.r.getStringArray(R.array.common_product_photo_dialog), (dialog12, position) -> {
+            switch (position) {
+                case 0:
 						//Request Storage
 						if (Build.VERSION.SDK_INT >= 23 && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
 							requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PermissionRequestCode.IMAGE_PICKER_GALLERY);
@@ -194,7 +197,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
 							startActivityForResult(intent, BaseInterface.REQUEST_GALLERY);
 							return;
 						}
-                    case 1:
+                case 1:
 						//Request Storage and Camera
 						if (Build.VERSION.SDK_INT >= 23 && (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)) {
 							requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PermissionRequestCode.IMAGE_PICKER_CAMERA);
@@ -204,32 +207,12 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
 							startActivityForResult(intent, BaseInterface.REQUEST_CAMERA);
 							return;
 						}
-                }
             }
         }).setNegativeButton(R.string.common_dialog_cancel, (dialog1, which) -> {}).create();
         if (this.mListener != null) {
             dialog.setOnDismissListener(this.mListener);
         }
         dialog.show();
-    }
-
-    protected ProgressDialog showProgressDialog() {
-        try {
-            if (this.mProgressDialog == null) {
-                ProgressDialog dialog = new ProgressDialog(this);
-                dialog.setTitle(R.string.app_name);
-                dialog.setMessage(getString(R.string.kanojo_room_dialog_progress));
-                dialog.setIndeterminate(true);
-                dialog.setCancelable(true);
-                dialog.setCanceledOnTouchOutside(false);
-                this.mProgressDialog = dialog;
-            }
-            if (!this.mProgressDialog.isShowing()) {
-                this.mProgressDialog.show();
-            }
-        } catch (Exception e) {
-        }
-        return this.mProgressDialog;
     }
 
     protected void dismissProgressDialog() {
@@ -348,7 +331,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                     code = response.getCode();
                 }
                 switch (code) {
-                    case 200:
+					case Response.CODE_SUCCESS:
                         if (this.mAction != 2) {
                             if (this.mAction != 4) {
                                 if (this.mAction == 3) {
@@ -388,7 +371,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                             break;
                         }
                         break;
-                    case 500:
+                    case Response.CODE_ERROR_SERVER:
                     case 503:
 						contextRef.get().dismissProgressDialog();
                         break;
@@ -480,7 +463,7 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         protected void onPostExecute(Response<?> response) {
             try {
                 switch (BaseEditActivity.this.getCodeAndShowAlert(response, this.mReason)) {
-                    case 200:
+					case Response.CODE_SUCCESS:
                         if (this.mAction == 1) {
                             BaseEditActivity.this.updateUser(response);
                             break;

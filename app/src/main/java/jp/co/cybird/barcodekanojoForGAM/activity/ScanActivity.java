@@ -35,7 +35,7 @@ import com.goujer.barcodekanojo.activity.scan.ScanKanojoGenerateActivity;
 import com.goujer.barcodekanojo.base.PermissionRequestCode;
 
 import jp.co.cybird.barcodekanojoForGAM.activity.scan.ScanOthersEditActivity;
-import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
+import com.goujer.barcodekanojo.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Barcode;
 import com.goujer.barcodekanojo.core.model.Kanojo;
@@ -617,9 +617,8 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         return true;
     }
 
-    public ProgressDialog showProgressDialog() {
+    public void showProgressDialog() {
         this.mLoadingView.show();
-        return new ProgressDialog(this);
     }
 
     protected void dismissProgressDialog() {

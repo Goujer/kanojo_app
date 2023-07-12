@@ -19,6 +19,7 @@ public class EditItemView extends LinearLayout {
     private ImageView mImageView;
     private EditItemViewCallback mListener;
     private String mTextString;
+	private String mEmptyTextString;
     private TextView mTextView;
     private int mtxtColor;
     private Boolean needMask;
@@ -178,7 +179,10 @@ public class EditItemView extends LinearLayout {
     }
 
     public void setHoverDescription(String value) {
-        this.mTextView.setText(value);
-        showHoverDescription();
+		this.mEmptyTextString = value;
+		if (mTextView.getText() == null || mTextView.getText().equals("")) {
+			this.mTextView.setText(value);
+			showHoverDescription();
+		}
     }
 }

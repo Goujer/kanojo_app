@@ -190,9 +190,8 @@ public class KanojoEditActivity extends BaseKanojoEditActivity implements View.O
         return true;
     }
 
-    public ProgressDialog showProgressDialog() {
+    public void showProgressDialog() {
         this.mLoadingView.show();
-        return new ProgressDialog(this);
     }
 
     protected void dismissProgressDialog() {

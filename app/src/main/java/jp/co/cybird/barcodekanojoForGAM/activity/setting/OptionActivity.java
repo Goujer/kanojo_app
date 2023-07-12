@@ -22,7 +22,7 @@ import jp.co.cybird.barcodekanojoForGAM.Defs;
 import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
-import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
+import com.goujer.barcodekanojo.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
@@ -40,9 +40,9 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
     private LinearLayout mDashboard;
     private LinearLayout mKanojos;
     private BaseActivity.OnDialogDismissListener mListener;
-    private OptionChangeDeviceTask mOptionChangeDeviceTask;
+    //private OptionChangeDeviceTask mOptionChangeDeviceTask;
     private OptionDeleteTask mOptionDeleteTask;
-    private OptionModifyTask mOptionModifyTask;
+    //private OptionModifyTask mOptionModifyTask;
     private LinearLayout mScan;
     private LinearLayout mSetting;
     private LinearLayout mWebView;
@@ -182,63 +182,63 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
     //    }
     //}
 
-    class OptionModifyTask extends AsyncTask<Void, Void, Response<?>> {
-        private Exception mReason = null;
+    //class OptionModifyTask extends AsyncTask<Void, Void, Response<?>> {
+    //    private Exception mReason = null;
 
-        public void onPreExecute() {
-            ProgressDialog unused = OptionActivity.this.showProgressDialog();
-        }
+    //    public void onPreExecute() {
+    //        showProgressDialog();
+    //    }
 
-        public Response<?> doInBackground(Void... params) {
-            try {
-                return modify_user();
-            } catch (Exception e) {
-                this.mReason = e;
-                return null;
-            }
-        }
+    //    public Response<?> doInBackground(Void... params) {
+    //        try {
+    //            return modify_user();
+    //        } catch (Exception e) {
+    //            this.mReason = e;
+    //            return null;
+    //        }
+    //    }
 
-        public void onPostExecute(Response<?> response) {
-            if (response == null) {
-                try {
-                    throw new BarcodeKanojoException("response is null! \n" + this.mReason);
-                } catch (BarcodeKanojoException e) {
-                    showAlertDialog(new Alert(OptionActivity.this.getResources().getString(R.string.error_internet)));
-                    dismissProgressDialog();
-                } catch (Throwable th) {
-                    dismissProgressDialog();
-                    throw th;
-                }
-            } else {
-				if (response.getCode() == 200) {
-					executeOptionChangeDeviceTask();
-				} else {
-					Alert alert = response.getAlert();
-					if (alert != null) {
-						showAlertDialog(alert);
-					}
-				}
-                dismissProgressDialog();
-            }
-        }
+    //    public void onPostExecute(Response<?> response) {
+    //        if (response == null) {
+    //            try {
+    //                throw new BarcodeKanojoException("response is null! \n" + this.mReason);
+    //            } catch (BarcodeKanojoException e) {
+    //                showAlertDialog(new Alert(OptionActivity.this.getResources().getString(R.string.error_internet)));
+    //                dismissProgressDialog();
+    //            } catch (Throwable th) {
+    //                dismissProgressDialog();
+    //                throw th;
+    //            }
+    //        } else {
+	//			if (response.getCode() == 200) {
+	//				executeOptionChangeDeviceTask();
+	//			} else {
+	//				Alert alert = response.getAlert();
+	//				if (alert != null) {
+	//					showAlertDialog(alert);
+	//				}
+	//			}
+    //            dismissProgressDialog();
+    //        }
+    //    }
 
-        @Override
-        protected void onCancelled() {
-        }
+    //    @Override
+    //    protected void onCancelled() {
+    //    }
 
-        Response<?> modify_user() throws BarcodeKanojoException, IllegalStateException, IOException {
-            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) OptionActivity.this.getApplication()).getBarcodeKanojo();
-            User user = barcodeKanojo.getUser();
-            if (modifiedUser.getPassword().getHashedPassword().length() == 0) {
-                modifiedUser.setPassword(user.getPassword());
-            }
-            Response<BarcodeKanojoModel> android_update = barcodeKanojo.update(OptionActivity.this.modifiedUser.getName(), user.getPassword(), OptionActivity.this.modifiedUser.getPassword(), OptionActivity.this.modifiedUser.getEmail(), OptionActivity.this.modifiedUser.getBirth_year(), OptionActivity.this.modifiedUser.getBirth_month(), OptionActivity.this.modifiedUser.getBirth_day(), OptionActivity.this.modifiedUser.getSex(), OptionActivity.this.modifiedPhoto);
-            barcodeKanojo.init_product_category_list();
-            User user2 = barcodeKanojo.getUser();
-			((BarcodeKanojoApp) OptionActivity.this.getApplication()).getImageCache().evict(user2.getProfile_image_url());
-            return android_update;
-        }
-    }
+    //    Response<?> modify_user() throws BarcodeKanojoException, IllegalStateException, IOException {
+    //        BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) OptionActivity.this.getApplication()).getBarcodeKanojo();
+    //        User user = barcodeKanojo.getUser();
+    //        if (modifiedUser.getPassword().getHashedPassword().length() == 0) {
+    //            modifiedUser.setPassword(user.getPassword());
+    //        }
+    //        Response<BarcodeKanojoModel> android_update = barcodeKanojo.update(OptionActivity.this.modifiedUser.getName(), user.getPassword(), OptionActivity.this.modifiedUser.getPassword(), OptionActivity.this.modifiedUser.getEmail(), OptionActivity.this.modifiedUser.getBirth_year(), OptionActivity.this.modifiedUser.getBirth_month(), OptionActivity.this.modifiedUser.getBirth_day(), OptionActivity.this.modifiedUser.getSex(), OptionActivity.this.modifiedPhoto);
+    //        barcodeKanojo.init_product_category_list();
+    //        User user2 = barcodeKanojo.getUser();
+	//		((BarcodeKanojoApp) OptionActivity.this.getApplication()).getImageCache().evict(user2.getProfile_image_url());
+    //        return android_update;
+    //    }
+    //}
 
     //private void executeOptionDeleteTask() {
     //    if (this.mOptionDeleteTask == null || this.mOptionDeleteTask.getStatus() == AsyncTask.Status.FINISHED || this.mOptionDeleteTask.cancel(true) || this.mOptionDeleteTask.isCancelled()) {
@@ -250,7 +250,7 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         private Exception mReason = null;
 
         public void onPreExecute() {
-            ProgressDialog unused = OptionActivity.this.showProgressDialog();
+            showProgressDialog();
         }
 
         public Response<?> doInBackground(Void... params) {
@@ -297,72 +297,72 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    @Override
-    protected void deleteUser() {
-        showNoticeDialog(getString(R.string.delete_account_message));
-    }
+    //@Override
+    //protected void deleteUser() {
+    //    showNoticeDialog(getString(R.string.delete_account_message));
+    //}
 
-    private void executeOptionChangeDeviceTask() {
-        if (this.mOptionChangeDeviceTask == null || this.mOptionChangeDeviceTask.getStatus() == AsyncTask.Status.FINISHED || this.mOptionChangeDeviceTask.cancel(true) || this.mOptionChangeDeviceTask.isCancelled()) {
-            this.mOptionChangeDeviceTask = (OptionChangeDeviceTask) new OptionChangeDeviceTask().execute(new Void[0]);
-        }
-    }
+//    private void executeOptionChangeDeviceTask() {
+//        if (this.mOptionChangeDeviceTask == null || this.mOptionChangeDeviceTask.getStatus() == AsyncTask.Status.FINISHED || this.mOptionChangeDeviceTask.cancel(true) || this.mOptionChangeDeviceTask.isCancelled()) {
+//            this.mOptionChangeDeviceTask = (OptionChangeDeviceTask) new OptionChangeDeviceTask().execute(new Void[0]);
+//        }
+//    }
 
-    class OptionChangeDeviceTask extends AsyncTask<Void, Void, Response<?>> {
-        private Exception mReason = null;
-
-        @Override
-        public void onPreExecute() {
-            ProgressDialog unused = OptionActivity.this.showProgressDialog();
-        }
-
-        @Override
-        public Response<?> doInBackground(Void... params) {
-            try {
-                return changeDevice();
-            } catch (Exception e) {
-                this.mReason = e;
-                return null;
-            }
-        }
-
-        @Override
-        public void onPostExecute(Response<?> response) {
-            if (response == null) {
-                try {
-                    throw new BarcodeKanojoException("response is null! \n" + this.mReason);
-                } catch (BarcodeKanojoException e) {
-                    OptionActivity.this.showAlertDialog(new Alert(OptionActivity.this.getResources().getString(R.string.error_internet)));
-                    OptionActivity.this.dismissProgressDialog();
-                } catch (Throwable th) {
-                    OptionActivity.this.dismissProgressDialog();
-                    throw th;
-                }
-            } else {
-				if (response.getCode() == 200) {
-					OptionActivity.this.fixUser();
-				} else {
-					Alert alert = response.getAlert();
-					if (alert != null) {
-						OptionActivity.this.showAlertDialog(alert);
-					}
-				}
-                OptionActivity.this.dismissProgressDialog();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-        }
-
-        Response<?> changeDevice() throws BarcodeKanojoException, IllegalStateException, IOException {
-            return ((BarcodeKanojoApp) OptionActivity.this.getApplication()).getBarcodeKanojo().android_uuid_verify(OptionActivity.this.modifiedUser.getEmail(), OptionActivity.this.modifiedUser.getPassword(), ((BarcodeKanojoApp) OptionActivity.this.getApplication()).getUUID());
-        }
-    }
+//    class OptionChangeDeviceTask extends AsyncTask<Void, Void, Response<?>> {
+//        private Exception mReason = null;
+//
+//        @Override
+//        public void onPreExecute() {
+//            showProgressDialog();
+//        }
+//
+//        @Override
+//        public Response<?> doInBackground(Void... params) {
+//            try {
+//                return changeDevice();
+//            } catch (Exception e) {
+//                this.mReason = e;
+//                return null;
+//            }
+//        }
+//
+//        @Override
+//        public void onPostExecute(Response<?> response) {
+//            if (response == null) {
+//                try {
+//                    throw new BarcodeKanojoException("response is null! \n" + this.mReason);
+//                } catch (BarcodeKanojoException e) {
+//                    OptionActivity.this.showAlertDialog(new Alert(OptionActivity.this.getResources().getString(R.string.error_internet)));
+//                    OptionActivity.this.dismissProgressDialog();
+//                } catch (Throwable th) {
+//                    OptionActivity.this.dismissProgressDialog();
+//                    throw th;
+//                }
+//            } else {
+//				if (response.getCode() == Response.CODE_SUCCESS) {
+//					OptionActivity.this.fixUser();
+//				} else {
+//					Alert alert = response.getAlert();
+//					if (alert != null) {
+//						OptionActivity.this.showAlertDialog(alert);
+//					}
+//				}
+//                OptionActivity.this.dismissProgressDialog();
+//            }
+//        }
+//
+//        @Override
+//        protected void onCancelled() {
+//        }
+//
+//        Response<?> changeDevice() throws BarcodeKanojoException, IllegalStateException {
+//            return ((BarcodeKanojoApp) OptionActivity.this.getApplication()).getBarcodeKanojo().verify(OptionActivity.this.modifiedUser.getEmail(), OptionActivity.this.modifiedUser.getPassword(), ((BarcodeKanojoApp) OptionActivity.this.getApplication()).getSettings().getUUID());
+//        }
+//    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == 4) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             finish();
             overridePendingTransition(0, 0);
         }

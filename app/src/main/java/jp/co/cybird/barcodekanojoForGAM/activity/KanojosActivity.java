@@ -37,7 +37,7 @@ import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseKanojosActivity;
 import com.goujer.barcodekanojo.adapter.KanojoAdapter;
 import jp.co.cybird.barcodekanojoForGAM.adapter.base.SeparatedListHeaderAdapter;
-import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
+import com.goujer.barcodekanojo.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import com.goujer.barcodekanojo.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList;
@@ -598,11 +598,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 
         @Override
         public void onPreExecute() {
-            ProgressDialog unused = KanojosActivity.this.showProgressDialog(new DialogInterface.OnCancelListener() {
-                public void onCancel(DialogInterface dialog) {
-                    KanojosActivity.this.backTab(KanojosActivity.this, DashboardActivity.class);
-                }
-            });
+            showProgressDialog(dialog -> KanojosActivity.this.backTab(KanojosActivity.this, DashboardActivity.class));
         }
 
         @Override

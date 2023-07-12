@@ -355,10 +355,12 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 			mList = list
 		}
 
+		@Deprecated("Deprecated in Java")
 		public override fun onPreExecute() {
 			mList!!.loading = true
 		}
 
+		@Deprecated("Deprecated in Java")
 		override fun doInBackground(vararg params: Void?): Response<*>? {
 			return try {
 				process(mList)
@@ -368,6 +370,7 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 			}
 		}
 
+		@Deprecated("Deprecated in Java")
 		public override fun onPostExecute(response: Response<*>?) {
 			val code: Int
 			try {
@@ -450,6 +453,7 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 			}
 		}
 
+		@Deprecated("Deprecated in Java")
 		override fun onCancelled() {
 			dismissProgressDialog()
 		}
@@ -524,9 +528,8 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 		return true
 	}
 
-	public override fun showProgressDialog(): ProgressDialog {
+	public override fun showProgressDialog() {
 		mLoadingView!!.show()
-		return ProgressDialog(this)
 	}
 
 	override fun dismissProgressDialog() {

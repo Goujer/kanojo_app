@@ -2,165 +2,135 @@ package com.goujer.barcodekanojo.activity.setting
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import android.os.AsyncTask
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
+import android.text.InputType
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import android.view.Window
 import android.widget.DatePicker
+import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
 import com.goujer.barcodekanojo.BarcodeKanojoApp
 import com.goujer.barcodekanojo.R
 import com.goujer.barcodekanojo.activity.top.LaunchActivity
 import com.goujer.barcodekanojo.core.Password
+import com.goujer.barcodekanojo.core.Password.Companion.hashPassword
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache
 import com.goujer.barcodekanojo.core.model.User
 import com.goujer.barcodekanojo.databinding.ActivityUserModifyBinding
-import com.goujer.barcodekanojo.preferences.ApplicationSetting
-import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity.OnDialogDismissListener
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseEditActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface
-import jp.co.cybird.barcodekanojoForGAM.activity.setting.ChangePasswordActivity
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
+import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
-import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView.EditItemViewCallback
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.File
 import java.util.*
 
+//TODO test functionality
 class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 	private lateinit var app: BarcodeKanojoApp
-	private lateinit var imgAvatar: ImageView
-	private var mAutoLoginTask: AutoLoginTask? = null
-	private var mChangeDeviceLayout: LinearLayout? = null
-	private var mListener2: OnDialogDismissListener? = null
-	private var mLoadingView: CustomLoadingView? = null
 	private var mRequestCode = 0
 	private var mResultCode = 0
+	//private var mTaskQueue: Queue<StatusHolder?> = LinkedList<StatusHolder?>()    //TODO During testing determine if Queue and status holder are needed.
+	private var mTextChangeListener: EditItemViewCallback? = null
+
+	private var user: User? = null
+
+	private var modifiedName: String? = null
+	private var modifiedGender: String? = null
+	private var modifiedBirthday: String? = null
+	private var modifiedPhoto: File? = null
+	private var modifiedEmail: String? = null
+	private var mCurrentPassword: Password? = null
+	private var mNewPassword: Password? = null
+
 	private lateinit var mDic: DynamicImageCache
 	private var imageJob: Job? = null
-	val mTaskEndHandler: Handler = object : Handler() {
-		override fun handleMessage(msg: Message) {
-			executeAutoLoginTask(queue!!.poll())
-		}
-	}
-	private var mTaskQueue: Queue<StatusHolder?>? = null
-	private var mTextChangeListener: EditItemViewCallback? = null
-	private var modifiedPhoto: File? = null
-	private var modifiedUser: User? = null
-	private var user: User? = null
-	private var password: Password? = null
-	private var currentPassword: Password? = null
+	private var accountJob: Job? = null
 
     private lateinit var binding: ActivityUserModifyBinding
 	private val mScope = MainScope()
+	private var ioScope = CoroutineScope(Dispatchers.IO) + CoroutineName(TAG)
 
 	public override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
         binding = ActivityUserModifyBinding.inflate(layoutInflater)
-		requestWindowFeature(1)
+		requestWindowFeature(Window.FEATURE_NO_TITLE)
 		setContentView(binding.root)
 		app = application as BarcodeKanojoApp
-		val bundle2 = intent.extras
-		if (bundle2 != null) {
-			mRequestCode = bundle2.getInt(EXTRA_REQUEST_CODE, REQUEST_SOCIAL_CONFIG_SETTING)
+
+		val bundle = intent.extras
+		if (bundle != null) {
+			mRequestCode = bundle.getInt(EXTRA_REQUEST_CODE, REQUEST_SOCIAL_CONFIG_SETTING)
 			if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
-				modifiedUser = bundle2.getParcelable("user")
-				user = modifiedUser
 				setAutoRefreshSession(false)
 			}
 		}
-		if (savedInstanceState != null && user == null) {
+		if (savedInstanceState != null) {
 			mRequestCode = savedInstanceState.getInt(EXTRA_REQUEST_CODE, REQUEST_SOCIAL_CONFIG_SETTING)
-			modifiedUser = savedInstanceState.getParcelable("user")
-			user = modifiedUser
+			user = savedInstanceState.getParcelable("user")
+			binding.userModifyEmail.value = savedInstanceState.getString("email")
 		}
 		if (user == null) {
 			user = app.user
 		}
+		if (user == null) {
+			user = User()
+		}
+
+		//Get Image Cache
 		mDic = app.imageCache
 
-        binding.kanojoUserUpdateBtn.isEnabled = true
-		if (mRequestCode == 1103) {
-            binding.kanojoUserUpdateBtn.setText(R.string.edit_account_update_btn)
-		} else if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
-            binding.kanojoUserUpdateBtn.setText(R.string.user_register_btn)
+		//Name Field Setup
+		if (user!!.name != null && user!!.name!!.isNotEmpty() && user!!.name != "null") {
+            binding.userModifyName.value = user!!.name
 		}
 
-		binding.kanojoUserModifyName.setTextChangeListner(mTextChangeListener)
-		if (user!!.name != null && user!!.name != "null") {
-            binding.kanojoUserModifyName.value = user!!.name
-		} else if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
-            binding.kanojoUserModifyName.setHoverDescription(getString(R.string.blank_name_L012))
-		} else {
-            binding.kanojoUserModifyName.setHoverDescription(getString(R.string.blank_name))
+		//Email Field Setup
+		if (binding.userModifyEmail.value == "") {
+			val email = app.barcodeKanojo.settings.getEmail()
+			binding.userModifyEmail.value = app.barcodeKanojo.settings.getEmail()
 		}
 
-		binding.kanojoUserModifyPassword.setTextChangeListner(mTextChangeListener)
-        binding.kanojoUserModifyPassword.hideText()
+		//Birthday Field Setup
+        binding.userModifyBirthday.value = user!!.birthText
+		binding.userModifyIcon.avatar.visibility = View.VISIBLE
 
-		binding.kanojoUserModifyEmail.setTextChangeListner(mTextChangeListener)
-        binding.kanojoUserModifyEmail.value = user!!.email
+		//Password Fields setup
+		binding.passwordChangeCurrent.hideText()
+		binding.passwordChangeNew.hideText()
+		binding.passwordChangeReNew.hideText()
 
-		binding.kanojoUserModifyGender.setTextChangeListner(mTextChangeListener)
-		if (user!!.sex != null) {
-            binding.kanojoUserModifyGender.value = user!!.getSexText(app.userGenderList)
-		}
-
-		binding.kanojoUserModifyBirthday.setTextChangeListner(mTextChangeListener)
-        binding.kanojoUserModifyBirthday.value = user!!.birthText
-		imgAvatar = binding.kanojoUserModifyIcon.avatar
-		imgAvatar.visibility = View.VISIBLE
-		mChangeDeviceLayout = findViewById(R.id.kanojo_user_account_device_layout)
-		//TODO: This Imagejob may not need to be run during a registration as there will be no profile picture to get from the server.
-		imageJob = mScope.launch { mDic.loadBitmap(imgAvatar, user!!.profile_image_url, R.drawable.common_noimage, null) }
-		mListener2 = OnDialogDismissListener { dialogInterface, code ->
-			if (code == 200) {
-				deleteUser()
-				logout()
-				val signUp = Intent().setClass(this@UserModifyActivity, LaunchActivity::class.java)
-				signUp.putExtra(EXTRA_REQUEST_CODE, REQUEST_SOCIAL_CONFIG_FIRST)
-				this@UserModifyActivity.startActivity(signUp)
-			}
-		}
-		mTextChangeListener = EditItemViewCallback { v, value ->
-            binding.kanojoUserUpdateBtn.isEnabled = isReadyForUpdate
-            binding.kanojoUserUpdateBtn.isEnabled = !(binding.kanojoUserModifyName.value.isEmpty() && binding.kanojoUserModifyEmail.value.isEmpty() && mRequestCode != BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
-		}
 		switchLayout()
-		mLoadingView = findViewById(R.id.loadingView)
+
+		//Listener for determining if Update/Register Button can be pressed.
+		mTextChangeListener = EditItemViewCallback { _, _ ->
+            binding.userUpdateBtn.isEnabled = isReadyForUpdate
+		}
 	}
 
 	override fun onSaveInstanceState(outState: Bundle) {
 		outState.putInt(EXTRA_REQUEST_CODE, mRequestCode)
-		user!!.name = binding.kanojoUserModifyName.value
-		user!!.setBirthFromText(binding.kanojoUserModifyBirthday.value)
-		user!!.setSexFromText(binding.kanojoUserModifyGender.value)
-		//if ((mRequestCode != BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST || user!!.profile_image_url == null) && file != null) {
-		//    user.setProfile_image_url(file.absolutePath);
-		//}
+		user!!.name = binding.userModifyName.value
+		user!!.setBirthFromText(binding.userModifyBirthday.value)
 		outState.putParcelable("user", user)
+		outState.putString("email", binding.userModifyName.value)
 		super.onSaveInstanceState(outState)
 	}
 
-	override fun onDismiss(dialog: DialogInterface, code: Int) {
+	override fun onDismiss(dialog: DialogInterface?, code: Int) {
 		super.onDismiss(dialog, code)
 		when (code) {
-			200 -> updateAndClose()
-			400 -> if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
+			Response.CODE_SUCCESS -> updateAndClose()
+			Response.CODE_ERROR_BAD_REQUEST -> if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
 				updateAndClose()
 			}
 		}
@@ -181,103 +151,106 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 
 	override fun onDestroy() {
 		unBindEvent()
+		binding.userModifyName.setTextChangeListner(null)
+		binding.userModifyEmail.setTextChangeListner(null)
+		binding.userModifyBirthday.setTextChangeListner(null)
+		binding.passwordChangeCurrent.setTextChangeListner(null)
+		binding.passwordChangeNew.setTextChangeListner(null)
+		binding.passwordChangeReNew.setTextChangeListner(null)
 		mScope.cancel()
+		binding.loadingView.dismiss()
 		super.onDestroy()
 	}
 
 	fun bindEvent() {
-        binding.kanojoUserModifyClose.setOnClickListener(this)
-        binding.kanojoUserModifyName.setOnClickListener(this)
-        binding.kanojoUserModifyPassword.setOnClickListener(this)
-        binding.kanojoUserModifyEmail.setOnClickListener(this)
-        binding.kanojoUserModifyGender.setOnClickListener(this)
-        binding.kanojoUserModifyBirthday.setOnClickListener(this)
-        binding.kanojoUserModifyIcon.setOnClickListener(this)
-        binding.kanojoUserUpdateBtn.setOnClickListener(this)
-		binding.kanojoUserDeleteBtn.setOnClickListener(this)
+        binding.userModifyClose.setOnClickListener(this)
+		binding.userModifyLogout.setOnClickListener(this)
+        binding.userModifyName.setOnClickListener(this)
+        binding.userModifyEmail.setOnClickListener(this)
+        binding.userModifyBirthday.setOnClickListener(this)
+        binding.userModifyIcon.setOnClickListener(this)
+		binding.passwordChangeCurrent.setOnClickListener(this)
+		binding.passwordChangeNew.setOnClickListener(this)
+		binding.passwordChangeReNew.setOnClickListener(this)
+        binding.userUpdateBtn.setOnClickListener(this)
+		binding.userDeleteBtn.setOnClickListener(this)
+
+		binding.userModifyName.setTextChangeListner(mTextChangeListener)
+		binding.userModifyEmail.setTextChangeListner(mTextChangeListener)
+		binding.userModifyBirthday.setTextChangeListner(mTextChangeListener)
+		binding.passwordChangeCurrent.setTextChangeListner(mTextChangeListener)
+		binding.passwordChangeNew.setTextChangeListner(mTextChangeListener)
+		binding.passwordChangeReNew.setTextChangeListner(mTextChangeListener)
 	}
 
 	private fun unBindEvent() {
-        binding.kanojoUserModifyClose.setOnClickListener(null)
-        binding.kanojoUserModifyName.setOnClickListener(null)
-        binding.kanojoUserModifyPassword.setOnClickListener(null)
-        binding.kanojoUserModifyEmail.setOnClickListener(null)
-        binding.kanojoUserModifyGender.setOnClickListener(null)
-        binding.kanojoUserModifyBirthday.setOnClickListener(null)
-        binding.kanojoUserModifyIcon.setOnClickListener(null)
-        binding.kanojoUserUpdateBtn.setOnClickListener(null)
-        binding.kanojoUserDeleteBtn.setOnClickListener(null)
+        binding.userModifyClose.setOnClickListener(null)
+		binding.userModifyLogout.setOnClickListener(null)
+        binding.userModifyName.setOnClickListener(null)
+        binding.userModifyEmail.setOnClickListener(null)
+        binding.userModifyBirthday.setOnClickListener(null)
+        binding.userModifyIcon.setOnClickListener(null)
+		binding.passwordChangeCurrent.setOnClickListener(null)
+		binding.passwordChangeNew.setOnClickListener(null)
+		binding.passwordChangeReNew.setOnClickListener(null)
+        binding.userUpdateBtn.setOnClickListener(null)
+        binding.userDeleteBtn.setOnClickListener(null)
 	}
 
 	override fun onClick(v: View) {
 		unBindEvent()
 		Log.d(TAG, "View Clicked: " + v.id)
 		val id = v.id
-		when (id) {
-			R.id.kanojo_user_modify_close -> {
-				close()
-			}
-			R.id.kanojo_user_modify_name -> {
-				showEditTextDialog(r.getString(R.string.user_account_name), binding.kanojoUserModifyName)
-			}
-			R.id.kanojo_user_modify_gender -> {
-				showGenderDialog(r.getString(R.string.user_account_gender), binding.kanojoUserModifyGender)
-			}
-			R.id.kanojo_user_modify_birthday -> {
-				showDatePickDialog(r.getString(R.string.user_account_birthday), binding.kanojoUserModifyBirthday)
-			}
-			R.id.kanojo_user_modify_icon -> {
-				showImagePickerDialog(r.getString(R.string.user_account_icon))
-			}
-			R.id.kanojo_user_modify_email -> {
-				showEditTextDialog(r.getString(R.string.user_account_email), binding.kanojoUserModifyEmail)
-			}
-			R.id.kanojo_user_modify_password -> {
-				startPasswordChangeActivity()
-			}
-			R.id.kanojo_user_update_btn -> {
-				mResultCode = RESULT_MODIFIED
-				if (binding.kanojoUserModifyName.value != "" || binding.kanojoUserModifyGender.value != "" || binding.kanojoUserModifyBirthday.value != "" || imgAvatar.drawable != null) {
-					mResultCode = RESULT_MODIFIED_COMMON
-				}
-				if (binding.kanojoUserModifyEmail.value != "") {
-					if (binding.kanojoUserModifyPassword.value == "" && user!!.email == null) {
-						showNoticeDialog(r.getString(R.string.error_password_length))
-						return
-					} else if (mResultCode == RESULT_MODIFIED_COMMON) {
-						mResultCode = RESULT_MODIFIED_COMMON
-					} else {
-						mResultCode = RESULT_MODIFIED_DEVICE
-					}
-				} else if (user!!.email == null && binding.kanojoUserModifyPassword.value != "") {
-					showNoticeDialog(r.getString(R.string.error_no_email))
-					return
-				}
-				processData()
-			}
-			R.id.kanojo_user_delete_btn -> {
-				mResultCode = RESULT_DELETE_ACCOUNT
-				showConfirmDeleteDialog(resources.getString(R.string.delete_account_warning_message))
-			}
+		if (id == R.id.user_modify_close) {
+			close()
+		} else if (id == R.id.user_modify_logout) {
+			logout()
+			finish()
+			startActivity(Intent().setClass(this@UserModifyActivity, LaunchActivity::class.java))
+		} else if (id == R.id.user_modify_name) {
+			showEditTextDialog(r.getString(R.string.user_account_name), binding.userModifyName)
+		} else if (id == R.id.user_modify_birthday) {
+			//TODO probably a good idea to add a warning or block to those under 13
+			showDatePickDialog(r.getString(R.string.user_account_birthday), binding.userModifyBirthday)
+		} else if (id == R.id.user_modify_icon) {
+			showImagePickerDialog(r.getString(R.string.user_account_icon))
+		} else if (id == R.id.user_modify_email) {
+			showEditTextDialog(r.getString(R.string.user_account_email), binding.userModifyEmail)
+		} else if (v.id == R.id.password_change_current) {
+			val input = EditText(this)
+			input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+			showEditTextDialog(resources.getString(R.string.password_change_current), binding.passwordChangeCurrent, input)
+		} else if (v.id == R.id.password_change_new) {
+			val input = EditText(this)
+			input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+			showEditTextDialog(resources.getString(R.string.password_change_password), binding.passwordChangeNew, input)
+		} else if (v.id == R.id.password_change_re_new) {
+			val input = EditText(this)
+			input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+			showEditTextDialog(resources.getString(R.string.password_change_re_password), binding.passwordChangeReNew, input)
+		} else if (id == R.id.user_update_btn) {
+			executeUserModifyTask()
+		} else if (id == R.id.user_delete_btn) {
+			mResultCode = RESULT_DELETE_ACCOUNT
+			showConfirmDeleteDialog(resources.getString(R.string.delete_account_warning_message))
 		}
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
-		val f = file
-		if (f != null && f.exists()) {
-			setBitmapFromFile(imgAvatar, f, 30, 30)
-            binding.kanojoUserUpdateBtn.isEnabled = true
-		}
-		if (requestCode == BaseInterface.REQUEST_CHANGE_PASWORD && resultCode == BaseInterface.RESULT_CHANGED) {
-            binding.kanojoUserModifyPassword.value = "********"
-			password = data?.getParcelableExtra("new_password")
-			currentPassword = data?.getParcelableExtra("current_Password")
-			binding.kanojoUserUpdateBtn.isEnabled = true
+		if (resultCode == RESULT_OK) {
+			when (requestCode) {
+				REQUEST_GALLERY, REQUEST_CAMERA ->
+					if (mFile != null && mFile.exists()) {
+						modifiedPhoto = mFile
+						setBitmapFromFile(binding.userModifyIcon.avatar, modifiedPhoto, 30, 30)
+						binding.userUpdateBtn.isEnabled = isReadyForUpdate
+					}
+			}
 		}
 	}
 
-	protected fun setBitmapFromFile(view: ImageView?, file: File?, width: Int, height: Int) {
+	private fun setBitmapFromFile(view: ImageView?, file: File?, width: Int, height: Int) {
 		val setBitmap: Bitmap
 		val bitmap = loadBitmap(file, width, height)
 		if (bitmap != null) {
@@ -292,78 +265,203 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 		}
 	}
 
-	private fun startPasswordChangeActivity() {
-		val intent = Intent().setClass(this, ChangePasswordActivity::class.java)
-		if (user!!.email == null || !(application as BarcodeKanojoApp).barcodeKanojo.isUserLoggedIn) {
-			intent.putExtra("new_email", true)
-			intent.putExtra("current_password", Password.emptyPassword())
-		} else {
-			intent.putExtra("new_email", false)
-			intent.putExtra("current_password", user!!.currentPassword)
-		}
-		startActivityForResult(intent, REQUEST_CHANGE_PASWORD)
-	}
-
+	// Switches between register and signup layout
 	private fun switchLayout() {
 		when (mRequestCode) {
 			REQUEST_SOCIAL_CONFIG_FIRST -> {
-				mChangeDeviceLayout!!.visibility = View.GONE
-                binding.kanojoUserDeleteBtn.visibility = View.GONE
-                binding.kanojoUserUpdateBtn.isEnabled = true
-				return
+				binding.userModifyName.setHoverDescription(getString(R.string.blank_name_L012))
+				binding.passwordChangeCurrent.visibility = View.GONE
+				binding.passwordChangeNew.setBackgroundResource(R.drawable.row_kanojo_edit_bg_top)
+                binding.userUpdateBtn.isEnabled = true
+				binding.userUpdateBtn.setText(R.string.user_register_btn)
+				binding.userDeleteBtn.visibility = View.GONE
+				binding.userModifyLogout.visibility = View.GONE
 			}
 			REQUEST_SOCIAL_CONFIG_SETTING -> {
-				mChangeDeviceLayout!!.visibility = View.GONE
-                binding.kanojoUserDeleteBtn.visibility = View.VISIBLE
-				return
+				binding.userModifyName.setHoverDescription(getString(R.string.blank_name))
+				imageJob = mScope.launch {
+					mDic.loadBitmap(binding.userModifyIcon.avatar, user!!.profile_image_url, R.drawable.common_noimage, null)
+				}
+                binding.userDeleteBtn.visibility = View.VISIBLE
+				binding.userUpdateBtn.setText(R.string.edit_account_update_btn)
 			}
-			else -> return
 		}
 	}
 
-	protected fun showConfirmDeleteDialog(message: String?) {
-		val dialog = AlertDialog.Builder(this).setTitle(R.string.app_name).setMessage(message).setPositiveButton(R.string.common_dialog_ok) { dialog, which -> processData() }.setNegativeButton(R.string.common_dialog_cancel) { dialog, which ->
-			bindEvent()
-			dialog.dismiss()
-		}.create()
+	private fun showConfirmDeleteDialog(message: String?) {
+		val dialog = AlertDialog.Builder(this)
+				.setTitle(R.string.app_name)
+				.setMessage(message)
+				.setPositiveButton(R.string.common_dialog_ok) { dialog, which ->
+					executeOptionDeleteTask()
+				}
+				.setNegativeButton(R.string.common_dialog_cancel) { dialog, which ->
+					bindEvent()
+					dialog.dismiss()
+				}
+				.create()
 		dialog.setCanceledOnTouchOutside(false)
 		dialog.setOnDismissListener { bindEvent() }
 		dialog.show()
 	}
 
-	private fun processData() {
-		if (mResultCode == RESULT_DELETE_ACCOUNT) {
-			executeOptionDeleteTask()
-		} else if (mResultCode == RESULT_MODIFIED_ALL || mResultCode == RESULT_MODIFIED_COMMON || mResultCode == RESULT_MODIFIED_DEVICE || mResultCode == RESULT_MODIFIED) {
-			modifiedUser = User()
-			modifiedUser!!.name = binding.kanojoUserModifyName.value
-			modifiedUser!!.password = password
-			modifiedUser!!.email = binding.kanojoUserModifyEmail.value.replace(" ".toRegex(), "")
-			modifiedUser!!.setSexFromText(binding.kanojoUserModifyGender.value, app!!.userGenderList)
-			val birthday = binding.kanojoUserModifyBirthday.value
-			if (birthday == "") {
-				modifiedUser!!.setBirth(1, 1, 1990)
-			} else {
-				modifiedUser!!.setBirthFromText(binding.kanojoUserModifyBirthday.value)
+	private fun executeOptionDeleteTask() {
+		binding.loadingView.show()
+
+		var response: Response<BarcodeKanojoModel?>? = null
+		var mReason: Exception? = null
+
+		val barcodeKanojo = app.barcodeKanojo
+		val user = barcodeKanojo.user!!
+		val settings = barcodeKanojo.settings
+		accountJob = ioScope.launch {
+			try {
+				response = barcodeKanojo.android_delete_account(user.id)
+			} catch (e: Exception) {
+				mReason = e
+				mReason!!.printStackTrace()
 			}
-			backupUser(modifiedUser)
-			if (mRequestCode != BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
-				modifiedPhoto = file
-				user?.let { mDic.evict(it.profile_image_url) }
-			} /*else {
-				modifiedPhoto = mDic.getFile(user!!.profile_image_url)
-			}*/
-			executeAutoLoginListTask()
-		} else {
-			updateAndClose()
+			withContext(Dispatchers.Main){
+				binding.loadingView.dismiss()
+				try {
+					if (response == null) {
+						throw BarcodeKanojoException("""response is null! \n${mReason}""".trimIndent())
+					}
+					getCodeAndShowAlert(response, mReason) { _, codeIn ->
+						when (codeIn) {
+							Response.CODE_SUCCESS -> {
+								logout()
+								finish()
+								startActivity(Intent().setClass(this@UserModifyActivity, LaunchActivity::class.java))
+							}
+							Response.CODE_ERROR_BAD_REQUEST, Response.CODE_ERROR_UNAUTHORIZED, Response.CODE_ERROR_FORBIDDEN, Response.CODE_ERROR_NOT_FOUND, Response.CODE_ERROR_SERVER, Response.CODE_ERROR_SERVICE_UNAVAILABLE -> {
+								bindEvent()
+							}
+						}
+					}
+				} catch (e: BarcodeKanojoException) {
+					binding.loadingView.dismiss()
+					bindEvent()
+					showNoticeDialog(getString(R.string.slow_network))
+				}
+			}
 		}
 	}
 
-	private fun executeOptionDeleteTask() {
-		val mDeleteUserHolder = StatusHolder()
-		mDeleteUserHolder.key = 8
-		queue!!.offer(mDeleteUserHolder)
-		mTaskEndHandler.sendEmptyMessage(0)
+	private fun executeUserModifyTask() {
+		//Email Validation
+		if (binding.userModifyEmail.value.isEmpty()) {
+			showNoticeDialog(r.getString(R.string.error_no_email))
+			modifiedEmail = binding.userModifyEmail.value.replace(" ".toRegex(), "").lowercase()
+			return
+		}
+
+		//Password validation
+		if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST && binding.passwordChangeNew.value.isEmpty() && binding.passwordChangeReNew.value.isEmpty()){
+			showNoticeDialog(resources.getString(R.string.error_no_password))
+			return
+		}
+		if (binding.passwordChangeNew.value.isNotEmpty() || binding.passwordChangeReNew.value.isNotEmpty()) {
+			if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_SETTING && binding.passwordChangeCurrent.value.isEmpty()) { //No Empty Current Password
+				showNoticeDialog(resources.getString(R.string.error_no_old_password))
+				return
+			} else if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_SETTING && !checkCurrentPassword()) {                //Check Input Password against app stored
+				showNoticeDialog(resources.getString(R.string.error_unmatch_current_password))
+				return
+			} else if (binding.passwordChangeNew.value.equals("")) {
+				showNoticeDialog(resources.getString(R.string.error_no_new_password))
+				return
+			} else if (binding.passwordChangeNew.value.length < 6 || 16 < binding.passwordChangeNew.value.length) {
+				showNoticeDialog(resources.getString(R.string.error_password_length))
+				return
+			} else if (!binding.passwordChangeNew.value.equals(binding.passwordChangeReNew.value)) {
+				showNoticeDialog(resources.getString(R.string.error_unmatch_new_password))
+				return
+			} else {
+				//We good, password change good to send
+				mCurrentPassword = hashPassword(binding.passwordChangeCurrent.value, "")
+				mNewPassword = hashPassword(binding.passwordChangeNew.value, "")
+			}
+		}
+
+		//ProcessData()
+		val modifiedUser = User()
+		modifiedName = binding.userModifyName.value
+		modifiedBirthday = binding.userModifyBirthday.value
+		modifiedEmail = binding.userModifyEmail.value
+		backupUser(modifiedUser)    //TODO Do we need this?
+		if (mRequestCode != BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
+			//Profile Update
+			user?.let { mDic.evict(it.profile_image_url) }
+			var mReason: Exception? = null
+			var response: Response<BarcodeKanojoModel?>? = null
+			accountJob = ioScope.launch {
+				val tempUser = User()
+				tempUser.setBirthFromText(modifiedBirthday!!)
+				try {
+					response = app.barcodeKanojo.update(modifiedName, mCurrentPassword, mNewPassword, modifiedEmail, tempUser.birth_year, tempUser.birth_month, tempUser.birth_day, modifiedGender, modifiedPhoto)
+				} catch (e: Exception) {
+					mReason = e
+					mReason!!.printStackTrace()
+				}
+				withContext(Dispatchers.Main) {
+					try {
+						if (response == null) {
+							throw BarcodeKanojoException("""response is null! \n${mReason}""".trimIndent())
+						}
+						getCodeAndShowAlert(response, mReason) { _, codeIn ->
+							if (codeIn == Response.CODE_SUCCESS) {
+								(application as BarcodeKanojoApp).barcodeKanojo.settings.setEmail(modifiedEmail!!)
+								if (mNewPassword != null) {
+									(application as BarcodeKanojoApp).barcodeKanojo.settings.setPassword(mNewPassword!!)
+								}
+								updateAndClose()
+							} else {
+								bindEvent()
+							}
+						}
+					} catch (e: BarcodeKanojoException) {
+						bindEvent()
+						//clearQueue()
+						showNoticeDialog(getString(R.string.slow_network))
+					}
+					binding.loadingView.dismiss()
+				}
+			}
+		} else {
+			//User Signup
+			binding.loadingView.show()
+			var mReason: Exception? = null
+			var response: Response<BarcodeKanojoModel?>? = null
+			accountJob = ioScope.launch {
+				val tempUser = User()
+				tempUser.setBirthFromText(modifiedBirthday!!)
+				try {
+					response = app.barcodeKanojo.signup(app.settings.getUUID(), modifiedName, mNewPassword!!, modifiedEmail!!, tempUser.birth_year, tempUser.birth_month, tempUser.birth_day, modifiedGender, modifiedPhoto)
+				} catch (e: Exception) {
+					mReason = e
+					mReason!!.printStackTrace()
+				}
+				withContext(Dispatchers.Main) {
+					try {
+						val code = getCodeAndShowAlert(response, mReason)
+						if (code == Response.CODE_SUCCESS) {
+							(application as BarcodeKanojoApp).barcodeKanojo.settings.setEmail(modifiedEmail!!)
+							if (mNewPassword != null) {
+								(application as BarcodeKanojoApp).barcodeKanojo.settings.setPassword(mNewPassword!!)
+							}
+							updateAndClose()
+						} else {
+							bindEvent()
+						}
+					} catch (e: BarcodeKanojoException) {
+						bindEvent()
+						showNoticeDialog(getString(R.string.slow_network))
+					}
+					binding.loadingView.dismiss()
+				}
+			}
+		}
 	}
 
 	private fun updateAndClose() {
@@ -372,271 +470,55 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 	}
 
 	private fun logout() {
-		(application as BarcodeKanojoApp).logged_out()
+		app.barcodeKanojo.resetUser()
+		app.barcodeKanojo.settings.logout()
+		app.logged_out()
 	}
-
-	private fun isLoading(status: StatusHolder?): Boolean {
-		return status!!.loading
-	}
-
-	internal class StatusHolder {
-		var key = 0
-		var loading = false
-
-		companion object {
-			const val SIGNUP_TASK = 0
-			const val SAVING_COMMON_INFO_TASK = 1
-			const val SAVING_DEVICE_ACCOUNT_TASK = 2
-			//public static final int REGISTER_TOKEN_TASK = 3;
-			const val UPDATE_TASK = 7
-			const val DELETE_USER_TASK = 8
-			const val VERIFY_TASK = 9
-		}
-	}
-
-	private val queue: Queue<StatusHolder?>?
-		get() {
-			if (mTaskQueue == null) {
-				mTaskQueue = LinkedList<StatusHolder?>()
-			}
-			return mTaskQueue
-		}
-
-	@Synchronized
-	private fun clearQueue() {
-		queue!!.clear()
-	}
-
-	@get:Synchronized
-	private val isQueueEmpty: Boolean
-		private get() = mTaskQueue!!.isEmpty()
-
-	//protected void startDashboard() {
-	//    finish();
-	//    startActivity(new Intent().setClass(this, KanojosActivity.class));
-	//}
-
-	@Synchronized
-	private fun executeAutoLoginListTask() {
-		clearQueue()
-		val mSignUpHolder = StatusHolder()
-		mSignUpHolder.key = StatusHolder.SIGNUP_TASK
-		StatusHolder().key = StatusHolder.UPDATE_TASK
-		//new StatusHolder().key = StatusHolder.REGISTER_TOKEN_TASK;
-		val mSaveCommonInfoHolder = StatusHolder()
-		mSaveCommonInfoHolder.key = StatusHolder.SAVING_COMMON_INFO_TASK
-		val mSaveDeviceHolder = StatusHolder()
-		mSaveDeviceHolder.key = StatusHolder.SAVING_DEVICE_ACCOUNT_TASK
-		StatusHolder().key = StatusHolder.VERIFY_TASK
-		if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
-			queue!!.offer(mSignUpHolder)
-		}
-		if (mResultCode == BaseInterface.RESULT_MODIFIED_COMMON || mResultCode == BaseInterface.RESULT_MODIFIED_ALL) {
-			queue!!.offer(mSaveCommonInfoHolder)
-		}
-		if (mResultCode == BaseInterface.RESULT_MODIFIED_DEVICE || mResultCode == BaseInterface.RESULT_MODIFIED_ALL) {
-			queue!!.offer(mSaveDeviceHolder)
-		}
-		if (!isQueueEmpty) {
-			mTaskEndHandler.sendEmptyMessage(0)
-		} else {
-			updateAndClose()
-		}
-	}
-
-	private fun executeAutoLoginTask(list: StatusHolder?) {
-		if (isLoading(list)) {
-			Log.d(TAG, "task " + list!!.key + " is running ")
-			return
-		}
-		mAutoLoginTask = AutoLoginTask()
-		mAutoLoginTask!!.setList(list)
-		showProgressDialog()
-		mAutoLoginTask!!.execute()
-	}
-
-	internal inner class AutoLoginTask : AsyncTask<Void?, Void?, Response<*>?>() {
-		private var mList: StatusHolder? = null
-		private var mReason: Exception? = null
-		fun setList(list: StatusHolder?) {
-			mList = list
-		}
-
-		public override fun onPreExecute() {
-			mList!!.loading = true
-		}
-
-		override fun doInBackground(vararg params: Void?): Response<*>? {
-			return try {
-				val barcodeKanojo = (this@UserModifyActivity.application as BarcodeKanojoApp).barcodeKanojo
-				val user = barcodeKanojo.user
-				val setting = ApplicationSetting(this@UserModifyActivity)
-				if (mList == null) {
-					throw BarcodeKanojoException("process:StatusHolder is null!")
-				}
-				var cPassword = currentPassword
-				when (mList!!.key) {
-					StatusHolder.SIGNUP_TASK -> barcodeKanojo.signup((application as BarcodeKanojoApp).uUID, modifiedUser!!.name, modifiedUser!!.password, modifiedUser!!.email, modifiedUser!!.birth_year, modifiedUser!!.birth_month, modifiedUser!!.birth_day, modifiedUser!!.sex, modifiedPhoto)
-					StatusHolder.SAVING_COMMON_INFO_TASK -> {
-						if (modifiedUser!!.password != null && (modifiedUser!!.password?.hashedPassword ?: "") == "") {
-							modifiedUser!!.password = user.password
-						}
-						if (cPassword == null) {
-							cPassword = user.password
-						}
-						barcodeKanojo.update(modifiedUser!!.name, cPassword, modifiedUser!!.password, modifiedUser!!.email, modifiedUser!!.birth_year, modifiedUser!!.birth_month, modifiedUser!!.birth_day, modifiedUser!!.sex, modifiedPhoto)
-					}
-					StatusHolder.SAVING_DEVICE_ACCOUNT_TASK -> barcodeKanojo.verify(modifiedUser!!.email, modifiedUser!!.password, (this@UserModifyActivity.application as BarcodeKanojoApp).uUID)
-					StatusHolder.UPDATE_TASK -> {
-						if (cPassword == null) {
-							cPassword = user.password
-						}
-						barcodeKanojo.update(modifiedUser!!.name, cPassword, modifiedUser!!.password, modifiedUser!!.email, modifiedUser!!.birth_year, modifiedUser!!.birth_month, modifiedUser!!.birth_day, modifiedUser!!.sex, modifiedPhoto)
-					}
-					StatusHolder.DELETE_USER_TASK -> barcodeKanojo.android_delete_account(user.id)
-					StatusHolder.VERIFY_TASK -> barcodeKanojo.verify("", null, (application as BarcodeKanojoApp).uUID)
-					else -> null
-				}
-			} catch (e: Exception) {
-				mReason = e
-				null
-			}
-		}
-
-		/* JADX INFO: finally extract failed */
-		public override fun onPostExecute(response: Response<*>?) {
-			val code: Int
-			try {
-				if (mReason != null) {
-					mReason!!.printStackTrace()
-				}
-				if (response == null) {
-					throw BarcodeKanojoException("""response is null! \n${mReason}""".trimIndent())
-				}
-				code = if (mList!!.key == StatusHolder.DELETE_USER_TASK) {
-						getCodeAndShowAlert(response, mReason, mListener2)
-					} else {
-						getCodeAndShowAlert(response, mReason)
-					}
-				when (code) {
-					Response.CODE_SUCCESS -> {
-						if (mList!!.key == StatusHolder.SIGNUP_TASK) {
-							(application as BarcodeKanojoApp).barcodeKanojo.user = response[User::class.java] as User
-						}
-						if (mList!!.key == StatusHolder.DELETE_USER_TASK) {
-							finish()
-							startActivity(Intent().setClass(this@UserModifyActivity, LaunchActivity::class.java))
-						}
-						if (!isQueueEmpty) {
-							mTaskEndHandler.sendEmptyMessage(0)
-						}
-					}
-					Response.CODE_ERROR_BAD_REQUEST, Response.CODE_ERROR_UNAUTHORIZED, Response.CODE_ERROR_FORBIDDEN, Response.CODE_ERROR_NOT_FOUND, Response.CODE_ERROR_SERVER, Response.CODE_ERROR_SERVICE_UNAVAILABLE -> {
-						dismissProgressDialog()
-						bindEvent()
-						clearQueue()
-					}
-				}
-				dismissProgressDialog()
-			} catch (e: BarcodeKanojoException) {
-				dismissProgressDialog()
-				bindEvent()
-				clearQueue()
-				if (mAutoLoginTask != null) {
-					mAutoLoginTask!!.cancel(true)
-					mAutoLoginTask = null
-				}
-				this@UserModifyActivity.showNoticeDialog(this@UserModifyActivity.getString(R.string.slow_network))
-				dismissProgressDialog()
-			} catch (th: Throwable) {
-				dismissProgressDialog()
-				throw th
-			}
-		}
-
-		override fun onCancelled() {
-			dismissProgressDialog()
-			bindEvent()
-		}
-	}
-
-	//    void nextScreen(StatusHolder list) {
-	//        setResult(BaseInterface.RESULT_MODIFIED);
-	//        close();
-	//        dismissProgressDialog();
-	//    }
 
 	private val isReadyForUpdate: Boolean
 		get() {
-			var mCount = 0
-			if (binding.kanojoUserModifyName.value != "" && binding.kanojoUserModifyName.value.equals(user!!.name, ignoreCase = true)) {
-				mCount++
+			if (binding.userModifyEmail.value.isEmpty()) {
+				return false
+			} else if (mRequestCode == REQUEST_SOCIAL_CONFIG_SETTING) {
+				if (binding.userModifyEmail.value.isNotEmpty()) {
+					return true
+				}
+				if (binding.userModifyName.value.isNotEmpty() && binding.userModifyName.value != user!!.name) {
+					return true
+				}
+				if (binding.userModifyBirthday.value.isNotEmpty() && !binding.userModifyBirthday.value.equals(user!!.birthText, ignoreCase = true)) {
+					return true
+				}
+				if (modifiedPhoto != null) {
+					return true
+				}
+				if (binding.passwordChangeNew.value.isNotEmpty()) {
+					return !(binding.passwordChangeCurrent.isEmpty || binding.passwordChangeNew.value != binding.passwordChangeReNew.value)
+				}
+			} else if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
+				return true
 			}
-			if (binding.kanojoUserModifyGender.value != "" && binding.kanojoUserModifyGender.value.equals(user!!.sex, ignoreCase = true)) {
-				mCount++
-			}
-			if (binding.kanojoUserModifyBirthday.value != "" && binding.kanojoUserModifyBirthday.value.equals(user!!.birthText, ignoreCase = true)) {
-				mCount++
-			}
-			if (imgAvatar.drawable != null) {
-				mCount++
-			}
-			if (binding.kanojoUserModifyEmail.value != "" && binding.kanojoUserModifyEmail.value.equals(user!!.email, ignoreCase = true) && binding.kanojoUserModifyPassword.value != "" && password == user!!.password) {
-				mCount++
-			}
-			if (mRequestCode == BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
-				mCount++
-			}
-			return mCount > 0
+			return false
 		}
 
 	override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-		if (keyCode != KeyEvent.KEYCODE_BACK || !mLoadingView!!.isShow) {
+		if (keyCode != KeyEvent.KEYCODE_BACK || !binding.loadingView.isShow) {
 			return super.onKeyDown(keyCode, event)
 		}
-		mLoadingView!!.setMessage(getString(R.string.requesting_cant_cancel))
+		binding.loadingView.setMessage(getString(R.string.requesting_cant_cancel))
 		return true
-	}
-
-	public override fun showProgressDialog(): ProgressDialog {
-		mLoadingView!!.show()
-		return ProgressDialog(this)
-	}
-
-	override fun dismissProgressDialog() {
-		if (mLoadingView != null) {
-			mLoadingView!!.dismiss()
-		}
 	}
 
 	override fun startCheckSession() {
 		if (mRequestCode != BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST) {
 			super.startCheckSession()
-			showProgressDialog()
+			binding.loadingView.show()
 		}
 	}
 
 	override fun endCheckSession() {
-		dismissProgressDialog()
+		binding.loadingView.dismiss()
 	}
-
-    private fun showGenderDialog(title: String?, value: EditItemView) {
-        val genderList = resources.getStringArray(R.array.user_account_gender_list)
-        var selected = -1
-        if (genderList != null) {
-            val size = genderList.size
-            for (i in 0 until size) {
-                if (genderList[i] == value.value) {
-                    selected = i
-                }
-            }
-        }
-        val dialog = AlertDialog.Builder(this).setTitle(title).setSingleChoiceItems(genderList, selected) { dialog, position -> value.value = genderList[position] }.setPositiveButton(R.string.common_dialog_ok) { dialog, which -> }.create()
-        if (this.mListener != null) {
-            dialog.setOnDismissListener(this.mListener)
-        }
-        dialog.show()
-    }
 
     private fun showDatePickDialog(title: String?, value: EditItemView) {
         val cal = Calendar.getInstance()
@@ -652,7 +534,7 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
                     day = arr[1].toInt()
                     year = arr[2].toInt()
                 }
-            } catch (e: java.lang.Exception) {
+            } catch (e: Exception) {
             }
         }
         val dialog = DatePickerDialog(this, { view: DatePicker?, year1: Int, monthOfYear: Int, dayOfMonth: Int -> value.value = String.format("%02d", monthOfYear + 1) + "." + String.format("%02d", dayOfMonth) + "." + String.format("%04d", year1) }, year, month, day)
@@ -662,8 +544,13 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
         dialog.show()
     }
 
+	private fun checkCurrentPassword(): Boolean {
+		val currentPassword = app.settings.getPassword()
+		val inputCurrentPassword = hashPassword(binding.passwordChangeCurrent.value, currentPassword.mSalt)
+		return currentPassword == inputCurrentPassword
+	}
+
 	companion object {
-		//TODO Rewrite all of this?
 		private const val TAG = "UserModifyActivity"
 	}
 }

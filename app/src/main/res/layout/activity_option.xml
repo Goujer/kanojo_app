@@ -10,7 +10,7 @@
     <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
         <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/edit_bg" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="match_parent">
             <TextView
-				android:id="@+id/kanojo_user_account_mode_text"
+				android:id="@+id/user_account_mode_text"
 				style="@style/txt_notice_input"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"

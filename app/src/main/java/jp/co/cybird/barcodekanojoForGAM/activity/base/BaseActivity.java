@@ -32,7 +32,7 @@ import com.goujer.barcodekanojo.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.Defs;
 import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.CustomWebViewActivity;
-import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
+import com.goujer.barcodekanojo.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
@@ -46,41 +46,6 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     private int code = 0;
     private boolean mAutoRefresh = true;
     public boolean mBaseLoadingFinished = false;
-
-    //final OnAccountsUpdateListener mChangeAccountListener = new OnAccountsUpdateListener() {
-    //    public void onAccountsUpdated(Account[] accounts) {
-    //        if (!new ApplicationSetting(BaseActivity.this.getApplicationContext()).getUserGoogleAccount().equalsIgnoreCase(new PhoneInfo(BaseActivity.this.getApplicationContext()).getGoogleAccount())) {
-    //            if (Defs.DEBUG) {
-    //                Log.d(BaseActivity.TAG, "Google Account has changed, will call verify api");
-    //            }
-    //            try {
-    //                BaseActivity.this.unregisterReceiver(BaseActivity.this.mChangeGmailReceiver);
-    //            } catch (Exception e) {
-    //            }
-    //            BaseActivity.this.sendBroadcast(new Intent("android.accounts.LOGIN_ACCOUNTS_CHANGED"));
-    //        }
-    //    }
-    //};
-
-    //public BroadcastReceiver mChangeGmailReceiver = new BroadcastReceiver() {
-    //    public void onReceive(Context context, Intent intent) {
-    //        if (Defs.DEBUG) {
-    //            Log.d(BaseActivity.TAG, "mChangeGmailReceiver: " + intent + ", at " + this);
-    //        }
-    //        String saveGoogle = new ApplicationSetting(context).getUserGoogleAccount();
-    //        String curGoogle = new PhoneInfo(context).getGoogleAccount();
-    //        if (Defs.DEBUG) {
-    //            Log.d(BaseActivity.TAG, "saved Google Account: " + saveGoogle);
-    //            Log.d(BaseActivity.TAG, "current Google Account: " + curGoogle);
-    //        }
-    //        if (!saveGoogle.equalsIgnoreCase(curGoogle)) {
-    //            if (Defs.DEBUG) {
-    //                Log.d(BaseActivity.TAG, "Google Account has changed, will call verify api");
-    //            }
-    //            BaseActivity.this.showAlertFullStorageDialog("gmail has changed....");
-    //        }
-    //    }
-    //};
 
     private CheckSessionTask mCheckSessionTask;
     AlertDialog mCommondialog;
@@ -184,24 +149,6 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             }
             user.setBirthFromText(this.tmpUser.getBirthText());
         }
-        if (user.getSex() == null) {
-            if (Defs.DEBUG) {
-                Log.d(TAG, "Sex copied:" + this.tmpUser.getSex());
-            }
-            user.setSex(this.tmpUser.getSex());
-        }
-        if (user.getEmail() == null) {
-            if (Defs.DEBUG) {
-                Log.d(TAG, "Email copied:" + this.tmpUser.getEmail());
-            }
-            user.setEmail(this.tmpUser.getEmail());
-        }
-        if (user.getPassword() == null) {
-            if (Defs.DEBUG) {
-                Log.d(TAG, "Password copied:" + this.tmpUser.getPassword());
-            }
-            user.setPassword(this.tmpUser.getPassword());
-        }
     }
 
     protected void onUserUpdated() {
@@ -254,6 +201,8 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             } else {
                 showAlertDialog(alert, dialog -> listener.onDismiss(dialog, BaseActivity.this.code));
             }
+        } else if (listener != null) {
+			listener.onDismiss(null, this.code);
         }
 		if (this.code == Response.CODE_SUCCESS) {
 			updateUser(response);
@@ -268,10 +217,11 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     }
 
     protected void showAlertDialog(Alert alert, DialogInterface.OnDismissListener listener) {
-        AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.app_name).setMessage(alert.getBody()).setPositiveButton(R.string.common_dialog_ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        }).create();
+        AlertDialog dialog = new AlertDialog.Builder(this)
+				.setTitle(R.string.app_name)
+				.setMessage(alert.getBody())
+				.setPositiveButton(R.string.common_dialog_ok, (dialog1, which) -> {})
+				.create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.setOnDismissListener(listener);
         if (!isFinishing()) {
@@ -279,23 +229,25 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         }
     }
 
-    protected ProgressDialog showProgressDialog(DialogInterface.OnCancelListener listener) {
+	//TODO ProgressDialog is deprecated, needs to be replaced.
+    protected void showProgressDialog(DialogInterface.OnCancelListener listener) {
         if (this.mProgressDialog == null) {
             ProgressDialog dialog = new ProgressDialog(this);
             dialog.setTitle(R.string.app_name);
             dialog.setMessage(getString(R.string.common_progress_dialog_message));
             dialog.setIndeterminate(true);
             dialog.setCancelable(true);
+			this.mProgressDialog.setCanceledOnTouchOutside(false);
             dialog.setOnCancelListener(listener);
             this.mProgressDialog = dialog;
         }
-        this.mProgressDialog.setCanceledOnTouchOutside(false);
-        this.mProgressDialog.show();
-        return this.mProgressDialog;
+		if (!this.mProgressDialog.isShowing()) {
+			this.mProgressDialog.show();
+		}
     }
 
-    protected ProgressDialog showProgressDialog() {
-        return showProgressDialog(null);
+    protected void showProgressDialog() {
+        showProgressDialog(null);
     }
 
     protected void dismissProgressDialog() {
@@ -377,7 +329,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     public void showMail() {
         Intent intent = new Intent(getApplicationContext(), CustomWebViewActivity.class);
         String locale = Locale.getDefault().getLanguage();
-        String uuid = ((BarcodeKanojoApp) getApplicationContext()).getUUID();
+        String uuid = ((BarcodeKanojoApp) getApplication()).getSettings().getUUID();
         if (Defs.DEBUG) {
             Log.e("lang", locale);
         }
@@ -415,11 +367,6 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         startActivity(new Intent("android.intent.action.VIEW", Uri.parse(Defs.URL_KDDI_SERVICE)));
     }
 
-    protected void deleteUser() {
-        ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().resetUser();
-        new ApplicationSetting(getApplicationContext()).reset();
-    }
-
     public void executeRefreshSession() {
         if (this.mRefreshTask == null || this.mRefreshTask.getStatus() == AsyncTask.Status.FINISHED) {
             if (Defs.DEBUG) {
@@ -444,7 +391,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         @Override
         protected Response<?> doInBackground(Void... params) {
             try {
-				return ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().verify("", null, ((BarcodeKanojoApp) getApplication()).getUUID());
+				return ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().verify(((BarcodeKanojoApp) getApplication()).getSettings().getUUID(), "", null);
             } catch (Exception e) {
                 this.mReason = e;
                 return null;
@@ -464,15 +411,15 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
                     Response.checkResponse(response);
                 }
                 switch (response.getCode()) {
-                    case 200:
+					case Response.CODE_SUCCESS:
                         BaseActivity.this.mBaseLoadingFinished = true;
                         BaseActivity.this.endCheckSession();
                         return;
-                    case 400:
-                    case 403:
-                    case 404:
+                    case Response.CODE_ERROR_BAD_REQUEST:
+					case Response.CODE_ERROR_FORBIDDEN:
+					case Response.CODE_ERROR_NOT_FOUND:
                         return;
-                    case 401:
+					case Response.CODE_ERROR_UNAUTHORIZED:
                         BaseActivity.this.showNoticeDialog("lalallalal");
                 }
             } catch (BarcodeKanojoException e) {
@@ -557,11 +504,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
                 }
             }).create();
         }
-        this.mFullStorageDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            public void onDismiss(DialogInterface dialog) {
-                BaseActivity.this.sendBroadcast(new Intent(BarcodeKanojoApp.INTENT_ACTION_LOGGED_OUT));
-            }
-        });
+        this.mFullStorageDialog.setOnDismissListener(dialog -> BaseActivity.this.sendBroadcast(new Intent(BarcodeKanojoApp.INTENT_ACTION_LOGGED_OUT)));
         this.mFullStorageDialog.setCanceledOnTouchOutside(false);
         if (!isFinishing() && !this.mFullStorageDialog.isShowing()) {
             this.mFullStorageDialog.show();

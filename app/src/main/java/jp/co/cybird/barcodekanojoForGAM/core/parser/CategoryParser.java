@@ -2,7 +2,6 @@ package jp.co.cybird.barcodekanojoForGAM.core.parser;
 
 import android.util.Log;
 
-import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoParseException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Category;

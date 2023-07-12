@@ -1,7 +1,6 @@
 package com.goujer.barcodekanojo.activity.top
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -15,7 +14,6 @@ import com.goujer.barcodekanojo.BarcodeKanojoApp
 import com.goujer.barcodekanojo.R
 import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface
-import jp.co.cybird.barcodekanojoForGAM.activity.top.LoginActivity
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
@@ -39,7 +37,7 @@ class LaunchActivity : BaseActivity() {
 		super.onCreate(savedInstanceState)
 		binding = ActivityBootBinding.inflate(layoutInflater)
 		setContentView(binding.root)
-		settings = (application as BarcodeKanojoApp).settings
+		settings = (application as BarcodeKanojoApp).barcodeKanojo.settings
 		if (Random.nextInt(0, 101) == 100) {
 			binding.root.setBackgroundResource(R.drawable.top_bg_blue)
 		}
@@ -47,7 +45,6 @@ class LaunchActivity : BaseActivity() {
 
 	override fun onStart() {
 		super.onStart()
-
 		//Set Button Listeners
 		binding.topLogIn.setOnClickListener {
 			val logInIntent = Intent().setClass(this, LoginActivity::class.java)
@@ -78,6 +75,8 @@ class LaunchActivity : BaseActivity() {
 			loginJob = scope.launch {
 				try {
 					if (verifyUser()) {
+						//Get Product Category List from Server
+						(application as BarcodeKanojoApp).barcodeKanojo.init_product_category_list()
 						finish()
 						withContext(Dispatchers.Main) {
 							startActivity(Intent().setClass(this@LaunchActivity, KanojosActivity::class.java))
@@ -130,12 +129,13 @@ class LaunchActivity : BaseActivity() {
 		scope.cancel()
 	}
 
+	@Deprecated("Deprecated in Java")
 	override fun onBackPressed() {
 
 	}
 
 	private fun verifyUser(): Boolean {
-		val response: Response<BarcodeKanojoModel>
+		val response: Response<BarcodeKanojoModel?>
 		try {
 			response = bootTaskProcess()
 		} catch (e: BarcodeKanojoException) {
@@ -143,15 +143,14 @@ class LaunchActivity : BaseActivity() {
 				runOnUiThread {
 					showNoticeDialog(getString(R.string.error_user_not_found));
 				}
-				return false
 			} else {
 				Log.d(TAG, "Unknown error has occurred during verify")
 				runOnUiThread {
 					showNoticeDialog(e.localizedMessage);
 				}
 				e.printStackTrace()
-				return false
 			}
+			return false
 		} catch (e: UnknownHostException) {
 			e.printStackTrace()
 			runOnUiThread {
@@ -167,12 +166,12 @@ class LaunchActivity : BaseActivity() {
 		}
 	}
 
-	private fun bootTaskProcess(): Response<BarcodeKanojoModel> {
-		val barcodeKanojo = (application as BarcodeKanojoApp).barcodeKanojo
-		val user = barcodeKanojo.user
-		val android_verify = barcodeKanojo.verify(user.email, user.password, (application as BarcodeKanojoApp).uUID)
-		barcodeKanojo.init_product_category_list()
-		return android_verify
+	private fun bootTaskProcess(): Response<BarcodeKanojoModel?> {
+		val barcodeKanojoApp = (application as BarcodeKanojoApp)
+		val barcodeKanojo = barcodeKanojoApp.barcodeKanojo
+
+		//Log User in
+		return barcodeKanojo.verify(barcodeKanojoApp.settings.getUUID(), "", null)
 	}
 
 	companion object {
