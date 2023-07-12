@@ -113,6 +113,7 @@ class DashboardAdapter(context: Context?, private val mDic: DynamicImageCache, o
 		/* synthetic */
 		internal constructor(dashboardAdapter: DashboardAdapter?, remoteResourceManagerObserver: RemoteResourceManagerObserver?) : this() {}
 
+		@Deprecated("Deprecated in Java")
 		override fun update(observable: Observable, data: Any) {
 			if (data != null) {
 				mHandler.removeCallbacks(mNotifyThread)
