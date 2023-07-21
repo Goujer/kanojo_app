@@ -189,36 +189,59 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1010 && resultCode == -1) {
+        if (requestCode == BaseInterface.REQUEST_SCAN && resultCode == -1) {
             String contents = data.getStringExtra(Intents.Scan.RESULT);
             String format = data.getStringExtra(Intents.Scan.RESULT_FORMAT);
             switch (format) {
 				case "UPC_A":
+				case "UPC_E":
+					switch (contents.charAt(6)) {
+						case '0':
+						case '1':
+						case '2': {
+							contents = contents.substring(0, 3) + contents.charAt(6) + "0000" + contents.substring(3, 6) + contents.charAt(7);
+							break;
+						}
+						case '3': {
+							contents = contents.substring(0, 4) + "00000" + contents.substring(4, 6) + contents.charAt(7);
+							break;
+						}
+						case '4': {
+							contents = contents.substring(0, 5) + "00000" + contents.charAt(5) + contents.charAt(7);
+							break;
+						}
+						case '5':
+						case '6':
+						case '7':
+						case '8':
+						case '9': {
+							contents = contents.substring(0, 6) + "0000" + contents.charAt(6) + contents.charAt(7);
+							break;
+						}
+					}
 				case "EAN_13":
+				case "EAN_8":
 					executeScanQueryTask(contents);
 					break;
 				default:
-					showNoticeDialog(getResources().getString(R.string.error_barcode_format)+" Found: "+format, new DialogInterface.OnDismissListener() {
-						public void onDismiss(DialogInterface dialog) {
-							startCaptureActivity();
-						}});
+					showNoticeDialog(getResources().getString(R.string.error_barcode_format)+" Found: "+format, dialog -> startCaptureActivity());
 			}
 
-        } else if (requestCode == 1020) {
-			if (resultCode == 102) {
-				setResult(102);
+        } else if (requestCode == BaseInterface.REQUEST_SCAN_KANOJO_GENERATE) {
+			if (resultCode == BaseInterface.RESULT_GENERATE_KANOJO) {
+				setResult(BaseInterface.RESULT_GENERATE_KANOJO);
 				finish();
 			} else {
 				startCaptureActivity();
 			}
-		} else if (requestCode == 1014) {
+		} else if (requestCode == BaseInterface.REQUEST_SCAN_OTHERS_EDIT) {
             switch (resultCode) {
-                case 101:
-                    setResult(101);
+				case BaseInterface.RESULT_SAVE_PRODUCT_INFO:
+					setResult(BaseInterface.RESULT_SAVE_PRODUCT_INFO);
                     finish();
                     return;
-                case 103:
-                    setResult(103);
+				case BaseInterface.RESULT_ADD_FRIEND:
+					setResult(BaseInterface.RESULT_ADD_FRIEND);
                     finish();
                     return;
                 default:
@@ -371,6 +394,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         ScanQueryTask() {
         }
 
+		@Override
         public void onPreExecute() {
             ScanActivity.this.showProgressDialog();
         }
@@ -610,7 +634,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode != 4 || !this.mLoadingView.isShow()) {
+        if (keyCode != KeyEvent.KEYCODE_BACK || !this.mLoadingView.isShow()) {
             return super.onKeyDown(keyCode, event);
         }
         this.mLoadingView.setMessage(getString(R.string.requesting_cant_cancel));
