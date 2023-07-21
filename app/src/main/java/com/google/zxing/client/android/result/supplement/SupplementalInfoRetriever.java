@@ -21,6 +21,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 
 public abstract class SupplementalInfoRetriever extends AsyncTask<Object, Object, Object> {
     private static final String TAG = "SupplementalInfo";
@@ -30,32 +31,6 @@ public abstract class SupplementalInfoRetriever extends AsyncTask<Object, Object
     private final WeakReference<TextView> textViewRef;
 
     abstract void retrieveSupplementalInfo() throws IOException;
-
-    public static void maybeInvokeRetrieval(TextView textView, ParsedResult result, HistoryManager historyManager, Context context) {
-        AsyncTaskExecInterface taskExec = (AsyncTaskExecInterface) new AsyncTaskExecManager().build();
-        if (result instanceof URIParsedResult) {
-            taskExec.execute(new URIResultInfoRetriever(textView, (URIParsedResult) result, historyManager, context), new Object[0]);
-            taskExec.execute(new TitleRetriever(textView, (URIParsedResult) result, historyManager), new Object[0]);
-        } else if (result instanceof ProductParsedResult) {
-            String productID = ((ProductParsedResult) result).getProductID();
-            taskExec.execute(new ProductResultInfoRetriever(textView, productID, historyManager, context), new Object[0]);
-            switch (productID.length()) {
-                case 12:
-                    taskExec.execute(new AmazonInfoRetriever(textView, "UPC", productID, historyManager, context), new Object[0]);
-                    return;
-                case 13:
-                    taskExec.execute(new AmazonInfoRetriever(textView, "EAN", productID, historyManager, context), new Object[0]);
-                    return;
-                default:
-                    return;
-            }
-        } else if (result instanceof ISBNParsedResult) {
-            String isbn = ((ISBNParsedResult) result).getISBN();
-            taskExec.execute(new ProductResultInfoRetriever(textView, isbn, historyManager, context), new Object[0]);
-            taskExec.execute(new BookResultInfoRetriever(textView, isbn, historyManager, context), new Object[0]);
-            taskExec.execute(new AmazonInfoRetriever(textView, Intents.SearchBookContents.ISBN, isbn, historyManager, context), new Object[0]);
-        }
-    }
 
     SupplementalInfoRetriever(TextView textView, HistoryManager historyManager) {
         this.textViewRef = new WeakReference<>(textView);

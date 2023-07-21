@@ -41,13 +41,13 @@ final class BeepManager {
             this.mediaPlayer.start();
         }
         if (this.vibrate) {
-            ((Vibrator) this.activity.getSystemService("vibrator")).vibrate(VIBRATE_DURATION);
+            ((Vibrator) this.activity.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(VIBRATE_DURATION);
         }
     }
 
     private static boolean shouldBeep(SharedPreferences prefs, Context activity2) {
         boolean shouldPlayBeep = prefs.getBoolean(PreferencesActivity.KEY_PLAY_BEEP, true);
-        if (!shouldPlayBeep || ((AudioManager) activity2.getSystemService("audio")).getRingerMode() == 2) {
+        if (!shouldPlayBeep || ((AudioManager) activity2.getSystemService(Context.AUDIO_SERVICE)).getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
             return shouldPlayBeep;
         }
         return false;
