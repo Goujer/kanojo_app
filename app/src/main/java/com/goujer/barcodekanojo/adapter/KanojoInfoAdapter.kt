@@ -57,6 +57,7 @@ class KanojoInfoAdapter(context: Context?, private val mDic: DynamicImageCache) 
 		/* synthetic */
 		internal constructor(kanojoInfoAdapter: KanojoInfoAdapter?, remoteResourceManagerObserver: RemoteResourceManagerObserver?) : this() {}
 
+		@Deprecated("Deprecated in Java")
 		override fun update(observable: Observable, data: Any) {
 			if (data != null) {
 				mHandler.removeCallbacks(mNotifyThread)

@@ -14,12 +14,14 @@ import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -31,9 +33,6 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ZoomControls;
-
-import androidx.core.content.FileProvider;
-import androidx.exifinterface.media.ExifInterface;
 
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
 import com.goujer.barcodekanojo.BuildConfig;
@@ -120,7 +119,7 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
             unregisterReceiver(this.mLoggedOutReceiver);
         } catch (Exception ignored) {
         }
-        ViewGroup root = (ViewGroup) getWindow().getDecorView().findViewById(R.id.common_top_menu_root);
+        ViewGroup root = getWindow().getDecorView().findViewById(R.id.common_top_menu_root);
         if (!(root == null || root.getChildCount() == 0)) {
             cleanupView(root.getChildAt(0));
         }
@@ -313,9 +312,12 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
 			Cursor cursor = this.getContentResolver().query(imgUri, projection, null, null, null);
 			if (cursor != null) {
 				if (cursor.getColumnCount() > 0 && cursor.moveToFirst()) {
-					photoRotation = cursor.getInt(cursor.getColumnIndex(projection[0]));
-					hasRotation = photoRotation != 0;
-					Log.d(TAG, "Cursor orientation: " + photoRotation);
+					int columnIndex = cursor.getColumnIndex(projection[0]);
+					if (columnIndex > -1) {
+						photoRotation = cursor.getInt(columnIndex);
+						hasRotation = photoRotation != 0;
+						Log.d(TAG, "Cursor orientation: " + photoRotation);
+					}
 				}
 				cursor.close();
 			}
@@ -546,23 +548,23 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
     //    return Bitmap.createBitmap(src, 0, 0, src_width, src_height, matrix, true);
     //}
 
-    public static float getFitScale(int dest_width, int dest_height, int src_width, int src_height) {
-        if (dest_width < dest_height) {
-            if (src_width >= src_height) {
-                return ((float) dest_width) / ((float) src_width);
-            }
-            float ret = ((float) dest_height) / ((float) src_height);
-            return ((float) src_width) * ret > ((float) dest_width) ? ((float) dest_width) / ((float) src_width) : ret;
-        } else if (src_width < src_height) {
-            return ((float) dest_height) / ((float) src_height);
-        } else {
-            float ret2 = ((float) dest_width) / ((float) src_width);
-            if (((float) src_height) * ret2 > ((float) dest_height)) {
-                return ((float) dest_height) / ((float) src_height);
-            }
-            return ret2;
-        }
-    }
+    //public static float getFitScale(int dest_width, int dest_height, int src_width, int src_height) {
+    //    if (dest_width < dest_height) {
+    //        if (src_width >= src_height) {
+    //            return ((float) dest_width) / ((float) src_width);
+    //        }
+    //        float ret = ((float) dest_height) / ((float) src_height);
+    //        return ((float) src_width) * ret > ((float) dest_width) ? ((float) dest_width) / ((float) src_width) : ret;
+    //    } else if (src_width < src_height) {
+    //        return ((float) dest_height) / ((float) src_height);
+    //    } else {
+    //        float ret2 = ((float) dest_width) / ((float) src_width);
+    //        if (((float) src_height) * ret2 > ((float) dest_height)) {
+    //            return ((float) dest_height) / ((float) src_height);
+    //        }
+    //        return ret2;
+    //    }
+    //}
 
     //private static final void createDirectory(File storageDirectory) {
     //    if (!storageDirectory.exists()) {

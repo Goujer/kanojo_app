@@ -19,7 +19,7 @@ import jp.co.cybird.barcodekanojoForGAM.activity.WebViewTabActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseKanojosActivity;
 import com.goujer.barcodekanojo.activity.setting.UserModifyActivity;
-import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
+import com.goujer.barcodekanojo.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 import com.goujer.barcodekanojo.core.model.Kanojo;
@@ -53,9 +53,9 @@ public class BarcodePushActivity extends BaseKanojosActivity {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
         ApplicationSetting mSetting = new ApplicationSetting(this);
-        String uuid = ((BarcodeKanojoApp) getApplication()).getUUID();
+        String uuid = ((BarcodeKanojoApp) getApplication()).getSettings().getUUID();
         String push_type = getIntent().getStringExtra("push_type");
-        mSetting.commitUUID(uuid);
+        mSetting.setUUID(uuid);
         if (push_type.equalsIgnoreCase(PUSH_NOTIFICATION_REGISTER)) {
             mSetting.commitDeviceToken(getIntent().getStringExtra("reg_id"));
             executePushListTask(PUSH_NOTIFICATION_REGISTER, 0);
@@ -231,7 +231,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
                 if (this.mList.key == 1 && this.mReason.getMessage().equalsIgnoreCase("user not found")) {
                     Intent signUp = new Intent().setClass(BarcodePushActivity.this, UserModifyActivity.class);
                     signUp.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST);
-                    BarcodePushActivity.this.startActivity(signUp);
+                    startActivity(signUp);
                 }
                 BarcodePushActivity.this.finish();
                 BarcodePushActivity.this.overridePendingTransition(0, 0);
@@ -251,7 +251,7 @@ public class BarcodePushActivity extends BaseKanojosActivity {
                 case 0:
                     return barcodeKanojo.android_register_device(setting.getUUID(), setting.getDeviceToken());
                 case 1:
-                    Response<BarcodeKanojoModel> android_verify = barcodeKanojo.verify("", Password.Companion.saveHashedPassword("", ""), ((BarcodeKanojoApp) getApplication()).getUUID());
+                    Response<BarcodeKanojoModel> android_verify = barcodeKanojo.verify(((BarcodeKanojoApp) getApplication()).getSettings().getUUID(), "", null);
                     if (android_verify == null) {
                         return null;
                     }

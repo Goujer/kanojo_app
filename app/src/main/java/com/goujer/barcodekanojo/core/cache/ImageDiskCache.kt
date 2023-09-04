@@ -6,9 +6,9 @@ import android.os.Build
 import android.os.Environment
 import android.os.storage.StorageManager
 import android.util.Log
-import kotlin.Throws
-import jp.co.cybird.barcodekanojoForGAM.Defs
 import com.goujer.barcodekanojo.BarcodeKanojoApp
+import com.goujer.barcodekanojo.BuildConfig
+import jp.co.cybird.barcodekanojoForGAM.Defs
 import jp.co.cybird.barcodekanojoForGAM.core.util.FileUtil
 import java.io.*
 
@@ -207,10 +207,25 @@ class ImageDiskCache(val mContext: Context) {
 
 		@JvmStatic
 		private fun getCacheDirectory(context: Context): File {
-			return if (!Environment.isExternalStorageEmulated() && Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-				context.externalCacheDir ?: context.cacheDir
+			if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+				//If Media (external storage) is mounted, try to use it for the cache area.
+				return if (Build.VERSION.SDK_INT >= 8) {
+					if (Build.VERSION.SDK_INT >= 11) {
+						//In APIs greater than 11 external storage may be emulated, in that situation we do not want to use the eternal storage as there is no benefit.
+						if (!Environment.isExternalStorageEmulated()) {
+							context.externalCacheDir ?: context.cacheDir
+						} else {
+							context.cacheDir
+						}
+					} else {
+						context.externalCacheDir ?: context.cacheDir
+					}
+				} else {
+					//On APIs less than 8 context.externalCacheDir is not accessible, so we create the path to the location ourselves.
+					File(Environment.getExternalStorageDirectory(), "Android" + File.pathSeparator + "data" + File.pathSeparator + BuildConfig.APPLICATION_ID + File.pathSeparator + "cache" + File.pathSeparator)
+				}
 			} else {
-				context.cacheDir
+				return context.cacheDir
 			}
 		}
 	}

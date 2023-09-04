@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.goujer.barcodekanojo",
+  "variantName": "sdk4Release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 4000304,
+      "versionName": "0.3.4",
+      "outputFile": "app-sdk4-release.apk"
+    }
+  ],
+  "elementType": "File"
+}

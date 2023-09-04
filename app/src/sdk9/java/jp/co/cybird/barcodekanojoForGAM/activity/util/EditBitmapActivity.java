@@ -119,7 +119,7 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
             unregisterReceiver(this.mLoggedOutReceiver);
         } catch (Exception ignored) {
         }
-        ViewGroup root = (ViewGroup) getWindow().getDecorView().findViewById(R.id.common_top_menu_root);
+        ViewGroup root = getWindow().getDecorView().findViewById(R.id.common_top_menu_root);
         if (!(root == null || root.getChildCount() == 0)) {
             cleanupView(root.getChildAt(0));
         }
@@ -171,18 +171,22 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
 							takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
 						} else if (Build.VERSION.SDK_INT < 23 || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 							File mRootDir;
-							if (Build.VERSION.SDK_INT >= 8) {
-								mRootDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + File.separator + "BarcodeKANOJO");
-							} else {
-								mRootDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.pathSeparator + "DCIM" + File.separator + "BarcodeKANOJO");
-							}
+							mRootDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + File.separator + "BarcodeKANOJO");
 							//TODO ensure directory creation
 							File imageFile = new File(mRootDir, new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date()) + ".jpg");
 							mPhotoPath = imageFile.getAbsolutePath();
 							try {
 								imageFile.getParentFile().mkdirs();
 								//imageFile.createNewFile();
-								mImageUri = Uri.fromFile(imageFile);
+								if (Build.VERSION.SDK_INT >= 16) {
+									mImageUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", imageFile);
+									if (Build.VERSION.SDK_INT <= 22) {
+										takePictureIntent.setClipData(ClipData.newRawUri("", mImageUri));
+									}
+									takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+								} else {
+									mImageUri = Uri.fromFile(imageFile);
+								}
 								takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
 							} catch (NullPointerException e) {
 								e.printStackTrace();
@@ -304,9 +308,12 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
 			Cursor cursor = this.getContentResolver().query(imgUri, projection, null, null, null);
 			if (cursor != null) {
 				if (cursor.getColumnCount() > 0 && cursor.moveToFirst()) {
-					photoRotation = cursor.getInt(cursor.getColumnIndex(projection[0]));
-					hasRotation = photoRotation != 0;
-					Log.d(TAG, "Cursor orientation: " + photoRotation);
+					int columnIndex = cursor.getColumnIndex(projection[0]);
+					if (columnIndex > -1) {
+						photoRotation = cursor.getInt(columnIndex);
+						hasRotation = photoRotation != 0;
+						Log.d(TAG, "Cursor orientation: " + photoRotation);
+					}
 				}
 				cursor.close();
 			}
@@ -407,7 +414,7 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
 			//finish();
 
 			File file;
-			if (Build.VERSION.SDK_INT >= 8 && FileUtil.isAvailableExternalSDMemory()) {
+			if (FileUtil.isAvailableExternalSDMemory()) {
 				file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), FILENAME);
 			} else if (FileUtil.isAvailableInternalMemory()) {
 				file = new File(getFilesDir(), FILENAME);
@@ -483,7 +490,7 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
 	}
 
     public static File getTempFile(Context context) {
-		if (Build.VERSION.SDK_INT >= 8 && FileUtil.isAvailableExternalSDMemory()) {
+		if (FileUtil.isAvailableExternalSDMemory()) {
 			return new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), FILENAME);
 		} else if (FileUtil.isAvailableInternalMemory()) {
 			return new File(context.getFilesDir(), FILENAME);
@@ -537,23 +544,23 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
     //    return Bitmap.createBitmap(src, 0, 0, src_width, src_height, matrix, true);
     //}
 
-    public static float getFitScale(int dest_width, int dest_height, int src_width, int src_height) {
-        if (dest_width < dest_height) {
-            if (src_width >= src_height) {
-                return ((float) dest_width) / ((float) src_width);
-            }
-            float ret = ((float) dest_height) / ((float) src_height);
-            return ((float) src_width) * ret > ((float) dest_width) ? ((float) dest_width) / ((float) src_width) : ret;
-        } else if (src_width < src_height) {
-            return ((float) dest_height) / ((float) src_height);
-        } else {
-            float ret2 = ((float) dest_width) / ((float) src_width);
-            if (((float) src_height) * ret2 > ((float) dest_height)) {
-                return ((float) dest_height) / ((float) src_height);
-            }
-            return ret2;
-        }
-    }
+    //public static float getFitScale(int dest_width, int dest_height, int src_width, int src_height) {
+    //    if (dest_width < dest_height) {
+    //        if (src_width >= src_height) {
+    //            return ((float) dest_width) / ((float) src_width);
+    //        }
+    //        float ret = ((float) dest_height) / ((float) src_height);
+    //        return ((float) src_width) * ret > ((float) dest_width) ? ((float) dest_width) / ((float) src_width) : ret;
+    //    } else if (src_width < src_height) {
+    //        return ((float) dest_height) / ((float) src_height);
+    //    } else {
+    //        float ret2 = ((float) dest_width) / ((float) src_width);
+    //        if (((float) src_height) * ret2 > ((float) dest_height)) {
+    //            return ((float) dest_height) / ((float) src_height);
+    //        }
+    //        return ret2;
+    //    }
+    //}
 
     //private static final void createDirectory(File storageDirectory) {
     //    if (!storageDirectory.exists()) {

@@ -40,7 +40,7 @@ class Password: Parcelable {
 		for (b in rawHashedPassword) {
 			sb.append(String.format("%02X", b))
 		}
-		this.hashedPassword = sb.toString()
+		this.hashedPassword = sb.toString().uppercase()
 	}
 
 	constructor(parcel: Parcel) {

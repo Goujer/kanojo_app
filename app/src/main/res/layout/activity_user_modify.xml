@@ -1,42 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:EditItemView="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	xmlns:EditItemView="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".activity.setting.UserModifyActivity">
     <LinearLayout android:orientation="vertical" android:background="@color/edit_bg" android:layout_width="match_parent" android:layout_height="match_parent">
         <RelativeLayout android:background="@drawable/common_title_bg" android:layout_width="match_parent" android:layout_height="@dimen/common_title_height">
             <ImageView android:layout_width="wrap_content" android:layout_height="@dimen/common_title_logo_height" android:src="@drawable/common_logo" android:scaleType="fitCenter" android:adjustViewBounds="true" android:layout_centerInParent="true" />
-            <Button android:id="@+id/kanojo_user_modify_close" android:text="@string/common_edit_close" android:layout_alignParentStart="true" style="@style/btn_navi"
+            <Button android:id="@+id/user_modify_close" android:text="@string/common_edit_close" android:layout_alignParentStart="true" style="@style/btn_navi"
 				android:layout_alignParentLeft="true" />
+			<Button
+				android:id="@+id/user_modify_logout"
+				style="@style/btn_navi"
+				android:layout_alignParentEnd="true"
+				android:layout_alignParentRight="true"
+				android:text="@string/common_logout" />
         </RelativeLayout>
         <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
             <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/edit_bg" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="wrap_content">
-                <TextView
-					android:id="@+id/kanojo_user_account_mode_text"
+				<TextView
+					android:id="@+id/user_account_mode_text"
 					style="@style/txt_notice_input"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_gravity="start"
 					android:layout_marginTop="@dimen/row_kanojo_edit_separator_height"
 					android:text="@string/edit_account_title" />
-                <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_user_modify_name" android:background="@drawable/row_kanojo_edit_bg_top" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/user_account_name" EditItemView:textColor="@color/editable_color" EditItemView:hoverText="@string/blank_name_L012"/>
-                <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_user_modify_gender" android:background="@drawable/row_kanojo_edit_bg_middle" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/user_account_gender" EditItemView:textColor="@color/editable_color" EditItemView:arrowDrawable="@drawable/arrow_setting"/>
-                <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_user_modify_birthday" android:background="@drawable/row_kanojo_edit_bg_middle" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/user_account_birthday" EditItemView:textColor="@color/editable_color" EditItemView:arrowDrawable="@drawable/arrow_setting"/>
-                <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_user_modify_icon" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/user_account_icon" EditItemView:textColor="@color/editable_color" EditItemView:arrowDrawable="@drawable/arrow_setting"/>
-                <TextView
-					android:id="@+id/kanojo_user_account_device_text"
-					style="@style/txt_notice_input"
+				<jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+					android:id="@+id/user_modify_name"
 					android:layout_width="match_parent"
+					android:layout_height="@dimen/row_kanojo_edit_txt_height"
+					android:layout_marginTop="@dimen/row_kanojo_edit_separator_height"
+					android:background="@drawable/row_kanojo_edit_bg_top"
+					EditItemView:hoverText="@string/blank_name_L012"
+					EditItemView:key="@string/user_account_name"
+					EditItemView:textColor="@color/editable_color" />
+				<jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+					android:id="@+id/user_modify_birthday"
+					android:layout_width="match_parent"
+					android:layout_height="@dimen/row_kanojo_edit_txt_height"
+					android:background="@drawable/row_kanojo_edit_bg_middle"
+					EditItemView:arrowDrawable="@drawable/arrow_setting"
+					EditItemView:key="@string/user_account_birthday"
+					EditItemView:textColor="@color/editable_color" />
+				<jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+					android:id="@+id/user_modify_icon"
+					android:layout_width="match_parent"
+					android:layout_height="@dimen/row_kanojo_edit_txt_height"
+					android:background="@drawable/row_kanojo_edit_bg_middle"
+					EditItemView:arrowDrawable="@drawable/arrow_setting"
+					EditItemView:key="@string/user_account_icon"
+					EditItemView:textColor="@color/editable_color"/>
+				<jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+					android:id="@+id/user_modify_email"
+					android:layout_width="match_parent"
+					android:layout_height="@dimen/row_kanojo_edit_txt_height"
+					android:background="@drawable/row_kanojo_edit_bg_bottom"
+					EditItemView:key="@string/user_account_email"
+					EditItemView:textColor="@color/editable_color"/>
+				<TextView
+					style="@style/txt_notice_input"
+					android:text="@string/password_change_title"
+					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_gravity="start"
+					android:layout_marginTop="@dimen/row_kanojo_edit_separator_height"/>
+				<jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+					android:id="@+id/password_change_current"
+					android:layout_width="match_parent"
+					android:layout_height="@dimen/row_kanojo_edit_txt_height"
 					android:layout_marginTop="@dimen/row_kanojo_edit_separator_height"
-					android:text="@string/edit_account_device_title" />
-                <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_user_modify_email" android:background="@drawable/row_kanojo_edit_bg_top" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/user_account_email" EditItemView:textColor="@color/editable_color"/>
-                <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_user_modify_password" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/user_account_password" EditItemView:textColor="@color/editable_color" EditItemView:arrowDrawable="@drawable/arrow_setting"/>
-                <LinearLayout android:orientation="vertical" android:id="@+id/kanojo_user_account_device_layout" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+					android:background="@drawable/row_kanojo_edit_bg_top"
+					EditItemView:key="@string/password_change_current"
+					EditItemView:textColor="@color/editable_color"/>
+				<jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+					android:id="@+id/password_change_new"
+					android:layout_width="match_parent"
+					android:layout_height="@dimen/row_kanojo_edit_txt_height"
+					android:background="@drawable/row_kanojo_edit_bg_middle"
+					EditItemView:key="@string/password_change_password"
+					EditItemView:textColor="@color/editable_color"/>
+				<jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+					android:id="@+id/password_change_re_new"
+					android:layout_width="match_parent"
+					android:layout_height="@dimen/row_kanojo_edit_txt_height"
+					android:background="@drawable/row_kanojo_edit_bg_bottom"
+					EditItemView:key="@string/password_change_re_password"
+					EditItemView:textColor="@color/editable_color"/>
                 <Button
-					android:id="@+id/kanojo_user_update_btn"
+					android:id="@+id/user_update_btn"
 					style="@style/btn_default"
 					android:layout_marginTop="@dimen/row_kanojo_edit_separator_height"
-					android:text="@string/edit_account_update_btn"/>
-                <Button android:id="@+id/kanojo_user_delete_btn" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" android:layout_marginBottom="@dimen/row_kanojo_edit_separator_height" android:text="@string/edit_account_delete_btn" style="@style/btn_default"/>
+					android:text="@string/edit_account_update_btn"
+	                android:enabled="false"/>
+                <Button android:id="@+id/user_delete_btn" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" android:layout_marginBottom="@dimen/row_kanojo_edit_separator_height" android:text="@string/edit_account_delete_btn" style="@style/btn_default"/>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

@@ -67,7 +67,7 @@ public class CustomWebViewActivity extends BaseKanojosActivity implements View.O
 
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            CustomWebViewActivity.this.showProgressDialog();
+            showProgressDialog();
         }
 
         public void onPageFinished(WebView view, String url) {
@@ -94,12 +94,11 @@ public class CustomWebViewActivity extends BaseKanojosActivity implements View.O
         return super.onKeyDown(keyCode, event);
     }
 
-    public ProgressDialog showProgressDialog() {
+    public void showProgressDialog() {
         if (this.mProgressBar != null) {
             this.mProgressBar.setVisibility(View.VISIBLE);
         }
         this.mProgressBar.setTag("show");
-        return this.mProgressDialog;
     }
 
     protected void dismissProgressDialog() {

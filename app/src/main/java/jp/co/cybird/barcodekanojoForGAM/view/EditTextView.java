@@ -48,7 +48,7 @@ public class EditTextView extends LinearLayout {
     }
 
     public boolean isEmpty() {
-        if (this.mTextView == null || this.mTextView.getText() == null || this.mTextView.getText().equals("")) {
+        if (this.mTextView == null || this.mTextView.getText() == null || this.mTextView.getText().length() == 0) {
             return true;
         }
         return false;

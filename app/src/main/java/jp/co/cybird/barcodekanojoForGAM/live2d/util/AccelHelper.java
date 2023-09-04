@@ -46,7 +46,7 @@ public class AccelHelper {
 
 		@Override
         public void onSensorChanged(SensorEvent e) {
-            if (e.sensor.getType() == 1 && listener != null) {
+            if (e.sensor.getType() == Sensor.TYPE_ACCELEROMETER && listener != null) {
                 listener.accelUpdated((-e.values[0]) / 9.80665f, (-e.values[1]) / 9.80665f, (-e.values[2]) / 9.80665f);
             }
         }

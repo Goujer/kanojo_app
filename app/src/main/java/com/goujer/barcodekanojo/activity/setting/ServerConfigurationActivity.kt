@@ -70,6 +70,7 @@ class ServerConfigurationActivity : Activity(), View.OnClickListener {
 		dialog.show()
 	}
 
+	@Deprecated("Deprecated in Java")
 	override fun onBackPressed() {
 		saveData()
 		super.onBackPressed()

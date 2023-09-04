@@ -143,12 +143,11 @@ public class WebViewTabActivity extends BaseKanojosActivity implements View.OnCl
     }
 
     @Override
-    public ProgressDialog showProgressDialog() {
+    public void showProgressDialog() {
         if (this.mProgressBar != null) {
             this.mProgressBar.setVisibility(View.VISIBLE);
         }
         this.mProgressBar.setTag("show");
-        return this.mProgressDialog;
     }
 
     @Override

@@ -53,18 +53,14 @@ public class DialogTextView extends RelativeLayout {
     public void initDialogMessage(String message, final String url, String btntext) {
         this.mTextView.setText(message);
         this.mSiteButton.setText(btntext);
-        this.mSiteButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (DialogTextView.this.listener != null) {
-                    DialogTextView.this.listener.onSiteClick(url);
-                }
+        this.mSiteButton.setOnClickListener(v -> {
+            if (DialogTextView.this.listener != null) {
+                DialogTextView.this.listener.onSiteClick(url);
             }
         });
-        this.mCloseButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (DialogTextView.this.listener != null) {
-                    DialogTextView.this.listener.OnCloseClick();
-                }
+        this.mCloseButton.setOnClickListener(v -> {
+            if (DialogTextView.this.listener != null) {
+                DialogTextView.this.listener.OnCloseClick();
             }
         });
     }

@@ -1,6 +1,5 @@
 package com.goujer.barcodekanojo.core.http
 
-import android.util.Log
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
@@ -8,7 +7,10 @@ import jp.co.cybird.barcodekanojoForGAM.core.parser.AbstractJSONParser
 import jp.co.cybird.barcodekanojoForGAM.core.parser.JSONParser
 import com.goujer.barcodekanojo.core.cache.ImageDiskCache
 import java.io.DataOutputStream
-import java.net.*
+import java.net.CookieHandler
+import java.net.CookieManager
+import java.net.HttpURLConnection
+import java.net.URL
 
 class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBasePort: Int?, clientVersion: String?, clientLanguage: String?) {
 	internal var mApiBaseProtocol: String = if (useHttps) "https" else "http"
@@ -29,13 +31,12 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 	}
 
 	//TODO Copied and modified from core.http.HttpApi.executeHttpRequest() which JADX did not decompile correctly.
-	fun executeHttpRequest(connection: HttpURLConnection, parser: JSONParser<out BarcodeKanojoModel?>): Response<BarcodeKanojoModel?>? {
+	fun executeHttpRequest(connection: HttpURLConnection, parser: JSONParser<out BarcodeKanojoModel?>): Response<BarcodeKanojoModel?> {
 		connection.connect()
-		val statusCode = connection.responseCode
-		when (statusCode) {
+		when (val statusCode = connection.responseCode) {
 			HttpURLConnection.HTTP_OK -> {
 				try {
-					return parser.parse(AbstractJSONParser.createJSONObject(connection.inputStream)) as Response<BarcodeKanojoModel?>?
+					return parser.parse(AbstractJSONParser.createJSONObject(connection.inputStream)) as Response<BarcodeKanojoModel?>
 				} finally {
 					connection.disconnect()
 				}

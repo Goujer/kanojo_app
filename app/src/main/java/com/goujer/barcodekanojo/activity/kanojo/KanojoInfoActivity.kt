@@ -243,10 +243,12 @@ class KanojoInfoActivity : BaseActivity(), View.OnClickListener, MoreBtnView.OnM
 
 	internal inner class KanojoInfoTask : AsyncTask<Void?, Void?, Response<*>?>() {
 		private var mReason: Exception? = null
+		@Deprecated("Deprecated in Java")
 		public override fun onPreExecute() {
 			mFooter!!.setLoading(true)
 		}
 
+		@Deprecated("Deprecated in Java")
 		override fun doInBackground(vararg params: Void?): Response<*>? {
 			return try {
 				process()
@@ -256,6 +258,7 @@ class KanojoInfoActivity : BaseActivity(), View.OnClickListener, MoreBtnView.OnM
 			}
 		}
 
+		@Deprecated("Deprecated in Java")
 		public override fun onPostExecute(response: Response<*>?) {
 			try {
 				when (this@KanojoInfoActivity.getCodeAndShowAlert(response, mReason)) {
@@ -287,6 +290,7 @@ class KanojoInfoActivity : BaseActivity(), View.OnClickListener, MoreBtnView.OnM
 			}
 		}
 
+		@Deprecated("Deprecated in Java")
 		override fun onCancelled() {
 			mFooter!!.setLoading(false)
 		}

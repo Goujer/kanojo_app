@@ -53,7 +53,7 @@ import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.WebViewTabActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
-import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
+import com.goujer.barcodekanojo.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoItem;
@@ -74,8 +74,11 @@ import jp.co.cybird.barcodekanojoForGAM.view.DialogTextView;
 
 @SuppressLint({"SetJavaScriptEnabled", "NewApi"})
 public class KanojoRoomActivity extends BaseActivity implements View.OnClickListener, Observer {
+	private static final String TAG = "KanojoRoomActivity";
 
-    private static final String TAG = "KanojoRoomActivity";
+	private RadarChart radarView;
+	private CustomLoadingView loadingView;
+
     private Button btnClose;
     private Button btnDate;
     private ImageButton btnInfo;
@@ -87,7 +90,6 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     private int dWidth;
     private RelativeLayout dialoglayout;
     private ImageView dropImage;
-    private String extraWebViewURL;
     private ImageView imageView01;
     private ImageView imageView02;
     private ImageView imageView03;
@@ -113,21 +115,24 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     private MessageModel mMessage;
     private Product mProduct;
     private Runnable mProgressThread = () -> {
-		if (KanojoRoomActivity.this.getLive2D().isModelAvailable()) {
-			KanojoRoomActivity.this.dismissProgressDialog();
-			KanojoRoomActivity.this.mHandler.removeCallbacks(KanojoRoomActivity.this.mProgressThread);
+		if (getLive2D().isModelAvailable()) {
+			dismissProgressDialog();
+			mHandler.removeCallbacks(KanojoRoomActivity.this.mProgressThread);
 			return;
 		}
-		KanojoRoomActivity.this.mHandler.postDelayed(KanojoRoomActivity.this.mProgressThread, 100);
+		mHandler.postDelayed(KanojoRoomActivity.this.mProgressThread, 100);
 	};
     private LinearLayout mStatusLayout;
     private Timer mTimerCallAPI;
-    private User mUser;
     private LinearLayout statusBarLayout;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kanojo_room);
+
+		radarView = findViewById(R.id.radar_view);
+		loadingView = findViewById(R.id.loadingView);
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         this.dWidth = displayMetrics.widthPixels;
@@ -403,7 +408,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 		//radarData.setLabels("Flirtable", "Sexual", "Possession", "Recognition", "Consumption");
 		radarData.setHighlightEnabled(false);
 
-		RadarChart radarView = findViewById(R.id.radar_view);
+		RadarChart radarView = this.radarView;
 
 		radarView.setRotationEnabled(false);
 
@@ -438,7 +443,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 			close();
 			return;
 		} else if (id == R.id.kanojo_room_info) {
-			findViewById(R.id.radar_view).setVisibility(View.GONE);
+			radarView.setVisibility(View.GONE);
 			Intent intent = new Intent(this, KanojoInfoActivity.class);
 			if (this.mKanojo != null) {
 				intent.putExtra(BaseInterface.EXTRA_KANOJO, this.mKanojo);
@@ -456,43 +461,43 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 			bindEvent();
 			return;
 		} else if (id == R.id.kanojo_room_items_btn) {
-			findViewById(R.id.radar_view).setVisibility(View.GONE);
+			radarView.setVisibility(View.GONE);
 			Intent intent2 = new Intent(this, KanojoItemsActivity.class);
 			if (this.mKanojo != null) {
 				intent2.putExtra(BaseInterface.EXTRA_KANOJO, this.mKanojo);
 			}
-			intent2.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, 2);
+			intent2.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, KanojoItemsActivity.MODE_GIFT);
 			startActivityForResult(intent2, BaseInterface.REQUEST_KANOJO_ITEMS);
 			return;
 		} else if (id == R.id.kanojo_room_date_btn) {
-			findViewById(R.id.radar_view).setVisibility(View.GONE);
+			radarView.setVisibility(View.GONE);
 			Intent intent3 = new Intent(this, KanojoItemsActivity.class);
 			if (this.mKanojo != null) {
 				intent3.putExtra(BaseInterface.EXTRA_KANOJO, this.mKanojo);
 			}
-			intent3.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, 1);
+			intent3.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, KanojoItemsActivity.MODE_DATE);
 			startActivityForResult(intent3, BaseInterface.REQUEST_KANOJO_ITEMS);
 			return;
 		} else if (id == R.id.kanojo_room_ticket_btn) {
-			findViewById(R.id.radar_view).setVisibility(View.GONE);
+			radarView.setVisibility(View.GONE);
 			Intent intent4 = new Intent(this, KanojoItemsActivity.class);
 			if (this.mKanojo != null) {
 				intent4.putExtra(BaseInterface.EXTRA_KANOJO, this.mKanojo);
 			}
-			KanojoItem item = new KanojoItem(3);
+			KanojoItem item = new KanojoItem(KanojoItem.GIFT_ITEM_CLASS);
 			item.setTitle(getResources().getString(R.string.kanojo_items_store));
 			intent4.putExtra(BaseInterface.EXTRA_KANOJO_ITEM, item);
-			intent4.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, 3);
+			intent4.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, KanojoItemsActivity.MODE_TICKET);
 			startActivityForResult(intent4, BaseInterface.REQUEST_KANOJO_TICKETS);
 			return;
 		} else if (id == R.id.kanojo_room_status_bar_layout || id == R.id.dropdown_img) {
 			if (this.mStatusLayout.getVisibility() == View.VISIBLE) {
-				findViewById(R.id.radar_view).setVisibility(View.GONE);
+				radarView.setVisibility(View.GONE);
 				this.mStatusLayout.setVisibility(View.GONE);
 				this.btnStatusArrow.setImageResource(R.drawable.kanojolovebararrowdown);
 			} else {
 				this.mStatusLayout.setVisibility(View.VISIBLE);
-				findViewById(R.id.radar_view).setVisibility(View.VISIBLE);
+				radarView.setVisibility(View.VISIBLE);
 				this.btnStatusArrow.setImageResource(R.drawable.kanojolovebararrowup);
 				radarChartUpdate();
 			}
@@ -695,11 +700,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     }
 
     public void update(Observable observable, Object data) {
-        this.mHandler.post(new Runnable() {
-            public void run() {
-                KanojoRoomActivity.this.settingLive2D();
-            }
-        });
+        this.mHandler.post(KanojoRoomActivity.this::settingLive2D);
     }
 
     private void executeKanojoShowDialogTask() {
@@ -762,27 +763,24 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode != KeyEvent.KEYCODE_BACK || !((CustomLoadingView) findViewById(R.id.loadingView)).isShow()) {
+        if (keyCode != KeyEvent.KEYCODE_BACK || !loadingView.isShow()) {
             return super.onKeyDown(keyCode, event);
         }
-		((CustomLoadingView) findViewById(R.id.loadingView)).setMessage(getString(R.string.requesting_cant_cancel));
+		loadingView.setMessage(getString(R.string.requesting_cant_cancel));
         return true;
     }
 
     @Override
-    public ProgressDialog showProgressDialog() {
-		((CustomLoadingView) findViewById(R.id.loadingView)).show();
-        return new ProgressDialog(this);
+    public void showProgressDialog() {
+		loadingView.show();
     }
 
     @Override
     protected void dismissProgressDialog() {
-		((CustomLoadingView) findViewById(R.id.loadingView)).dismiss();
+		loadingView.dismiss();
     }
 
     class MyJavaScriptInterface {
-        MyJavaScriptInterface() {
-        }
 
         @JavascriptInterface
         public void getValue(String wordCount) {
@@ -799,7 +797,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 
             protected String doInBackground(String... params) {
                 try {
-                    Thread.sleep(Integer.parseInt(params[0]) * 5000);
+                    Thread.sleep(Integer.parseInt(params[0]) * 5000L);
                     return null;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -808,12 +806,12 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
             }
 
             protected void onPostExecute(String result) {
-                if (KanojoRoomActivity.this.mKanojo.getRelation_status() == Kanojo.RELATION_KANOJO) {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) KanojoRoomActivity.this.btnItems.getLayoutParams();
+                if (mKanojo.getRelation_status() == Kanojo.RELATION_KANOJO) {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) btnItems.getLayoutParams();
                     params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-                    KanojoRoomActivity.this.btnItems.setLayoutParams(params);
+                    btnItems.setLayoutParams(params);
                 }
-                KanojoRoomActivity.this.kanojoMessage.setVisibility(View.GONE);
+                kanojoMessage.setVisibility(View.GONE);
             }
         }
     }

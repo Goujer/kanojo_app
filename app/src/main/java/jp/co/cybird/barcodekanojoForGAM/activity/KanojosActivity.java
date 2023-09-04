@@ -37,7 +37,7 @@ import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseKanojosActivity;
 import com.goujer.barcodekanojo.adapter.KanojoAdapter;
 import jp.co.cybird.barcodekanojoForGAM.adapter.base.SeparatedListHeaderAdapter;
-import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
+import com.goujer.barcodekanojo.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import com.goujer.barcodekanojo.core.model.Kanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList;
@@ -314,7 +314,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         list.more.setOnMoreClickListener(id, this);
         list.displayed = 0;
         list.adapter = new KanojoAdapter(getApplicationContext(), this.mDic);
-        list.adapter.setKanojosModelList(new ModelList());
+        list.adapter.setKanojosModelList(new ModelList<>());
         list.adapter.setOnKanojoClickListener(this);
         list.key = key;
         this.mAdapter.addSection(key, headerView, list.adapter, list.more);
@@ -402,7 +402,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 
     private Queue<StatusHolder> getQueue() {
         if (this.mTaskQueue == null) {
-            this.mTaskQueue = new LinkedList();
+            this.mTaskQueue = new LinkedList<>();
         }
         return this.mTaskQueue;
     }
@@ -476,7 +476,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
             SearchResult res;
             try {
                 switch (response.getCode()) {
-                    case 200:
+					case Response.CODE_SUCCESS:
                         if (this.mList != null) {
                             if (KanojosActivity.this.isSearch && (res = (SearchResult) response.get(SearchResult.class)) != null) {
                                 if (this.mList.txtNumber != null) {
@@ -568,9 +568,10 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
     }
 
     static class StatusHolder {
+	    public static final int YOUR_KANOJOS = 0;
         public static final int FRIENDS = 1;
         public static final int RANKING = 2;
-        public static final int YOUR_KANOJOS = 0;
+
         int MAX = 100;
         KanojoAdapter adapter;
         int displayed = 0;
@@ -581,8 +582,6 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         MoreBtnView more;
         TextView txtNumber;
         int what;
-
-
     }
 
     protected void executeLogInTask() {
@@ -598,11 +597,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 
         @Override
         public void onPreExecute() {
-            ProgressDialog unused = KanojosActivity.this.showProgressDialog(new DialogInterface.OnCancelListener() {
-                public void onCancel(DialogInterface dialog) {
-                    KanojosActivity.this.backTab(KanojosActivity.this, DashboardActivity.class);
-                }
-            });
+            showProgressDialog(dialog -> KanojosActivity.this.backTab(KanojosActivity.this, DashboardActivity.class));
         }
 
         @Override
@@ -628,7 +623,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
                 }
             } else {
                 switch (response.getCode()) {
-                    case 200:
+					case Response.CODE_SUCCESS:
                         KanojosActivity.this.updateProfileView();
                         KanojosActivity.this.executeListTask(true);
                         break;

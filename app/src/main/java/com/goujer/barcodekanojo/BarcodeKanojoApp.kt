@@ -4,18 +4,18 @@ import android.app.Application
 import android.content.Intent
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
+import android.support.annotation.RequiresApi
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache
 import com.goujer.barcodekanojo.core.model.User
 import com.goujer.barcodekanojo.preferences.ApplicationSetting
 import jp.co.cybird.barcodekanojoForGAM.Defs
 import jp.co.cybird.barcodekanojoForGAM.billing.util.PurchaseApi
-import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo
+import com.goujer.barcodekanojo.core.BarcodeKanojo
 import jp.co.cybird.barcodekanojoForGAM.core.location.BestLocationListener
 
 class BarcodeKanojoApp : Application() {
 	lateinit var barcodeKanojo: BarcodeKanojo
-		private set
-	lateinit var settings: ApplicationSetting
 		private set
 	lateinit var imageCache: DynamicImageCache
 		private set
@@ -26,12 +26,13 @@ class BarcodeKanojoApp : Application() {
 
 	override fun onCreate() {
 		super.onCreate()
-		barcodeKanojo = BarcodeKanojo()
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
+			System.setProperty("http.keepAlive", "false")
+		}
+		barcodeKanojo = BarcodeKanojo(this)
 		barcodeKanojo.user = User()
 		mPurchaseApi = PurchaseApi(applicationContext)
 		mUserGenderList = resources.getStringArray(R.array.user_account_gender_list)
-		settings = ApplicationSetting(this)
-		barcodeKanojo.createHttpApi(settings.getServerHttps(), settings.getServerURL(), settings.getServerPort(), Defs.USER_AGENT(), Defs.USER_LANGUAGE())
 		imageCache = DynamicImageCache((Runtime.getRuntime().maxMemory() / 1024L).toInt() / 6, baseContext)
 	}
 
@@ -54,17 +55,17 @@ class BarcodeKanojoApp : Application() {
 	}
 
 	fun changeLocate() {
-		barcodeKanojo = BarcodeKanojo()
+		barcodeKanojo = BarcodeKanojo(this)
 		mUserGenderList = resources.getStringArray(R.array.user_account_gender_list)
 	}
 
 	val uDID: String
 		get() = "au_barcodekanojo"
 
-	val uUID: String?
-		get() = settings.getUUID()
+	val settings: ApplicationSetting
+		get() = barcodeKanojo.settings
 
-	val user: User
+	val user: User?
 		get() = barcodeKanojo.user
 
 	fun logged_out() {
@@ -129,6 +130,6 @@ class BarcodeKanojoApp : Application() {
 		const val INTENT_ACTION_FULL_STORAGE = "jp.co.cybird.barcodekanojoForGAM.intent.action.FULL_STORAGE"
 		const val INTENT_ACTION_LOGGED_OUT = "jp.co.cybird.barcodekanojoForGAM.intent.action.LOGGED_OUT"
 		const val PACKAGE_NAME = "jp.co.cybird.barcodekanojoForGAM"
-		private const val TAG = "BarcodeKanojo"
+		private const val TAG = "BarcodeKanojoApp"
 	}
 }

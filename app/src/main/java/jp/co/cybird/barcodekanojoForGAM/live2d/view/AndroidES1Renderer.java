@@ -1,7 +1,12 @@
 package jp.co.cybird.barcodekanojoForGAM.live2d.view;
 
 import android.opengl.GLSurfaceView;
+import android.os.Build;
+
 import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import jp.co.cybird.barcodekanojoForGAM.live2d.KanojoLive2D;
@@ -14,8 +19,8 @@ import jp.live2d.type.LDRectF;
 import jp.live2d.util.UtSystem;
 
 public class AndroidES1Renderer implements GLSurfaceView.Renderer {
-    static final int BASE_MODEL_CANVAS_W = 1280;
-    static final int DEFAULT_VISIBLE_HEIGHT = 1200;
+    static final float BASE_MODEL_CANVAS_W = 1280.0f;
+    static final float DEFAULT_VISIBLE_HEIGHT = 1200.0f;
     static final int DEFAULT_VISIBLE_OFFSET_Y = 0;
     static final int RENDER_SETUP_INTERVAL = 60;
     private static float acceleration_x = 0.0f;
@@ -68,10 +73,10 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
         return this.kanojoLive2D.getAnimation();
     }
 
-    public void setCurAccel(float a1, float a2, float a3) {
-        dst_acceleration_x = a1;
-        dst_acceleration_y = a2;
-        dst_acceleration_z = a3;
+    public void setCurAccel(float aX, float aY, float aZ) {
+        dst_acceleration_x = aX;
+        dst_acceleration_y = aY;
+        dst_acceleration_z = aZ;
         lastMove = (lastMove * 0.7f) + (0.3f * (fabs(dst_acceleration_x - last_dst_acceleration_x) + fabs(dst_acceleration_y - last_dst_acceleration_y) + fabs(dst_acceleration_z - last_dst_acceleration_z)));
         last_dst_acceleration_x = dst_acceleration_x;
         last_dst_acceleration_y = dst_acceleration_y;
@@ -111,8 +116,9 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
         acceleration_y += dy;
         acceleration_z += dz;
         long time = UtSystem.getTimeMSec();
+		long diff = time - lastTimeMSec;
         lastTimeMSec = time;
-        float scale = ((0.2f * ((float) (time - lastTimeMSec))) * 60.0f) / 1000.0f;
+        float scale = ((0.2f * ((float) (diff))) * 60.0f) / 1000.0f;
         if (scale > 0.5f) {
             scale = 0.5f;
         }
@@ -129,11 +135,11 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
         if (this.logicalW > 0.0f && this.logicalH > 0.0f) {
             int i = this.renderCount;
             this.renderCount = i + 1;
-            if (i % 60 == 0) {
+            if (i % RENDER_SETUP_INTERVAL == 0) {
                 gl2.glViewport(0, 0, this.backingWidth, this.backingHeight);
                 gl2.glMatrixMode(5889);
                 gl2.glLoadIdentity();
-                float marginW = 0.5f * (1280.0f - this.logicalW);
+                float marginW = 0.5f * (BASE_MODEL_CANVAS_W - this.logicalW);
 				this.visibleRect.setRect((int) marginW, 0, (int) this.logicalW, (int) this.logicalH);
                 gl2.glOrthof(marginW, marginW + this.logicalW, 0.0f + this.logicalH, 0.0f, 0.5f, -0.5f);
                 gl2.glMatrixMode(5888);
@@ -146,14 +152,14 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
     }
 
 	private void renderMain(GL10 gl2) {
-        gl2.glEnable(3042);
-        gl2.glDisable(2929);
+        gl2.glEnable(GL10.GL_BLEND);
+        gl2.glDisable(GL10.GL_DEPTH_TEST);
         gl2.glBlendFunc(1, 771);
         gl2.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-        gl2.glDisable(2884);
+        gl2.glDisable(GL10.GL_CULL_FACE);
         gl2.glMatrixMode(5888);
         gl2.glLoadIdentity();
-        gl2.glEnable(3553);
+        gl2.glEnable(GL10.GL_TEXTURE_2D);
         gl2.glEnableClientState(32888);
         gl2.glEnableClientState(32884);
         if (this.backImageUpdated) {
@@ -162,7 +168,11 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
             }
             try {
                 if (this.backImageIsCache) {
-                    this.backImage2 = UtOpenGL.loadTexture(gl2, new FileInputStream(this.backImagePath), true);
+	                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+		                this.backImage2 = UtOpenGL.loadTexture(gl2, Files.newInputStream(Paths.get(this.backImagePath)), true);
+	                } else {
+		                this.backImage2 = UtOpenGL.loadTexture(gl2, new FileInputStream(this.backImagePath), true);
+	                }
                 } else {
                     this.backImage2 = UtOpenGL.loadTexture(gl2, this.view.getContext(), this.backImagePath, true);
                 }
@@ -198,10 +208,11 @@ public class AndroidES1Renderer implements GLSurfaceView.Renderer {
         }
     }
 
+	@Override
     public void onSurfaceChanged(GL10 gl2, int width, int height) {
         this.backingWidth = width;
         this.backingHeight = height;
-        this.logicalH = 1200.0f;
+        this.logicalH = DEFAULT_VISIBLE_HEIGHT;
         this.logicalW = (this.logicalH * ((float) this.backingWidth)) / ((float) this.backingHeight);
         this.renderCount = 0;
     }

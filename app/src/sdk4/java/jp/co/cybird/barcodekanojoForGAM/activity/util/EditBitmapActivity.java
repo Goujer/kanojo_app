@@ -14,13 +14,13 @@ import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -118,7 +118,7 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
             unregisterReceiver(this.mLoggedOutReceiver);
         } catch (Exception ignored) {
         }
-        ViewGroup root = (ViewGroup) getWindow().getDecorView().findViewById(R.id.common_top_menu_root);
+        ViewGroup root = getWindow().getDecorView().findViewById(R.id.common_top_menu_root);
         if (!(root == null || root.getChildCount() == 0)) {
             cleanupView(root.getChildAt(0));
         }
@@ -181,7 +181,15 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
 							try {
 								imageFile.getParentFile().mkdirs();
 								//imageFile.createNewFile();
-								mImageUri = Uri.fromFile(imageFile);
+								if (Build.VERSION.SDK_INT >= 16) {
+									mImageUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", imageFile);
+									if (Build.VERSION.SDK_INT <= 22) {
+										takePictureIntent.setClipData(ClipData.newRawUri("", mImageUri));
+									}
+									takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+								} else {
+									mImageUri = Uri.fromFile(imageFile);
+								}
 								takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
 							} catch (NullPointerException e) {
 								e.printStackTrace();
@@ -294,45 +302,23 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
 	}
 
 	public int getImageRotationDegrees(@NotNull Uri imgUri) {
-		int photoRotation = ExifInterface.ORIENTATION_UNDEFINED;
+		int photoRotation = 0;
 
-		try {
-			boolean hasRotation = false;
-			//If image comes from the gallery and is not in the folder DCIM (Scheme: content://)
-			String[] projection = {MediaStore.Images.ImageColumns.ORIENTATION};
-			Cursor cursor = this.getContentResolver().query(imgUri, projection, null, null, null);
-			if (cursor != null) {
-				if (cursor.getColumnCount() > 0 && cursor.moveToFirst()) {
-					photoRotation = cursor.getInt(cursor.getColumnIndex(projection[0]));
-					hasRotation = photoRotation != 0;
+		//If image comes from the gallery and is not in the folder DCIM (Scheme: content://)
+		String[] projection = {MediaStore.Images.ImageColumns.ORIENTATION};
+		Cursor cursor = this.getContentResolver().query(imgUri, projection, null, null, null);
+		if (cursor != null) {
+			if (cursor.getColumnCount() > 0 && cursor.moveToFirst()) {
+				int columnIndex = cursor.getColumnIndex(projection[0]);
+				if (columnIndex > -1) {
+					photoRotation = cursor.getInt(columnIndex);
 					Log.d(TAG, "Cursor orientation: " + photoRotation);
 				}
-				cursor.close();
 			}
-
-			//If image comes from the camera (Scheme: file://) or is from the folder DCIM (Scheme: content://)
-			if (!hasRotation) {
-				ExifInterface exif = new ExifInterface(getAbsolutePath(imgUri));
-				int exifRotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-				switch (exifRotation) {
-					case ExifInterface.ORIENTATION_ROTATE_90: {
-						photoRotation = 90;
-						break;
-					}
-					case ExifInterface.ORIENTATION_ROTATE_180: {
-						photoRotation = 180;
-						break;
-					}
-					case ExifInterface.ORIENTATION_ROTATE_270: {
-						photoRotation = 270;
-						break;
-					}
-				}
-				Log.d(TAG, "Exif orientation: "+ photoRotation);
-			}
-		} catch (IOException e) {
-			Log.e(TAG, "Error determining rotation for image"+ imgUri, e);
+			cursor.close();
 		}
+
+			//No EXIF stuff because sdk4 doesn't have ExifInterface
 		return photoRotation;
 	}
 
@@ -536,23 +522,23 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
     //    return Bitmap.createBitmap(src, 0, 0, src_width, src_height, matrix, true);
     //}
 
-    public static float getFitScale(int dest_width, int dest_height, int src_width, int src_height) {
-        if (dest_width < dest_height) {
-            if (src_width >= src_height) {
-                return ((float) dest_width) / ((float) src_width);
-            }
-            float ret = ((float) dest_height) / ((float) src_height);
-            return ((float) src_width) * ret > ((float) dest_width) ? ((float) dest_width) / ((float) src_width) : ret;
-        } else if (src_width < src_height) {
-            return ((float) dest_height) / ((float) src_height);
-        } else {
-            float ret2 = ((float) dest_width) / ((float) src_width);
-            if (((float) src_height) * ret2 > ((float) dest_height)) {
-                return ((float) dest_height) / ((float) src_height);
-            }
-            return ret2;
-        }
-    }
+    //public static float getFitScale(int dest_width, int dest_height, int src_width, int src_height) {
+    //    if (dest_width < dest_height) {
+    //        if (src_width >= src_height) {
+    //            return ((float) dest_width) / ((float) src_width);
+    //        }
+    //        float ret = ((float) dest_height) / ((float) src_height);
+    //        return ((float) src_width) * ret > ((float) dest_width) ? ((float) dest_width) / ((float) src_width) : ret;
+    //    } else if (src_width < src_height) {
+    //        return ((float) dest_height) / ((float) src_height);
+    //    } else {
+    //        float ret2 = ((float) dest_width) / ((float) src_width);
+    //        if (((float) src_height) * ret2 > ((float) dest_height)) {
+    //            return ((float) dest_height) / ((float) src_height);
+    //        }
+    //        return ret2;
+    //    }
+    //}
 
     //private static final void createDirectory(File storageDirectory) {
     //    if (!storageDirectory.exists()) {

@@ -1,5 +1,6 @@
 package com.google.zxing.client.android;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,7 +45,10 @@ public final class CaptureActivityHandler extends Handler {
 
     @Override
     public void handleMessage(Message message) {
-		if (message.what == R.id.decode_failed) {
+		if (message.what == R.id.restart_preview) {
+			Log.d(TAG, "Got restart preview message");
+			restartPreviewAndDecode();
+		} else if (message.what == R.id.decode_failed) {
 			this.state = State.PREVIEW;
 			this.cameraManager.requestPreviewFrame(this.decodeThread.getHandler(), R.id.decode);
 			return;
@@ -91,13 +95,9 @@ public final class CaptureActivityHandler extends Handler {
 				Log.w(TAG, "Can't find anything to handle VIEW of URI " + url);
 				return;
 			}
-		} else if (message.what == R.id.restart_preview) {
-			Log.d(TAG, "Got restart preview message");
-			restartPreviewAndDecode();
-			return;
 		} else if (message.what == R.id.return_scan_result) {
 			Log.d(TAG, "Got return scan result message");
-			this.activity.setResult(-1, (Intent) message.obj);
+			this.activity.setResult(Activity.RESULT_OK, (Intent) message.obj);
 			this.activity.finish();
 		}
     }

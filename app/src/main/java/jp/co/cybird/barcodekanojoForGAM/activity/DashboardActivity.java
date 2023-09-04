@@ -2,7 +2,6 @@ package jp.co.cybird.barcodekanojoForGAM.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -12,7 +11,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -21,7 +19,6 @@ import android.widget.Toolbar;
 
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache;
 
-import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
@@ -33,7 +30,7 @@ import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseKanojosActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.GreeBaseActivity;
 
 import com.goujer.barcodekanojo.adapter.DashboardAdapter;
-import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
+import com.goujer.barcodekanojo.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.ActivityModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
@@ -77,9 +74,9 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         this.mDic = ((BarcodeKanojoApp) getApplication()).getImageCache();
 		this.mProfileView = findViewById(R.id.common_profile);
         this.mListView = findViewById(R.id.list_activities);
-        this.mFooter = getLayoutInflater().inflate(R.layout.row_footer, (ViewGroup) null, false);
+        this.mFooter = getLayoutInflater().inflate(R.layout.row_footer, null, false);
         this.mHeader = new DashboardHeaderView(this);
-        this.mResourcesObserver = new RemoteResourceManagerObserver(this, (RemoteResourceManagerObserver) null);
+        this.mResourcesObserver = new RemoteResourceManagerObserver(this, null);
         this.mDashboardAdapter = new DashboardAdapter(this, this.mDic, this.mResourcesObserver);
         this.mDashboardAdapter.setOnKanojoClickListener(this);
         this.mListView.addHeaderView(this.mHeader);
@@ -89,7 +86,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
     }
 
     public View getClientView() {
-        View layout = getLayoutInflater().inflate(R.layout.activity_dashboard, (ViewGroup) null);
+        View layout = getLayoutInflater().inflate(R.layout.activity_dashboard, null);
         FrameLayout appLayoutRoot = new FrameLayout(this);
         appLayoutRoot.addView(layout);
         return appLayoutRoot;
@@ -142,7 +139,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == 4) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             finish();
             overridePendingTransition(0, 0);
         }
@@ -152,8 +149,8 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1050 && resultCode == 107) {
-            setResult(BaseInterface.RESULT_LOG_OUT, (Intent) null);
+        if (requestCode == BaseInterface.REQUEST_OPTION_ACTIVITY && resultCode == BaseInterface.RESULT_LOG_OUT) {
+            setResult(BaseInterface.RESULT_LOG_OUT, null);
             finish();
         } else if (resultCode == 213) {
             final Kanojo kanojo = new Kanojo();
@@ -263,7 +260,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         public Response<?> doInBackground(Integer... params) {
             boolean z = true;
             if (!(params == null || params.length == 0)) {
-                if (params[0] != 1) {
+                if (params[0] != PARAM_REFRESH) {
                     z = false;
                 }
                 this.refreshFlg = z;
@@ -283,7 +280,7 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         public void onPostExecute(Response<?> response) {
             try {
                 switch (DashboardActivity.this.getCodeAndShowDialog(response, this.mReason)) {
-                    case 200:
+					case Response.CODE_SUCCESS:
                         ModelList<ActivityModel> temp = response.getActivityModelList();
                         if (!this.refreshFlg) {
                             if (temp != null) {
@@ -351,18 +348,21 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
 
         @Override
         protected void onPreExecute() {
-            ProgressDialog unused = DashboardActivity.this.showProgressDialog(new DialogInterface.OnCancelListener() {
-                public void onCancel(DialogInterface dialog) {
-                    DashboardActivity.this.clearHistory();
-                    ((BarcodeKanojoApp) DashboardActivity.this.getApplication()).logged_out();
-                }
-            });
+            showProgressDialog(dialog -> {
+				DashboardActivity.this.clearHistory();
+				((BarcodeKanojoApp) DashboardActivity.this.getApplication()).logged_out();
+			});
         }
 
         @Override
         protected Response<?> doInBackground(Void... params) {
             try {
-                return login();
+				BarcodeKanojoApp barcodeKanojoApp = ((BarcodeKanojoApp) DashboardActivity.this.getApplication());
+				BarcodeKanojo barcodeKanojo = barcodeKanojoApp.getBarcodeKanojo();
+
+				Response<BarcodeKanojoModel> verification = barcodeKanojo.verify(barcodeKanojoApp.getSettings().getUUID(), barcodeKanojoApp.getSettings().getEmail(), barcodeKanojoApp.getSettings().getPassword());
+				barcodeKanojo.init_product_category_list();
+				return verification;
             } catch (Exception e) {
                 this.mReason = e;
                 return null;
@@ -381,12 +381,10 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
                     throw th;
                 }
             } else {
-                switch (response.getCode()) {
-                    case 200:
-                        DashboardActivity.this.updateProfileView();
-                        DashboardActivity.this.executeReadActivitiesTask();
-                        break;
-                }
+				if (response.getCode() == Response.CODE_SUCCESS) {
+					DashboardActivity.this.updateProfileView();
+					DashboardActivity.this.executeReadActivitiesTask();
+				}
                 DashboardActivity.this.dismissProgressDialog();
             }
         }
@@ -394,15 +392,6 @@ public class DashboardActivity extends BaseKanojosActivity implements View.OnCli
         @Override
         protected void onCancelled() {
             DashboardActivity.this.dismissProgressDialog();
-        }
-
-		Response<?> login() throws BarcodeKanojoException, IllegalStateException, IOException {
-            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) DashboardActivity.this.getApplication()).getBarcodeKanojo();
-            Log.d(DashboardActivity.TAG, "login() cannot be used !!!");
-            User user = barcodeKanojo.getUser();
-            Response<BarcodeKanojoModel> iphone_verify = barcodeKanojo.verify(user.getEmail(), user.getPassword(), ((BarcodeKanojoApp) DashboardActivity.this.getApplication()).getUUID());
-            barcodeKanojo.init_product_category_list();
-            return iphone_verify;
         }
     }
 

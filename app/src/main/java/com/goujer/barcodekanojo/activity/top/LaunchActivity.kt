@@ -5,6 +5,10 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.RelativeLayout
+import android.widget.TextView
 
 import com.goujer.barcodekanojo.activity.base.BaseActivity
 import com.goujer.barcodekanojo.activity.setting.ServerConfigurationActivity
@@ -15,11 +19,9 @@ import com.goujer.barcodekanojo.BarcodeKanojoApp
 import com.goujer.barcodekanojo.R
 import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface
-import jp.co.cybird.barcodekanojoForGAM.activity.top.LoginActivity
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
-import com.goujer.barcodekanojo.databinding.ActivityBootBinding
 
 import kotlinx.coroutines.*
 
@@ -28,20 +30,32 @@ import java.net.UnknownHostException
 import kotlin.random.Random
 
 class LaunchActivity : BaseActivity() {
-	private lateinit var settings: ApplicationSetting
+	private lateinit var launch_root: RelativeLayout
+	private lateinit var top_server_name: TextView
+	private lateinit var top_log_in: Button
+	private lateinit var top_sign_up: Button
+	private lateinit var top_config_server: Button
+	private lateinit var progressbar: ProgressBar
 
-	private lateinit var binding: ActivityBootBinding
+	private lateinit var settings: ApplicationSetting
 
 	private var scope = CoroutineScope(Dispatchers.IO) + CoroutineName(TAG)
 	private var loginJob: Job? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		binding = ActivityBootBinding.inflate(layoutInflater)
-		setContentView(binding.root)
-		settings = (application as BarcodeKanojoApp).settings
+		setContentView(R.layout.activity_boot)
+
+		launch_root = findViewById(R.id.launch_root)
+		top_server_name = findViewById(R.id.top_server_name)
+		top_log_in = findViewById(R.id.top_log_in)
+		top_sign_up = findViewById(R.id.top_sign_up)
+		top_config_server = findViewById(R.id.top_config_server)
+		progressbar = findViewById(R.id.progressbar)
+
+		settings = (application as BarcodeKanojoApp).barcodeKanojo.settings
 		if (Random.nextInt(0, 101) == 100) {
-			binding.root.setBackgroundResource(R.drawable.top_bg_blue)
+			launch_root.setBackgroundResource(R.drawable.top_bg_blue)
 		}
 	}
 
@@ -49,52 +63,54 @@ class LaunchActivity : BaseActivity() {
 		super.onStart()
 
 		//Set Button Listeners
-		binding.topLogIn.setOnClickListener {
+		top_log_in.setOnClickListener {
 			val logInIntent = Intent().setClass(this, LoginActivity::class.java)
 			logInIntent.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
 			startActivityForResult(logInIntent, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
 		}
-		binding.topSignUp.setOnClickListener {
+		top_sign_up.setOnClickListener {
 			val signUp = Intent().setClass(this, UserModifyActivity::class.java)
 			signUp.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
 			startActivity(signUp)
 		}
-		binding.topConfigServer.setOnClickListener {
+		top_config_server.setOnClickListener {
 			startActivity(Intent(this, ServerConfigurationActivity::class.java))
 		}
 
 		//Set visibilities
 		if (settings.getServerURL() == "") {
-			binding.progressbar.visibility = View.GONE
-			binding.topLogIn.visibility = View.INVISIBLE
-			binding.topSignUp.visibility = View.INVISIBLE
-			binding.topConfigServer.visibility = View.VISIBLE
+			progressbar.visibility = View.GONE
+			top_log_in.visibility = View.INVISIBLE
+			top_sign_up.visibility = View.INVISIBLE
+			top_config_server.visibility = View.VISIBLE
 		} else {
-			binding.progressbar.visibility = View.VISIBLE
-			binding.topLogIn.visibility = View.INVISIBLE
-			binding.topSignUp.visibility = View.INVISIBLE
-			binding.topConfigServer.visibility = View.INVISIBLE
+			progressbar.visibility = View.VISIBLE
+			top_log_in.visibility = View.INVISIBLE
+			top_sign_up.visibility = View.INVISIBLE
+			top_config_server.visibility = View.INVISIBLE
 			//Attempt log in / verify server
 			loginJob = scope.launch {
 				try {
 					if (verifyUser()) {
+						//Get Product Category List from Server
+						(application as BarcodeKanojoApp).barcodeKanojo.init_product_category_list()
 						finish()
 						withContext(Dispatchers.Main) {
 							startActivity(Intent().setClass(this@LaunchActivity, KanojosActivity::class.java))
 						}
 					} else {
 						withContext(Dispatchers.Main) {
-							binding.progressbar.visibility = View.GONE
-							binding.topLogIn.visibility = View.VISIBLE
-							binding.topSignUp.visibility = View.VISIBLE
-							binding.topConfigServer.visibility = View.VISIBLE
+							progressbar.visibility = View.GONE
+							top_log_in.visibility = View.VISIBLE
+							top_sign_up.visibility = View.VISIBLE
+							top_config_server.visibility = View.VISIBLE
 						}
 					}
 				} catch (e: SocketException) {
 					withContext(Dispatchers.Main) {
 						showNoticeDialog(e.message)
-						binding.progressbar.visibility = View.GONE
-						binding.topConfigServer.visibility = View.VISIBLE
+						progressbar.visibility = View.GONE
+						top_config_server.visibility = View.VISIBLE
 					}
 				}
 			}
@@ -103,7 +119,7 @@ class LaunchActivity : BaseActivity() {
 
 	override fun onResume() {
 		super.onResume()
-		binding.topServerName.text = settings.getServerURL()
+		top_server_name.text = settings.getServerURL()
 	}
 
 	override fun onStop() {
@@ -114,14 +130,14 @@ class LaunchActivity : BaseActivity() {
 		}
 
 		//Set Button Listeners
-		binding.topLogIn.setOnClickListener(null)
-		binding.topSignUp.setOnClickListener(null)
-		binding.topConfigServer.setOnClickListener(null)
+		top_log_in.setOnClickListener(null)
+		top_sign_up.setOnClickListener(null)
+		top_config_server.setOnClickListener(null)
 
-		binding.progressbar.visibility = View.VISIBLE
-		binding.topLogIn.visibility = View.INVISIBLE
-		binding.topSignUp.visibility = View.INVISIBLE
-		binding.topConfigServer.visibility = View.INVISIBLE
+		progressbar.visibility = View.VISIBLE
+		top_log_in.visibility = View.INVISIBLE
+		top_sign_up.visibility = View.INVISIBLE
+		top_config_server.visibility = View.INVISIBLE
 	}
 
 	override fun onDestroy() {
@@ -130,28 +146,28 @@ class LaunchActivity : BaseActivity() {
 		scope.cancel()
 	}
 
+	@Deprecated("Deprecated in Java")
 	override fun onBackPressed() {
 
 	}
 
 	private fun verifyUser(): Boolean {
-		val response: Response<BarcodeKanojoModel>
+		val response: Response<BarcodeKanojoModel?>
 		try {
 			response = bootTaskProcess()
 		} catch (e: BarcodeKanojoException) {
 			if (e.message.equals("user not found", ignoreCase = true)) {
 				runOnUiThread {
-					showNoticeDialog(getString(R.string.error_user_not_found));
+					showNoticeDialog(getString(R.string.error_user_not_found))
 				}
-				return false
 			} else {
 				Log.d(TAG, "Unknown error has occurred during verify")
 				runOnUiThread {
-					showNoticeDialog(e.localizedMessage);
+					showNoticeDialog(e.localizedMessage)
 				}
 				e.printStackTrace()
-				return false
 			}
+			return false
 		} catch (e: UnknownHostException) {
 			e.printStackTrace()
 			runOnUiThread {
@@ -167,12 +183,12 @@ class LaunchActivity : BaseActivity() {
 		}
 	}
 
-	private fun bootTaskProcess(): Response<BarcodeKanojoModel> {
-		val barcodeKanojo = (application as BarcodeKanojoApp).barcodeKanojo
-		val user = barcodeKanojo.user
-		val android_verify = barcodeKanojo.verify(user.email, user.password, (application as BarcodeKanojoApp).uUID)
-		barcodeKanojo.init_product_category_list()
-		return android_verify
+	private fun bootTaskProcess(): Response<BarcodeKanojoModel?> {
+		val barcodeKanojoApp = (application as BarcodeKanojoApp)
+		val barcodeKanojo = barcodeKanojoApp.barcodeKanojo
+
+		//Log User in
+		return barcodeKanojo.verify(barcodeKanojoApp.settings.getUUID(), "", null)
 	}
 
 	companion object {

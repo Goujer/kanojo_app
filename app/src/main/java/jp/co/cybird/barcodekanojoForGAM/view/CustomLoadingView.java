@@ -38,18 +38,18 @@ public class CustomLoadingView extends LinearLayout implements View.OnClickListe
 
     public void show() {
         this.mLoadingview.setVisibility(View.VISIBLE);
-        this.mLoadingview.setTag("show");
+        this.mLoadingview.setTag(SHOW_TAG);
     }
 
     public void dismiss() {
         this.mLoadingview.setVisibility(View.INVISIBLE);
         setStatus(this.mContext.getResources().getString(R.string.common_progress_dialog_message));
         setMessage("");
-        this.mLoadingview.setTag("hide");
+        this.mLoadingview.setTag(HIDE_TAG);
     }
 
     public boolean isShow() {
-        return this.mLoadingview.getTag().toString().equals("show");
+        return this.mLoadingview.getTag().toString().equals(SHOW_TAG);
     }
 
     public void setStatus(String status) {
