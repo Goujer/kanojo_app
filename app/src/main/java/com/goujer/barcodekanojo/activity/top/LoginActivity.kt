@@ -29,12 +29,13 @@ class LoginActivity : BaseEditActivity(), View.OnClickListener {
 		super.onCreate(savedInstanceState)
 		binding = ActivityLoginBinding.inflate(layoutInflater)
 		setContentView(binding.root)
+
 		binding.kanojoLogInPassword.setTypeToPassword()
 		binding.kanojoLogInEmail.value = (application as BarcodeKanojoApp).barcodeKanojo.settings.getEmail()
 		binding.kanojoLogInClose.setOnClickListener(this)
 		binding.kanojoLogInPassword.setOnClickListener(this)
 		binding.kanojoLogInBtn.setOnClickListener(this)
-		binding.progressbar.visibility = View.GONE
+		binding.logInProgressbar.visibility = View.GONE
 		setAutoRefreshSession(false)
 	}
 
@@ -59,7 +60,7 @@ class LoginActivity : BaseEditActivity(), View.OnClickListener {
 				binding.kanojoLogInEmail.isEnabled = false
 				binding.kanojoLogInPassword.isEnabled = false
 				binding.kanojoLogInBtn.isEnabled = false
-				binding.progressbar.visibility = View.VISIBLE
+				binding.logInProgressbar.visibility = View.VISIBLE
 
 				//Attempt log in / verify server
 				loginJob = scope.launch {
@@ -73,7 +74,7 @@ class LoginActivity : BaseEditActivity(), View.OnClickListener {
 						finish()
 					} else {
 						withContext(Dispatchers.Main) {
-							binding.progressbar.visibility = View.GONE
+							binding.logInProgressbar.visibility = View.GONE
 							binding.kanojoLogInClose.isEnabled = true
 							binding.kanojoLogInEmail.isEnabled = true
 							binding.kanojoLogInPassword.isEnabled = true
