@@ -171,12 +171,7 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
 							mPhotoPath = mImageUri.getPath();
 							takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
 						} else if (Build.VERSION.SDK_INT < 23 || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-							File mRootDir;
-							if (Build.VERSION.SDK_INT >= 8) {
-								mRootDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + File.separator + "BarcodeKANOJO");
-							} else {
-								mRootDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.pathSeparator + "DCIM" + File.separator + "BarcodeKANOJO");
-							}
+							File mRootDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + File.separator + "BarcodeKANOJO");
 							//TODO ensure directory creation
 							File imageFile = new File(mRootDir, new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date()) + ".jpg");
 							mPhotoPath = imageFile.getAbsolutePath();
@@ -313,9 +308,12 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
 			Cursor cursor = this.getContentResolver().query(imgUri, projection, null, null, null);
 			if (cursor != null) {
 				if (cursor.getColumnCount() > 0 && cursor.moveToFirst()) {
-					photoRotation = cursor.getInt(cursor.getColumnIndex(projection[0]));
-					hasRotation = photoRotation != 0;
-					Log.d(TAG, "Cursor orientation: " + photoRotation);
+					int columnIndex = cursor.getColumnIndex(projection[0]);
+					if (columnIndex > -1) {
+						photoRotation = cursor.getInt(columnIndex);
+						hasRotation = photoRotation != 0;
+						Log.d(TAG, "Cursor orientation: " + photoRotation);
+					}
 				}
 				cursor.close();
 			}
@@ -492,7 +490,7 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
 	}
 
     public static File getTempFile(Context context) {
-		if (Build.VERSION.SDK_INT >= 8 && FileUtil.isAvailableExternalSDMemory()) {
+		if (FileUtil.isAvailableExternalSDMemory()) {
 			return new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), FILENAME);
 		} else if (FileUtil.isAvailableInternalMemory()) {
 			return new File(context.getFilesDir(), FILENAME);
@@ -546,23 +544,23 @@ public class EditBitmapActivity extends BaseActivity implements BaseInterface, V
     //    return Bitmap.createBitmap(src, 0, 0, src_width, src_height, matrix, true);
     //}
 
-    public static float getFitScale(int dest_width, int dest_height, int src_width, int src_height) {
-        if (dest_width < dest_height) {
-            if (src_width >= src_height) {
-                return ((float) dest_width) / ((float) src_width);
-            }
-            float ret = ((float) dest_height) / ((float) src_height);
-            return ((float) src_width) * ret > ((float) dest_width) ? ((float) dest_width) / ((float) src_width) : ret;
-        } else if (src_width < src_height) {
-            return ((float) dest_height) / ((float) src_height);
-        } else {
-            float ret2 = ((float) dest_width) / ((float) src_width);
-            if (((float) src_height) * ret2 > ((float) dest_height)) {
-                return ((float) dest_height) / ((float) src_height);
-            }
-            return ret2;
-        }
-    }
+    //public static float getFitScale(int dest_width, int dest_height, int src_width, int src_height) {
+    //    if (dest_width < dest_height) {
+    //        if (src_width >= src_height) {
+    //            return ((float) dest_width) / ((float) src_width);
+    //        }
+    //        float ret = ((float) dest_height) / ((float) src_height);
+    //        return ((float) src_width) * ret > ((float) dest_width) ? ((float) dest_width) / ((float) src_width) : ret;
+    //    } else if (src_width < src_height) {
+    //        return ((float) dest_height) / ((float) src_height);
+    //    } else {
+    //        float ret2 = ((float) dest_width) / ((float) src_width);
+    //        if (((float) src_height) * ret2 > ((float) dest_height)) {
+    //            return ((float) dest_height) / ((float) src_height);
+    //        }
+    //        return ret2;
+    //    }
+    //}
 
     //private static final void createDirectory(File storageDirectory) {
     //    if (!storageDirectory.exists()) {
