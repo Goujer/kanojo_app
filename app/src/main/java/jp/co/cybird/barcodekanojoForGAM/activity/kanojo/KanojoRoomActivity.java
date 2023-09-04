@@ -54,7 +54,7 @@ import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.WebViewTabActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
-import jp.co.cybird.barcodekanojoForGAM.core.BarcodeKanojo;
+import com.goujer.barcodekanojo.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel;
 import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoItem;
@@ -74,8 +74,8 @@ import jp.co.cybird.barcodekanojoForGAM.view.DialogTextView;
 
 @SuppressLint({"SetJavaScriptEnabled", "NewApi"})
 public class KanojoRoomActivity extends BaseActivity implements View.OnClickListener, Observer {
+	private static final String TAG = "KanojoRoomActivity";
 
-    private static final String TAG = "KanojoRoomActivity";
     private Button btnClose;
     private Button btnDate;
     private ImageButton btnInfo;
@@ -87,7 +87,6 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     private int dWidth;
     private RelativeLayout dialoglayout;
     private ImageView dropImage;
-    private String extraWebViewURL;
     private ImageView imageView01;
     private ImageView imageView02;
     private ImageView imageView03;
@@ -113,16 +112,15 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     private MessageModel mMessage;
     private Product mProduct;
     private Runnable mProgressThread = () -> {
-		if (KanojoRoomActivity.this.getLive2D().isModelAvailable()) {
-			KanojoRoomActivity.this.dismissProgressDialog();
-			KanojoRoomActivity.this.mHandler.removeCallbacks(KanojoRoomActivity.this.mProgressThread);
+		if (getLive2D().isModelAvailable()) {
+			dismissProgressDialog();
+			mHandler.removeCallbacks(KanojoRoomActivity.this.mProgressThread);
 			return;
 		}
-		KanojoRoomActivity.this.mHandler.postDelayed(KanojoRoomActivity.this.mProgressThread, 100);
+		mHandler.postDelayed(KanojoRoomActivity.this.mProgressThread, 100);
 	};
     private LinearLayout mStatusLayout;
     private Timer mTimerCallAPI;
-    private User mUser;
     private LinearLayout statusBarLayout;
 
     private ActivityKanojoRoomBinding binding;
@@ -131,6 +129,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         binding = ActivityKanojoRoomBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         this.dWidth = displayMetrics.widthPixels;
@@ -464,7 +463,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 			if (this.mKanojo != null) {
 				intent2.putExtra(BaseInterface.EXTRA_KANOJO, this.mKanojo);
 			}
-			intent2.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, 2);
+			intent2.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, KanojoItemsActivity.MODE_GIFT);
 			startActivityForResult(intent2, BaseInterface.REQUEST_KANOJO_ITEMS);
 			return;
 		} else if (id == R.id.kanojo_room_date_btn) {
@@ -473,7 +472,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 			if (this.mKanojo != null) {
 				intent3.putExtra(BaseInterface.EXTRA_KANOJO, this.mKanojo);
 			}
-			intent3.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, 1);
+			intent3.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, KanojoItemsActivity.MODE_DATE);
 			startActivityForResult(intent3, BaseInterface.REQUEST_KANOJO_ITEMS);
 			return;
 		} else if (id == R.id.kanojo_room_ticket_btn) {
@@ -482,10 +481,10 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 			if (this.mKanojo != null) {
 				intent4.putExtra(BaseInterface.EXTRA_KANOJO, this.mKanojo);
 			}
-			KanojoItem item = new KanojoItem(3);
+			KanojoItem item = new KanojoItem(KanojoItem.GIFT_ITEM_CLASS);
 			item.setTitle(getResources().getString(R.string.kanojo_items_store));
 			intent4.putExtra(BaseInterface.EXTRA_KANOJO_ITEM, item);
-			intent4.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, 3);
+			intent4.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, KanojoItemsActivity.MODE_TICKET);
 			startActivityForResult(intent4, BaseInterface.REQUEST_KANOJO_TICKETS);
 			return;
 		} else if (id == R.id.kanojo_room_status_bar_layout || id == R.id.dropdown_img) {
@@ -698,11 +697,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     }
 
     public void update(Observable observable, Object data) {
-        this.mHandler.post(new Runnable() {
-            public void run() {
-                KanojoRoomActivity.this.settingLive2D();
-            }
-        });
+        this.mHandler.post(KanojoRoomActivity.this::settingLive2D);
     }
 
     private void executeKanojoShowDialogTask() {
@@ -773,9 +768,8 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     }
 
     @Override
-    public ProgressDialog showProgressDialog() {
+    public void showProgressDialog() {
 		binding.loadingView.show();
-        return new ProgressDialog(this);
     }
 
     @Override
@@ -784,8 +778,6 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     }
 
     class MyJavaScriptInterface {
-        MyJavaScriptInterface() {
-        }
 
         @JavascriptInterface
         public void getValue(String wordCount) {
@@ -802,7 +794,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
 
             protected String doInBackground(String... params) {
                 try {
-                    Thread.sleep(Integer.parseInt(params[0]) * 5000);
+                    Thread.sleep(Integer.parseInt(params[0]) * 5000L);
                     return null;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -811,12 +803,12 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
             }
 
             protected void onPostExecute(String result) {
-                if (KanojoRoomActivity.this.mKanojo.getRelation_status() == Kanojo.RELATION_KANOJO) {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) KanojoRoomActivity.this.btnItems.getLayoutParams();
+                if (mKanojo.getRelation_status() == Kanojo.RELATION_KANOJO) {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) btnItems.getLayoutParams();
                     params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-                    KanojoRoomActivity.this.btnItems.setLayoutParams(params);
+                    btnItems.setLayoutParams(params);
                 }
-                KanojoRoomActivity.this.kanojoMessage.setVisibility(View.GONE);
+                kanojoMessage.setVisibility(View.GONE);
             }
         }
     }

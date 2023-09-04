@@ -229,7 +229,6 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         }
     }
 
-	//TODO ProgressDialog is deprecated, needs to be replaced.
     protected void showProgressDialog(DialogInterface.OnCancelListener listener) {
         if (this.mProgressDialog == null) {
             ProgressDialog dialog = new ProgressDialog(this);
