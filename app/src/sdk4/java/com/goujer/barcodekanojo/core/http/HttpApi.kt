@@ -131,7 +131,11 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 			if (parameters.isNotEmpty()) parameters.append('&')
 			parameters.append(pair.toString())
 		}
-		connection.outputStream.write(parameters.toString().toByteArray(charset("UTF-8")))
+		try {
+			connection.outputStream.write(parameters.toString().toByteArray(charset("UTF-8")))
+		} catch (e: SSLHandshakeException) {
+			throw BarcodeKanojoException("SSL Handshake Failed")    //TODO Ensure this gets delivered right anc consider making this a proper string.
+		}
 		return connection
 	}
 

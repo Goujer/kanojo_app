@@ -11,6 +11,7 @@ import java.net.CookieHandler
 import java.net.CookieManager
 import java.net.HttpURLConnection
 import java.net.URL
+import javax.net.ssl.SSLHandshakeException
 
 class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBasePort: Int?, clientVersion: String?, clientLanguage: String?) {
 	internal var mApiBaseProtocol: String = if (useHttps) "https" else "http"
@@ -131,7 +132,11 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 			if (parameters.isNotEmpty()) parameters.append('&')
 			parameters.append(pair.toString())
 		}
-		connection.outputStream.write(parameters.toString().toByteArray(charset("UTF-8")))
+		try {
+			connection.outputStream.write(parameters.toString().toByteArray(charset("UTF-8")))
+		} catch (e: SSLHandshakeException) {
+			throw BarcodeKanojoException("SSL Handshake Failed")    //TODO Ensure this gets delivered right anc consider making this a proper string.
+		}
 		return connection
 	}
 
