@@ -93,3 +93,5 @@ app/src/main/META-INF/CERT.SF
 app/src/main/META-INF/MANIFEST.MF
 .idea/deploymentTargetDropDown.xml
 .idea/misc.xml
+app/http/release/output-metadata.json
+app/https/release/output-metadata.json

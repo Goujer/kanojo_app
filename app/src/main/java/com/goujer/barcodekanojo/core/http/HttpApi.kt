@@ -8,6 +8,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.parser.JSONParser
 import com.goujer.barcodekanojo.core.cache.ImageDiskCache
 import java.io.DataOutputStream
 import java.net.*
+import javax.net.ssl.SSLHandshakeException
 
 class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBasePort: Int?, clientVersion: String?, clientLanguage: String?) {
 	internal var mApiBaseProtocol: String = if (useHttps) "https" else "http"
@@ -128,7 +129,12 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 			if (parameters.isNotEmpty()) parameters.append('&')
 			parameters.append(pair.toString())
 		}
-		connection.outputStream.write(parameters.toString().toByteArray(charset("UTF-8")))
+		try {
+			connection.outputStream.write(parameters.toString().toByteArray(charset("UTF-8")))
+		} catch (e: SSLHandshakeException) {
+			throw BarcodeKanojoException("SSL Handshake Failed")    //TODO Ensure this gets delivered right anc consider making this a proper string.
+		}
+
 		return connection
 	}
 
