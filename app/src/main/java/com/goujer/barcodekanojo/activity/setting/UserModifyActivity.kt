@@ -34,12 +34,11 @@ import kotlinx.coroutines.*
 import java.io.File
 import java.util.*
 
-//TODO test functionality
 class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 	private lateinit var app: BarcodeKanojoApp
+
 	private var mRequestCode = 0
 	private var mResultCode = 0
-	//private var mTaskQueue: Queue<StatusHolder?> = LinkedList<StatusHolder?>()    //TODO During testing determine if Queue and status holder are needed.
 	private var mTextChangeListener: EditItemViewCallback? = null
 
 	private var user: User? = null

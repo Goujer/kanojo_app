@@ -10,16 +10,16 @@
             <ImageView android:layout_width="wrap_content" android:layout_height="@dimen/common_title_logo_height" android:src="@drawable/common_logo" android:scaleType="fitCenter" android:adjustViewBounds="true" android:layout_centerInParent="true" />
             <Button android:id="@+id/user_modify_close" android:text="@string/common_edit_close" android:layout_alignParentStart="true" style="@style/btn_navi"
 				android:layout_alignParentLeft="true" />
-	        <Button
-		        android:id="@+id/user_modify_logout"
-		        style="@style/btn_navi"
-		        android:layout_alignParentEnd="true"
-		        android:layout_alignParentRight="true"
-		        android:text="@string/common_logout" />
+			<Button
+				android:id="@+id/user_modify_logout"
+				style="@style/btn_navi"
+				android:layout_alignParentEnd="true"
+				android:layout_alignParentRight="true"
+				android:text="@string/common_logout" />
         </RelativeLayout>
         <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
             <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/edit_bg" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="wrap_content">
-                <TextView
+				<TextView
 					android:id="@+id/user_account_mode_text"
 					style="@style/txt_notice_input"
 					android:layout_width="match_parent"

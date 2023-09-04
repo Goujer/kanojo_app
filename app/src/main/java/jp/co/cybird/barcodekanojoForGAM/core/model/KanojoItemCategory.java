@@ -6,7 +6,7 @@ import android.os.Parcelable;
 public class KanojoItemCategory implements BarcodeKanojoModel, Parcelable {
     public static final Parcelable.Creator<KanojoItemCategory> CREATOR = new Parcelable.Creator<KanojoItemCategory>() {
         public KanojoItemCategory createFromParcel(Parcel in) {
-            return new KanojoItemCategory(in, (KanojoItemCategory) null);
+            return new KanojoItemCategory(in, null);
         }
 
         public KanojoItemCategory[] newArray(int size) {
@@ -14,8 +14,10 @@ public class KanojoItemCategory implements BarcodeKanojoModel, Parcelable {
         }
     };
     public static final String TAG = "KanojoItemCategory";
-    private String flag;
+    // This is set to true by the server if it is a belonging. Could this become a local only change?
+	private String flag;
     private ModelList<KanojoItem> items;
+	// Very likely to be the user's level
     private String level;
     private String title;
 

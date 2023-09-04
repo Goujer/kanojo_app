@@ -26,7 +26,7 @@ open class BaseKanojoEditActivity : BaseEditActivity() {
 				mCategoryList[i] = mCategories[i].name
 			}
 		} catch (e: BarcodeKanojoException) {
-			Thread(Runnable {
+			Thread {
 				try {
 					val barcodeKanojo = (application as BarcodeKanojoApp).barcodeKanojo
 					barcodeKanojo.init_product_category_list()
@@ -35,38 +35,34 @@ open class BaseKanojoEditActivity : BaseEditActivity() {
 					mCategoryList = arrayOfNulls(size)
 					var i = 0
 					while (i < size) {
-						mCategoryList[i] = mCategories[i].getName()
+						mCategoryList[i] = mCategories[i].name
 						i++
 					}
 				} catch (e: IOException) {
 				} catch (e: BarcodeKanojoException) {
 				}
-			}).start()
+			}.start()
 		}
 	}
 
 	protected fun getDefaultCategory(): Category? {
-		return if (mCategories == null || mCategories.size == 0) {
+		return if (mCategories.size == 0) {
 			null
 		} else mCategories[0]
 	}
 
 	protected fun showListDialog(title: String?, product: Product, value: EditItemView) {
 		var selected = 0
-		if (mCategories != null) {
-			val size: Int = mCategories.size
-			for (i in 0 until size) {
-				if (mCategories[i].id == product.category_id) {
-					selected = i
-				}
+		val size: Int = mCategories.size
+		for (i in 0 until size) {
+			if (mCategories[i].id == product.category_id) {
+				selected = i
 			}
 		}
 		val dialog: AlertDialog = AlertDialog.Builder(this).setTitle(title).setSingleChoiceItems(mCategoryList, selected) { dialog, position ->
-			product.category = mCategoryList.get(position)
-			if (mCategories != null) {
-				product.category_id = mCategories.get(position).getId()
-				value.value = mCategories.get(position).getName()
-			}
+			product.category = mCategoryList[position]
+			product.category_id = mCategories[position].id
+			value.value = mCategories[position].name
 		}.setPositiveButton(R.string.common_dialog_ok) { dialog, which -> }.create()
 		if (mListener != null) {
 			dialog.setOnDismissListener(mListener)

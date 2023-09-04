@@ -141,12 +141,12 @@ class LaunchActivity : BaseActivity() {
 		} catch (e: BarcodeKanojoException) {
 			if (e.message.equals("user not found", ignoreCase = true)) {
 				runOnUiThread {
-					showNoticeDialog(getString(R.string.error_user_not_found));
+					showNoticeDialog(getString(R.string.error_user_not_found))
 				}
 			} else {
 				Log.d(TAG, "Unknown error has occurred during verify")
 				runOnUiThread {
-					showNoticeDialog(e.localizedMessage);
+					showNoticeDialog(e.localizedMessage)
 				}
 				e.printStackTrace()
 			}

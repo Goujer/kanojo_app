@@ -253,7 +253,7 @@
 					<jp.co.cybird.barcodekanojoForGAM.view.DialogTextView
 						android:id="@+id/dialog_message"
 						android:layout_width="match_parent"
-						android:layout_height="match_parent"/>
+						android:layout_height="match_parent" />
 				</RelativeLayout>
 			</RelativeLayout>
 		</RelativeLayout>

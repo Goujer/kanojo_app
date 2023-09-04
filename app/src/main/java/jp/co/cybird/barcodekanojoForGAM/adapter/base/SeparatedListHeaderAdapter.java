@@ -14,7 +14,7 @@ public class SeparatedListHeaderAdapter extends BaseAdapter implements Observabl
     private static final int EXTRA_HEADER_FOOTER = 2;
     public static final int TYPE_SECTION_FOOTER = -1;
     public static final int TYPE_SECTION_HEADER = 0;
-    public final Map<String, View> footers = new LinkedHashMap();
+    public final Map<String, View> footers = new LinkedHashMap<>();
     public final Map<String, View> headers = new LinkedHashMap();
     private DataSetObserver mDataSetObserver = new DataSetObserver() {
         public void onChanged() {
@@ -55,9 +55,9 @@ public class SeparatedListHeaderAdapter extends BaseAdapter implements Observabl
     }
 
     public Object getItem(int position) {
-        for (Object section : this.sections.keySet()) {
+        for (String section : this.sections.keySet()) {
             Adapter adapter = this.sections.get(section);
-            int extraCount = this.mExtraItemCount.get(section).intValue();
+            int extraCount = this.mExtraItemCount.get(section);
             int size = adapter.getCount() + extraCount;
             if (extraCount == 2) {
                 if (position == 0) {
