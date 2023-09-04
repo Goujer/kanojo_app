@@ -36,7 +36,7 @@ class BarcodeKanojo(context: Context) {
 	}
 
 	fun signup(uuid: String?, name: String?, password: Password, email: String, birth_year: Int, birth_month: Int, birth_day: Int, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?> {
-		val mEmail = email.lowercase(Locale.getDefault())
+		val mEmail = email.lowercase()
 		val response = mBCKApi.signup(uuid!!, name, password, mEmail, birth_year, birth_month, birth_day, sex, profile_image_data)
 		user = response[User::class.java] as User?
 		return response
