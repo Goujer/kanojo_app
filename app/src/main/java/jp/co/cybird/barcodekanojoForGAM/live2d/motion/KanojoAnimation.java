@@ -150,24 +150,24 @@ public class KanojoAnimation {
 
     public void tapEvent_exe(int tapCount, float x, float y) {
         if (tapCount == 2 && 400.0f < x && x < 880.0f && 200.0f < y && y < 700.0f) {
-            this.kanojoLive2D.addPositionTouch(x, y, 12);
-            if (this.kanojoLive2D.addUserAction_notForClientCall(12)) {
+			this.kanojoLive2D.addPositionTouch(x, y, KanojoLive2D.USER_ACTION_HEADPAT);
+			if (this.kanojoLive2D.addUserAction_notForClientCall(KanojoLive2D.USER_ACTION_HEADPAT)) {
                 no = (no + 1) % this.motionDoubleTapList.size();
                 if (this.motionDoubleTapList.get(no) != null) {
                     setMainMotion(this.motionDoubleTapList.get(no));
                 }
             }
         } else if (tapCount == 1 && 500.0f < x && x < 780.0f && 550.0f < y && y < 700.0f) {
-            this.kanojoLive2D.addPositionTouch(x, y, 20);
-            if (this.kanojoLive2D.addUserAction_notForClientCall(20)) {
+			this.kanojoLive2D.addPositionTouch(x, y, KanojoLive2D.USER_ACTION_KISS);
+			if (this.kanojoLive2D.addUserAction_notForClientCall(KanojoLive2D.USER_ACTION_KISS)) {
                 no = (no + 1) % this.motionTouchList.size();
                 if (this.motionTouchList.get(no) != null) {
                     setMainMotion(this.motionTouchList.get(no));
                 }
             }
         } else if (tapCount == 1 && 400.0f < x && x < 880.0f && 700.0f < y && y < 1280.0f) {
-            this.kanojoLive2D.addPositionTouch(x, y, 21);
-            if (this.kanojoLive2D.addUserAction_notForClientCall(21)) {
+			this.kanojoLive2D.addPositionTouch(x, y, KanojoLive2D.USER_ACTION_BREAST);
+			if (this.kanojoLive2D.addUserAction_notForClientCall(KanojoLive2D.USER_ACTION_BREAST)) {
                 no = (no + 1) % this.motionTouchList.size();
                 if (this.motionTouchList.get(no) != null) {
                     setMainMotion(this.motionTouchList.get(no));
@@ -244,7 +244,7 @@ public class KanojoAnimation {
     }
 
     public void shakeEvent() {
-        if (UtSystem.getTimeMSec() - lastShakeEvent >= 3000 && this.kanojoLive2D.addUserAction_notForClientCall(KanojoLive2D.USER_ACTION_FURU)) {
+        if (UtSystem.getTimeMSec() - lastShakeEvent >= 3000 && this.kanojoLive2D.addUserAction_notForClientCall(KanojoLive2D.USER_ACTION_SHAKE)) {
             this.mainMotionMgr.startMotion(this.motionKurakuraList.get(rand() % this.motionKurakuraList.size()), false);
         }
     }

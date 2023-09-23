@@ -94,14 +94,11 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
         return this.renderer;
     }
 
+	@Override
     public boolean onTouchEvent(MotionEvent event) {
         boolean ret = false;
 		int action;
-		if (Build.VERSION.SDK_INT >= 8) {
-			action = event.getActionMasked();
-		} else {
-			action = event.getAction() & MotionEvent.ACTION_MASK;
-		}
+		action = event.getActionMasked();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 ret = true;

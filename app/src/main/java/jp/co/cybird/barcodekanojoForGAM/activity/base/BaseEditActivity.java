@@ -366,13 +366,13 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                                 }
                             }
                         } else {
-							contextRef.get().setResult(102);
+							contextRef.get().setResult(BaseInterface.RESULT_GENERATE_KANOJO);
 							contextRef.get().close();
                             break;
                         }
                         break;
                     case Response.CODE_ERROR_SERVER:
-                    case 503:
+                    case Response.CODE_ERROR_SERVICE_UNAVAILABLE:
 						contextRef.get().dismissProgressDialog();
                         break;
                 }

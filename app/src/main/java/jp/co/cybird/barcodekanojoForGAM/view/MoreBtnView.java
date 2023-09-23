@@ -14,10 +14,10 @@ public class MoreBtnView extends FrameLayout {
     public static final String TAG = "MoreBtnView";
     private int Id;
     private OnMoreClickListener listener;
-    private ProgressBar progress = findViewById(R.id.row_more_progressbar);
-    private Resources r = getResources();
-    private TextView txt = findViewById(R.id.row_more_txt);
-    private ImageView ya = findViewById(R.id.row_more_ya);
+    private final Resources r = getResources();
+    private final TextView txt;
+    private final ImageView ya;
+	private final ProgressBar progress;
 
     public interface OnMoreClickListener {
         void onMoreClick(int i);
@@ -26,11 +26,10 @@ public class MoreBtnView extends FrameLayout {
     public MoreBtnView(Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.view_more, this, true);
-        setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                MoreBtnView.this.setLoading(true);
-            }
-        });
+	    txt = findViewById(R.id.row_more_txt);
+		ya = findViewById(R.id.row_more_ya);
+	    progress = findViewById(R.id.row_more_progressbar);
+        setOnClickListener(v -> MoreBtnView.this.setLoading(true));
     }
 
     public void setLoading(boolean loading) {
@@ -43,18 +42,17 @@ public class MoreBtnView extends FrameLayout {
             }
             if (this.progress != null) {
                 this.progress.setVisibility(View.VISIBLE);
-                return;
             }
-            return;
-        }
-        if (this.txt != null) {
-            this.txt.setText(this.r.getString(R.string.row_more));
-        }
-        if (this.ya != null) {
-            this.ya.setVisibility(View.VISIBLE);
-        }
-        if (this.progress != null) {
-            this.progress.setVisibility(View.INVISIBLE);
+        } else {
+	        if (this.txt != null) {
+		        this.txt.setText(this.r.getString(R.string.row_more));
+	        }
+	        if (this.ya != null) {
+		        this.ya.setVisibility(View.VISIBLE);
+	        }
+	        if (this.progress != null) {
+		        this.progress.setVisibility(View.INVISIBLE);
+	        }
         }
     }
 
@@ -65,12 +63,10 @@ public class MoreBtnView extends FrameLayout {
 
     public void setOnMoreClickListener(OnMoreClickListener l) {
         this.listener = l;
-        setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                MoreBtnView.this.setLoading(true);
-                if (MoreBtnView.this.listener != null) {
-                    MoreBtnView.this.listener.onMoreClick(MoreBtnView.this.Id);
-                }
+        setOnClickListener(v -> {
+            MoreBtnView.this.setLoading(true);
+            if (MoreBtnView.this.listener != null) {
+                MoreBtnView.this.listener.onMoreClick(MoreBtnView.this.Id);
             }
         });
     }

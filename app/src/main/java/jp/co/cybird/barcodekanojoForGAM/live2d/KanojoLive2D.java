@@ -3,6 +3,9 @@ package jp.co.cybird.barcodekanojoForGAM.live2d;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+
+import com.goujer.barcodekanojo.core.model.Kanojo;
+
 import javax.microedition.khronos.opengles.GL10;
 import jp.co.cybird.barcodekanojoForGAM.activity.kanojo.KanojoRoomActivity;
 import jp.co.cybird.barcodekanojoForGAM.live2d.model.IconRenderer;
@@ -20,11 +23,11 @@ public class KanojoLive2D implements KanojoResource {
     public static final int ICON_FLAG_SILHOUETTE = 1;
     public static final int USER_ACTION_COUNT = 20;
 
-	public static final int USER_ACTION_NADERU = 10;
-    public static final int USER_ACTION_FURU = 11;
-	public static final int USER_ACTION_TSUTSUKU = 12;
-    public static final int USER_ACTION_KISS = 20;
-    public static final int USER_ACTION_MUNE = 21;
+	public static final int USER_ACTION_SWIPE = 10;
+	public static final int USER_ACTION_SHAKE = 11;
+	public static final int USER_ACTION_HEADPAT = 12;
+	public static final int USER_ACTION_KISS = 20;
+	public static final int USER_ACTION_BREAST = 21;
 
     private AccelHelper accelHelper;
     private int curUserActionNo = -1;
@@ -34,13 +37,13 @@ public class KanojoLive2D implements KanojoResource {
     private boolean inRoom = true;
     private KanojoModel kanojoModel = null;
     private KanojoRoomActivity kanojoRoomActivity;
-    private KanojoSetting kanojoSetting;
+    private final KanojoSetting kanojoSetting;
     private boolean modelAvailable = false;
     private boolean modelUpdating = false;
     private String partsCacheDir = null;
     private boolean process1Finished = false;
     private int textureSize = 512;
-    private int[] userActions = new int[20];
+    private final int[] userActions = new int[20];
 
     public void setKanojoRoomActivity(KanojoRoomActivity kanojoRoomActivity2) {
         this.kanojoRoomActivity = kanojoRoomActivity2;
@@ -280,10 +283,13 @@ public class KanojoLive2D implements KanojoResource {
         int state = this.kanojoSetting.getKanojoState();
         if (!isInRoom()) {
             return false;
-        }
-		if (state == 1) {
+		}
+		if (state == Kanojo.RELATION_OTHER) {
 			return false;
 		}
+	    if (this.kanojoRoomActivity != null && !this.kanojoRoomActivity.isPrepared) {
+		    return false;
+	    }
 		this.curUserActionNo = (this.curUserActionNo + 1) % 20;
 		this.userActions[this.curUserActionNo] = userAction;
 		if (this.kanojoRoomActivity != null) {

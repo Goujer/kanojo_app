@@ -12,17 +12,18 @@ import java.util.Map;
 public class SeparatedListHeaderAdapter extends BaseAdapter implements ObservableAdapter {
     private static final int EXTRA_HEADER = 1;
     private static final int EXTRA_HEADER_FOOTER = 2;
+
     public static final int TYPE_SECTION_FOOTER = -1;
     public static final int TYPE_SECTION_HEADER = 0;
     public final Map<String, View> footers = new LinkedHashMap<>();
-    public final Map<String, View> headers = new LinkedHashMap();
+    public final Map<String, View> headers = new LinkedHashMap<>();
     private DataSetObserver mDataSetObserver = new DataSetObserver() {
         public void onChanged() {
             SeparatedListHeaderAdapter.this.notifyDataSetChanged();
         }
     };
-    private Map<String, Integer> mExtraItemCount = new LinkedHashMap();
-    public final Map<String, Adapter> sections = new LinkedHashMap();
+    private Map<String, Integer> mExtraItemCount = new LinkedHashMap<>();
+    public final Map<String, Adapter> sections = new LinkedHashMap<>();
 
     public SeparatedListHeaderAdapter(Context context) {
     }
@@ -30,11 +31,11 @@ public class SeparatedListHeaderAdapter extends BaseAdapter implements Observabl
     public SeparatedListHeaderAdapter(Context context, int layoutId) {
     }
 
-    public void addSection(String no, View header, Adapter adapter, View footer) {
-        this.headers.put(no, header);
-        this.sections.put(no, adapter);
-        this.footers.put(no, footer);
-        this.mExtraItemCount.put(no, 2);
+    public void addSection(String key, View header, Adapter adapter, View footer) {
+        this.headers.put(key, header);
+        this.sections.put(key, adapter);
+        this.footers.put(key, footer);
+        this.mExtraItemCount.put(key, 2);
         adapter.registerDataSetObserver(this.mDataSetObserver);
         notifyDataSetChanged();
     }
