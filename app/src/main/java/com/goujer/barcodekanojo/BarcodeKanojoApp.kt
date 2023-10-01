@@ -4,6 +4,11 @@ import android.app.Application
 import android.content.Intent
 import android.location.Location
 import android.location.LocationManager
+import android.util.Log
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
+import com.google.android.gms.common.GooglePlayServicesUtil
+import com.google.android.gms.security.ProviderInstaller
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache
 import com.goujer.barcodekanojo.core.model.User
 import com.goujer.barcodekanojo.preferences.ApplicationSetting
@@ -24,6 +29,9 @@ class BarcodeKanojoApp : Application() {
 
 	override fun onCreate() {
 		super.onCreate()
+		try {
+			ProviderInstaller.installIfNeeded(this) //Attempt to update connection security (helps older devices with ssl and tls)
+		} catch (_: Exception) {}
 		barcodeKanojo = BarcodeKanojo(this)
 		barcodeKanojo.user = User()
 		mPurchaseApi = PurchaseApi(applicationContext)

@@ -1,9 +1,14 @@
 package com.goujer.barcodekanojo.activity.top
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
+import com.google.android.gms.common.GooglePlayServicesUtil
+import com.google.android.gms.security.ProviderInstaller
 
 import com.goujer.barcodekanojo.activity.base.BaseActivity
 import com.goujer.barcodekanojo.activity.setting.ServerConfigurationActivity
@@ -103,6 +108,7 @@ class LaunchActivity : BaseActivity() {
 	override fun onResume() {
 		super.onResume()
 		binding.topServerName.text = settings.getServerURL()
+		updateAndroidSecurityProvider(this)
 	}
 
 	override fun onStop() {
@@ -172,6 +178,18 @@ class LaunchActivity : BaseActivity() {
 
 		//Log User in
 		return barcodeKanojo.verify(barcodeKanojoApp.settings.getUUID(), "", null)
+	}
+
+	private fun updateAndroidSecurityProvider(callingActivity: Activity) { //Attempt to update connection security (helps older devices with ssl and tls)
+		try {
+			ProviderInstaller.installIfNeeded(this)
+		} catch (e: GooglePlayServicesRepairableException) {
+			// Thrown when Google Play Services is not installed, up-to-date, or enabled
+			// Show dialog to allow users to install, update, or otherwise enable Google Play services.
+			GooglePlayServicesUtil.getErrorDialog(e.connectionStatusCode, callingActivity, 0)?.show()
+		} catch (e: GooglePlayServicesNotAvailableException) {
+			Log.e("SecurityException", "Google Play Services not available.")
+		}
 	}
 
 	companion object {
