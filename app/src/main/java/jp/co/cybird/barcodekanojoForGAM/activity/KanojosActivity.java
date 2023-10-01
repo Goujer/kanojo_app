@@ -1,14 +1,10 @@
 package jp.co.cybird.barcodekanojoForGAM.activity;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.SearchRecentSuggestions;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -16,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -26,8 +23,7 @@ import android.widget.Toolbar;
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.lang.ref.WeakReference;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -50,59 +46,62 @@ import jp.co.cybird.barcodekanojoForGAM.view.MoreBtnView;
 import com.goujer.barcodekanojo.view.UserProfileView;
 
 public class KanojosActivity extends BaseKanojosActivity implements View.OnClickListener, MoreBtnView.OnMoreClickListener, KanojoAdapter.OnKanojoClickListener {
-    private static final int DEFAULT_LIMIT = 6;
+	public static final String TAG = "KanojosActivity";
+
+	private static final int DEFAULT_LIMIT = 6;
+
+	private static final int YOUR_KANOJOS_MAX = 100;
     private static final int FRIENDS_MAX = 100;
     private static final int RANKING_MAX = 100;
-    public static final String TAG = "KanojosActivity";
-    private static final int YOUR_KANOJOS_MAX = 100;
+
+	private final int MORE_KANOJOS = 10;
     private final int MORE_FRIENDS = 11;
-    private final int MORE_KANOJOS = 10;
     private final int MORE_RANKING = 12;
+
     private boolean isLoading = false;
     private boolean isSearch = false;
     private SeparatedListHeaderAdapter mAdapter;
-    private StatusHolder mFriends;
-    private KanojoTask mKanojoTask;
+
+	private StatusHolder mYourKanojos;
+	private StatusHolder mFriends;
+	private StatusHolder mRanking;
+
+    private KanojoTask myKanojoTask;
+	private KanojoTask friendKanojoTask;
+	private KanojoTask rankingKanojoTask;
+
     private ListView mKanojosListView;
     private LogInTask mLogInTask;
     private UserProfileView mProfileView;
-    private StatusHolder mRanking;
     private DynamicImageCache mDic;
     private String mSearchWord = null;
-    final Handler mTaskEndHandler = new Handler() {
-        @Override
-    	public void handleMessage(Message msg) {
-            StatusHolder next = KanojosActivity.this.getQueue().poll();
-            if (next != null) {
-                KanojosActivity.this.executeKanojoTask(next);
-            }
-        }
-    };
-    private Queue<StatusHolder> mTaskQueue;
     private User mUser;
-    private StatusHolder mYourKanojos;
     private Resources r;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(1);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_kanojos);
         this.r = getResources();
+
         //Toolbar stuff
         if (Build.VERSION.SDK_INT >= 21) {
 			setActionBar((Toolbar) findViewById(R.id.toolbar_primary));
 			getActionBar().setDisplayShowTitleEnabled(false);
 		}
+
         this.mDic = ((BarcodeKanojoApp) getApplication()).getImageCache();
         this.mProfileView = findViewById(R.id.common_profile);
         this.mKanojosListView = findViewById(R.id.kanojos_list);
+
         this.mYourKanojos = new StatusHolder();
-        this.mYourKanojos.what = 0;
+		this.mYourKanojos.what = StatusHolder.YOUR_KANOJOS;
         this.mFriends = new StatusHolder();
-        this.mFriends.what = 1;
+		this.mFriends.what = StatusHolder.FRIENDS;
         this.mRanking = new StatusHolder();
-        this.mRanking.what = 2;
+		this.mRanking.what = StatusHolder.RANKING;
+
         this.mAdapter = new SeparatedListHeaderAdapter(this);
         this.mKanojosListView.setSmoothScrollbarEnabled(true);
         this.mKanojosListView.setDividerHeight(0);
@@ -114,15 +113,54 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
             cleanupView(firstBoot);
         } else {
             firstBoot.setVisibility(View.VISIBLE);
-            firstBoot.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    firstBoot.setVisibility(View.GONE);
-                    KanojosActivity.this.cleanupView(firstBoot);
-                }
+            firstBoot.setOnClickListener(v -> {
+                firstBoot.setVisibility(View.GONE);
+                KanojosActivity.this.cleanupView(firstBoot);
             });
         }
         executeListTask(true);
     }
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			Kanojo kanojo = (Kanojo) bundle.get(BaseInterface.EXTRA_KANOJO);
+			if (kanojo != null) {
+				startKanojoRoomActivity(kanojo);
+			}
+			getIntent().getExtras().clear();
+			getIntent().replaceExtras((Bundle) null);
+		}
+		updateProfileView();
+
+		if (this.isSearch) {
+			executeSearchTask(this.mSearchWord);
+		} else {
+			executeListTask(false);
+		}
+		this.isLoading = false;
+	}
+
+	@Override
+	protected void onPause() {
+		if (this.mYourKanojos.loading || this.mFriends.loading || this.mRanking.loading) {
+			this.isLoading = true;
+		}
+		if (isFinishing()) {
+			this.mAdapter.removeObserver();
+		}
+
+		resetKanojoTasks();
+		super.onPause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mProfileView.destroy();
+	}
 
     public View getClientView() {
         View layout = getLayoutInflater().inflate(R.layout.activity_kanojos, null);
@@ -131,50 +169,6 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         appLayoutRoot.addView(layout);
         return appLayoutRoot;
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            Kanojo kanojo = (Kanojo) bundle.get(BaseInterface.EXTRA_KANOJO);
-            if (kanojo != null) {
-                startKanojoRoomActivity(kanojo);
-            }
-            getIntent().getExtras().clear();
-            getIntent().replaceExtras((Bundle) null);
-        }
-        updateProfileView();
-        Log.d(TAG, "Kanojo onResume " + this.isLoading);
-        if (this.isSearch) {
-            executeSearchTask(this.mSearchWord);
-        } else {
-            executeListTask(false);
-        }
-        this.isLoading = false;
-    }
-
-    @Override
-    protected void onPause() {
-        if (this.mYourKanojos.loading || this.mFriends.loading || this.mRanking.loading) {
-            this.isLoading = true;
-        }
-        if (isFinishing()) {
-            this.mAdapter.removeObserver();
-        }
-        if (this.mKanojoTask != null) {
-            this.mKanojoTask.cancel(true);
-            this.mKanojoTask = null;
-        }
-        clearQueue();
-        super.onPause();
-    }
-
-    @Override
-	protected void onDestroy() {
-    	super.onDestroy();
-		mProfileView.destroy();
-	}
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -205,7 +199,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == 4) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             ((BarcodeKanojoApp) getApplication()).logged_out();
         }
         return super.onKeyDown(keyCode, event);
@@ -215,16 +209,31 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
     public void onClick(View v) {
     }
 
-    public void onMoreClick(int id) {
-        switch (id) {
-            case 10:
-                loadMoreList(this.mYourKanojos);
+	public void onMoreClick(int id) {
+		switch (id) {
+			case MORE_KANOJOS:
+				if (myKanojoTask == null || !myKanojoTask.isLoading()) {
+					mYourKanojos.index = mYourKanojos.displayed;
+					mYourKanojos.limit = DEFAULT_LIMIT;
+					myKanojoTask = new KanojoTask(this, mYourKanojos);
+					executeKanojoTask(myKanojoTask);
+				}
+				return;
+            case MORE_FRIENDS:
+	            if (friendKanojoTask == null || !friendKanojoTask.isLoading()) {
+		            mFriends.index = mFriends.displayed;
+		            mFriends.limit = DEFAULT_LIMIT;
+					friendKanojoTask = new KanojoTask(this, mFriends);
+					executeKanojoTask(friendKanojoTask);
+	            }
                 return;
-            case 11:
-                loadMoreList(this.mFriends);
-                return;
-            case 12:
-                loadMoreList(this.mRanking);
+            case MORE_RANKING:
+	            if (rankingKanojoTask == null || !rankingKanojoTask.isLoading()) {
+		            mRanking.index = 0;
+		            mRanking.limit = mRanking.displayed + DEFAULT_LIMIT;
+					rankingKanojoTask = new KanojoTask(this, mRanking);
+					executeKanojoTask(rankingKanojoTask);
+	            }
                 return;
             default:
         }
@@ -242,8 +251,8 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();
 		if (itemId == R.id.menu_kanojos_refresh) {
 			if (this.isSearch) {
@@ -259,8 +268,8 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 		return super.onOptionsItemSelected(item);
 	}
 
-    @Override
-    protected void onNewIntent(Intent intent) {
+	@Override
+	protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (intent != null) {
             String action = intent.getAction();
@@ -321,43 +330,36 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
     }
 
     private synchronized void executeListTask(boolean initflg) {
-        int i;
-        int i2 = 6;
         synchronized (this) {
             this.isSearch = false;
             this.mSearchWord = null;
-            if (this.mKanojoTask != null) {
-                this.mKanojoTask.cancel(true);
-                this.mKanojoTask = null;
-            }
-            clearQueue();
+			resetKanojoTasks();
             if (initflg) {
                 this.mAdapter.clear();
                 this.mAdapter.notifyDataSetInvalidated();
-                addSection(10, this.r.getString(R.string.kanojos_your_kanojos), "your_kanojos", this.mYourKanojos);
-                addSection(11, this.r.getString(R.string.kanojos_just_friend), "just_friend", this.mFriends);
-                addSection(12, this.r.getString(R.string.kanojos_ranking), "ranking", this.mRanking);
+				addSection(MORE_KANOJOS, this.r.getString(R.string.kanojos_your_kanojos), "your_kanojos", this.mYourKanojos);
+				addSection(MORE_FRIENDS, this.r.getString(R.string.kanojos_just_friend), "just_friend", this.mFriends);
+				addSection(MORE_RANKING, this.r.getString(R.string.kanojos_ranking), "ranking", this.mRanking);
                 this.mKanojosListView.setAdapter(this.mAdapter);
             }
             this.mYourKanojos.MAX = YOUR_KANOJOS_MAX;
             this.mFriends.MAX = FRIENDS_MAX;
             this.mRanking.MAX = RANKING_MAX;
+
             this.mYourKanojos.index = 0;
             this.mFriends.index = 0;
             this.mRanking.index = 0;
-            this.mYourKanojos.limit = Math.max(this.mYourKanojos.displayed, 6);
-            StatusHolder statusHolder = this.mFriends;
-			i = Math.max(this.mFriends.displayed, 6);
-            statusHolder.limit = i;
-            StatusHolder statusHolder2 = this.mRanking;
-            if (this.mRanking.displayed > 6) {
-                i2 = this.mRanking.displayed;
-            }
-            statusHolder2.limit = i2;
-            getQueue().offer(this.mYourKanojos);
-            getQueue().offer(this.mFriends);
-            getQueue().offer(this.mRanking);
-            this.mTaskEndHandler.sendEmptyMessage(0);
+
+			this.mYourKanojos.limit = Math.max(this.mYourKanojos.displayed, DEFAULT_LIMIT);
+			this.mFriends.limit = Math.max(this.mFriends.displayed, DEFAULT_LIMIT);
+			this.mRanking.limit = Math.max(this.mRanking.displayed, DEFAULT_LIMIT);
+
+			myKanojoTask = new KanojoTask(this, this.mYourKanojos);
+			friendKanojoTask = new KanojoTask(this, this.mFriends);
+			rankingKanojoTask = new KanojoTask(this, this.mRanking);
+			executeKanojoTask(myKanojoTask);
+			executeKanojoTask(friendKanojoTask);
+			executeKanojoTask(rankingKanojoTask);
         }
     }
 
@@ -365,53 +367,33 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         synchronized (this) {
             this.isSearch = true;
             this.mSearchWord = word;
-            clearQueue();
-            if (this.mKanojoTask != null) {
-                this.mKanojoTask.cancel(true);
-                this.mKanojoTask = null;
-            }
+			resetKanojoTasks();
             this.mAdapter.clear();
             this.mAdapter.notifyDataSetInvalidated();
-            addSection(10, this.r.getString(R.string.kanojos_search_your_kanojos), "your_kanojos", this.mYourKanojos);
-            addSection(11, this.r.getString(R.string.kanojos_search_just_friend), "just_friend", this.mFriends);
+
+			addSection(MORE_KANOJOS, this.r.getString(R.string.kanojos_search_your_kanojos), "your_kanojos", this.mYourKanojos);
+			addSection(MORE_FRIENDS, this.r.getString(R.string.kanojos_search_just_friend), "just_friend", this.mFriends);
+
             this.mKanojosListView.setAdapter(this.mAdapter);
+
             this.mYourKanojos.index = 0;
             this.mFriends.index = 0;
-            this.mYourKanojos.limit = Math.max(this.mYourKanojos.displayed, 6);
-            StatusHolder statusHolder = this.mFriends;
-            statusHolder.limit = Math.max(this.mFriends.displayed, 6);
-            getQueue().offer(this.mYourKanojos);
-            getQueue().offer(this.mFriends);
-            this.mTaskEndHandler.sendEmptyMessage(0);
+
+			this.mYourKanojos.limit = Math.max(this.mYourKanojos.displayed, DEFAULT_LIMIT);
+			this.mFriends.limit = Math.max(this.mFriends.displayed, DEFAULT_LIMIT);
+
+			myKanojoTask = new KanojoTask(this, this.mYourKanojos);
+			friendKanojoTask = new KanojoTask(this, this.mFriends);
+			executeKanojoTask(myKanojoTask);
+			executeKanojoTask(friendKanojoTask);
         }
     }
 
-    private void loadMoreList(StatusHolder list) {
-        if (!isLoading(list)) {
-            if (list.what == 2) {
-                list.index = 0;
-                list.limit = list.displayed + 6;
-            } else {
-                list.index = list.displayed;
-                list.limit = 6;
-            }
-            getQueue().offer(list);
-            this.mTaskEndHandler.sendEmptyMessage(0);
-        }
-    }
-
-    private Queue<StatusHolder> getQueue() {
-        if (this.mTaskQueue == null) {
-            this.mTaskQueue = new LinkedList<>();
-        }
-        return this.mTaskQueue;
-    }
-
-    private synchronized void clearQueue() {
-        getQueue().clear();
+	private synchronized void resetKanojoTasks() {
         this.mYourKanojos.loading = false;
         this.mFriends.loading = false;
         this.mRanking.loading = false;
+
         if (this.mYourKanojos.more != null) {
             this.mYourKanojos.more.setLoading(false);
         }
@@ -421,40 +403,47 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         if (this.mRanking.more != null) {
             this.mRanking.more.setLoading(false);
         }
+
+		if (this.myKanojoTask != null) {
+			this.myKanojoTask.cancel(true);
+			this.myKanojoTask = null;
+		}
+		if (this.friendKanojoTask != null) {
+			this.friendKanojoTask.cancel(true);
+			this.friendKanojoTask = null;
+		}
+		if (this.rankingKanojoTask != null) {
+			this.rankingKanojoTask.cancel(true);
+			this.rankingKanojoTask = null;
+		}
+	}
+
+	private void executeKanojoTask(KanojoTask task) {
+		if (task != null) {
+			if (!task.isLoading() && !isLoading) {
+				task.execute();
+			}
+		}
     }
 
-    private boolean isLoading(StatusHolder status) {
-        if (status.loading) {
-            return true;
-        }
-        if (this.mKanojoTask == null || this.mKanojoTask.getStatus() == AsyncTask.Status.FINISHED || status.more == null) {
-            return false;
-        }
-        status.more.setLoading(false);
-        return false;
-    }
-
-    private void executeKanojoTask(StatusHolder list) {
-        if (!isLoading(list)) {
-            this.mKanojoTask = new KanojoTask();
-            this.mKanojoTask.setList(list);
-            this.mKanojoTask.execute();
-        }
-    }
-
-    class KanojoTask extends AsyncTask<Void, Void, Response<?>> {
-        private StatusHolder mList;
+	static class KanojoTask extends AsyncTask<Void, Void, Response<?>> {
+		private final WeakReference<KanojosActivity> activityRef;
+		final StatusHolder mList;
         private Exception mReason = null;
 
-        KanojoTask() {
-        }
-
-        public void setList(StatusHolder list) {
-            this.mList = list;
+		KanojoTask(KanojosActivity activity, StatusHolder list) {
+			super();
+			activityRef = new WeakReference<>(activity);
+			this.mList = list;
         }
 
         @Override
         public void onPreExecute() {
+			KanojosActivity activity = activityRef.get();
+			if (activity == null || activity.isFinishing()) {
+				return;
+			}
+
             this.mList.loading = true;
             if (this.mList.more != null) {
                 this.mList.more.setLoading(true);
@@ -473,45 +462,53 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 
         @Override
         public void onPostExecute(Response<?> response) {
+	        KanojosActivity activity = activityRef.get();
+			if (activity == null || activity.isFinishing()) {
+				return;
+			}
+
+			if (mReason != null) {
+				Toast.makeText(activity, mReason.getMessage(), Toast.LENGTH_LONG).show();
+			}
+
             SearchResult res;
             try {
                 switch (response.getCode()) {
 					case Response.CODE_SUCCESS:
                         if (this.mList != null) {
-                            if (KanojosActivity.this.isSearch && (res = (SearchResult) response.get(SearchResult.class)) != null) {
+							if (activity.isSearch && (res = (SearchResult) response.get(SearchResult.class)) != null) {
                                 if (this.mList.txtNumber != null) {
                                     this.mList.txtNumber.setText(String.valueOf(res.getHit_count()));
                                 }
                                 this.mList.MAX = res.getHit_count();
                             }
-                            ModelList<Kanojo> temp = response.getKanojoList();
-                            if (temp != null) {
-                                int size = temp.size();
+                            ModelList<Kanojo> kanojoList = response.getKanojoList();
+                            if (kanojoList != null) {
+                                int size = kanojoList.size();
                                 if (this.mList.index == 0) {
                                     if (size < this.mList.limit) {
-                                        KanojosActivity.this.mAdapter.removeFooter(this.mList.key);
+										activity.mAdapter.removeFooter(this.mList.key);
                                     }
                                     this.mList.displayed = size;
                                     this.mList.adapter.clear();
                                     this.mList.adapter.notifyDataSetInvalidated();
-                                    this.mList.adapter.addKanojosModelList(temp);
+                                    this.mList.adapter.addKanojosModelList(kanojoList);
                                 } else {
                                     this.mList.displayed += size;
-                                    this.mList.adapter.addKanojosModelList(temp);
+                                    this.mList.adapter.addKanojosModelList(kanojoList);
                                     if (size < this.mList.limit) {
-                                        KanojosActivity.this.mAdapter.removeFooter(this.mList.key);
+										activity.mAdapter.removeFooter(this.mList.key);
                                     }
                                 }
                                 if (this.mList.displayed >= this.mList.MAX) {
-                                    KanojosActivity.this.mAdapter.removeFooter(this.mList.key);
+									activity.mAdapter.removeFooter(this.mList.key);
                                 }
                             }
-                            KanojosActivity.this.mTaskEndHandler.sendEmptyMessage(0);
                             break;
                         }
                         break;
-                    case 401:
-                        KanojosActivity.this.clearQueue();
+					case Response.CODE_ERROR_UNAUTHORIZED:
+						activity.resetKanojoTasks();
                         break;
                 }
                 if (this.mList != null) {
@@ -521,7 +518,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
                     }
                 }
             } catch (Exception e) {
-                KanojosActivity.this.clearQueue();
+	            activity.resetKanojoTasks();
                 if (this.mList != null) {
                     this.mList.loading = false;
                     if (this.mList.more != null) {
@@ -541,6 +538,11 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 
         @Override
         protected void onCancelled() {
+	        KanojosActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
+
             if (this.mList != null) {
                 this.mList.loading = false;
                 if (this.mList.more != null) {
@@ -550,21 +552,37 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         }
 
         Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
-            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) KanojosActivity.this.getApplication()).getBarcodeKanojo();
+	        KanojosActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return null;
+	        }
+
+            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) activity.getApplication()).getBarcodeKanojo();
             if (list == null) {
                 throw new BarcodeKanojoException("process:StatusHolder is null!");
             }
             switch (list.what) {
                 case StatusHolder.YOUR_KANOJOS:
-                    return barcodeKanojo.my_current_kanojos(list.index, list.limit, KanojosActivity.this.mSearchWord);
+                    return barcodeKanojo.my_current_kanojos(list.index, list.limit, activity.mSearchWord);
                 case StatusHolder.FRIENDS:
-                    return barcodeKanojo.my_friend_kanojos(list.index, list.limit, KanojosActivity.this.mSearchWord);
+                    return barcodeKanojo.my_friend_kanojos(list.index, list.limit, activity.mSearchWord);
                 case StatusHolder.RANKING:
                     return barcodeKanojo.like_ranking(list.index, list.limit);
                 default:
                     return null;
             }
         }
+
+	    boolean isLoading() {
+		    if (getStatus() == AsyncTask.Status.FINISHED || mList.more == null) {
+			    return false;
+		    }
+		    if (mList.loading) {
+			    return true;
+		    }
+		    mList.more.setLoading(false);
+		    return false;
+	    }
     }
 
     static class StatusHolder {
@@ -577,7 +595,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         int displayed = 0;
         int index = 0;
         String key;
-        int limit = 6;
+        int limit = DEFAULT_LIMIT;
         boolean loading = false;
         MoreBtnView more;
         TextView txtNumber;
@@ -586,18 +604,29 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 
     protected void executeLogInTask() {
         if (this.mLogInTask == null || this.mLogInTask.getStatus() == AsyncTask.Status.FINISHED || this.mLogInTask.cancel(true) || this.mLogInTask.isCancelled()) {
-            this.mLogInTask = (LogInTask) new LogInTask().execute(new Void[0]);
+            this.mLogInTask = (LogInTask) new LogInTask(this).execute();
         } else {
             Toast.makeText(this, "ttttttt", Toast.LENGTH_SHORT).show();
         }
     }
 
-    class LogInTask extends AsyncTask<Void, Void, Response<?>> {
+    private static class LogInTask extends AsyncTask<Void, Void, Response<?>> {
+		private final WeakReference<KanojosActivity> activityRef;
         private Exception mReason = null;
+
+		LogInTask(KanojosActivity activity) {
+			super();
+			activityRef = new WeakReference<>(activity);
+		}
 
         @Override
         public void onPreExecute() {
-            showProgressDialog(dialog -> KanojosActivity.this.backTab(KanojosActivity.this, DashboardActivity.class));
+	        KanojosActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
+
+            activity.showProgressDialog(dialog -> activity.backTab(activity, DashboardActivity.class));
         }
 
         @Override
@@ -612,33 +641,46 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 
         @Override
         public void onPostExecute(Response<?> response) {
+	        KanojosActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
+
             if (response == null) {
                 try {
                     throw new BarcodeKanojoException("response is null! \n" + this.mReason);
                 } catch (BarcodeKanojoException e) {
-                    KanojosActivity.this.dismissProgressDialog();
+	                activity.dismissProgressDialog();
                 } catch (Throwable th) {
-                    KanojosActivity.this.dismissProgressDialog();
+	                activity.dismissProgressDialog();
                     throw th;
                 }
             } else {
-                switch (response.getCode()) {
-					case Response.CODE_SUCCESS:
-                        KanojosActivity.this.updateProfileView();
-                        KanojosActivity.this.executeListTask(true);
-                        break;
-                }
-                KanojosActivity.this.dismissProgressDialog();
+	            if (response.getCode() == Response.CODE_SUCCESS) {
+		            activity.updateProfileView();
+		            activity.executeListTask(true);
+	            }
+	            activity.dismissProgressDialog();
             }
         }
 
         @Override
         protected void onCancelled() {
-            KanojosActivity.this.dismissProgressDialog();
+	        KanojosActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
+
+	        activity.dismissProgressDialog();
         }
 
         Response<?> login() throws BarcodeKanojoException, IllegalStateException, IOException {
-            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) KanojosActivity.this.getApplication()).getBarcodeKanojo();
+	        KanojosActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return null;
+	        }
+
+            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) activity.getApplication()).getBarcodeKanojo();
             Log.d(KanojosActivity.TAG, "login() cannot be used !!!");
             barcodeKanojo.init_product_category_list();
             return null;
