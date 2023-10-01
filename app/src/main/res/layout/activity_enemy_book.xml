@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
-    <include layout="@layout/row_selection"/>
+	<include layout="@layout/toolbar_primary"/>
+	<jp.co.cybird.barcodekanojoForGAM.view.CustomToolBarView android:layout_width="match_parent" android:layout_height="wrap_content"/>
+	<include layout="@layout/row_selection"/>
     <ListView android:id="@+id/enemy_book_list" android:background="@color/default_bg" android:layout_width="match_parent" android:layout_height="match_parent" android:divider="#555555"/>
 </LinearLayout>

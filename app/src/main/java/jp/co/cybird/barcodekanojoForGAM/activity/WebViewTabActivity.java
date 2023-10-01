@@ -85,8 +85,8 @@ public class WebViewTabActivity extends BaseKanojosActivity implements View.OnCl
             }
             int code = uRLWebView.getCode();
             switch (code) {
-                case 200:
-                    WebViewTabActivity.this.webview.loadUrl("https://" + ((WebViewData) uRLWebView.get(WebViewData.class)).getUrl());
+	            case Response.CODE_SUCCESS:
+					runOnUiThread(() -> WebViewTabActivity.this.webview.loadUrl("https://" + ((WebViewData) uRLWebView.get(WebViewData.class)).getUrl()));
                     return;
                 case 400:
                 case 401:

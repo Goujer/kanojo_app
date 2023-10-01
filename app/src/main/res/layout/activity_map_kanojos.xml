@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent" android:layout_height="match_parent">
-	<fragment
-		android:id="@+id/map"
-		android:name="com.google.android.gms.maps.MapFragment"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+	<include layout="@layout/toolbar_primary"/>
+	<jp.co.cybird.barcodekanojoForGAM.view.CustomToolBarView
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"/>
-</RelativeLayout>
+		android:layout_height="wrap_content" />
+	<org.osmdroid.views.MapView
+		android:id="@+id/mapview"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		tilesource="Mapnik" />
+</LinearLayout>
