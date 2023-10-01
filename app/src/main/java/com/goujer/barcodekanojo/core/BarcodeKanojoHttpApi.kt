@@ -1,6 +1,7 @@
 package com.goujer.barcodekanojo.core
 
 import android.location.Location
+import android.os.Build
 import com.goujer.barcodekanojo.core.http.*
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
@@ -13,6 +14,7 @@ import jp.co.cybird.barcodekanojoForGAM.preferences.Preferences
 import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
+import java.util.Locale
 
 class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort: Int, mClientVersion: String?, mClientLanguage: String?) {
 	var mHttpApi: HttpApi = HttpApi.get(useHttps, mApiBaseUrl, mApiBasePort, mClientVersion, mClientLanguage)
@@ -48,7 +50,9 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY,
 				NameStringPair("uuid", uuid),
 				NameStringPair("email", email),
-				NameStringPair("password", password?.hashedPassword ?: ""))
+				NameStringPair("password", password?.hashedPassword ?: ""),
+				NameStringPair("api", Build.VERSION.SDK_INT.toString()),
+				NameStringPair("language", Locale.getDefault().displayLanguage))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
@@ -400,9 +404,11 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun show_dialog(): Response<BarcodeKanojoModel?> {
-		val connection = mHttpApi.createHttpGet(URL_API_MESSAGE_DIALOG)
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(KanojoMessageParser()))
+	fun show_dialog(action: Int, pod: Int): Response<BarcodeKanojoModel?> {
+		val connection = mHttpApi.createHttpGet(URL_API_MESSAGE_DIALOG,
+				NameStringPair("a", action.toString()),
+				NameStringPair("pod", pod.toString()))
+		return mHttpApi.executeHttpRequest(connection, ResponseParser(ModelParser("kanojo_message", KanojoMessageParser())))
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)

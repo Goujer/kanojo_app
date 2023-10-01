@@ -202,6 +202,7 @@
     <string name="preferences_disable_continuous_focus_summary">Use only standard focus mode</string>
     <string name="preferences_try_bsplus">Try Barcode Scanner+</string>
     <string name="preferences_try_bsplus_summary">Enhanced with new features and interface</string>
+	<string name="button_next">Next</string>
 	<string name="error_barcode_format">Barcode KANOJO is only able to scan EAN/UPC codes.</string>
 	<string name="server_url">Server URL</string>
 	<string name="sign_up">Sign Up</string>

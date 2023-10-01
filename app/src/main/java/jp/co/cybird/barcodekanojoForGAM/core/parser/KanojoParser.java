@@ -143,9 +143,6 @@ public class KanojoParser extends AbstractJSONParser<Kanojo> {
             if (object.has("on_advertising") && !object.isNull("on_advertising")) {
                 res.setOn_advertising(object.getBoolean("on_advertising"));
             }
-            if (object.has("advertising_banner_url")) {
-                res.setAdvertising_banner_url(object.getString("advertising_banner_url"));
-            }
             if (object.has("emotion_status")) {
                 res.setEmotion_status(object.getInt("emotion_status"));
             }

@@ -13,6 +13,7 @@ import jp.co.cybird.barcodekanojoForGAM.Defs
 import com.goujer.barcodekanojo.core.model.Kanojo
 import com.goujer.barcodekanojo.core.http.HttpApi
 import com.goujer.barcodekanojo.preferences.ApplicationSetting
+import com.goujer.utils.getPartOfDay
 import jp.co.cybird.barcodekanojoForGAM.core.model.Category
 import java.io.File
 import java.io.IOException
@@ -56,9 +57,9 @@ class BarcodeKanojo(context: Context) {
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun my_current_kanojos(index: Int, limit: Int, search: String): Response<BarcodeKanojoModel?>? {
+	fun my_current_kanojos(index: Int, limit: Int, search: String?): Response<BarcodeKanojoModel?>? {
 		return try {
-			current_kanojos(user!!.id, index, limit, search)
+			mBCKApi.current_kanojos(user!!.id, index, limit, search)
 		} catch (e: Exception) {
 			if (Defs.DEBUG) {
 				Log.d(TAG, e.toString())
@@ -69,7 +70,7 @@ class BarcodeKanojo(context: Context) {
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	private fun current_kanojos(user_id: Int, index: Int, limit: Int, search: String): Response<BarcodeKanojoModel?> {
+	private fun current_kanojos(user_id: Int, index: Int, limit: Int, search: String?): Response<BarcodeKanojoModel?> {
 		return mBCKApi.current_kanojos(user_id, index, limit, search)
 	}
 
@@ -78,9 +79,10 @@ class BarcodeKanojo(context: Context) {
 		return mBCKApi.friend_kanojos(user!!.id, index, limit, search)
 	}
 
-	//public Response<BarcodeKanojoModel> friend_kanojos(int user_id, int index, int limit, String search) throws IllegalStateException, BarcodeKanojoException, IOException {
-	//    return this.mBCKApi.friend_kanojos(user_id, index, limit, search);
-	//}
+	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
+	fun friend_kanojos(user_id: Int, index: Int, limit: Int, search: String): Response<BarcodeKanojoModel?> {
+		return mBCKApi.friend_kanojos(user_id, index, limit, search)
+	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class)
 	fun account_show(): Response<BarcodeKanojoModel?>? {
@@ -349,8 +351,8 @@ class BarcodeKanojo(context: Context) {
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun show_dialog(): Response<BarcodeKanojoModel?> {
-		return mBCKApi.show_dialog()
+	fun show_dialog(action: Int): Response<BarcodeKanojoModel?> {
+		return mBCKApi.show_dialog(action, getPartOfDay())
 	}
 
 	@Throws(BarcodeKanojoException::class, IOException::class)

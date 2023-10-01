@@ -229,6 +229,7 @@
     <string name="preferences_disable_continuous_focus_summary">Use only standard focus mode</string>
     <string name="preferences_try_bsplus">Try Barcode Scanner+</string>
     <string name="preferences_try_bsplus_summary">Enhanced with new features and interface</string>
+	<string name="button_next">次</string>
 	<string name="sign_up">Sign Up</string>
 	<string name="save">保存</string>
 </resources>

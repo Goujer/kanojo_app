@@ -242,6 +242,7 @@
     <string name="button_add_calendar">Add to calendar</string>
     <string name="button_add_contact">Add contact</string>
     <string name="button_back">Back</string>
+	<string name="button_next">Next</string>
     <string name="button_book_search">Book Search</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_clipboard_empty">Clipboard empty</string>

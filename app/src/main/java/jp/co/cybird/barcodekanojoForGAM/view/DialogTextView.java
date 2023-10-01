@@ -11,17 +11,17 @@ import android.widget.TextView;
 import com.goujer.barcodekanojo.R;
 
 public class DialogTextView extends RelativeLayout {
-    private OnDismissListener listener;
     private ImageButton mCloseButton;
-	private Button mSiteButton;
-    private String mTextString;
+	private Button mNextButton;
     private TextView mTextView;
-    private Boolean needMask = false;
+	private OnDismissListener listener;
+	private String[] mTextStrings;
+	private int messageIndex = 0;
 
     public interface OnDismissListener {
         void OnCloseClick();
 
-        void onSiteClick(String str);
+		void onNextClick();
     }
 
     public DialogTextView(Context context, AttributeSet attrs) {
@@ -30,43 +30,50 @@ public class DialogTextView extends RelativeLayout {
         setPadding(10, 0, 10, 0);
         LayoutInflater.from(context).inflate(R.layout.view_dialog_frame, this, true);
         getControls();
-        setEvent();
-        init(context, attrs);
     }
 
     public void getControls() {
         this.mTextView = findViewById(R.id.dialog_view_message);
         this.mCloseButton = findViewById(R.id.dialog_close_btn);
-        this.mSiteButton = findViewById(R.id.dialog_site_btn);
+        this.mNextButton = findViewById(R.id.dialog_site_btn);
     }
 
     public void setListener(OnDismissListener listener2) {
         this.listener = listener2;
     }
 
-    public void setEvent() {
-    }
+	public void initDialogMessage(String[] messages) {
+		this.mTextStrings = messages;
+		this.messageIndex = 0;
+		this.mTextView.setText(messages[0]);
+		if (this.mTextStrings.length > 1) {
+			this.mNextButton.setVisibility(View.VISIBLE);
+		} else {
+			this.mNextButton.setVisibility(View.INVISIBLE);
+		}
 
-    public void init(Context context, AttributeSet attrs) {
-    }
-
-    public void initDialogMessage(String message, final String url, String btntext) {
-        this.mTextView.setText(message);
-        this.mSiteButton.setText(btntext);
-        this.mSiteButton.setOnClickListener(v -> {
+		this.mNextButton.setOnClickListener(v -> {
+			messageIndex++;
+			this.mTextView.setText(this.mTextStrings[this.messageIndex]);
+			if (messageIndex+1 >= messages.length) {
+				this.mNextButton.setVisibility(View.INVISIBLE);
+			}
             if (DialogTextView.this.listener != null) {
-                DialogTextView.this.listener.onSiteClick(url);
+				DialogTextView.this.listener.onNextClick();
             }
         });
+
         this.mCloseButton.setOnClickListener(v -> {
+			this.mTextStrings = null;
+			this.messageIndex = 0;
             if (DialogTextView.this.listener != null) {
                 DialogTextView.this.listener.OnCloseClick();
             }
         });
     }
 
-    public String getMessage() {
-        return this.mTextString;
+	public String[] getMessages() {
+        return this.mTextStrings;
     }
 
     public boolean isEmpty() {
