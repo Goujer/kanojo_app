@@ -1,7 +1,5 @@
 package jp.co.cybird.barcodekanojoForGAM.activity.base;
 
-import static kotlinx.coroutines.CoroutineScopeKt.CoroutineScope;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -27,6 +25,8 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
 import com.goujer.barcodekanojo.R;
+
+import jp.co.cybird.barcodekanojoForGAM.activity.kanojo.KanojoRoomActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.util.ApiTask;
 import jp.co.cybird.barcodekanojoForGAM.activity.util.EditBitmapActivity;
 import com.goujer.barcodekanojo.core.BarcodeKanojo;
@@ -39,8 +39,6 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.FileUtil;
 import jp.co.cybird.barcodekanojoForGAM.core.util.GeoUtil;
 import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
-import kotlinx.coroutines.Dispatchers;
-import kotlinx.coroutines.Job;
 
 import com.goujer.barcodekanojo.base.PermissionRequestCode;
 import com.goujer.barcodekanojo.view.ProductAndKanojoView;
@@ -288,17 +286,22 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         private Object mOption;
         private HashMap<String, String> mParam;
         private Exception mReason = null;
-        private WeakReference<BaseEditActivity> contextRef;
+        private WeakReference<BaseEditActivity> activityRef;
 
-        KanojoGenerateAndUpdate(BaseEditActivity context, HashMap<String, String> param, Object option, int action) {
-        	this.contextRef = new WeakReference<>(context);
+        KanojoGenerateAndUpdate(BaseEditActivity activity, HashMap<String, String> param, Object option, int action) {
+        	this.activityRef = new WeakReference<>(activity);
             this.mParam = param;
             this.mOption = option;
             this.mAction = action;
         }
 
         public void onPreExecute() {
-			contextRef.get().showProgressDialog();
+	        BaseEditActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
+
+			activity.showProgressDialog();
         }
 
         public Response<?> doInBackground(String... params) {
@@ -311,19 +314,22 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         }
 
         public void onPostExecute(Response<?> response) {
+	        BaseEditActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
+
             int code = 0;
             try {
                 if (this.mAction == 2) {
-                    code = contextRef.get().getCodeAndShowAlert(response, this.mReason, new BaseActivity.OnDialogDismissListener() {
-                        public void onDismiss(DialogInterface dialog, int code) {
-                            if (code == 200) {
-								contextRef.get().setResult(102);
-								contextRef.get().close();
-                            }
-                        }
-                    });
+					code = activity.getCodeAndShowAlert(response, this.mReason, (dialog, code1) -> {
+					    if (code1 == Response.CODE_SUCCESS) {
+													activity.setResult(BaseInterface.RESULT_GENERATE_KANOJO);
+													activity.close();
+					    }
+					});
                 } else if (this.mAction == 3) {
-                    code = contextRef.get().getCodeAndShowAlert(response, this.mReason);
+                    code = activity.getCodeAndShowAlert(response, this.mReason);
                 } else if (this.mAction == 4) {
                     if (response == null) {
                         throw new BarcodeKanojoException(this.mReason.toString());
@@ -335,13 +341,13 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                         if (this.mAction != 2) {
                             if (this.mAction != 4) {
                                 if (this.mAction == 3) {
-									contextRef.get().dismissProgressDialog();
+									activity.dismissProgressDialog();
                                     ApiTask task = (ApiTask) this.mOption;
                                     task.result = 1;
                                     if (task.what != 2) {
                                         if (task.what == 1) {
-											contextRef.get().setResult(103);
-											contextRef.get().close();
+											activity.setResult(103);
+											activity.close();
                                             break;
                                         }
                                     } else {
@@ -353,44 +359,54 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                                 Alert alert = response.getAlert();
                                 final Product product = (Product) response.get(Product.class);
                                 if (alert != null) {
-									contextRef.get().dismissProgressDialog();
-									contextRef.get().showNoticeDialog(alert.getBody(), new DialogInterface.OnDismissListener() {
+	                                activity.dismissProgressDialog();
+	                                activity.showNoticeDialog(alert.getBody(), new DialogInterface.OnDismissListener() {
                                         public void onDismiss(DialogInterface dialog) {
                                             Intent data = new Intent();
                                             data.putExtra(BaseInterface.EXTRA_PRODUCT, product);
-											contextRef.get().setResult(101, data);
-											contextRef.get().close();
+											activity.setResult(101, data);
+											activity.close();
                                         }
                                     });
                                     break;
                                 }
                             }
                         } else {
-							contextRef.get().setResult(BaseInterface.RESULT_GENERATE_KANOJO);
-							contextRef.get().close();
+							activity.setResult(BaseInterface.RESULT_GENERATE_KANOJO);
+							activity.close();
                             break;
                         }
                         break;
                     case Response.CODE_ERROR_SERVER:
                     case Response.CODE_ERROR_SERVICE_UNAVAILABLE:
-						contextRef.get().dismissProgressDialog();
+	                    activity.dismissProgressDialog();
                         break;
                 }
             } catch (BarcodeKanojoException e) {
             } finally {
-				contextRef.get().dismissProgressDialog();
+	            activity.dismissProgressDialog();
             }
         }
 
         protected void onCancelled() {
-			contextRef.get().dismissProgressDialog();
+	        BaseEditActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
+
+			activity.dismissProgressDialog();
         }
 
         Response<?> process() throws BarcodeKanojoException, IllegalStateException, IOException {
-            BarcodeKanojoApp barcodeKanojoApp = (BarcodeKanojoApp) contextRef.get().getApplication();
+	        BaseEditActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return null;
+	        }
+
+            BarcodeKanojoApp barcodeKanojoApp = (BarcodeKanojoApp) activity.getApplication();
             BarcodeKanojo barcodeKanojo = barcodeKanojoApp.getBarcodeKanojo();
             if (this.mAction == 2) {
-                File iconFile = FileUtil.createIconCache(contextRef.get(), (Kanojo) this.mOption);
+                File iconFile = FileUtil.createIconCache(activity, (Kanojo) this.mOption);
                 Location loc = barcodeKanojoApp.getLastKnownLocation();
                 if (loc == null) {
                     try {
@@ -399,9 +415,9 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                     }
                     loc = barcodeKanojoApp.getLastKnownLocation();
                 }
-                return barcodeKanojo.scan_and_generate(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.KANOJO_NAME), iconFile, this.mParam.get(GreeDefs.PRODUCT_NAME), Integer.parseInt(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)), this.mParam.get(GreeDefs.PRODUCT_COMMENT), contextRef.get().getFile(), loc);
+                return barcodeKanojo.scan_and_generate(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.KANOJO_NAME), iconFile, this.mParam.get(GreeDefs.PRODUCT_NAME), Integer.parseInt(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)), this.mParam.get(GreeDefs.PRODUCT_COMMENT), activity.getFile(), loc);
             } else if (this.mAction == 4) {
-                return barcodeKanojo.update(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.PRODUCT_NAME), Integer.parseInt(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)), this.mParam.get(GreeDefs.PRODUCT_COMMENT), contextRef.get().getFile(), GeoUtil.stringToGeo(this.mParam.get(GreeDefs.GEOPOINT)));
+                return barcodeKanojo.update(this.mParam.get(GreeDefs.BARCODE), this.mParam.get(GreeDefs.COMPANY_NAME), this.mParam.get(GreeDefs.PRODUCT_NAME), Integer.parseInt(this.mParam.get(GreeDefs.PRODUCT_CUTEGORY_ID)), this.mParam.get(GreeDefs.PRODUCT_COMMENT), activity.getFile(), GeoUtil.stringToGeo(this.mParam.get(GreeDefs.GEOPOINT)));
             } else if (this.mAction == 3) {
                 Location loc2 = barcodeKanojoApp.getLastKnownLocation();
                 if (loc2 == null) {
@@ -420,12 +436,12 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                         if (task.barcode == null || task.product == null) {
                             return null;
                         }
-                        return barcodeKanojo.scan(task.barcode, task.product.getCompany_name(), task.product.getName(), task.product.getCategory_id(), task.product.getComment(), contextRef.get().getFile(), loc2);
+                        return barcodeKanojo.scan(task.barcode, task.product.getCompany_name(), task.product.getName(), task.product.getCategory_id(), task.product.getComment(), activity.getFile(), loc2);
                     case 2:
                         if (task.barcode == null || task.product == null) {
                             return null;
                         }
-                        return barcodeKanojo.update(task.barcode, task.product.getCompany_name(), task.product.getName(), task.product.getCategory_id(), task.product.getComment(), contextRef.get().getFile(), loc2);
+                        return barcodeKanojo.update(task.barcode, task.product.getCompany_name(), task.product.getName(), task.product.getCategory_id(), task.product.getComment(), activity.getFile(), loc2);
                     default:
                         return null;
                 }
@@ -435,24 +451,35 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         }
     }
 
-    protected class SignUpAndUpdateAccountTask extends AsyncTask<Void, Void, Response<?>> {
+    protected static class SignUpAndUpdateAccountTask extends AsyncTask<Void, Void, Response<?>> {
         private static final String TAG = "SignUpUpdateAccountTask";
         private final int mAction;
         private Exception mReason;
+		private WeakReference<BaseEditActivity> activityRef;
 
 		public SignUpAndUpdateAccountTask(HashMap<String, String> param2, int action) {
 			this.mAction = action;
         }
 
         protected void onPreExecute() {
-            BaseEditActivity.this.showProgressDialog();
+	        BaseEditActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
+
+            activity.showProgressDialog();
         }
 
         protected Response<?> doInBackground(Void... params) {
+	        BaseEditActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return null;
+	        }
+
             try {
-                BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) BaseEditActivity.this.getApplication()).getBarcodeKanojo();
+                BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) activity.getApplication()).getBarcodeKanojo();
                 Log.e(TAG, "doInBackground() cunnot be used !!!");
-                String udid = ((BarcodeKanojoApp) BaseEditActivity.this.getApplication()).getUDID();
+                String udid = ((BarcodeKanojoApp) activity.getApplication()).getUDID();
                 return null;
             } catch (Exception e) {
                 this.mReason = e;
@@ -461,23 +488,33 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         }
 
         protected void onPostExecute(Response<?> response) {
+	        BaseEditActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
+
             try {
-                switch (BaseEditActivity.this.getCodeAndShowAlert(response, this.mReason)) {
+                switch (activity.getCodeAndShowAlert(response, this.mReason)) {
 					case Response.CODE_SUCCESS:
                         if (this.mAction == 1) {
-                            BaseEditActivity.this.updateUser(response);
+                            activity.updateUser(response);
                             break;
                         }
                         break;
                 }
             } catch (BarcodeKanojoException e) {
             } finally {
-                BaseEditActivity.this.dismissProgressDialog();
+                activity.dismissProgressDialog();
             }
         }
 
         protected void onCancelled() {
-            BaseEditActivity.this.dismissProgressDialog();
+	        BaseEditActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
+
+            activity.dismissProgressDialog();
         }
     }
 
