@@ -1,14 +1,19 @@
 package com.goujer.barcodekanojo.core.http
 
+import com.goujer.barcodekanojo.core.cache.ImageDiskCache
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
 import jp.co.cybird.barcodekanojoForGAM.core.parser.AbstractJSONParser
 import jp.co.cybird.barcodekanojoForGAM.core.parser.JSONParser
-import com.goujer.barcodekanojo.core.cache.ImageDiskCache
 import java.io.DataOutputStream
-import java.net.*
+import java.net.CookieHandler
+import java.net.CookieManager
+import java.net.HttpURLConnection
+import java.net.URL
+import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLHandshakeException
+
 
 class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBasePort: Int?, clientVersion: String?, clientLanguage: String?) {
 	internal var mApiBaseProtocol: String = if (useHttps) "https" else "http"
@@ -26,6 +31,10 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 
 	init {
 		CookieHandler.setDefault(CookieManager())
+
+		val sslContext = SSLContext.getInstance("TLSv1.2")
+		sslContext.init(null, null, null)
+		val engine = sslContext.createSSLEngine()
 	}
 
 	//TODO Copied and modified from core.http.HttpApi.executeHttpRequest() which JADX did not decompile correctly.
@@ -132,7 +141,8 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 		try {
 			connection.outputStream.write(parameters.toString().toByteArray(charset("UTF-8")))
 		} catch (e: SSLHandshakeException) {
-			throw BarcodeKanojoException("SSL Handshake Failed")    //TODO Ensure this gets delivered right anc consider making this a proper string.
+			e.printStackTrace()
+			throw BarcodeKanojoException("Error with connection")    //TODO Ensure this gets delivered right anc consider making this a proper string.
 		}
 
 		return connection

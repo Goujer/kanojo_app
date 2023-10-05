@@ -236,7 +236,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             dialog.setMessage(getString(R.string.common_progress_dialog_message));
             dialog.setIndeterminate(true);
             dialog.setCancelable(true);
-			this.mProgressDialog.setCanceledOnTouchOutside(false);
+			dialog.setCanceledOnTouchOutside(false);
             dialog.setOnCancelListener(listener);
             this.mProgressDialog = dialog;
         }
