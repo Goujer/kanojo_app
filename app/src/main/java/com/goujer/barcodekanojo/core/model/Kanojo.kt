@@ -6,10 +6,10 @@ import android.os.Parcelable
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.util.GeoUtil
 import jp.co.cybird.barcodekanojoForGAM.core.model.Barcode
+import org.osmdroid.util.GeoPoint
 
 class Kanojo : BarcodeKanojoModel, Parcelable {
 	var accessory_type = 0
-	var advertising_banner_url: String? = null
 	var avatar_background_image_url: String? = null
 	var barcode: String? = null
 	var birth_day = 0
@@ -26,7 +26,7 @@ class Kanojo : BarcodeKanojoModel, Parcelable {
 	var face_type = 0
 	var follower_count = 0
 	var fringe_type = 0
-	var geo: Location
+	var geo: GeoPoint
 	var id = 0
 	var isIn_room = false
 	var like_rate = 0
@@ -66,7 +66,7 @@ class Kanojo : BarcodeKanojoModel, Parcelable {
 	var sexual = 0
 
 	constructor() {
-		geo = GeoUtil.doublesToGeo(0.0, 0.0)
+		geo = GeoPoint(0.0, 0.0)
 	}
 
 	constructor(barcodeIn: Barcode) : this() {
@@ -107,8 +107,8 @@ class Kanojo : BarcodeKanojoModel, Parcelable {
 		dest.writeInt(id)
 		dest.writeString(name)
 		dest.writeString(barcode)
-		dest.writeDouble(GeoUtil.getLatitudeE6(geo))
-		dest.writeDouble(GeoUtil.getLongitudeE6(geo))
+		dest.writeDouble(geo.latitude)
+		dest.writeDouble(geo.longitude)
 		dest.writeString(location)
 		dest.writeInt(birth_year)
 		dest.writeInt(birth_month)
@@ -149,7 +149,6 @@ class Kanojo : BarcodeKanojoModel, Parcelable {
 		dest.writeInt(like_rate)
 		dest.writeString(status)
 		dest.writeString(avatar_background_image_url)
-		dest.writeString(advertising_banner_url)
 		dest.writeInt(emotion_status)
 		dest.writeInt(mascotEnable)
 	}
@@ -158,7 +157,7 @@ class Kanojo : BarcodeKanojoModel, Parcelable {
 		id = parcelIn.readInt()
 		name = parcelIn.readString()
 		barcode = parcelIn.readString()
-		geo = GeoUtil.doublesToGeo(parcelIn.readDouble(), parcelIn.readDouble())
+		geo = GeoPoint(parcelIn.readDouble(), parcelIn.readDouble())
 		location = parcelIn.readString()
 		birth_year = parcelIn.readInt()
 		birth_month = parcelIn.readInt()
@@ -203,7 +202,6 @@ class Kanojo : BarcodeKanojoModel, Parcelable {
 		like_rate = parcelIn.readInt()
 		status = parcelIn.readString()
 		avatar_background_image_url = parcelIn.readString()
-		advertising_banner_url = parcelIn.readString()
 		emotion_status = parcelIn.readInt()
 		mascotEnable = parcelIn.readInt()
 	}
@@ -211,15 +209,16 @@ class Kanojo : BarcodeKanojoModel, Parcelable {
 	private constructor(parcel: Parcel, kanojo: Kanojo?) : this(parcel) {}
 
 	fun setGeo(geo2: String?) {
-		geo = GeoUtil.stringToGeo(geo2)
+		geo = GeoPoint.fromDoubleString(geo2, ',')
 	}
 
 	val geoString: String
-		get() = GeoUtil.geoToString(geo)
+		get() = geo.toDoubleString()
+
 	val profile_image_icon_url: String
 		get() = "/profile_images/kanojo/$id/icon.png"
-	val profile_image_iconv1_url: String
-		get() = "/profile_images/kanojo/$id/iconv1.png"
+	val profile_image_bust_url: String
+		get() = "/profile_images/kanojo/$id/bust.png"
 	val profile_image_url: String
 		get() = "/profile_images/kanojo/$id/full.png"
 
