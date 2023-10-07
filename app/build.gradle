@@ -9,8 +9,8 @@ android {
 		//noinspection ExpiredTargetSdkVersion
 		minSdkVersion 14
 		//VersionCode Scheme AABBBBBB	A=minSDK, B=Version of App (BB.BB.BB)
-		versionCode 14000304
-		versionName "0.3.4"
+		versionCode 14000400
+		versionName "0.4.0"
 	}
 
 	signingConfigs {
@@ -104,7 +104,7 @@ dependencies {
 	//implementation 'com.google.zxing:android-core:3.2.1'
 	//implementation 'com.google.zxing:android-integration:3.2.1'
 
-	//Google Play Android Security Provider Update
+	//Google Play Android Security Provider Update (Lets TLS 1.2 work on some older devices)
 	implementation 'com.google.android.gms:play-services-auth:20.7.0'
 
 	//Live2D
