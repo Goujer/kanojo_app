@@ -219,8 +219,9 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
 							break;
 						}
 					}
-				case "EAN_13":
 				case "EAN_8":
+					contents = "00000" + contents;
+				case "EAN_13":
 					executeScanQueryTask(contents);
 					break;
 				default:
@@ -405,7 +406,9 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                 return null;
             }
             try {
-                return process(params[0]);
+	            BarcodeKanojoApp barcodeKanojoApp = (BarcodeKanojoApp) ScanActivity.this.getApplication();
+	            BarcodeKanojo barcodeKanojo = barcodeKanojoApp.getBarcodeKanojo();
+	            return barcodeKanojo.query(params[0]);  //Check if Kanojo exists with this Barcode.
             } catch (Exception e) {
                 this.mReason = e;
                 return null;
@@ -475,20 +478,6 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         @Override
         protected void onCancelled() {
             ScanActivity.this.dismissProgressDialog();
-        }
-
-        private Response<?> process(String barcode) throws BarcodeKanojoException, IllegalStateException, IOException {
-            BarcodeKanojoApp barcodeKanojoApp = (BarcodeKanojoApp) ScanActivity.this.getApplication();
-            BarcodeKanojo barcodeKanojo = barcodeKanojoApp.getBarcodeKanojo();
-            Location loc = barcodeKanojoApp.getLastKnownLocation();
-            if (loc == null) {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                }
-                loc = barcodeKanojoApp.getLastKnownLocation();
-            }
-            return barcodeKanojo.query(barcode, loc);
         }
     }
 

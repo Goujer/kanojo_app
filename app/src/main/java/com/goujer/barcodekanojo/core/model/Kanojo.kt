@@ -9,23 +9,14 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.Barcode
 import org.osmdroid.util.GeoPoint
 
 class Kanojo : BarcodeKanojoModel, Parcelable {
-	var accessory_type = 0
 	var avatar_background_image_url: String? = null
 	var barcode: String? = null
 	var birth_day = 0
 	var birth_month = 0
 	var birth_year = 0
-	var brow_position = 0f
-	var brow_type = 0
-	var clothes_type = 0
-	var ear_type = 0
 	var emotion_status = 0
-	var eye_color = 0
-	var eye_position = 0f
-	var eye_type = 0
-	var face_type = 0
+
 	var follower_count = 0
-	var fringe_type = 0
 	var geo: GeoPoint
 	var id = 0
 	var isIn_room = false
@@ -33,8 +24,7 @@ class Kanojo : BarcodeKanojoModel, Parcelable {
 	var location: String? = null
 	var love_gauge = 0
 	var mascotEnable = 0
-	var mouth_position = 0f
-	var mouth_type = 0
+
 	var name: String? = null
 	var nationality: String? = null
 
@@ -48,15 +38,28 @@ class Kanojo : BarcodeKanojoModel, Parcelable {
 	var isVoted_like = false
 
 	//Generated Attributes
+	var accessory_type = 0
 	var body_type = 0
+	var brow_type = 0
+	var clothes_type = 0
+	var ear_type = 0
+	var eye_type = 0
+	var face_type = 0
+	var fringe_type = 0
 	var glasses_type = 0
 	var hair_type = 0
+	var mouth_type = 0
 	var nose_type = 0
 	var race_type = 0 //Unused?
 	var spot_type = 0
 
+	var eye_color = 0
 	var hair_color = 0
 	var skin_color = 0
+
+	var brow_position = 0f
+	var eye_position = 0f
+	var mouth_position = 0f
 
 	//Chart Stats
 	var flirtable = 0

@@ -261,19 +261,6 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
         }
     }
 
-    protected void executeInspectionAndGenerateTask(String barcode, String company_name, String kanojo_name, String product_name, int product_category_id, String product_comment, Location product_geo, Kanojo kanojo) {
-        HashMap<String, String> param = new HashMap<>();
-        param.put(GreeDefs.BARCODE, barcode);
-        param.put(GreeDefs.KANOJO_NAME, kanojo_name);
-        param.put(GreeDefs.COMPANY_NAME, company_name);
-        param.put(GreeDefs.PRODUCT_NAME, product_name);
-        param.put(GreeDefs.PRODUCT_CUTEGORY_ID, String.valueOf(product_category_id));
-        param.put(GreeDefs.PRODUCT_COMMENT, product_comment);
-        HashMap<String, Object> options = new HashMap<>();
-        options.put(Kanojo.TAG, kanojo);
-        inspectionAndUpdateByAction(param, 2, options);
-    }
-
     public void executeGenerateTask(HashMap<String, String> params, Kanojo kanojo) {
         if (this.mKanojoGenerateAndUpdateTask == null || this.mKanojoGenerateAndUpdateTask.getStatus() == AsyncTask.Status.FINISHED) {
             this.mKanojoGenerateAndUpdateTask = new KanojoGenerateAndUpdate(this, params, kanojo, 2);
@@ -538,13 +525,6 @@ public abstract class BaseEditActivity extends BaseActivity implements BaseInter
                 return;
             case 1:
                 executeEditAccountTask(param);
-                return;
-            case 2:
-                Kanojo kanojo = null;
-                if (options != null) {
-                    kanojo = (Kanojo) options.get(Kanojo.TAG);
-                }
-                executeGenerateTask(param, kanojo);
                 return;
             case 3:
                 ApiTask task = null;

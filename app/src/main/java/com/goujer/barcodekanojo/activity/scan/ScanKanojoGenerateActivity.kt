@@ -6,12 +6,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
-import com.goujer.barcodekanojo.activity.base.BaseKanojoEditActivity
-import com.goujer.barcodekanojo.view.ProductAndKanojoView
 import com.goujer.barcodekanojo.BarcodeKanojoApp
 import com.goujer.barcodekanojo.R
+import com.goujer.barcodekanojo.activity.base.BaseKanojoEditActivity
 import com.goujer.barcodekanojo.core.model.Kanojo
+import com.goujer.barcodekanojo.view.ProductAndKanojoView
 import jp.co.cybird.barcodekanojoForGAM.core.model.Product
+import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView
 
 class ScanKanojoGenerateActivity : BaseKanojoEditActivity(), View.OnClickListener, DialogInterface.OnDismissListener {
@@ -48,10 +49,12 @@ class ScanKanojoGenerateActivity : BaseKanojoEditActivity(), View.OnClickListene
 		btnSave = findViewById(R.id.scan_generate_btn_save)
 		btnSave.setOnClickListener(this)
 		btnSave.setEnabled(false)
+
 		val bundle = intent.extras
 		mKanojo = bundle!![EXTRA_KANOJO] as Kanojo?
 		mProduct = bundle[EXTRA_PRODUCT] as Product?
 		isDetailByAmazon = bundle.getBoolean("isDetailByAmazon")
+
 		if (mKanojo != null && mProduct != null) {
 			mBarcode.value = mKanojo!!.barcode
 			var leftimgurl: String? = null
@@ -117,27 +120,43 @@ class ScanKanojoGenerateActivity : BaseKanojoEditActivity(), View.OnClickListene
 	}
 
 	override fun onClick(v: View) {
-		val id = v.id
-		if (id == R.id.edit_close) {
-			close()
-		} else if (id == R.id.scan_generate_1_kanojo_name) {
-			showEditTextDialog(r.getString(R.string.common_product_kanojo_name), mKanojoName)
-		} else if (id == R.id.scan_generate_2_company_name) {
-			showEditTextDialog(r.getString(R.string.common_product_company), mCompanyName)
-		} else if (id == R.id.scan_generate_3_product_name) {
-			showEditTextDialog(r.getString(R.string.common_product_name), mProductName)
-		} else if (id == R.id.scan_generate_4_category) {
-			showListDialog(r.getString(R.string.common_product_category), mProduct!!, mCategoryName!!)
-		} else if (id == R.id.scan_generate_6_photo) {
-			showImagePickerDialog(r.getString(R.string.common_product_photo))
-		} else if (id == R.id.scan_generate_7_comment) {
-			showEditTextDialog(r.getString(R.string.common_product_comment), mComment, 4)
-		} else if (id == R.id.scan_generate_btn_save) {
-			if (isDetailByAmazon && file == null) {
-				val dic = (application as BarcodeKanojoApp).imageCache
-				file = dic.getFile(mProduct!!.product_image_url)
+		when (v.id) {
+			R.id.edit_close -> {
+				close()
 			}
-			executeInspectionAndGenerateTask(mKanojo!!.barcode, mCompanyName.value, mKanojoName.value, mProductName.value, mProduct!!.category_id, mComment.value, null, mKanojo)
+			R.id.scan_generate_1_kanojo_name -> {
+				showEditTextDialog(r.getString(R.string.common_product_kanojo_name), mKanojoName)
+			}
+			R.id.scan_generate_2_company_name -> {
+				showEditTextDialog(r.getString(R.string.common_product_company), mCompanyName)
+			}
+			R.id.scan_generate_3_product_name -> {
+				showEditTextDialog(r.getString(R.string.common_product_name), mProductName)
+			}
+			R.id.scan_generate_4_category -> {
+				showListDialog(r.getString(R.string.common_product_category), mProduct!!, mCategoryName)
+			}
+			R.id.scan_generate_6_photo -> {
+				showImagePickerDialog(r.getString(R.string.common_product_photo))
+			}
+			R.id.scan_generate_7_comment -> {
+				showEditTextDialog(r.getString(R.string.common_product_comment), mComment, 4)
+			}
+			R.id.scan_generate_btn_save -> {
+				if (isDetailByAmazon && file == null) {
+					val dic = (application as BarcodeKanojoApp).imageCache
+					file = dic.getFile(mProduct!!.product_image_url)
+				}
+				//execute Inspection And Generate Task
+				val param = HashMap<String, String>()
+				param[GreeDefs.BARCODE] = mKanojo!!.barcode!!
+				param[GreeDefs.KANOJO_NAME] = mKanojoName.value
+				param[GreeDefs.COMPANY_NAME] = mCompanyName.value
+				param[GreeDefs.PRODUCT_NAME] = mProductName.value
+				param[GreeDefs.PRODUCT_CUTEGORY_ID] = mProduct!!.category_id.toString()
+				param[GreeDefs.PRODUCT_COMMENT] = mComment.value
+				executeGenerateTask(param, mKanojo)
+			}
 		}
 	}
 
