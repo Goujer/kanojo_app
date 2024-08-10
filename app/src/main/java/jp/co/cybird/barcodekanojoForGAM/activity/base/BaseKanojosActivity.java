@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
+
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
 import jp.co.cybird.barcodekanojoForGAM.activity.kanojo.KanojoRoomActivity;
 import com.goujer.barcodekanojo.core.BarcodeKanojo;
@@ -50,22 +52,40 @@ public abstract class BaseKanojosActivity extends BaseActivity {
 
     private void executeLive2dTask() {
         if (this.mLive2dTask == null || this.mLive2dTask.getStatus() == AsyncTask.Status.FINISHED || this.mLive2dTask.cancel(true) || this.mLive2dTask.isCancelled()) {
-            this.mLive2dTask = new Live2dTask();
+            this.mLive2dTask = new Live2dTask(this);
             this.mLive2dTask.execute();
         }
     }
 
-    class Live2dTask extends AsyncTask<Void, Void, Response<BarcodeKanojoModel>> {
-        private Exception mReason = null;
+	//This saves and sends any remaining Live2D interactions and updates the Like status of the Kanojo
+    static class Live2dTask extends AsyncTask<Void, Void, Response<BarcodeKanojoModel>> {
+	    private final WeakReference<BaseKanojosActivity> activityRef;
+		private Exception mReason = null;
 
-        @Override
-        protected void onPreExecute() {
-        }
+	    Live2dTask(BaseKanojosActivity activity) {
+		    super();
+		    activityRef = new WeakReference<>(activity);
+	    }
 
         @Override
         protected Response<BarcodeKanojoModel> doInBackground(Void... params) {
+	        BaseKanojosActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return null;
+	        }
+
             try {
-                return process();
+	            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) activity.getApplication()).getBarcodeKanojo();
+	            Response<BarcodeKanojoModel> response = barcodeKanojo.play_on_live2d();
+	            Response<BarcodeKanojoModel> response2 = barcodeKanojo.vote_like();
+	            if (response != null && response2 != null) {
+		            response.addAll(response2);
+		            return response;
+	            } else if (response != null || response2 == null) {
+		            return response;
+	            } else {
+		            return response2;
+	            }
             } catch (Exception e) {
                 this.mReason = e;
                 return null;
@@ -74,24 +94,14 @@ public abstract class BaseKanojosActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(Response<BarcodeKanojoModel> response) {
-            try {
-                switch (BaseKanojosActivity.this.getCodeAndShowAlert(response, this.mReason)) {
-                }
-            } catch (BarcodeKanojoException e) {
-            }
-        }
+	        BaseKanojosActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
 
-        Response<BarcodeKanojoModel> process() throws BarcodeKanojoException, IllegalStateException, IOException {
-            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) BaseKanojosActivity.this.getApplication()).getBarcodeKanojo();
-            Response<BarcodeKanojoModel> response = barcodeKanojo.play_on_live2d();
-            Response<BarcodeKanojoModel> response2 = barcodeKanojo.vote_like();
-            if (response != null && response2 != null) {
-                response.addAll(response2);
-                return response;
-            } else if (response != null || response2 == null) {
-                return response;
-            } else {
-                return response2;
+			try {
+				activity.getCodeAndShowAlert(response, this.mReason);
+			} catch (BarcodeKanojoException e) {
             }
         }
     }

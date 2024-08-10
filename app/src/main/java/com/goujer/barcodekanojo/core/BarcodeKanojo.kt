@@ -96,7 +96,7 @@ class BarcodeKanojo(context: Context) {
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun like_ranking(index: Int, limit: Int): Response<BarcodeKanojoModel?>? {
+	fun like_ranking(index: Int, limit: Int): Response<BarcodeKanojoModel?> {
 		return mBCKApi.like_ranking(index, limit)
 	}
 
@@ -107,7 +107,7 @@ class BarcodeKanojo(context: Context) {
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun vote_like(): Response<BarcodeKanojoModel?>? {
-		var kanojo: Kanojo
+		val kanojo: Kanojo
 		return if (mPlayLive2d != null && mPlayLive2d!!.kanojo != null) {
 			kanojo = mPlayLive2d!!.kanojo!!
 			mBCKApi.vote_like(kanojo.id, kanojo.isVoted_like)
@@ -251,9 +251,13 @@ class BarcodeKanojo(context: Context) {
 		}
 		val kanojo = mPlayLive2d!!.kanojo
 		val actions = mPlayLive2d!!.actions
-		if (kanojo == null || actions == null) {
+
+		//Check Arguments
+		if (kanojo == null || actions.isNullOrEmpty()) {
 			return null
 		}
+
+		//Check if Relationship is valid for updating
 		return if (kanojo.relation_status != Kanojo.RELATION_KANOJO && kanojo.relation_status != Kanojo.RELATION_FRIEND) {
 			null
 		} else mBCKApi.play_on_live2d(kanojo.id, actions)
