@@ -15,18 +15,35 @@
         </LinearLayout>
         <RelativeLayout android:id="@+id/layoutTab" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content">
             <Button
-				android:id="@+id/kanojo_tab_items_store"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignParentLeft="true"
-				android:background="@drawable/button_store_tab_select"
-				android:clickable="true"
-				android:focusable="true"
-				android:text="Store"
-				android:textColor="@android:color/black"
-				android:textStyle="bold"/>
-            <Button android:textStyle="bold" android:textColor="@android:color/black" android:id="@+id/kanojo_tab_items_list" android:background="@drawable/button_list_item_tab" android:focusable="true" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Belongings List" android:layout_alignParentRight="true"/>
+	            android:id="@+id/kanojo_tab_items_store"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentStart="true"
+	            android:layout_alignParentLeft="true"
+	            android:background="@drawable/button_store_tab"
+	            android:clickable="true"
+	            android:focusable="true"
+	            android:text="Store"
+	            android:textColor="@android:color/black"
+	            android:textStyle="bold" />
+            <Button
+	            android:id="@+id/kanojo_tab_items_list"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:background="@drawable/button_list_item_tab"
+	            android:clickable="true"
+	            android:focusable="true"
+	            android:text="Belongings List"
+	            android:textColor="@android:color/black"
+	            android:textStyle="bold"
+	            android:layout_alignParentEnd="true" />
         </RelativeLayout>
+	    <com.goujer.barcodekanojo.view.UserProfileView
+		    android:id="@+id/common_profile"
+		    android:layout_width="match_parent"
+		    android:layout_height="@dimen/profile_height"
+		    android:background="@drawable/userprofile_bg" />
         <ListView android:id="@+id/kanojo_items_list" android:background="@color/default_bg" android:layout_width="match_parent" android:layout_height="match_parent" android:divider="#555555"/>
     </LinearLayout>
     <RelativeLayout android:id="@+id/kanojo_items_firstboot" android:background="@color/firstboot_bg" android:paddingTop="@dimen/common_firstboot_top" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent">
