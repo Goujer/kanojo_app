@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache;
 
 import java.io.IOException;
@@ -60,7 +62,6 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 
     private boolean isLoading = false;
     private boolean isSearch = false;
-    private SeparatedListHeaderAdapter mAdapter;
 
 	private StatusHolder mYourKanojos;
 	private StatusHolder mFriends;
@@ -70,10 +71,13 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 	private KanojoTask friendKanojoTask;
 	private KanojoTask rankingKanojoTask;
 
+	private SeparatedListHeaderAdapter mAdapter;
     private ListView mKanojosListView;
-    private LogInTask mLogInTask;
     private UserProfileView mProfileView;
+	private SwipeRefreshLayout swipeRefreshLayout;
+
     private DynamicImageCache mDic;
+	private LogInTask mLogInTask;
     private String mSearchWord = null;
     private User mUser;
     private Resources r;
@@ -94,8 +98,16 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         this.mDic = ((BarcodeKanojoApp) getApplication()).getImageCache();
         this.mProfileView = findViewById(R.id.common_profile);
         this.mKanojosListView = findViewById(R.id.kanojos_list);
+		this.swipeRefreshLayout = findViewById(R.id.kanojos_swipe_refresh);
 
-        this.mYourKanojos = new StatusHolder();
+	    swipeRefreshLayout.setOnRefreshListener(() -> {
+				    // This method performs the actual data-refresh operation and calls setRefreshing(false) when it finishes.
+				    refreshAction();
+			    }
+	    );
+
+
+	    this.mYourKanojos = new StatusHolder();
 		this.mYourKanojos.what = StatusHolder.YOUR_KANOJOS;
         this.mFriends = new StatusHolder();
 		this.mFriends.what = StatusHolder.FRIENDS;
@@ -107,6 +119,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         this.mKanojosListView.setDividerHeight(0);
         this.isSearch = false;
         this.mUser = ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().getUser();
+
         final RelativeLayout firstBoot = findViewById(R.id.kanojo_firstboot);
         if (FirstbootUtil.isShowed(this, "kanojo_firstboot")) {
             firstBoot.setVisibility(View.GONE);
@@ -174,16 +187,18 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode) {
-            case BaseInterface.RESULT_SAVE_PRODUCT_INFO:
+
             case BaseInterface.RESULT_GENERATE_KANOJO:
             case BaseInterface.RESULT_ADD_FRIEND:
             case BaseInterface.RESULT_KANOJO_GOOD_BYE:
+				refreshAction();
+	        case BaseInterface.RESULT_SAVE_PRODUCT_INFO:
                 this.isLoading = true;
                 startCheckSession();
                 return;
             case BaseInterface.RESULT_KANOJO_MESSAGE_DIALOG:
                 final Kanojo kanojo = new Kanojo();
-                int kanojo_id = data.getIntExtra(BaseInterface.EXTRA_KANOJO_ITEM, 0);
+                int kanojo_id = data.getIntExtra(BaseInterface.EXTRA_KANOJO_ITEM, 0);   //TODO Look into whatever this is doing
                 if (kanojo_id > 0) {
                     kanojo.setId(kanojo_id);
                     new Timer().schedule(new TimerTask() {
@@ -198,6 +213,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         }
     }
 
+	@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             ((BarcodeKanojoApp) getApplication()).logged_out();
@@ -209,6 +225,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
     public void onClick(View v) {
     }
 
+	@Override
 	public void onMoreClick(int id) {
 		switch (id) {
 			case MORE_KANOJOS:
@@ -239,6 +256,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         }
     }
 
+	@Override
     public void onKanojoClick(Kanojo kanojo) {
         if (kanojo != null) {
             startKanojoRoomActivity(kanojo);
@@ -255,11 +273,8 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();
 		if (itemId == R.id.menu_kanojos_refresh) {
-			if (this.isSearch) {
-				executeListTask(true);
-				return true;
-			}
-			executeListTask(false);
+			swipeRefreshLayout.setRefreshing(true);
+			refreshAction();
 			return true;
 		} else if (itemId == R.id.menu_kanojos_search) {
 			onSearchRequested();
@@ -295,6 +310,11 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         updateProfileView();
     }
 
+	private void refreshAction() {
+		executeListTask(this.isSearch); //If search is true and we refresh we should re-initialize the list
+		swipeRefreshLayout.setRefreshing(false);
+	}
+
     private void updateProfileView() {
         this.mUser = ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().getUser();
         if (this.mUser == null) {
@@ -319,14 +339,14 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
             txtTitle.setText(title);
         }
         list.txtNumber = headerView.findViewById(R.id.row_selection_number);
-        list.more = new MoreBtnView(getApplicationContext());
-        list.more.setOnMoreClickListener(id, this);
+        list.moreBtn = new MoreBtnView(getApplicationContext());
+        list.moreBtn.setOnMoreClickListener(id, this);
         list.displayed = 0;
         list.adapter = new KanojoAdapter(getApplicationContext(), this.mDic);
         list.adapter.setKanojosModelList(new ModelList<>());
         list.adapter.setOnKanojoClickListener(this);
         list.key = key;
-        this.mAdapter.addSection(key, headerView, list.adapter, list.more);
+        this.mAdapter.addSection(key, headerView, list.adapter, list.moreBtn);
     }
 
     private synchronized void executeListTask(boolean initflg) {
@@ -334,14 +354,16 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
             this.isSearch = false;
             this.mSearchWord = null;
 			resetKanojoTasks();
-            if (initflg) {
+
+            if (initflg) {  //Sets list back to default
                 this.mAdapter.clear();
-                this.mAdapter.notifyDataSetInvalidated();
+                this.mAdapter.notifyDataSetInvalidated();   //TODO Consider if all updates or refreshes should include this
 				addSection(MORE_KANOJOS, this.r.getString(R.string.kanojos_your_kanojos), "your_kanojos", this.mYourKanojos);
 				addSection(MORE_FRIENDS, this.r.getString(R.string.kanojos_just_friend), "just_friend", this.mFriends);
 				addSection(MORE_RANKING, this.r.getString(R.string.kanojos_ranking), "ranking", this.mRanking);
                 this.mKanojosListView.setAdapter(this.mAdapter);
             }
+
             this.mYourKanojos.MAX = YOUR_KANOJOS_MAX;
             this.mFriends.MAX = FRIENDS_MAX;
             this.mRanking.MAX = RANKING_MAX;
@@ -394,14 +416,14 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         this.mFriends.loading = false;
         this.mRanking.loading = false;
 
-        if (this.mYourKanojos.more != null) {
-            this.mYourKanojos.more.setLoading(false);
+        if (this.mYourKanojos.moreBtn != null) {
+            this.mYourKanojos.moreBtn.setLoading(false);
         }
-        if (this.mFriends.more != null) {
-            this.mFriends.more.setLoading(false);
+        if (this.mFriends.moreBtn != null) {
+            this.mFriends.moreBtn.setLoading(false);
         }
-        if (this.mRanking.more != null) {
-            this.mRanking.more.setLoading(false);
+        if (this.mRanking.moreBtn != null) {
+            this.mRanking.moreBtn.setLoading(false);
         }
 
 		if (this.myKanojoTask != null) {
@@ -445,15 +467,33 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 			}
 
             this.mList.loading = true;
-            if (this.mList.more != null) {
-                this.mList.more.setLoading(true);
+            if (this.mList.moreBtn != null) {
+                this.mList.moreBtn.setLoading(true);
             }
         }
 
         @Override
         public Response<?> doInBackground(Void... params) {
             try {
-                return process(this.mList);
+	            KanojosActivity activity = activityRef.get();
+	            if (activity == null || activity.isFinishing()) {
+		            return null;
+	            }
+
+	            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) activity.getApplication()).getBarcodeKanojo();
+	            if (mList == null) {
+		            throw new BarcodeKanojoException("process:StatusHolder is null!");
+	            }
+	            switch (mList.what) {
+		            case StatusHolder.YOUR_KANOJOS:
+			            return barcodeKanojo.my_current_kanojos(mList.index, mList.limit, activity.mSearchWord);
+		            case StatusHolder.FRIENDS:
+			            return barcodeKanojo.my_friend_kanojos(mList.index, mList.limit, activity.mSearchWord);
+		            case StatusHolder.RANKING:
+			            return barcodeKanojo.like_ranking(mList.index, mList.limit);
+		            default:
+			            return null;
+	            }
             } catch (Exception e) {
                 this.mReason = e;
                 return null;
@@ -513,23 +553,23 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
                 }
                 if (this.mList != null) {
                     this.mList.loading = false;
-                    if (this.mList.more != null) {
-                        this.mList.more.setLoading(false);
+                    if (this.mList.moreBtn != null) {
+                        this.mList.moreBtn.setLoading(false);
                     }
                 }
             } catch (Exception e) {
 	            activity.resetKanojoTasks();
                 if (this.mList != null) {
                     this.mList.loading = false;
-                    if (this.mList.more != null) {
-                        this.mList.more.setLoading(false);
+                    if (this.mList.moreBtn != null) {
+                        this.mList.moreBtn.setLoading(false);
                     }
                 }
             } catch (Throwable th) {
                 if (this.mList != null) {
                     this.mList.loading = false;
-                    if (this.mList.more != null) {
-                        this.mList.more.setLoading(false);
+                    if (this.mList.moreBtn != null) {
+                        this.mList.moreBtn.setLoading(false);
                     }
                 }
                 throw th;
@@ -545,42 +585,20 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 
             if (this.mList != null) {
                 this.mList.loading = false;
-                if (this.mList.more != null) {
-                    this.mList.more.setLoading(false);
+                if (this.mList.moreBtn != null) {
+                    this.mList.moreBtn.setLoading(false);
                 }
             }
         }
 
-        Response<?> process(StatusHolder list) throws BarcodeKanojoException, IllegalStateException, IOException {
-	        KanojosActivity activity = activityRef.get();
-	        if (activity == null || activity.isFinishing()) {
-		        return null;
-	        }
-
-            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) activity.getApplication()).getBarcodeKanojo();
-            if (list == null) {
-                throw new BarcodeKanojoException("process:StatusHolder is null!");
-            }
-            switch (list.what) {
-                case StatusHolder.YOUR_KANOJOS:
-                    return barcodeKanojo.my_current_kanojos(list.index, list.limit, activity.mSearchWord);
-                case StatusHolder.FRIENDS:
-                    return barcodeKanojo.my_friend_kanojos(list.index, list.limit, activity.mSearchWord);
-                case StatusHolder.RANKING:
-                    return barcodeKanojo.like_ranking(list.index, list.limit);
-                default:
-                    return null;
-            }
-        }
-
 	    boolean isLoading() {
-		    if (getStatus() == AsyncTask.Status.FINISHED || mList.more == null) {
+		    if (getStatus() == AsyncTask.Status.FINISHED || mList.moreBtn == null) {
 			    return false;
 		    }
 		    if (mList.loading) {
 			    return true;
 		    }
-		    mList.more.setLoading(false);
+		    mList.moreBtn.setLoading(false);
 		    return false;
 	    }
     }
@@ -597,7 +615,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         String key;
         int limit = DEFAULT_LIMIT;
         boolean loading = false;
-        MoreBtnView more;
+        MoreBtnView moreBtn;
         TextView txtNumber;
         int what;
     }
@@ -631,8 +649,16 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 
         @Override
         public Response<?> doInBackground(Void... params) {
+	        KanojosActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return null;
+	        }
+
             try {
-                return login();
+	            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) activity.getApplication()).getBarcodeKanojo();
+	            Log.d(KanojosActivity.TAG, "login() cannot be used !!!");
+	            barcodeKanojo.init_product_category_list();
+	            return null;
             } catch (Exception e) {
                 this.mReason = e;
                 return null;
@@ -672,18 +698,6 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
 	        }
 
 	        activity.dismissProgressDialog();
-        }
-
-        Response<?> login() throws BarcodeKanojoException, IllegalStateException, IOException {
-	        KanojosActivity activity = activityRef.get();
-	        if (activity == null || activity.isFinishing()) {
-		        return null;
-	        }
-
-            BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) activity.getApplication()).getBarcodeKanojo();
-            Log.d(KanojosActivity.TAG, "login() cannot be used !!!");
-            barcodeKanojo.init_product_category_list();
-            return null;
         }
     }
 

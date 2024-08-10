@@ -7,12 +7,17 @@
         <jp.co.cybird.barcodekanojoForGAM.view.CustomToolBarView android:layout_width="match_parent" android:layout_height="wrap_content"/>
         <com.goujer.barcodekanojo.view.UserProfileView
 			android:id="@+id/common_profile" android:background="@drawable/userprofile_bg" android:layout_width="match_parent" android:layout_height="@dimen/profile_height"/>
-		<ListView
-			android:id="@+id/kanojos_list"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:background="@color/default_bg"
-			android:divider="#555555" />
+	    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+		    android:id="@+id/kanojos_swipe_refresh"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent">
+		    <ListView
+				android:id="@+id/kanojos_list"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:background="@color/default_bg"
+				android:divider="#555555" />
+	    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 	<RelativeLayout
 		android:id="@+id/kanojo_firstboot"
