@@ -2,15 +2,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-	compileSdkVersion 33
+	compileSdk 34
 
 	defaultConfig {
 		applicationId 'com.goujer.barcodekanojo'
 		//noinspection ExpiredTargetSdkVersion
+		targetSdkVersion 28
 		minSdkVersion 14
 		//VersionCode Scheme AABBBBBB	A=minSDK, B=Version of App (BB.BB.BB)
-		versionCode 14000400
-		versionName "0.4.0"
+		versionCode 14000500
+		versionName "0.5.0"
 	}
 
 	signingConfigs {
@@ -37,21 +38,6 @@ android {
 			debuggable true
 			applicationIdSuffix '.DEBUG'
 			versionNameSuffix '.d'
-		}
-	}
-
-	//VersionCode Scheme AABBBBBB	A=minSDK, B=Version of App (BB.BB.BB)
-	flavorDimensions 'security'
-	productFlavors {
-		https {
-			dimension 'security'
-			targetSdkVersion 29
-			versionNameSuffix "-https"
-		}
-		http {
-			dimension 'security'
-			targetSdkVersion 27
-			versionNameSuffix "-http"
 		}
 	}
 
@@ -82,16 +68,16 @@ android {
 
 dependencies {
 	//AndroidX Core
-	implementation "androidx.core:core-ktx:1.10.1"
+	implementation "androidx.core:core-ktx:1.12.0"
 
 	//SwipeRefreshLayout
 	implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
 	//LruCache
-	implementation "androidx.collection:collection-ktx:1.3.0"
+	implementation "androidx.collection:collection-ktx:1.4.5"
 
 	//ExifInterface
-	implementation 'androidx.exifinterface:exifinterface:1.3.6'
+	implementation 'androidx.exifinterface:exifinterface:1.3.7'
 
 	//Maps
 	implementation 'org.osmdroid:osmdroid-android:6.1.13'
@@ -99,13 +85,19 @@ dependencies {
 	//Charts
 	implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
-	//ZXing
-	implementation 'com.google.zxing:core:3.2.1'
+	//ZXing (Barcode Scanner)
+	implementation 'com.google.zxing:core:3.5.3'
 	//implementation 'com.google.zxing:android-core:3.2.1'
-	//implementation 'com.google.zxing:android-integration:3.2.1'
 
-	//Google Play Android Security Provider Update (Lets TLS 1.2 work on some older devices)
-	implementation 'com.google.android.gms:play-services-auth:20.7.0'
+	//Google Play Android Security Provider Update (Lets TLS 1.2 work on some older devices) (Both are needed, this is very bare-bones)
+	implementation 'com.google.android.gms:play-services-base:18.4.0' //Last Version to support API 14
+	implementation 'com.google.android.gms:play-services-basement:18.3.0' //Last Version to support API 14
+
+	//Security Provider Straight up
+	implementation 'org.conscrypt:conscrypt-android:2.5.2'
+
+	//OKHttp (How we connect to the server)
+	implementation 'com.squareup.okhttp3:okhttp:3.12.13'    //Last to support API 9, past this is 21+
 
 	//Live2D
 	implementation files('libs/live2d_android.jar')

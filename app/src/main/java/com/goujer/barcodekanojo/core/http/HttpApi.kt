@@ -6,16 +6,27 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response
 import jp.co.cybird.barcodekanojoForGAM.core.parser.AbstractJSONParser
 import jp.co.cybird.barcodekanojoForGAM.core.parser.JSONParser
+import jp.co.cybird.barcodekanojoForGAM.core.parser.ResponseParser
+import okhttp3.ConnectionSpec
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.conscrypt.Conscrypt
 import java.io.DataOutputStream
 import java.net.CookieHandler
 import java.net.CookieManager
 import java.net.HttpURLConnection
 import java.net.URL
+import java.security.Security
+import java.util.Collections
+import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLHandshakeException
-
+import javax.net.ssl.TrustManager
 
 class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBasePort: Int?, clientVersion: String?, clientLanguage: String?) {
+	//val client: OkHttpClient
+
 	internal var mApiBaseProtocol: String = if (useHttps) "https" else "http"
 	var mApiBaseUrl: String = apiBaseUrl
 		internal set
@@ -35,10 +46,31 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 		val sslContext = SSLContext.getInstance("TLSv1.2")
 		sslContext.init(null, null, null)
 		val engine = sslContext.createSSLEngine()
+
+//		val clientBuilder = OkHttpClient.Builder()
+//				.readTimeout(10, TimeUnit.SECONDS)
+//				.writeTimeout(10, TimeUnit.SECONDS)
+//				.connectionSpecs(Collections.singletonList(ConnectionSpec.RESTRICTED_TLS))
+
+		//Conscrypt install
+//		val conscrypt = Conscrypt.newProvider()
+//
+//		Security.insertProviderAt(conscrypt, 1)
+//
+//		try {
+//			val tm = Conscrypt.getDefaultX509TrustManager()
+//			val sslContext = SSLContext.getInstance("TLS", conscrypt)
+//			sslContext.init(null, arrayOf<TrustManager>(tm), null)
+//			clientBuilder.sslSocketFactory(InternalSSLSocketFactory(sslContext.socketFactory), tm)
+//		} catch (e: Exception) {
+//			e.printStackTrace()
+//		}
+//
+//		client = clientBuilder.build()
 	}
 
 	//TODO Copied and modified from core.http.HttpApi.executeHttpRequest() which JADX did not decompile correctly.
-	fun executeHttpRequest(connection: HttpURLConnection, parser: JSONParser<out BarcodeKanojoModel?>): Response<BarcodeKanojoModel?> {
+	fun executeHttpRequest(connection: HttpURLConnection, parser: ResponseParser): Response<BarcodeKanojoModel?> {
 		connection.connect()
 		when (val statusCode = connection.responseCode) {
 			HttpURLConnection.HTTP_OK -> {
@@ -67,6 +99,36 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 			}
 		}
 	}
+
+	//fun executeOKHttpRequest(request: Request, parser: ResponseParser): Response<BarcodeKanojoModel?> {
+	//	val response = client.newCall(request).execute()
+	//	when (val statusCode = response.code()) {
+	//		Response.CODE_SUCCESS -> {
+	//			try {
+	//				return parser.parse(AbstractJSONParser.createJSONObject(connection.inputStream)) as Response<BarcodeKanojoModel?>
+	//			} finally {
+	//				connection.disconnect()
+	//			}
+	//		}
+	//		Response.CODE_ERROR_BAD_REQUEST -> {
+	//			val message = connection.responseMessage
+	//			connection.disconnect()
+	//			throw BarcodeKanojoException(message)
+	//		}
+	//		Response.CODE_ERROR_UNAUTHORIZED, Response.CODE_ERROR_NOT_FOUND -> {
+	//			connection.disconnect()
+	//			throw BarcodeKanojoException(connection.responseMessage)
+	//		}
+	//		Response.CODE_ERROR_SERVER -> {
+	//			connection.disconnect()
+	//			throw BarcodeKanojoException("Server is down. Try again later.")
+	//		}
+	//		else -> {
+	//			connection.disconnect()
+	//			throw BarcodeKanojoException("Error connecting to Server: $statusCode. Try again later.")
+	//		}
+	//	}
+	//}
 
 	fun executeHttpRequest(connection: HttpURLConnection, cache: ImageDiskCache, key: String) {
 		connection.connect()
@@ -124,6 +186,46 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 		connection.setRequestProperty(CLIENT_LANGUAGE_HEADER, mClientLanguage)
 		return connection
 	}
+
+	//fun createOkHttpGet(fileIn: String, vararg nameValuePairs: NameValuePair): Request {
+	//	val urlBuilder = HttpUrl.Builder()
+	//			.scheme(mApiBaseProtocol)
+	//			.host(mApiBaseUrl)
+	//			.port(mApiBasePort)
+	//			.addPathSegment(fileIn)
+//
+	//	for (pair in stripNulls(*nameValuePairs)) {
+	//		urlBuilder.addQueryParameter(pair.name, pair.valueAsString())
+	//	}
+//
+//
+//
+//
+	//	//Old System
+	//	var file: String = fileIn
+	//	val connection: HttpURLConnection
+	//	if (nameValuePairs.isEmpty()) {
+	//		connection = URL(mApiBaseProtocol, mApiBaseUrl, mApiBasePort, file).openConnection() as HttpURLConnection
+	//	} else {
+	//		val parameters = StringBuilder()
+	//		for (pair in stripNulls(*nameValuePairs)) {
+	//			if (parameters.isNotEmpty()) {
+	//				parameters.append('&')
+	//			} else {
+	//				parameters.append('?')
+	//			}
+	//			parameters.append(pair.toString())
+	//		}
+	//		file += parameters.toString()
+	//		connection = URL(mApiBaseProtocol, mApiBaseUrl, mApiBasePort, file).openConnection() as HttpURLConnection
+	//	}
+	//	connection.doInput = true
+	//	connection.requestMethod = "GET"
+	//	connection.setRequestProperty("Accept-Charset", "utf-8")
+	//	connection.setRequestProperty(CLIENT_VERSION_HEADER, mClientVersion)
+	//	connection.setRequestProperty(CLIENT_LANGUAGE_HEADER, mClientLanguage)
+	//	return connection
+	//}
 
 	fun createHttpPost(file: String, vararg nameValuePairs: NameValuePair): HttpURLConnection {
 		val connection = URL(mApiBaseProtocol, mApiBaseUrl, mApiBasePort, file).openConnection() as HttpURLConnection
@@ -198,7 +300,6 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 		private const val DEFAULT_CLIENT_LANGUAGE = "en"
 		private const val DEFAULT_CLIENT_VERSION = "jp.co.cybrid.barcodekanojo"
 		private const val BOUNDARY = "0xKhTmLbOuNdArY"
-		private const val TAG = "HttpApi"
 
 		private lateinit var mHttpApi: HttpApi
 
