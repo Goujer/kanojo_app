@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 public class ModelParser extends AbstractJSONParser<BarcodeKanojoModel> {
 
-    private static final String TAG = "ModelParser";
     private String mName;
     private JSONParser<? extends BarcodeKanojoModel> mSubParser;
 

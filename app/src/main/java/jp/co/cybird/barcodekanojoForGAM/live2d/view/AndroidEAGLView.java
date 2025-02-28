@@ -5,6 +5,9 @@ import android.os.Build;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
+
+import androidx.annotation.NonNull;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import jp.co.cybird.barcodekanojoForGAM.live2d.KanojoLive2D;
@@ -32,20 +35,20 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
         this.renderer = new AndroidES1Renderer(kanojoLive2D2, this);
         setRenderer(this);
 		GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
-			public boolean onDoubleTap(MotionEvent event) {
+			public boolean onDoubleTap(@NonNull MotionEvent event) {
 				return tapEvent(2) | super.onDoubleTap(event);
 			}
 
-			public boolean onDown(MotionEvent event) {
+			public boolean onDown(@NonNull MotionEvent event) {
 				super.onDown(event);
 				return true;
 			}
 
-			public boolean onSingleTapConfirmed(MotionEvent event) {
+			public boolean onSingleTapConfirmed(@NonNull MotionEvent event) {
 				return tapEvent(1) | super.onSingleTapUp(event);
 			}
 
-			public boolean onSingleTapUp(MotionEvent event) {
+			public boolean onSingleTapUp(@NonNull MotionEvent event) {
 				return super.onSingleTapUp(event);
 			}
 

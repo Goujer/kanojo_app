@@ -13,7 +13,7 @@ public class KanojoItemCategory implements BarcodeKanojoModel, Parcelable {
             return new KanojoItemCategory[size];
         }
     };
-    public static final String TAG = "KanojoItemCategory";
+
     // This is set to true by the server if it is a belonging. Could this become a local only change?
 	private String flag;
     private ModelList<KanojoItem> items;

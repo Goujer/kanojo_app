@@ -37,7 +37,7 @@ public class SeparatedListAdapter extends BaseAdapter implements ObservableAdapt
 
     public SeparatedListAdapter(Context context, int layoutId) {
         this.headers = new ArrayAdapter<>(context, layoutId);
-        this.flag = new ArrayList();
+        this.flag = new ArrayList<>();
         this.mCount = 0;
     }
 
@@ -127,23 +127,13 @@ public class SeparatedListAdapter extends BaseAdapter implements ObservableAdapt
 	@Override
     public boolean isEnabled(int position) {
         if (this.mode == MODE_EXTEND_DATE || this.mode == MODE_EXTEND_GIFT) {
-            if (getItemViewType(position) == 0 || !checkLevel(position)) {
-                return false;
-            }
-            return true;
-        } else if (getItemViewType(position) == 0) {
-            return false;
-        } else {
-            return true;
-        }
+	        return getItemViewType(position) != 0 && checkLevel(position);
+        } else return getItemViewType(position) != 0;
     }
 
     public boolean checkLevel(int position) {
         KanojoItem item = (KanojoItem) getItem(position);
-        if (item == null || this.userLevel == 0 || (item.getPurchasable_level() != null && Integer.parseInt(item.getPurchasable_level()) > this.userLevel)) {
-            return false;
-        }
-        return true;
+	    return item != null && this.userLevel != 0 && (item.getPurchasable_level() == null || Integer.parseInt(item.getPurchasable_level()) <= this.userLevel);
     }
 
     public boolean isEmpty() {

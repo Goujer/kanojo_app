@@ -19,8 +19,6 @@ import org.json.JSONObject;
 
 public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implements JSONParser<T> {
 
-    protected static final String TAG = "AbstractJSONParser";
-
     protected abstract T parseInner(JSONObject jSONObject) throws IOException, BarcodeKanojoException;
 
     public final T parse(JSONObject object) throws BarcodeKanojoException {
@@ -49,13 +47,14 @@ public abstract class AbstractJSONParser<T extends BarcodeKanojoModel> implement
 				is.close();
 				objBuf.close();
 				if (Defs.DEBUG) {
-					Log.w(TAG, "Length: " + objJson.length() + " Downloaded: " + objJson.toString());
+					Log.w(AbstractJSONParser.class.getName(), "Length: " + objJson.length() + " Downloaded: " + objJson);
 					Throwable t = e.getCause();
 					if (t != null) {
 						t.printStackTrace();
 					}
 					e.printStackTrace();
 				}
+				//Repair JSON if error.
 				String json = objJson.toString();
 				int missingBrackets = StringUtilKt.countOccurrences(json, '{') - StringUtilKt.countOccurrences(json, '}');
 				for (int i = 0; i < missingBrackets; i++) {

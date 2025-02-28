@@ -44,12 +44,12 @@ class DynamicImageCache(cacheSize: Int, context: Context): LruCache<String, Bitm
         }
     }
 
-    override fun sizeOf(key: String, bitmap: Bitmap): Int {
+    override fun sizeOf(key: String, value: Bitmap): Int {
         //The cache size will be measured in kilobytes rather than number of items.
         val sizeBytes: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            bitmap.allocationByteCount
+            value.allocationByteCount
         } else {
-            bitmap.byteCount
+            value.byteCount
         }
         return sizeBytes / 1024
     }

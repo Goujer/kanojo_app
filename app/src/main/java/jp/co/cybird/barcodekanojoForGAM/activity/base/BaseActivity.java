@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
 import java.util.Locale;
 
@@ -33,6 +34,8 @@ import jp.co.cybird.barcodekanojoForGAM.Defs;
 import com.goujer.barcodekanojo.R;
 import jp.co.cybird.barcodekanojoForGAM.activity.CustomWebViewActivity;
 import com.goujer.barcodekanojo.core.BarcodeKanojo;
+
+import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Response;
@@ -48,8 +51,12 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
     public boolean mBaseLoadingFinished = false;
 
     private CheckSessionTask mCheckSessionTask;
+	private RefreshTask mRefreshTask;
+
     AlertDialog mCommondialog;
     private AlertDialog mFullStorageDialog;
+	protected ProgressDialog mProgressDialog;
+
     private BroadcastReceiver mLoggedOutReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (Defs.DEBUG) {
@@ -61,8 +68,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             BaseActivity.this.finish();
         }
     };
-    protected ProgressDialog mProgressDialog;
-    private RefreshTask mRefreshTask;
+
     public BroadcastReceiver mWarningFullSpaceReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (Defs.DEBUG) {
@@ -114,12 +120,11 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
         }
         try {
             unregisterReceiver(this.mLoggedOutReceiver);
-        } catch (Exception e) {
-        }
-        try {
-            unregisterReceiver(this.mWarningFullSpaceReceiver);
-        } catch (Exception e2) {
-        }
+        } catch (Exception e) {}
+	    try {
+		    unregisterReceiver(this.mWarningFullSpaceReceiver);
+	    } catch (Exception e) {}
+
         ViewGroup root = getWindow().getDecorView().findViewById(R.id.common_top_menu_root);
         if (!(root == null || root.getChildCount() == 0)) {
             cleanupView(root.getChildAt(0));
@@ -143,7 +148,7 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             }
             user.setName(this.tmpUser.getName());
         }
-        if (user.getBirthText() == null) {
+        if (user.getBirthText().equals("")) {
             if (Defs.DEBUG) {
                 Log.d(TAG, "Birthday copied:" + this.tmpUser.getBirthText());
             }
@@ -440,19 +445,31 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
             if (Defs.DEBUG) {
                 Log.e(TAG, "Start Run " + this.mCheckSessionTask);
             }
-            this.mCheckSessionTask = (CheckSessionTask) new CheckSessionTask().execute(new Void[0]);
+            this.mCheckSessionTask = (CheckSessionTask) new CheckSessionTask(this).execute(new Void[0]);
         } else if (Defs.DEBUG) {
             Log.e(TAG, "Query already running attempting to cancel: " + this.mCheckSessionTask);
         }
     }
 
-    class CheckSessionTask extends AsyncTask<Void, Void, Response<?>> {
+    private static class CheckSessionTask extends AsyncTask<Void, Void, Response<?>> {
         private Exception mReason = null;
+
+	    private final WeakReference<BaseActivity> activityRef;
+
+	    CheckSessionTask(BaseActivity activity) {
+		    super();
+		    activityRef = new WeakReference<>(activity);
+	    }
 
         @Override
         protected Response<?> doInBackground(Void... params) {
+	        BaseActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return null;
+	        }
+
             try {
-                return ((BarcodeKanojoApp) BaseActivity.this.getApplication()).getBarcodeKanojo().account_show();
+                return ((BarcodeKanojoApp) activity.getApplication()).getBarcodeKanojo().account_show();
             } catch (Exception e) {
                 this.mReason = e;
                 return null;
@@ -461,6 +478,11 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
 
         @Override
         protected void onPostExecute(Response<?> response) {
+	        BaseActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
+
             try {
                 if (this.mReason != null && Defs.DEBUG) {
                     Log.d(TAG, "Error message: " + this.mReason.getMessage());
@@ -474,15 +496,15 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
                 }
                 switch (response.getCode()) {
                     case Response.CODE_SUCCESS:
-                        BaseActivity.this.mBaseLoadingFinished = true;
-                        BaseActivity.this.endCheckSession();
+                        activity.mBaseLoadingFinished = true;
+                        activity.endCheckSession();
                         return;
                     case Response.CODE_ERROR_BAD_REQUEST:
                     case Response.CODE_ERROR_FORBIDDEN:
 					case Response.CODE_ERROR_NOT_FOUND:
                         return;
                     case Response.CODE_ERROR_UNAUTHORIZED:
-                        BaseActivity.this.executeRefreshSession();
+	                    activity.executeRefreshSession();
                         return;
                     default:
 				}
@@ -490,8 +512,8 @@ public abstract class BaseActivity extends GreeBaseActivity implements BaseInter
                 if (Defs.DEBUG) {
                     e.printStackTrace();
                 }
-                BaseActivity.this.endCheckSession();
-                BaseActivity.this.showNoticeDialog(e.getMessage());
+                activity.endCheckSession();
+                activity.showNoticeDialog(e.getMessage());
             }
         }
     }

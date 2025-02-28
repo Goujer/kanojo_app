@@ -10,7 +10,7 @@ import org.json.JSONObject;
 public class LoveIncrementParser extends AbstractJSONParser<LoveIncrement> {
     protected LoveIncrement parseInner(JSONObject object) throws BarcodeKanojoException, BarcodeKanojoParseException {
         LoveIncrement res = new LoveIncrement();
-        Log.d(LoveIncrement.TAG, object.toString());
+        Log.d(LoveIncrementParser.class.getName(), object.toString());
         try {
             if (object.has("increase_love")) {
                 res.setIncrease_love(object.getString("increase_love"));
@@ -20,9 +20,6 @@ public class LoveIncrementParser extends AbstractJSONParser<LoveIncrement> {
             }
             if (object.has("alertShow")) {
                 res.setAlertShow(object.getString("alertShow"));
-            }
-            if (object.has("reaction_word")) {
-                res.setReaction_word(object.getString("reaction_word"));
             }
             return res;
         } catch (JSONException e) {

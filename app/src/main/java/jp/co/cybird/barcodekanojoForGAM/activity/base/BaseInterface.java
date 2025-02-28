@@ -31,7 +31,6 @@ public interface BaseInterface {
 	public static final int REQUEST_KANOJO = 1000;
 	public static final int REQUEST_KANOJO_INFO = 1001;
 	public static final int REQUEST_KANOJO_EDIT = 1002;
-	public static final int REQUEST_BUY_TICKET = 1106;
 	public static final int REQUEST_KANOJO_TICKETS = 1009;
 	public static final int REQUEST_SCAN = 1010;
 	public static final int REQUEST_SCAN_NEW = 1011;
@@ -48,6 +47,7 @@ public interface BaseInterface {
 	public static final int REQUEST_SOCIAL_CONFIG_SETTING = 1103;	//Edit User
 	public static final int REQUEST_SOCIAL_SUKIYA_SETTING = 1104;
 	public static final int REQUEST_SYNC_SETTING = 1105;
+	public static final int REQUEST_BUY_TICKET = 1106;
 	public static final int REQUEST_KANOJO_ITEMS = 2114;
 
     //Results

@@ -21,7 +21,7 @@ class User : BarcodeKanojoModel, Parcelable {
 	private val requestList = arrayOf("male", "female", "not sure")
 	var scan_count = 0
 	var stamina = 0
-	var stamina_max = 0
+	var stamina_max = 100
 	var tickets = 0
 	var wish_count = 0
 

@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.google.zxing.client.android.CaptureActivity;
 import com.google.zxing.client.android.Intents;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.Timer;
 import java.util.TimerTask;
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
@@ -49,11 +50,11 @@ import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
 public class ScanActivity extends BaseActivity implements View.OnClickListener {
     private static final int LONG_DELAY = 3500;
     private static final String TAG = "ScanActivity";
-    private final int SCAN_RESULT_DEFAULT = 0;
-    private final int SCAN_RESULT_FRIEND = 3;
-    private final int SCAN_RESULT_GENERATE = 1;
-    private final int SCAN_RESULT_KANOJO = 2;
-    private final int SCAN_RESULT_OTHERS = 4;
+    private static final int SCAN_RESULT_DEFAULT = 0;
+    private static final int SCAN_RESULT_GENERATE = 1;
+    private static final int SCAN_RESULT_KANOJO = 2;
+	private static final int SCAN_RESULT_FRIEND = 3;
+    private static final int SCAN_RESULT_OTHERS = 4;
     private Button btn01;
     private Button btn02;
     private Button btnClose;
@@ -192,7 +193,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         if (requestCode == BaseInterface.REQUEST_SCAN && resultCode == -1) {
             String contents = data.getStringExtra(Intents.Scan.RESULT);
             String format = data.getStringExtra(Intents.Scan.RESULT_FORMAT);
-            switch (format) {
+            switch (format) {   //This is all going to need a massive re-write eventually, check out: https://www.barcodefaq.com/1d/upc-ean/
 				case "UPC_A":
 				case "UPC_E":
 					switch (contents.charAt(6)) {
@@ -384,31 +385,43 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
     private void executeScanQueryTask(String barcode) {
         if (barcode != null && !barcode.equals("")) {
             if (this.mScanQueryTask == null || this.mScanQueryTask.getStatus() == AsyncTask.Status.FINISHED || this.mScanQueryTask.cancel(true) || this.mScanQueryTask.isCancelled()) {
-                this.mScanQueryTask = (ScanQueryTask) new ScanQueryTask().execute(new String[]{barcode});
+                this.mScanQueryTask = (ScanQueryTask) new ScanQueryTask(this).execute(barcode);
             }
         }
     }
 
-    class ScanQueryTask extends AsyncTask<String, Void, Response<?>> {
+    static class ScanQueryTask extends AsyncTask<String, Void, Response<?>> {
         private Exception mReason = null;
 
-        ScanQueryTask() {
+	    private final WeakReference<ScanActivity> activityRef;
+
+        ScanQueryTask(ScanActivity activity) {
+	        super();
+	        activityRef = new WeakReference<>(activity);
         }
 
 		@Override
         public void onPreExecute() {
-            ScanActivity.this.showProgressDialog();
+			ScanActivity activity = activityRef.get();
+			if (activity == null || activity.isFinishing()) {
+				return;
+			}
+
+			activity.showProgressDialog();
         }
 
         @Override
         protected Response<?> doInBackground(String... params) {
+	        ScanActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return null;
+	        }
+
             if (params == null || params.length == 0) {
                 return null;
             }
             try {
-	            BarcodeKanojoApp barcodeKanojoApp = (BarcodeKanojoApp) ScanActivity.this.getApplication();
-	            BarcodeKanojo barcodeKanojo = barcodeKanojoApp.getBarcodeKanojo();
-	            return barcodeKanojo.query(params[0]);  //Check if Kanojo exists with this Barcode.
+	            return ((BarcodeKanojoApp) activity.getApplication()).getBarcodeKanojo().query(params[0]);  //Check if Kanojo exists with this Barcode.
             } catch (Exception e) {
                 this.mReason = e;
                 return null;
@@ -417,49 +430,54 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
 
         @Override
         protected void onPostExecute(Response<?> response) {
+	        ScanActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
+
             try {
-                switch (ScanActivity.this.getCodeAndShowDialog(response, this.mReason)) {
+                switch (activity.getCodeAndShowDialog(response, this.mReason)) {
                     case Response.CODE_SUCCESS:
-                        ScanActivity.this.mKanojo = (Kanojo) response.get(Kanojo.class);
-                        ScanActivity.this.mBarcode = (Barcode) response.get(Barcode.class);
-                        ScanActivity.this.mProduct = (Product) response.get(Product.class);
-                        ScanActivity.this.mMessages = (MessageModel) response.get(MessageModel.class);
-                        if (ScanActivity.this.mKanojo == null) {
-                            if (ScanActivity.this.mBarcode != null) {
-                                ScanActivity.this.mKanojo = new Kanojo(ScanActivity.this.mBarcode);
-                                ScanActivity.this.mKanojo.setLove_gauge(85);
-                                ScanActivity.this.mProduct = new Product();
-                                ScanActivity.this.result = 1;
-                                ScanActivity.this.mStringMessage = ScanActivity.this.mMessages.get(MessageModel.DO_GENERATE_KANOJO);
+                        activity.mKanojo = (Kanojo) response.get(Kanojo.class);
+                        activity.mBarcode = (Barcode) response.get(Barcode.class);
+                        activity.mProduct = (Product) response.get(Product.class);
+                        activity.mMessages = (MessageModel) response.get(MessageModel.class);
+                        if (activity.mKanojo == null) {
+                            if (activity.mBarcode != null) {
+                                activity.mKanojo = new Kanojo(activity.mBarcode);
+                                activity.mKanojo.setLove_gauge(85);
+                                activity.mProduct = new Product();
+                                activity.result = SCAN_RESULT_GENERATE;
+                                activity.mStringMessage = activity.mMessages.get(MessageModel.DO_GENERATE_KANOJO);
                                 break;
                             } else {
                                 throw new BarcodeKanojoException("Barcode Model is null");
                             }
                         } else {
-                            switch (ScanActivity.this.mKanojo.getRelation_status()) {
+                            switch (activity.mKanojo.getRelation_status()) {
 								case Kanojo.RELATION_OTHER:
-                                    ScanActivity.this.result = 4;
-                                    ScanActivity.this.mStringMessage = ScanActivity.this.mMessages.get(MessageModel.DO_ADD_FRIEND);
+                                    activity.result = SCAN_RESULT_OTHERS;
+                                    activity.mStringMessage = activity.mMessages.get(MessageModel.DO_ADD_FRIEND);
                                     break;
 								case Kanojo.RELATION_KANOJO:
-                                    ScanActivity.this.result = 2;
-                                    ScanActivity.this.mStringMessage = ScanActivity.this.mMessages.get(MessageModel.INFORM_GIRLFRIEND);
+									activity.result = SCAN_RESULT_KANOJO;
+									activity.mStringMessage = activity.mMessages.get(MessageModel.INFORM_GIRLFRIEND);
                                     break;
 								case Kanojo.RELATION_FRIEND:
-                                    ScanActivity.this.result = 3;
-                                    ScanActivity.this.mStringMessage = ScanActivity.this.mMessages.get(MessageModel.INFORM_FRIEND);
+                                    activity.result = SCAN_RESULT_FRIEND;
+                                    activity.mStringMessage = activity.mMessages.get(MessageModel.INFORM_FRIEND);
                                     break;
                                 default:
-                                    ScanActivity.this.result = 0;
+	                                activity.result = SCAN_RESULT_DEFAULT;
                                     break;
                             }
                         }
                         break;
                     case Response.CODE_ERROR_NETWORK:
-                        ScanActivity.this.showToast(ScanActivity.this.getResources().getString(R.string.error_internet));
+	                    activity.showToast(activity.getResources().getString(R.string.error_internet));
                         TimerTask task = new TimerTask() {
                             public void run() {
-                                ScanActivity.this.close();
+	                            activity.close();
                             }
                         };
                         Timer timer = new Timer();
@@ -470,14 +488,19 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
             } catch (BarcodeKanojoException e) {
             	if (Defs.DEBUG) e.printStackTrace();
             } finally {
-                ScanActivity.this.dismissProgressDialog();
-                ScanActivity.this.updateViews();
+                activity.dismissProgressDialog();
+                activity.updateViews();
             }
         }
 
         @Override
         protected void onCancelled() {
-            ScanActivity.this.dismissProgressDialog();
+	        ScanActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
+
+	        activity.dismissProgressDialog();
         }
     }
 

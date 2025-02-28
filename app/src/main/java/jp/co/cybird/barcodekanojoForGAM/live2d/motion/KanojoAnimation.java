@@ -17,29 +17,34 @@ public class KanojoAnimation {
     private static final int EYE_INTERVAL_NORMAL = 4000;
     private static final int EYE_INTERVAL_TOUCHING = 1500;
     public static final int FLIP_LENGTH = 500;
-    public static final int FLIP_START_BODY_H = 600;
-    public static final int FLIP_START_BODY_W = 600;
-    public static final int FLIP_START_BODY_X = 300;
-    public static final int FLIP_START_BODY_Y = 600;
-    public static final int FLIP_START_FACE_H = 400;
-    public static final int FLIP_START_FACE_W = 400;
-    public static final int FLIP_START_FACE_X = 400;
-    public static final int FLIP_START_FACE_Y = 200;
+    public static final float FLIP_START_BODY_H = 600.0f;
+    public static final float FLIP_START_BODY_W = 600.0f;
+    public static final float FLIP_START_BODY_X = 300.0f;
+    public static final float FLIP_START_BODY_Y = 600.0f;
+
+    public static final float FLIP_START_FACE_H = 400.0f;
+    public static final float FLIP_START_FACE_W = 400.0f;
+    public static final float FLIP_START_FACE_X = 400.0f;
+    public static final float FLIP_START_FACE_Y = 200.0f;
+
     public static final int FLIP_START_TOUCH_H = 1100;
     public static final int FLIP_START_TOUCH_W = 600;
     public static final int FLIP_START_TOUCH_X = 300;
     public static final int FLIP_START_TOUCH_Y = 300;
+
     public static final int MAX_COMMON_MOTION = 1;
     public static final int MAX_DOUBLE_TAP_MOTION = 2;
     public static final int MAX_KURAKURA_MOTION = 3;
+
     public static final int MAX_LOVE_A_MOTION = 5;
     public static final int MAX_LOVE_B_MOTION = 4;
     public static final int MAX_LOVE_C_MOTION = 7;
+
     public static final int MAX_TOUCH_MOTION = 2;
     public static final float MOUSE_TO_FACE_TARGET_SCALE = 1.5f;
     private static long lastShakeEvent = 0;
     private static int no = 0;
-    private static Random rand = new Random();
+    private static final Random rand = new Random();
     private boolean _flipAvailable;
     private float _flipStartX;
     private float _flipStartY;
@@ -86,22 +91,25 @@ public class KanojoAnimation {
     }
 
     public void setupMotionData() {
-        String dir = String.format("%s/%s", new Object[]{KanojoResource.AVATAR_DATA_DIR, KanojoResource.MOTION_DIR});
-        String mdir = String.format("%s/%s", new Object[]{dir, "double_tap"});
+        String dir = String.format("%s/%s", KanojoResource.AVATAR_DATA_DIR, KanojoResource.MOTION_DIR);
+        String mdir = String.format("%s/%s", dir, "double_tap");
         this.motionDoubleTapList.add(loadMotion(mdir, "double_tap1"));
         this.motionDoubleTapList.add(loadMotion(mdir, "double_tap2"));
         this.motionDoubleTapList.add(loadMotion(mdir, "double_tap3"));
         this.motionDoubleTapList.add(loadMotion(mdir, "double_tap4"));
-        String mdir2 = String.format("%s/%s", new Object[]{dir, "touch"});
+
+        String mdir2 = String.format("%s/%s", dir, "touch");
         this.motionTouchList.add(loadMotion(mdir2, "touch1"));
         this.motionTouchList.add(loadMotion(mdir2, "touch2"));
         this.motionTouchList.add(loadMotion(mdir2, "touch3"));
         this.motionTouchList.add(loadMotion(mdir2, "touch4"));
-        String mdir3 = String.format("%s/%s", new Object[]{dir, "kurakura"});
+
+        String mdir3 = String.format("%s/%s", dir, "kurakura");
         this.motionKurakuraList.add(loadMotion(mdir3, "kurakura1"));
         this.motionKurakuraList.add(loadMotion(mdir3, "kurakura2"));
         this.motionKurakuraList.add(loadMotion(mdir3, "kurakura3"));
-        String mdir4 = String.format("%s/%s", new Object[]{dir, "love_a"});
+
+        String mdir4 = String.format("%s/%s", dir, "love_a");
         this.motionLoveAList.add(loadMotion(mdir4, "love_a01"));
         this.motionLoveAList.add(loadMotion(mdir4, "love_a02"));
         this.motionLoveAList.add(loadMotion(mdir4, "love_a03"));
@@ -111,7 +119,8 @@ public class KanojoAnimation {
             this.motionLoveAList.get(i).setFadeIn(EYE_INTERVAL_NORMAL);
             this.motionLoveAList.get(i).setFadeOut(EYE_INTERVAL_NORMAL);
         }
-        String mdir5 = String.format("%s/%s", new Object[]{dir, "love_b"});
+
+        String mdir5 = String.format("%s/%s", dir, "love_b");
         this.motionLoveBList.add(loadMotion(mdir5, "love_b01"));
         this.motionLoveBList.add(loadMotion(mdir5, "love_b02"));
         this.motionLoveBList.add(loadMotion(mdir5, "love_b03"));
@@ -121,6 +130,7 @@ public class KanojoAnimation {
             this.motionLoveBList.get(i2).setFadeIn(EYE_INTERVAL_NORMAL);
             this.motionLoveBList.get(i2).setFadeOut(EYE_INTERVAL_NORMAL);
         }
+
         this.motionLoveCList.add(loadMotion(String.format("%s/%s", dir, "love_c"), "love_c01"));
         for (int i3 = 0; i3 < this.motionLoveCList.size(); i3++) {
             this.motionLoveCList.get(i3).setFadeIn(EYE_INTERVAL_NORMAL);
@@ -143,7 +153,7 @@ public class KanojoAnimation {
             try {
                 tapEvent_exe(tapCount, x, y);
             } catch (Throwable e) {
-                System.err.printf("error @KanojoAnimation#tapEvent :: %s\n", e.toString());
+                System.err.printf("error @KanojoAnimation#tapEvent :: %s\n", e);
             }
         }
     }
@@ -224,10 +234,10 @@ public class KanojoAnimation {
         this._lastY = logicalY;
         this._touchSingle = this._touchSingle && touchNum == 1;
         if (this._touchSingle && this._totalD > 500.0f && this._flipAvailable) {
-            if (contains(this._flipStartX, this._flipStartY, 400.0f, 200.0f, 400.0f, 400.0f)) {
+            if (contains(this._flipStartX, this._flipStartY, FLIP_START_FACE_X, FLIP_START_FACE_Y, FLIP_START_FACE_W, FLIP_START_FACE_H)) {
                 this.kanojoLive2D.addUserAction_notForClientCall(10);
             } else {
-                contains(this._flipStartX, this._flipStartY, 300.0f, 600.0f, 600.0f, 600.0f);
+                contains(this._flipStartX, this._flipStartY, FLIP_START_BODY_X, FLIP_START_BODY_Y, FLIP_START_BODY_W, FLIP_START_BODY_H);
             }
             this._flipAvailable = false;
         }
@@ -394,9 +404,6 @@ public class KanojoAnimation {
         if (v < min) {
             v = min;
         }
-        if (v > max) {
-            return max;
-        }
-        return v;
+	    return Math.min(v, max);
     }
 }

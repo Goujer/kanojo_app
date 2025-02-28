@@ -14,17 +14,15 @@ public class LoveIncrement implements BarcodeKanojoModel, Parcelable {
             return new LoveIncrement[size];
         }
     };
-    public static final String TAG = "LoveIncrement";
+
     private String alertShow;
     private String decrement_love;
     private String increase_love;
-    private String reaction_word;
 
     public LoveIncrement() {
-        this.increase_love = GreeDefs.BARCODE;
-        this.decrement_love = GreeDefs.BARCODE;
-        this.alertShow = GreeDefs.BARCODE;
-        this.reaction_word = "";
+        this.increase_love = "0";
+        this.decrement_love = "0";
+        this.alertShow = "0";
     }
 
     public String getIncrease_love() {
@@ -51,19 +49,10 @@ public class LoveIncrement implements BarcodeKanojoModel, Parcelable {
         this.alertShow = alertShow2;
     }
 
-    public String getReaction_word() {
-        return this.reaction_word;
-    }
-
-    public void setReaction_word(String reaction_word2) {
-        this.reaction_word = reaction_word2;
-    }
-
     public void clearValueAll() {
-        this.increase_love = GreeDefs.BARCODE;
-        this.decrement_love = GreeDefs.BARCODE;
-        this.alertShow = GreeDefs.BARCODE;
-        this.reaction_word = "";
+        this.increase_love = "0";
+        this.decrement_love = "0";
+        this.alertShow = "0";
     }
 
     public int describeContents() {
@@ -74,18 +63,16 @@ public class LoveIncrement implements BarcodeKanojoModel, Parcelable {
         dest.writeString(this.increase_love);
         dest.writeString(this.decrement_love);
         dest.writeString(this.alertShow);
-        dest.writeString(this.reaction_word);
     }
 
     private LoveIncrement(Parcel in) {
         this.increase_love = GreeDefs.BARCODE;
         this.decrement_love = GreeDefs.BARCODE;
         this.alertShow = GreeDefs.BARCODE;
-        this.reaction_word = "";
+
         this.increase_love = in.readString();
         this.decrement_love = in.readString();
         this.alertShow = in.readString();
-        this.reaction_word = in.readString();
     }
 
     /* synthetic */ LoveIncrement(Parcel parcel, LoveIncrement loveIncrement) {

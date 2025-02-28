@@ -101,7 +101,7 @@ class BarcodeKanojo(context: Context) {
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun show(kanojo_id: Int, screen: Boolean): Response<BarcodeKanojoModel?>? {
+	fun show(kanojo_id: Int, screen: Boolean): Response<BarcodeKanojoModel?> {
 		return mBCKApi.show(kanojo_id, screen)
 	}
 
@@ -118,7 +118,7 @@ class BarcodeKanojo(context: Context) {
 
 	//This checks if a kanojo exists or not.
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun query(barcode: String?): Response<BarcodeKanojoModel?>? {
+	fun query(barcode: String): Response<BarcodeKanojoModel?> {
 		return mBCKApi.query(barcode)
 	}
 
@@ -258,7 +258,7 @@ class BarcodeKanojo(context: Context) {
 		}
 
 		//Check if Relationship is valid for updating
-		return if (kanojo.relation_status != Kanojo.RELATION_KANOJO && kanojo.relation_status != Kanojo.RELATION_FRIEND) {
+		return if (kanojo.relation_status == Kanojo.RELATION_OTHER) {
 			null
 		} else mBCKApi.play_on_live2d(kanojo.id, actions)
 	}
@@ -305,7 +305,7 @@ class BarcodeKanojo(context: Context) {
 	@get:Throws(BarcodeKanojoException::class)
 	val categoryList: ModelList<Category>
 		get() {
-			if (mCategories != null && mCategories!!.isNotEmpty()) {
+			if (mCategories != null && mCategories.isNotEmpty()) {
 				return mCategories
 			}
 			throw BarcodeKanojoException("Categories is empty")

@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class KanojoMessage implements BarcodeKanojoModel, Parcelable {
-	public static final String TAG = "KanojoMessage";
+
     public static final Parcelable.Creator<KanojoMessage> CREATOR = new Parcelable.Creator<KanojoMessage>() {
         public KanojoMessage createFromParcel(Parcel in) {
             return new KanojoMessage(in, (KanojoMessage) null);

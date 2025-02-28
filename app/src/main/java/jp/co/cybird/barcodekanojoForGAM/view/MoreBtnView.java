@@ -58,16 +58,12 @@ public class MoreBtnView extends FrameLayout {
 
     public void setOnMoreClickListener(int id, OnMoreClickListener l) {
         this.Id = id;
-        setOnMoreClickListener(l);
-    }
-
-    public void setOnMoreClickListener(OnMoreClickListener l) {
-        this.listener = l;
-        setOnClickListener(v -> {
-            MoreBtnView.this.setLoading(true);
-            if (MoreBtnView.this.listener != null) {
-                MoreBtnView.this.listener.onMoreClick(MoreBtnView.this.Id);
-            }
-        });
+	    this.listener = l;
+	    setOnClickListener(v -> {
+		    MoreBtnView.this.setLoading(true);
+		    if (MoreBtnView.this.listener != null) {
+			    MoreBtnView.this.listener.onMoreClick(MoreBtnView.this.Id);
+		    }
+	    });
     }
 }

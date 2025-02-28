@@ -16,7 +16,7 @@ public class FirstbootUtil {
         if (!ret) {
             SharedPreferences.Editor editor = pref.edit();
             editor.putBoolean(key, true);
-            editor.commit();
+            editor.apply();
         }
         return ret;
     }
