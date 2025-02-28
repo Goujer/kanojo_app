@@ -116,9 +116,6 @@ public class KanojoParser extends AbstractJSONParser<Kanojo> {
             if (object.has("follower_count")) {
                 res.setFollower_count(object.getInt("follower_count"));
             }
-            if (object.has("source")) {
-                res.setSource(object.getString("source"));
-            }
             if (object.has("nationality")) {
                 res.setNationality(object.getString("nationality"));
             }
@@ -131,17 +128,17 @@ public class KanojoParser extends AbstractJSONParser<Kanojo> {
             if (object.has("in_room")) {
                 res.setIn_room(object.getBoolean("in_room"));
             }
+			if (object.has("on_date")) {
+				res.setOnDate(object.getBoolean("on_date"));
+			}
             if (object.has("like_rate")) {
                 res.setLike_rate(object.getInt("like_rate"));
             }
             if (object.has("status")) {
                 res.setStatus(object.getString("status"));
             }
-            if (object.has("avatar_background_image_url")) {
-                res.setAvatar_background_image_url(object.getString("avatar_background_image_url"));
-            }
-            if (object.has("on_advertising") && !object.isNull("on_advertising")) {
-                res.setOn_advertising(object.getBoolean("on_advertising"));
+            if (object.has("date_location")) {
+                res.setDateLocation(object.getString("date_location"));
             }
             if (object.has("emotion_status")) {
                 res.setEmotion_status(object.getInt("emotion_status"));

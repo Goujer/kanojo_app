@@ -10,6 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.goujer.barcodekanojo.R;
 
+import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoMessage;
+
 public class DialogTextView extends RelativeLayout {
     private ImageButton mCloseButton;
 	private Button mNextButton;
@@ -42,10 +44,10 @@ public class DialogTextView extends RelativeLayout {
         this.listener = listener2;
     }
 
-	public void initDialogMessage(String[] messages) {
-		this.mTextStrings = messages;
+	public void initDialogMessage(KanojoMessage message) {
+		this.mTextStrings = message.getMessages();
 		this.messageIndex = 0;
-		this.mTextView.setText(messages[0]);
+		this.mTextView.setText(mTextStrings[0]);
 		if (this.mTextStrings.length > 1) {
 			this.mNextButton.setVisibility(View.VISIBLE);
 		} else {
@@ -55,7 +57,7 @@ public class DialogTextView extends RelativeLayout {
 		this.mNextButton.setOnClickListener(v -> {
 			messageIndex++;
 			this.mTextView.setText(this.mTextStrings[this.messageIndex]);
-			if (messageIndex+1 >= messages.length) {
+			if (messageIndex+1 >= mTextStrings.length) {
 				this.mNextButton.setVisibility(View.INVISIBLE);
 			}
             if (DialogTextView.this.listener != null) {

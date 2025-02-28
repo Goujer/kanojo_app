@@ -2,7 +2,9 @@ package com.goujer.barcodekanojo.core
 
 import android.location.Location
 import android.os.Build
+//import com.google.android.gms.security.ProviderInstaller
 import com.goujer.barcodekanojo.core.http.*
+import com.goujer.utils.getPartOfDay
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.BarcodeKanojoModel
 import jp.co.cybird.barcodekanojoForGAM.core.model.KanojoItem
@@ -11,10 +13,14 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.Response
 import jp.co.cybird.barcodekanojoForGAM.core.parser.*
 import jp.co.cybird.barcodekanojoForGAM.core.util.GeoUtil
 import jp.co.cybird.barcodekanojoForGAM.preferences.Preferences
+//import org.conscrypt.Conscrypt
 import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
+//import java.security.Security
 import java.util.Locale
+//import javax.net.ssl.SSLContext
+//import javax.net.ssl.TrustManager
 
 class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort: Int, mClientVersion: String?, mClientLanguage: String?) {
 	var mHttpApi: HttpApi = HttpApi.get(useHttps, mApiBaseUrl, mApiBasePort, mClientVersion, mClientLanguage)
@@ -45,17 +51,6 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	//}
 
-	//Attempt Login
-	fun verify(uuid: String, email: String?, password: Password?): Response<BarcodeKanojoModel?> {
-		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY,
-				NameStringPair("uuid", uuid),
-				NameStringPair("email", email),
-				NameStringPair("password", password?.hashedPassword ?: ""),
-				NameStringPair("api", Build.VERSION.SDK_INT.toString()),
-				NameStringPair("language", Locale.getDefault().displayLanguage))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
-	}
-
 	fun signup(uuid: String, name: String?, password: Password, email: String, birth_year: Int?, birth_month: Int?, birth_day: Int?, sex: String?, profile_image_data: File?): Response<BarcodeKanojoModel?> {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_ACCOUNT_SIGNUP,
 				NameStringPair("uuid", uuid),
@@ -68,6 +63,17 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 				NameStringPair("sex", sex),
 				NameFilePair("profile_image_data", profile_image_data))
 		return  mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
+	}
+
+	//Attempt Login
+	fun verify(uuid: String, email: String?, password: Password?): Response<BarcodeKanojoModel?> {
+		val connection = mHttpApi.createHttpPost(URL_API_ACCOUNT_VERIFY,
+				NameStringPair("uuid", uuid),
+				NameStringPair("email", email),
+				NameStringPair("password", password?.hashedPassword ?: ""),
+				NameStringPair("api", Build.VERSION.SDK_INT.toString()),
+				NameStringPair("language", Locale.getDefault().displayLanguage))
+		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
 	//@Throws(BarcodeKanojoException::class, IOException::class)
@@ -159,7 +165,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 
 	//Verify if Kanojo exists or not.
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun query(barcode: String?): Response<BarcodeKanojoModel?> {
+	fun query(barcode: String): Response<BarcodeKanojoModel?> {
 		val connection = mHttpApi.createHttpGet(URL_API_BARCODE_QUERY,
 				NameStringPair("barcode", barcode))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("barcode", BarcodeParser()), ModelParser("product", ProductParser()), ModelParser("scan_history", ScanHistoryParser()), MessageParser(MessageModel.NOTIFY_AMENDMENT_INFORMATION, MessageModel.DO_GENERATE_KANOJO, MessageModel.DO_ADD_FRIEND, MessageModel.INFORM_GIRLFRIEND, MessageModel.INFORM_FRIEND)))
@@ -237,12 +243,12 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(item_class))))
 	}
 
-	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun date_and_gift_menu(kanojo_id: Int): Response<BarcodeKanojoModel?> {
-		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_DATE_AND_GIFT_MENU,
-				NameStringPair("kanojo_id", kanojo_id.toString()))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(KanojoItem.GIFT_ITEM_CLASS))))
-	}
+	//@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
+	//fun date_and_gift_menu(kanojo_id: Int): Response<BarcodeKanojoModel?> {
+	//	val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_DATE_AND_GIFT_MENU,
+	//			NameStringPair("kanojo_id", kanojo_id.toString()))
+	//	return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(KanojoItem.GIFT_ITEM_CLASS))))
+	//}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun date_menu(kanojo_id: Int, type_id: Int): Response<BarcodeKanojoModel?> {
@@ -264,7 +270,8 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	fun store_items(item_class: Int, item_category_id: Int): Response<BarcodeKanojoModel?> {
 		val connection = mHttpApi.createHttpGet(URL_API_COMMUNICATION_STORE_ITEMS,
 				NameStringPair("item_class", item_class.toString()),
-				NameStringPair("item_category_id", item_category_id.toString()))
+				NameStringPair("item_category_id", item_category_id.toString()),
+				NameStringPair("pod", getPartOfDay().toString()))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("item_categories", KanojoItemCategoryParser(item_class))))
 	}
 
@@ -272,40 +279,45 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	fun do_date(kanojo_id: Int, basic_item_id: Int): Response<BarcodeKanojoModel?> {
 		val connection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_DO_DATE,
 				NameStringPair("kanojo_id", kanojo_id.toString()),
-				NameStringPair("basic_item_id", basic_item_id.toString()))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser())))
+				NameStringPair("basic_item_id", basic_item_id.toString()),
+				NameStringPair("pod", getPartOfDay().toString()))
+		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser()), ModelParser("kanojo_message", KanojoMessageParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun do_extend_date(kanojo_id: Int, extend_item_id: Int): Response<BarcodeKanojoModel?> {
 		val connection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_DO_EXTEND_DATE,
 				NameStringPair("kanojo_id", kanojo_id.toString()),
-				NameStringPair("extend_item_id", extend_item_id.toString()))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser())))
+				NameStringPair("extend_item_id", extend_item_id.toString()),
+				NameStringPair("pod", getPartOfDay().toString()))
+		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser()), ModelParser("kanojo_message", KanojoMessageParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun do_gift(kanojo_id: Int, basic_item_id: Int): Response<BarcodeKanojoModel?> {
 		val connection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_DO_GIFT,
 				NameStringPair("kanojo_id", kanojo_id.toString()),
-				NameStringPair("basic_item_id", basic_item_id.toString()))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser())))
+				NameStringPair("basic_item_id", basic_item_id.toString()),
+				NameStringPair("pod", getPartOfDay().toString()))
+		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser()), ModelParser("kanojo_message", KanojoMessageParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun do_extend_gift(kanojo_id: Int, extend_item_id: Int): Response<BarcodeKanojoModel?> {
 		val connection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_DO_EXTEND_GIFT,
 				NameStringPair("kanojo_id", kanojo_id.toString()),
-				NameStringPair("extend_item_id", extend_item_id.toString()))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser())))
+				NameStringPair("extend_item_id", extend_item_id.toString()),
+				NameStringPair("pod", getPartOfDay().toString()))
+		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser()), ModelParser("kanojo_message", KanojoMessageParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
 	fun play_on_live2d(kanojo_id: Int, actions: String?): Response<BarcodeKanojoModel?> {
 		val connection: HttpURLConnection = mHttpApi.createHttpPost(URL_API_COMMUNICATION_PLAY_ON_LIVE2D,
 				NameStringPair("kanojo_id", kanojo_id.toString()),
-				NameStringPair("actions", actions))
-		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser())))
+				NameStringPair("actions", actions),
+				NameStringPair("pod", getPartOfDay().toString()))
+		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("self_user", UserParser()), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("love_increment", LoveIncrementParser()), ModelParser("kanojo_message", KanojoMessageParser())))
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
@@ -364,6 +376,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("user", UserParser())))
 	}
 
+	// Helps register the notifications, not related to actual account registration
 	@Throws(BarcodeKanojoException::class, IOException::class)
 	fun android_register_device(uuid: String?, device_token: String?): Response<BarcodeKanojoModel?> {
 		val connection = mHttpApi.createHttpMultipartPost(URL_API_REGISTER_TOKEN,
@@ -428,53 +441,65 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 	}
 
 	companion object {
-		private const val TAG = "BarcodeKanojoHttpApi"
-		private const val URL_API_ACCOUNT_DELETE = "/api/account/delete.json"
-		private const val URL_API_ACCOUNT_SHOW = "/api/account/show.json"
+		// Account Stuff
 		private const val URL_API_ACCOUNT_SIGNUP = "/api/account/signup.json"
-		private const val URL_API_ACCOUNT_UPDATE = "/api/account/update.json"
 		private const val URL_API_ACCOUNT_VERIFY = "/api/account/verify.json"
+		private const val URL_API_VERIFY_UUID = "/api/account/uuidverify.json"
+		private const val URL_API_ACCOUNT_UPDATE = "/api/account/update.json"
+		private const val URL_API_ACCOUNT_SHOW = "/api/account/show.json"
+		private const val URL_API_ACCOUNT_DELETE = "/api/account/delete.json"
+		private const val URL_API_FACEBOOK_CONNECT = "/api/account/connect_facebook.json"
+		private const val URL_API_FACEBOOK_DISCONNECT = "/api/account/disconnect_facebook.json"
+		private const val URL_API_SUKIYA_CONNECT = "/api/account/connect_sukiya.json"
+		private const val URL_API_SUKIYA_DISCONNECT = "/api/account/disconnect_sukiya.json"
+		private const val URL_API_TWITTER_CONNECT = "/api/account/connect_twitter.json"
+		private const val URL_API_TWITTER_DISCONNECT = "/api/account/disconnect_twitter.json"
+
 		private const val URL_API_ACTIVITY_SCANNED_TIMELINE = "/api/activity/scanned_timeline.json"
 		private const val URL_API_ACTIVITY_USER_TIMELINE = "/activity/user_timeline.json"
+
 		private const val URL_API_BARCODE_DECREASE_GENERATING = "/api/barcode/decrease_generating.json"
 		private const val URL_API_BARCODE_QUERY = "/api/barcode/query.json"
 		private const val URL_API_BARCODE_SCAN = "/api/barcode/scan.json"
 		private const val URL_API_BARCODE_SCAN_AND_GENERATE = "/api/barcode/scan_and_generate.json"
 		private const val URL_API_BARCODE_UPDATE = "/api/barcode/update.json"
-		private const val URL_API_COMMUNICATION_CONFIRM_PURCHASE_ITEM = "/api/google/confirm_purchase_item.json"
+
 		private const val URL_API_COMMUNICATION_DATE_AND_GIFT_MENU = "/api/communication/date_and_gift_menu.json"
 		private const val URL_API_COMMUNICATION_DATE_MENU = "/api/communication/date_list.json"
 		private const val URL_API_COMMUNICATION_DO_DATE = "/api/communication/do_date.json"
 		private const val URL_API_COMMUNICATION_DO_EXTEND_DATE = "/api/communication/do_extend_date.json"
-		private const val URL_API_COMMUNICATION_DO_EXTEND_GIFT = "/api/communication/do_extend_gift.json"
 		private const val URL_API_COMMUNICATION_DO_GIFT = "/api/communication/do_gift.json"
+		private const val URL_API_COMMUNICATION_DO_EXTEND_GIFT = "/api/communication/do_extend_gift.json"
 		private const val URL_API_COMMUNICATION_GIFT_MENU = "/api/communication/item_list.json"
 		private const val URL_API_COMMUNICATION_HAS_ITEMS = "/api/communication/has_items.json"
 		private const val URL_API_COMMUNICATION_PERMANENT_ITEM_GIFT_MENU = "/api/communication/permanent_items.json"
 		private const val URL_API_COMMUNICATION_PERMANENT_SUB_ITEM_GIFT_MENU = "/api/communication/permanent_sub_item.json"
 		private const val URL_API_COMMUNICATION_PLAY_ON_LIVE2D = "/api/communication/play_on_live2d.json"
 		private const val URL_API_COMMUNICATION_STORE_ITEMS = "/api/communication/store_items.json"
+
+		private const val URL_API_COMMUNICATION_CONFIRM_PURCHASE_ITEM = "/api/google/confirm_purchase_item.json"
 		private const val URL_API_COMMUNICATION_VERIFY_PURCHASED_ITEM = "/api/google/verify_purchased_item.json"
-		private const val URL_API_FACEBOOK_CONNECT = "/api/account/connect_facebook.json"
-		private const val URL_API_FACEBOOK_DISCONNECT = "/api/account/disconnect_facebook.json"
+
 		private const val URL_API_KANOJO_LIKE_RANKING = "/api/kanojo/like_rankings.json"
 		private const val URL_API_KANOJO_SHOW = "/api/kanojo/show.json"
 		private const val URL_API_KANOJO_VOTE_LIKE = "/api/kanojo/vote_like.json"
+
 		private const val URL_API_MESSAGE_DIALOG = "/api/message/dialog.json"
+
 		private const val URL_API_PAYMENT_ITEM_DETAIL = "/api/payment/item_detail.html"
 		private const val URL_API_PAYMENT_VERIFY = "/api/payment/verify.json"
+
 		private const val URL_API_REGISTER_TOKEN = "/api/notification/register_token.json"
+
 		private const val URL_API_RESOURCE_PRODUCT_CATEGORY_LIST = "/api/resource/product_category_list.json"
+
 		private const val URL_API_SHOPPING_COMPARE_PRICE = "/api/shopping/compare_price.json"
 		private const val URL_API_SHOPPING_GOOD_LIST = "/api/shopping/goods_list.json"
 		private const val URL_API_SHOPPING_VERIFY_TICKET = "/api/shopping/verify_tickets.json"
-		private const val URL_API_SUKIYA_CONNECT = "/api/account/connect_sukiya.json"
-		private const val URL_API_SUKIYA_DISCONNECT = "/api/account/disconnect_sukiya.json"
-		private const val URL_API_TWITTER_CONNECT = "/api/account/connect_twitter.json"
-		private const val URL_API_TWITTER_DISCONNECT = "/api/account/disconnect_twitter.json"
+
 		private const val URL_API_USER_CURRENT_KANOJOS = "/user/current_kanojos.json"
 		private const val URL_API_USER_FRIEND_KANOJOS = "/api/user/friend_kanojos.json"
-		private const val URL_API_VERIFY_UUID = "/api/account/uuidverify.json"
+
 		private const val URL_RADAR_WEBVIEW = "/api/webview/chart.json"
 		private const val URL_WEBVIEW = "/api/webview/show.json"
 	}

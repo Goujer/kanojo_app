@@ -63,6 +63,7 @@
 				android:layout_height="wrap_content"
 				android:layout_alignParentTop="true"
 				android:background="@color/kanojo_room_status_bg"
+				android:elevation="2dp"
 				android:orientation="vertical">
 				<com.github.mikephil.charting.charts.RadarChart
 					android:id="@+id/radar_view"
@@ -83,6 +84,7 @@
 				android:layout_height="24dp"
 				android:layout_below="@+id/kanojo_room_status_txt_layout"
 				android:background="@color/kanojo_room_status_bg"
+				android:elevation="2dp"
 				android:gravity="center_vertical"
 				android:orientation="horizontal">
 				<ImageView
@@ -120,13 +122,15 @@
 				android:id="@+id/kanojo_room_buttom_status_bar_layout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_below="@+id/kanojo_room_status_bar_layout">
+				android:layout_below="@+id/kanojo_room_status_bar_layout"
+				android:elevation="2dp">
 				<ImageView
 					android:id="@+id/dropdown_img"
 					android:layout_width="111dp"
 					android:layout_height="12dp"
 					android:layout_centerInParent="true"
 					android:src="@drawable/btn_drop" />
+
 				<ImageView
 					android:id="@+id/kanojo_room_arrow"
 					android:layout_width="13dp"
@@ -204,7 +208,8 @@
 				android:layout_alignParentRight="true"
 				android:layout_marginRight="15dp"
 				android:layout_marginBottom="12dp"
-				android:background="@drawable/btn_kanojo_tickets" />
+				android:background="@drawable/btn_kanojo_tickets"
+				android:visibility="gone"/>
 			<Button
 				android:id="@+id/kanojo_room_date_btn"
 				android:layout_width="70dp"
@@ -237,7 +242,8 @@
 				android:layout_marginBottom="5dp"
 				android:alwaysDrawnWithCache="true"
 				android:clickable="true"
-				android:elevation="2dp" />
+				android:elevation="3dp"
+				android:visibility="invisible" />
 		</RelativeLayout>
 	</LinearLayout>
 	<RelativeLayout
@@ -247,7 +253,7 @@
 		android:background="@color/firstboot_bg"
 		android:paddingLeft="@dimen/kanojo_room_firstboot_left"
 		android:paddingRight="@dimen/kanojo_room_firstboot_right"
-		android:visibility="visible">
+		android:visibility="gone">
 		<ImageView
 			android:id="@+id/ticket_instruction"
 			android:layout_width="match_parent"

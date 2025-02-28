@@ -81,36 +81,36 @@ public class Live2dUtil {
         return false;
     }
 
-    public boolean setLive2DKanojoBackground(Kanojo kanojo) {
-        if (kanojo == null) {
-            return true;
-        }
-        String StringUrl = kanojo.getAvatar_background_image_url();
-        if (StringUrl == null || StringUrl.equals("") || !HttpUtil.isUrl(StringUrl)) {
-            return true;
-        }
-        if (this.map.containsKey(StringUrl)) {
-            int count = this.map.get(StringUrl);
-            if (count > REQUEST_MAX) {
-                this.mKanojoLive2D.setBackgroundImage(null, false);
-                return true;
-            }
-            this.map.put(StringUrl, count + 1);
-        } else {
-            this.map.put(StringUrl, 0);
-        }
-        Uri backUri = Uri.parse(StringUrl);
-        //this.mRrm = new RemoteResourceManager(new Live2dDiskCache(this.mContext, AVATAR_DATA_CACHE_DIR, BACKGROUND_DIR));
-        //if (this.mRrm.exists(backUri)) {
-        //    this.mKanojoLive2D.setBackgroundImage(this.mRrm.getFile(backUri).getAbsolutePath(), true);
-        //    return true;
-        //}
-        //if (this.mRrObserver != null) {
-        //    this.mRrm.addObserver(this.mRrObserver);
-        //}
-        //ImageCache.requestImage(StringUrl, this.mRrm);
-        return false;
-    }
+//    public boolean setLive2DKanojoBackground(Kanojo kanojo) {
+//        if (kanojo == null) {
+//            return true;
+//        }
+//        String StringUrl = kanojo.getAvatar_background_image_url();
+//        if (StringUrl == null || StringUrl.equals("") || !HttpUtil.isUrl(StringUrl)) {
+//            return true;
+//        }
+//        if (this.map.containsKey(StringUrl)) {
+//            int count = this.map.get(StringUrl);
+//            if (count > REQUEST_MAX) {
+//                this.mKanojoLive2D.setBackgroundImage(null, false);
+//                return true;
+//            }
+//            this.map.put(StringUrl, count + 1);
+//        } else {
+//            this.map.put(StringUrl, 0);
+//        }
+//        Uri backUri = Uri.parse(StringUrl);
+//        //this.mRrm = new RemoteResourceManager(new Live2dDiskCache(this.mContext, AVATAR_DATA_CACHE_DIR, BACKGROUND_DIR));
+//        //if (this.mRrm.exists(backUri)) {
+//        //    this.mKanojoLive2D.setBackgroundImage(this.mRrm.getFile(backUri).getAbsolutePath(), true);
+//        //    return true;
+//        //}
+//        //if (this.mRrObserver != null) {
+//        //    this.mRrm.addObserver(this.mRrObserver);
+//        //}
+//        //ImageCache.requestImage(StringUrl, this.mRrm);
+//        return false;
+//    }
 
     public boolean exists(Uri uri) {
         //return this.mRrm.exists(uri);

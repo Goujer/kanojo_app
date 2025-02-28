@@ -1,6 +1,5 @@
 package com.goujer.barcodekanojo.activity.kanojo
 
-import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.AsyncTask
@@ -15,19 +14,15 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-
-import com.goujer.barcodekanojo.core.cache.DynamicImageCache
-
 import com.goujer.barcodekanojo.BarcodeKanojoApp
+import com.goujer.barcodekanojo.R
+import com.goujer.barcodekanojo.core.cache.DynamicImageCache
 import com.goujer.barcodekanojo.core.model.Kanojo
 import com.goujer.barcodekanojo.core.model.User
-import com.goujer.barcodekanojo.R
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity
+import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface
 import jp.co.cybird.barcodekanojoForGAM.activity.kanojo.KanojoItemsActivity
 import jp.co.cybird.barcodekanojoForGAM.billing.util.Inventory
-import jp.co.cybird.barcodekanojoForGAM.billing.util.Purchase
-import jp.co.cybird.barcodekanojoForGAM.billing.util.PurchaseApi
-import jp.co.cybird.barcodekanojoForGAM.billing.util.PurchaseApi.OnPurchaseListener
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
 import jp.co.cybird.barcodekanojoForGAM.core.model.*
 import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView
@@ -35,8 +30,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-
-import java.io.IOException
+import java.lang.ref.WeakReference
 import java.util.*
 
 class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
@@ -47,11 +41,10 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 	private var mInventory: Inventory? = null
 	private var mKanojo: Kanojo? = null
 	private var mKanojoItem: KanojoItem? = null
-	private var mListener: OnPurchaseListener? = null
 	private var mLoadingDone = false
 	private var mLoadingView: CustomLoadingView? = null
 	private var mLoveIncrement: LoveIncrement? = null
-	private lateinit var mPurchaseAPI: PurchaseApi
+	private var mKanojoMessage: KanojoMessage? = null
 	private var mReceiptData: String? = null
 	private lateinit var mDic: DynamicImageCache
 	val mTaskEndHandler: Handler = object : Handler() {
@@ -95,47 +88,11 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 			mode = bundle.getInt(EXTRA_KANOJO_ITEM_MODE)
 		}
 		btnCancel.visibility = View.GONE
-		mPurchaseAPI = (application as BarcodeKanojoApp).mPurchaseApi
-		mListener = object : OnPurchaseListener {
-			override fun onSetUpFailed(message: String) {
-				Log.d(TAG, "setUp Purchase failed $message")
-			}
-
-			override fun onSetUpDone(inventory: Inventory) {
-				mInventory = inventory
-			}
-
-			override fun onPurchaseDone(purchase: Purchase) {
-				mReceiptData = purchase.orderId
-				Log.d("Purchase", "start to consume item " + purchase.sku)
-				mPurchaseAPI.consumeItem(purchase)
-			}
-
-			override fun onPurchaseFailed(message: String) {
-				Log.d(TAG, "Error purchasing: $message")
-				this@KanojoItemDetailActivity.showNoticeDialog(message)
-				clearQueue()
-			}
-
-			override fun onConsumeDone(purchase: Purchase, message: String) {
-				if (!isQueueEmpty) {
-					mTaskEndHandler.sendEmptyMessage(0)
-				}
-			}
-
-			override fun onConsumeFail(purchase: Purchase, message: String) {
-				Log.d(TAG, "Purchase onConsumeDone failed $message")
-				this@KanojoItemDetailActivity.showNoticeDialog(message)
-				clearQueue()
-				dismissProgressDialog()
-			}
-		}
-		mPurchaseAPI.setListener(mListener)
 	}
 
 	override fun onResume() {
 		super.onResume()
-		if (mLoadingDone || !((mode == 4 || mode == 5) && mKanojoItem!!.has_units == null)) {
+		if (mLoadingDone || !((mode == MODE_EXTEND_DATE || mode == MODE_EXTEND_GIFT) && mKanojoItem!!.has_units == null)) {
 			loadContent(0)
 		} else {
 			executeCheckPriceTask()
@@ -150,7 +107,7 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 		}
 	}
 
-	override  fun onStop() {
+	override fun onStop() {
 		mJob?.cancel()
 		super.onStop()
 	}
@@ -176,44 +133,43 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 					""".trimIndent()
 			}
 		}
-		if (mode == 3) {
+
+		// Set the text of the buy button
+		if (mode == MODE_TICKET) {
 			btnOk!!.text = resources.getString(R.string.kanojo_shop_buy)
-		} else if (mode == 2 || mode == 1 || mKanojoItem!!.has_units != null) {
-			if (mode == 2 || mode == 5) {
+		} else if (mode == MODE_GIFT || mode == MODE_DATE || mKanojoItem!!.has_units != null) {
+			if (mode == MODE_GIFT || mode == MODE_EXTEND_GIFT) {
 				btnOk!!.text = resources.getString(R.string.item_detail_button_ok_text)
-			} else if (mode == 1 || mode == 4) {
+			} else if (mode == MODE_DATE || mode == MODE_EXTEND_DATE) {
 				btnOk!!.text = resources.getString(R.string.item_detail_date_button_ok_text)
 			}
 		}
+
 		if (btnTextRes > 0) {
 			btnOk!!.setText(btnTextRes)
 		}
 	}
 
-	fun hideContent() {
+	private fun hideContent() {
 		imgView!!.visibility = View.INVISIBLE
 		txtDescription!!.visibility = View.INVISIBLE
 		btnOk!!.visibility = View.INVISIBLE
 	}
 
 	public override fun getClientView(): View {
-		val leyout = layoutInflater.inflate(R.layout.activity_kanojo_item_detail, null as ViewGroup?)
+		val layout = layoutInflater.inflate(R.layout.activity_kanojo_item_detail, null as ViewGroup?)
 		val appLayoutRoot = LinearLayout(this)
-		appLayoutRoot.addView(leyout)
+		appLayoutRoot.addView(layout)
 		return appLayoutRoot
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-		if (mPurchaseAPI!!.helper == null || !mPurchaseAPI!!.handleActivityResult(requestCode, resultCode, data)) {
-			super.onActivityResult(requestCode, resultCode, data)
-			if (requestCode == 1009 && resultCode == 207) {
-				close()
-			} else if (requestCode == 1106) {
-				hideContent()
-				mLoadingDone = false
-			}
-		} else {
-			Log.d(TAG, "resume from google play")
+		super.onActivityResult(requestCode, resultCode, data)
+		if (requestCode == BaseInterface.REQUEST_KANOJO_TICKETS && resultCode == BaseInterface.RESULT_KANOJO_ITEM_PAYMENT_DONE) {
+			close()
+		} else if (requestCode == BaseInterface.REQUEST_BUY_TICKET) {
+			hideContent()
+			mLoadingDone = false
 		}
 	}
 
@@ -231,21 +187,22 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 
 	override fun onDismiss(dialog: DialogInterface, code: Int) {
 		when (code) {
-			200 -> {
-				if (mode == 3) {
+			Response.CODE_SUCCESS -> {
+				if (mode == MODE_TICKET) {
 					setResult(RESULT_BUY_TICKET_SUCCESS)
 					close()
 					return
 				}
 				val data = Intent()
-				data.putExtra(EXTRA_KANOJO, mKanojo)
-				data.putExtra(EXTRA_LOVE_INCREMENT, mLoveIncrement)
+				data.putExtra(BaseInterface.EXTRA_KANOJO, mKanojo)
+				data.putExtra(BaseInterface.EXTRA_LOVE_INCREMENT, mLoveIncrement)
+				data.putExtra(BaseInterface.EXTRA_MESSAGES, mKanojoMessage)
 				setResult(RESULT_KANOJO_ITEM_USED, data)
 				close()
 				return
 			}
 			403 -> {
-				if (mode != 3) {
+				if (mode != MODE_TICKET) {
 					val data2 = Intent()
 					data2.putExtra(EXTRA_KANOJO, mKanojo)
 					setResult(RESULT_KANOJO_ITEM_USED, data2)
@@ -261,9 +218,7 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 	}
 
 	private fun isLoading(status: StatusHolder): Boolean {
-		return if (status.loading) {
-			true
-		} else false
+		return status.loading
 	}
 
 	class StatusHolder {
@@ -271,16 +226,16 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 		var loading = false
 
 		companion object {
-			const val CHECK_TICKET_TASK = 3
-			const val COMPLETE_PURCHASE_TASK = 2
 			const val GET_TRANSACTION_ID_TASK = 0
-			const val KANOJOITEM_TASK = 4
 			const val REQUEST_PURCHASE_TASK = 1
+			const val COMPLETE_PURCHASE_TASK = 2
+			const val CHECK_TICKET_TASK = 3
+			const val KANOJOITEM_TASK = 4
 		}
 	}
 
 	private val queue: Queue<StatusHolder?>?
-		private get() {
+		get() {
 			if (mTaskQueue == null) {
 				mTaskQueue = LinkedList<StatusHolder?>()
 			}
@@ -294,7 +249,7 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 
 	@get:Synchronized
 	private val isQueueEmpty: Boolean
-		private get() = mTaskQueue!!.isEmpty()
+		get() = mTaskQueue!!.isEmpty()
 
 	@Synchronized
 	private fun executeCheckPriceTask() {
@@ -311,13 +266,13 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 		val mCheckTicketHolder = StatusHolder()
 		mCheckTicketHolder.key = StatusHolder.CHECK_TICKET_TASK
 		val mKanojoHolder = StatusHolder()
-		mKanojoHolder.key = 4
+		mKanojoHolder.key = StatusHolder.KANOJOITEM_TASK
 		val mGetTransactionHolder = StatusHolder()
-		mGetTransactionHolder.key = 0
+		mGetTransactionHolder.key = StatusHolder.GET_TRANSACTION_ID_TASK
 		val mRequestHolder = StatusHolder()
-		mRequestHolder.key = 1
+		mRequestHolder.key = StatusHolder.REQUEST_PURCHASE_TASK
 		val mCompleteHolder = StatusHolder()
-		mCompleteHolder.key = 2
+		mCompleteHolder.key = StatusHolder.COMPLETE_PURCHASE_TASK
 		if (mode != 3) {
 			if ((mode == 4 || mode == 5) && mKanojoItem!!.has_units == null) {
 				queue!!.offer(mCheckTicketHolder)
@@ -334,176 +289,12 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 	private fun executePurchaseTask(list: StatusHolder) {
 		if (isLoading(list)) {
 			Log.d(TAG, "task " + list.key + " is running ")
-		} else if (list.key != 1) {
-			mBuyTicketTask = BuyTicketTask()
-			mBuyTicketTask!!.setList(list)
+		} else if (list.key != StatusHolder.REQUEST_PURCHASE_TASK) {
+			mBuyTicketTask = BuyTicketTask(this, list)
 			showProgressDialog()
-			mBuyTicketTask!!.execute(*arrayOfNulls<Void>(0))
+			mBuyTicketTask!!.execute()
 		} else {
 			dismissProgressDialog()
-			try {
-				mPurchaseAPI!!.BuyProduct(this, mKanojoItem!!.item_purchase_product_id, mKanojoItem!!.item_id.toString() + "-" + mTransactionId)
-			} catch (e: Exception) {
-			}
-		}
-	}
-
-	internal inner class BuyTicketTask : AsyncTask<Void?, Void?, Response<*>?>() {
-		private var mList: StatusHolder? = null
-		private var mReason: Exception? = null
-		fun setList(list: StatusHolder?) {
-			mList = list
-		}
-
-		@Deprecated("Deprecated in Java")
-		public override fun onPreExecute() {
-			mList!!.loading = true
-		}
-
-		@Deprecated("Deprecated in Java")
-		override fun doInBackground(vararg params: Void?): Response<*>? {
-			return try {
-				process(mList)
-			} catch (e: Exception) {
-				mReason = e
-				null
-			}
-		}
-
-		@Deprecated("Deprecated in Java")
-		public override fun onPostExecute(response: Response<*>?) {
-			val code: Int
-			try {
-				if (mReason != null) {
-				}
-				if (response == null) {
-					throw BarcodeKanojoException("""response is null! \n${mReason}""".trimIndent())
-				}
-				if (mList!!.key == 4) {
-					val kanojo = response[Kanojo::class.java] as Kanojo
-					if (kanojo != null) {
-						mKanojo = kanojo
-					}
-					val loveIncrement = response[LoveIncrement::class.java] as LoveIncrement
-					if (loveIncrement != null) {
-						mLoveIncrement = loveIncrement
-					}
-					clearQueue()
-				}
-				code = if (isQueueEmpty) {
-					this@KanojoItemDetailActivity.getCodeAndShowAlert(response, mReason)
-				} else {
-					response.code
-				}
-				when (code) {
-					200 -> {
-						if (mList!!.key == 0) {
-							mTransactionId = (response[PurchaseItem::class.java] as PurchaseItem).transactiontId
-						} else if (mList!!.key == 3) {
-							loadContent(R.string.item_detail_buy_ticket_text)
-							if (!mLoadingDone) {
-								clearQueue()
-								dismissProgressDialog()
-								mLoadingDone = true
-							}
-						}
-						if (!isQueueEmpty) {
-							mTaskEndHandler.sendEmptyMessage(0)
-							return
-						}
-						return
-					}
-					Response.CODE_ERROR_NOT_ENOUGH_TICKET -> {
-						if (mList!!.key == 3) {
-							if (!mLoadingDone) {
-								mLoadingDone = true
-								loadContent(R.string.item_detail_go_to_ticket_screen_text)
-							} else {
-								val ticket = Intent(this@KanojoItemDetailActivity, KanojoItemsActivity::class.java)
-								if (mKanojo != null) {
-									ticket.putExtra(EXTRA_KANOJO, mKanojo)
-								}
-								val item = KanojoItem(3)
-								item.title = this@KanojoItemDetailActivity.resources.getString(R.string.kanojo_items_store)
-								ticket.putExtra(EXTRA_KANOJO_ITEM, item)
-								ticket.putExtra(EXTRA_KANOJO_ITEM_MODE, 3)
-								ticket.putExtra(EXTRA_REQUEST_CODE, REQUEST_BUY_TICKET)
-								this@KanojoItemDetailActivity.startActivityForResult(ticket, REQUEST_BUY_TICKET)
-							}
-							clearQueue()
-							dismissProgressDialog()
-							return
-						}
-						return
-					}
-					400, 401, 404, 500, 503 -> return
-					403 -> {
-						if (mList!!.key == 2) {
-							dismissProgressDialog()
-							return
-						}
-						return
-					}
-					else -> return
-				}
-			} catch (e: BarcodeKanojoException) {
-				clearQueue()
-				dismissProgressDialog()
-				showToast(this@KanojoItemDetailActivity.getString(R.string.error_internet))
-			}
-		}
-
-		@Deprecated("Deprecated in Java")
-		override fun onCancelled() {
-			dismissProgressDialog()
-		}
-
-		@Throws(BarcodeKanojoException::class, IllegalStateException::class, IOException::class)
-		fun process(list: StatusHolder?): Response<*>? {
-			val barcodeKanojo = (this@KanojoItemDetailActivity.application as BarcodeKanojoApp).barcodeKanojo
-			if (list == null) {
-				throw BarcodeKanojoException("process:StatusHolder is null!")
-			}
-			return when (list.key) {
-				0 -> barcodeKanojo.android_get_transaction_id(mKanojoItem!!.item_id)
-				2 -> barcodeKanojo.android_verify_purchased(mKanojoItem!!.item_id, mTransactionId, mReceiptData)
-				3 -> barcodeKanojo.android_check_ticket(getPriceFromString(mKanojoItem!!.price), mKanojoItem!!.item_id)
-				4 -> when (mode) {
-					1 -> {
-						if (mKanojo == null || mKanojoItem == null) {
-							null
-						} else barcodeKanojo.do_date(mKanojo!!.id, mKanojoItem!!.item_id)
-					}
-					2 -> {
-						if (mKanojo == null || mKanojoItem == null) {
-							null
-						} else barcodeKanojo.do_gift(mKanojo!!.id, mKanojoItem!!.item_id)
-					}
-					3 -> {
-						if (mKanojo == null || mKanojoItem == null) {
-							null
-						} else barcodeKanojo.do_ticket(mKanojoItem!!.item_id, getPriceFromString(mKanojoItem!!.price))
-					}
-					4 -> {
-						if (mKanojo == null || mKanojoItem == null) {
-							return null
-						}
-						if (mKanojoItem!!.has_units == null) {
-							barcodeKanojo.do_ticket(mKanojoItem!!.item_id, getPriceFromString(mKanojoItem!!.price))
-						} else barcodeKanojo.do_extend_date(mKanojo!!.id, mKanojoItem!!.item_id)
-					}
-					5 -> {
-						if (mKanojo == null || mKanojoItem == null) {
-							return null
-						}
-						if (mKanojoItem!!.has_units == null) {
-							barcodeKanojo.do_ticket(mKanojoItem!!.item_id, getPriceFromString(mKanojoItem!!.price))
-						} else barcodeKanojo.do_extend_gift(mKanojo!!.id, mKanojoItem!!.item_id)
-					}
-					else -> null
-				}
-				else -> null
-			}
 		}
 	}
 
@@ -517,7 +308,7 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 	}
 
 	override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-		if (keyCode != 4 || !mLoadingView!!.isShow) {
+		if (keyCode != KeyEvent.KEYCODE_BACK || !mLoadingView!!.isShow) {
 			if (mode == 3) {
 				setResult(RESULT_BUY_TICKET_FAIL)
 			}
@@ -539,10 +330,190 @@ class KanojoItemDetailActivity : BaseActivity(), View.OnClickListener {
 	companion object {
 		private const val DEBUG_PURCHASE = false
 		const val MODE_DATE = 1
-		const val MODE_EXTEND_DATE = 4
-		const val MODE_EXTEND_GIFT = 5
 		const val MODE_GIFT = 2
 		const val MODE_TICKET = 3
-		private const val TAG = "KanojoItemDetailActivit"
+		const val MODE_EXTEND_DATE = 4
+		const val MODE_EXTEND_GIFT = 5
+
+		internal class BuyTicketTask(activity: KanojoItemDetailActivity, list: StatusHolder) : AsyncTask<Void?, Void?, Response<*>?>() {
+			private var mList: StatusHolder = list
+			private var mReason: Exception? = null
+			private val activityRef: WeakReference<KanojoItemDetailActivity>
+
+			init {
+				activityRef = WeakReference<KanojoItemDetailActivity>(activity)
+			}
+
+			public override fun onPreExecute() {
+				val activity: KanojoItemDetailActivity? = activityRef.get()
+				if (activity == null || activity.isFinishing) {
+					return
+				}
+
+				mList.loading = true
+			}
+
+			override fun doInBackground(vararg params: Void?): Response<*>? {
+				val activity: KanojoItemDetailActivity? = activityRef.get()
+				if (activity == null || activity.isFinishing) {
+					return null
+				}
+
+				return try {
+					val barcodeKanojo = (activity.application as BarcodeKanojoApp).barcodeKanojo
+					//if (mList == null) {
+					//	throw BarcodeKanojoException("process:StatusHolder is null!")
+					//}
+					return when (mList.key) {
+						StatusHolder.GET_TRANSACTION_ID_TASK -> barcodeKanojo.android_get_transaction_id(activity.mKanojoItem!!.item_id)
+						StatusHolder.COMPLETE_PURCHASE_TASK -> barcodeKanojo.android_verify_purchased(activity.mKanojoItem!!.item_id, activity.mTransactionId, activity.mReceiptData)
+						StatusHolder.CHECK_TICKET_TASK -> barcodeKanojo.android_check_ticket(activity.getPriceFromString(activity.mKanojoItem!!.price), activity.mKanojoItem!!.item_id)
+						StatusHolder.KANOJOITEM_TASK -> when (activity.mode) {
+							MODE_DATE -> {
+								if (activity.mKanojo == null || activity.mKanojoItem == null) {
+									null
+								} else barcodeKanojo.do_date(activity.mKanojo!!.id, activity.mKanojoItem!!.item_id)
+							}
+
+							MODE_GIFT -> {
+								if (activity.mKanojo == null || activity.mKanojoItem == null) {
+									null
+								} else barcodeKanojo.do_gift(activity.mKanojo!!.id, activity.mKanojoItem!!.item_id)
+							}
+
+							MODE_TICKET -> {
+								if (activity.mKanojo == null || activity.mKanojoItem == null) {
+									null
+								} else barcodeKanojo.do_ticket(activity.mKanojoItem!!.item_id, activity.getPriceFromString(activity.mKanojoItem!!.price))
+							}
+
+							MODE_EXTEND_DATE -> {
+								if (activity.mKanojo == null || activity.mKanojoItem == null) {
+									return null
+								}
+								if (activity.mKanojoItem!!.has_units == null) {
+									barcodeKanojo.do_ticket(activity.mKanojoItem!!.item_id, activity.getPriceFromString(activity.mKanojoItem!!.price))
+								} else barcodeKanojo.do_extend_date(activity.mKanojo!!.id, activity.mKanojoItem!!.item_id)
+							}
+
+							MODE_EXTEND_GIFT -> {
+								if (activity.mKanojo == null || activity.mKanojoItem == null) {
+									return null
+								}
+								if (activity.mKanojoItem!!.has_units == null) {
+									barcodeKanojo.do_ticket(activity.mKanojoItem!!.item_id, activity.getPriceFromString(activity.mKanojoItem!!.price))
+								} else barcodeKanojo.do_extend_gift(activity.mKanojo!!.id, activity.mKanojoItem!!.item_id)
+							}
+							else -> null
+						}
+						else -> null
+					}
+				} catch (e: Exception) {
+					mReason = e
+					null
+				}
+			}
+
+			public override fun onPostExecute(response: Response<*>?) {
+				val activity: KanojoItemDetailActivity? = activityRef.get()
+				if (activity == null || activity.isFinishing) {
+					return
+				}
+
+				try {
+					if (response == null) {
+						throw BarcodeKanojoException("""response is null! \n${mReason}""".trimIndent())
+					}
+					if (mList.key == StatusHolder.KANOJOITEM_TASK) {
+						val kanojo = response[Kanojo::class.java] as Kanojo?
+						if (kanojo != null) {
+							activity.mKanojo = kanojo
+						}
+
+						val loveIncrement = response[LoveIncrement::class.java] as LoveIncrement?
+						if (loveIncrement != null) {
+							activity.mLoveIncrement = loveIncrement
+						}
+
+						val kanojoMessage = response[KanojoMessage::class.java] as KanojoMessage?
+						if (kanojoMessage != null) {
+							activity.mKanojoMessage = kanojoMessage
+						}
+
+						activity.clearQueue()
+					}
+
+					val code = if (activity.isQueueEmpty) {
+						activity.getCodeAndShowAlert(response, mReason)
+					} else {
+						response.code
+					}
+					when (code) {
+						Response.CODE_SUCCESS -> {
+							if (mList.key == StatusHolder.GET_TRANSACTION_ID_TASK) {
+								activity.mTransactionId = (response[PurchaseItem::class.java] as PurchaseItem).transactiontId
+							} else if (mList.key == StatusHolder.CHECK_TICKET_TASK) {
+								activity.loadContent(R.string.item_detail_buy_ticket_text)
+								if (!activity.mLoadingDone) {
+									activity.clearQueue()
+									activity.dismissProgressDialog()
+									activity.mLoadingDone = true
+								}
+							}
+							if (!activity.isQueueEmpty) {
+								activity.mTaskEndHandler.sendEmptyMessage(0)
+								return
+							}
+							return
+						}
+						Response.CODE_ERROR_NOT_ENOUGH_TICKET -> {
+							if (mList.key == StatusHolder.CHECK_TICKET_TASK) {
+								if (!activity.mLoadingDone) {
+									activity.mLoadingDone = true
+									activity.loadContent(R.string.item_detail_go_to_ticket_screen_text)
+								} else {
+									val ticket = Intent(activity, KanojoItemsActivity::class.java)
+									if (activity.mKanojo != null) {
+										ticket.putExtra(EXTRA_KANOJO, activity.mKanojo)
+									}
+									val item = KanojoItem(KanojoItem.TICKET_ITEM_CLASS)
+									item.title = activity.resources.getString(R.string.kanojo_items_store)
+									ticket.putExtra(EXTRA_KANOJO_ITEM, item)
+									ticket.putExtra(EXTRA_KANOJO_ITEM_MODE, MODE_TICKET)
+									ticket.putExtra(EXTRA_REQUEST_CODE, REQUEST_BUY_TICKET)
+									activity.startActivityForResult(ticket, REQUEST_BUY_TICKET)
+								}
+								activity.clearQueue()
+								activity.dismissProgressDialog()
+								return
+							}
+							return
+						}
+						Response.CODE_ERROR_BAD_REQUEST, Response.CODE_ERROR_UNAUTHORIZED, Response.CODE_ERROR_NOT_FOUND, Response.CODE_ERROR_SERVER, Response.CODE_ERROR_SERVICE_UNAVAILABLE -> return
+						Response.CODE_ERROR_FORBIDDEN -> {
+							if (mList.key == StatusHolder.COMPLETE_PURCHASE_TASK) {
+								activity.dismissProgressDialog()
+								return
+							}
+							return
+						}
+						else -> return
+					}
+				} catch (e: BarcodeKanojoException) {
+					activity.clearQueue()
+					activity.dismissProgressDialog()
+					activity.showToast(activity.getString(R.string.error_internet))
+				}
+			}
+
+			override fun onCancelled() {
+				val activity: KanojoItemDetailActivity? = activityRef.get()
+				if (activity == null || activity.isFinishing) {
+					return
+				}
+
+				activity.dismissProgressDialog()
+			}
+		}
 	}
 }

@@ -9,32 +9,35 @@ import jp.co.cybird.barcodekanojoForGAM.core.model.Barcode
 import org.osmdroid.util.GeoPoint
 
 class Kanojo : BarcodeKanojoModel, Parcelable {
-	var avatar_background_image_url: String? = null
-	var barcode: String? = null
-	var birth_day = 0
-	var birth_month = 0
-	var birth_year = 0
-	var emotion_status = 0
-
-	var follower_count = 0
-	var geo: GeoPoint
-	var id = 0
-	var isIn_room = false
-	var like_rate = 0
-	var location: String? = null
-	var love_gauge = 0
-	var mascotEnable = 0
-
 	var name: String? = null
-	var nationality: String? = null
-
-	var isOn_advertising = false
+	var id = 0
+	var barcode: String? = null
 
 	var relation_status = 0
 
-	var source: String? = null
+	//Birthday
+	var birth_day = 0
+	var birth_month = 0
+	var birth_year = 0
 
-	var status: String? = null
+	var like_rate = 0
+	var follower_count = 0  //How many users have her scanned and as a friend
+
+	var love_gauge = 0
+	var mascotEnable = 0    //Married
+
+
+	var emotion_status = 0  //Unused
+	var isIn_room: Boolean = true
+
+	var dateLocation: String? = null
+	var isOnDate = false
+
+	var location: String? = null
+	var geo: GeoPoint
+	var nationality: String? = null //Location they were spawned at
+
+	var status: String? = null  //The text in the drop down chart
 	var isVoted_like = false
 
 	//Generated Attributes
@@ -145,15 +148,14 @@ class Kanojo : BarcodeKanojoModel, Parcelable {
 
 		dest.writeInt(love_gauge)
 		dest.writeInt(follower_count)
-		dest.writeString(source)
 		dest.writeString(nationality)
 		dest.writeInt(relation_status)
-		dest.writeBooleanArray(booleanArrayOf(isVoted_like, isIn_room, isOn_advertising))
+		dest.writeBooleanArray(booleanArrayOf(isVoted_like, isIn_room, isOnDate))
 		dest.writeInt(like_rate)
 		dest.writeString(status)
-		dest.writeString(avatar_background_image_url)
 		dest.writeInt(emotion_status)
 		dest.writeInt(mascotEnable)
+		dest.writeString(dateLocation)
 	}
 
 	private constructor(parcelIn: Parcel) {
@@ -194,19 +196,18 @@ class Kanojo : BarcodeKanojoModel, Parcelable {
 
 		love_gauge = parcelIn.readInt()
 		follower_count = parcelIn.readInt()
-		source = parcelIn.readString()
 		nationality = parcelIn.readString()
 		relation_status = parcelIn.readInt()
 		val b = BooleanArray(3)
 		parcelIn.readBooleanArray(b)
 		isVoted_like = b[0]
 		isIn_room = b[1]
-		isOn_advertising = b[2]
+		isOnDate = b[2]
 		like_rate = parcelIn.readInt()
 		status = parcelIn.readString()
-		avatar_background_image_url = parcelIn.readString()
 		emotion_status = parcelIn.readInt()
 		mascotEnable = parcelIn.readInt()
+		dateLocation = parcelIn.readString()
 	}
 
 	private constructor(parcel: Parcel, kanojo: Kanojo?) : this(parcel) {}
@@ -238,6 +239,5 @@ class Kanojo : BarcodeKanojoModel, Parcelable {
 		const val RELATION_FRIEND = 3
 		const val RELATION_KANOJO = 2
 		const val RELATION_OTHER = 1
-		const val TAG = "Kanojo"
 	}
 }

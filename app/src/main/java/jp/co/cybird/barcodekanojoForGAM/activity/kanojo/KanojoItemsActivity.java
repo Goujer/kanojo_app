@@ -21,19 +21,21 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import com.goujer.barcodekanojo.BarcodeKanojoApp;
 import com.goujer.barcodekanojo.R;
+
+import jp.co.cybird.barcodekanojoForGAM.activity.KanojosActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseInterface;
 import jp.co.cybird.barcodekanojoForGAM.adapter.KanojoItemAdapter;
 import jp.co.cybird.barcodekanojoForGAM.adapter.base.SeparatedListAdapter;
 import jp.co.cybird.barcodekanojoForGAM.billing.util.Inventory;
 import jp.co.cybird.barcodekanojoForGAM.billing.util.Purchase;
-import jp.co.cybird.barcodekanojoForGAM.billing.util.PurchaseApi;
 import com.goujer.barcodekanojo.core.BarcodeKanojo;
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException;
 import jp.co.cybird.barcodekanojoForGAM.core.model.Alert;
@@ -47,12 +49,14 @@ import com.goujer.barcodekanojo.core.model.User;
 import com.goujer.barcodekanojo.activity.kanojo.KanojoItemDetailActivity;
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache;
 import com.goujer.barcodekanojo.preferences.ApplicationSetting;
+import com.goujer.barcodekanojo.view.UserProfileView;
+
 import jp.co.cybird.barcodekanojoForGAM.view.CustomLoadingView;
 
 public class KanojoItemsActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
-	private static final String TAG = "KanojoItemsActivity";
 
     private static final boolean DEBUG_PURCHASE = false;
+
     public static final int MODE_DATE = 1;
 	public static final int MODE_GIFT = 2;
 	public static final int MODE_TICKET = 3;
@@ -66,20 +70,20 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
 
     private Button buttonTabItemsList;
     private Button buttonTabItemsStore;
+	private ListView mListView;
+	private CustomLoadingView mLoadingView;
+
+	private LoadItemsTask mLoadItemsTask;
+	private ConsumeTask mConsumeTask;
+
     private List<String> lstProductId;
     private SeparatedListAdapter mAdapter;
     private String mAlertMsgLst = "";
-    private ConsumeTask mConsumeTask;
     private ModelList<KanojoItemCategory> mCurrentCategory;
     private Inventory mInventory;
     private Kanojo mKanojo;
     private KanojoItem mKanojoItem;
-    private ListView mListView;
-    private PurchaseApi.OnPurchaseListener mListener;
-    private LoadItemsTask mLoadItemsTask;
     private boolean mLoadingFinshed = false;
-    private CustomLoadingView mLoadingView;
-    private PurchaseApi mPurchaseAPI;
     private int mRequestCode;
     private DynamicImageCache mDic;
     final Handler mTaskEndHandler = new Handler() {
@@ -93,8 +97,9 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
         }
     };
     private Queue<TicketHolder> mTaskQueue;
-    private User mUser;
-    private int mUserLevel = 0;
+
+
+	private int mUserLevel = 0;
     private int mode;
     private int type;
 
@@ -110,33 +115,38 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
             this.mUserLevel = bundle.getInt(BaseInterface.EXTRA_LEVEL, 0);
             this.mRequestCode = bundle.getInt(BaseInterface.EXTRA_REQUEST_CODE, 0);
         }
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int dWidth = displayMetrics.widthPixels;
+
         Resources r = getResources();
         this.mDic = ((BarcodeKanojoApp) getApplication()).getImageCache();
-        this.mPurchaseAPI = ((BarcodeKanojoApp) getApplication()).getMPurchaseApi();
+
         Button btnClose = findViewById(R.id.kanojo_items_close);
         btnClose.setOnClickListener(this);
         btnClose.setText(this.mKanojo.getName());
-        TextView txtTitle = findViewById(R.id.kanojo_items_title);
+
         this.mListView = findViewById(R.id.kanojo_items_list);
         this.mListView.setOnItemClickListener(this);
+
+	    this.mLoadingView = findViewById(R.id.loadingView);
+
         this.mAdapter = new SeparatedListAdapter(this, R.layout.view_list_header);
-        RelativeLayout mLayoutTab = findViewById(R.id.layoutTab);
+
+	    DisplayMetrics displayMetrics = new DisplayMetrics();
+	    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+	    int dWidth = displayMetrics.widthPixels;
         this.buttonTabItemsStore = findViewById(R.id.kanojo_tab_items_store);
         this.buttonTabItemsStore.getLayoutParams().width = (dWidth / 2) + 10;
         this.buttonTabItemsStore.setOnClickListener(this);
         this.buttonTabItemsList = findViewById(R.id.kanojo_tab_items_list);
         this.buttonTabItemsList.getLayoutParams().width = (dWidth / 2) + 10;
         this.buttonTabItemsList.setOnClickListener(this);
-        this.mUser = ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().getUser();
-        this.mLoadingView = findViewById(R.id.loadingView);
-        if (this.mUser != null) {
+
+	    User mUser = ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo().getUser();
+		TextView txtTitle = findViewById(R.id.kanojo_items_title);
+		RelativeLayout mLayoutTab = findViewById(R.id.layoutTab);
+        if (mUser != null) {
             switch (this.mode) {
                 case MODE_DATE:
                     txtTitle.setText(r.getString(R.string.kanojo_items_date));
-                    mLayoutTab.setVisibility(View.VISIBLE);
                     onTabType(TYPE_STORE);
                     break;
                 case MODE_GIFT:
@@ -158,96 +168,22 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
 				case MODE_PERMANENT_SUB_ITEM_GIFT:
                     if (this.mKanojoItem != null) {
                         txtTitle.setText(this.mKanojoItem.getTitle());
-                        break;
                     }
                     break;
             }
-            this.lstProductId = new ArrayList();
-            this.mListener = new PurchaseApi.OnPurchaseListener() {
-                public void onSetUpFailed(String message) {
-                    Log.d(TAG, "setUp Purchase failed " + message);
-                    KanojoItemsActivity.this.showCustomNoticeDialog(KanojoItemsActivity.this.getString(R.string.purchase_setup_failed));
-                }
 
-                public void onSetUpDone(Inventory inventory) {
-                    KanojoItemsActivity.this.showProgressDialog();
-                    KanojoItemsActivity.this.mInventory = inventory;
-                    if (KanojoItemsActivity.this.mCurrentCategory != null) {
-						for (KanojoItemCategory category : KanojoItemsActivity.this.mCurrentCategory) {
-							ModelList<KanojoItem> modelItem = category.getItems();
-							for (KanojoItem item : modelItem) {
-								try {
-									item.setPrice(inventory.getSkuDetails(item.getItem_purchase_product_id()).getPrice());
-								} catch (Exception e) {
-									item.setPrice("0 US$");
-								}
-								KanojoItemsActivity.this.clearQueue();
-								if (inventory.hasPurchase(item.getItem_purchase_product_id())) {
-									TicketHolder mConsumetHolder = new TicketHolder();
-									Purchase p = inventory.getPurchase(item.getItem_purchase_product_id());
-									mConsumetHolder.key = item.getItem_purchase_product_id();
-									mConsumetHolder.what = TicketHolder.CONSUME_PURCHASED_TASK;
-									mConsumetHolder.orderId = p.getOrderId();
-									String[] payLoadValue = p.getDeveloperPayload().split("-");
-									if (payLoadValue.length == 2) {
-										mConsumetHolder.store_item_id = Integer.parseInt(payLoadValue[0]);
-										mConsumetHolder.google_transaction_id = Integer.parseInt(payLoadValue[1]);
-									}
-									TicketHolder mVerifyHolder = mConsumetHolder.clone();
-									mVerifyHolder.what = TicketHolder.VERIFY_PURCHASED_TASK;
-									KanojoItemsActivity.this.getQueue().offer(mVerifyHolder);
-									KanojoItemsActivity.this.getQueue().offer(mConsumetHolder);
-								}
-							}
-							boolean flag = false;
-							if (category.getFlag() != null) {
-								flag = true;
-							}
-							KanojoItemsActivity.this.addSection(category.getTitle(), flag, modelItem);
-						}
-                        if (!KanojoItemsActivity.this.isQueueEmpty()) {
-                            TicketHolder mUpdateHodler = new TicketHolder();
-                            mUpdateHodler.what = TicketHolder.UPDATE_DATA_TASK;
-                            KanojoItemsActivity.this.getQueue().offer(mUpdateHodler);
-                            KanojoItemsActivity.this.mTaskEndHandler.sendEmptyMessage(0);
-                            return;
-                        }
-                        KanojoItemsActivity.this.dismissProgressDialog();
-                        KanojoItemsActivity.this.mListView.setAdapter(KanojoItemsActivity.this.mAdapter);
-                    }
-                }
+	        ((UserProfileView) findViewById(R.id.common_profile)).setUser(mUser, this.mDic);
 
-                public void onPurchaseDone(Purchase purchase) {
-                }
-
-                public void onPurchaseFailed(String message) {
-                }
-
-                public void onConsumeDone(Purchase purchase, String message) {
-                    if (!KanojoItemsActivity.this.isQueueEmpty()) {
-                        KanojoItemsActivity.this.mTaskEndHandler.sendEmptyMessage(0);
-                        return;
-                    }
-                    KanojoItemsActivity.this.dismissProgressDialog();
-                    KanojoItemsActivity.this.mListView.setAdapter(KanojoItemsActivity.this.mAdapter);
-                }
-
-                public void onConsumeFail(Purchase purchase, String message) {
-                    if (purchase != null) {
-                    }
-                    KanojoItemsActivity.this.clearQueue();
-                    KanojoItemsActivity.this.dismissProgressDialog();
-                }
-            };
+            this.lstProductId = new ArrayList<>();
         }
     }
 
-    public View getClientView() {
-        View layout = getLayoutInflater().inflate(R.layout.activity_kanojo_items, null);
-        FrameLayout appLayoutRoot = new FrameLayout(this);
-        appLayoutRoot.addView(layout);
-        return appLayoutRoot;
-    }
+	public void onResume() {
+		super.onResume();
+		if (!this.mLoadingFinshed) {
+			executeLoadItemsTask();
+		}
+	}
 
     protected void onPause() {
         super.onPause();
@@ -260,23 +196,17 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    public void onResume() {
-        super.onResume();
-        String uuid = new ApplicationSetting(this).getUUID();
-        if (!PurchaseApi.isBillingAvailable(getApplicationContext()) && this.mode == MODE_TICKET) {
-            showNoticeDialog(getString(R.string.no_support_billing_v3));
-        } else if (!this.mLoadingFinshed) {
-            executeLoadItemsTask();
-        }
-    }
-
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "Destroying helper.");
-        if (this.mPurchaseAPI.getHelper() != null) {
-            this.mPurchaseAPI.disposeHelper();
-        }
     }
+
+	public View getClientView() {
+		View layout = getLayoutInflater().inflate(R.layout.activity_kanojo_items, null);
+		FrameLayout appLayoutRoot = new FrameLayout(this);
+		appLayoutRoot.addView(layout);
+		return appLayoutRoot;
+	}
 
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         KanojoItem item = (KanojoItem) this.mAdapter.getItem(position);
@@ -295,6 +225,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
 							next_mode = MODE_PERMANENT_ITEM_GIFT;
                             break;
                         }
+						break;
 					case MODE_TICKET:
 						next_mode = MODE_TICKET;
                         break;
@@ -305,14 +236,13 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
 						next_mode = MODE_EXTEND_GIFT;
                         break;
                 }
+
                 Intent intent = new Intent(this, KanojoItemsActivity.class);
                 if (this.mKanojo != null) {
                     intent.putExtra(BaseInterface.EXTRA_KANOJO, this.mKanojo);
                 }
-                if (item != null) {
-                    intent.putExtra(BaseInterface.EXTRA_KANOJO_ITEM, item);
-                }
-                if (this.mUserLevel != 0) {
+	            intent.putExtra(BaseInterface.EXTRA_KANOJO_ITEM, item);
+	            if (this.mUserLevel != 0) {
                     intent.putExtra(BaseInterface.EXTRA_LEVEL, this.mUserLevel);
                 }
                 intent.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, next_mode);
@@ -330,10 +260,8 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
                 if (this.mKanojo != null) {
                     intent2.putExtra(BaseInterface.EXTRA_KANOJO, this.mKanojo);
                 }
-                if (item != null) {
-                    intent2.putExtra(BaseInterface.EXTRA_KANOJO_ITEM, item);
-                }
-                intent2.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, temp_mode);
+	            intent2.putExtra(BaseInterface.EXTRA_KANOJO_ITEM, item);
+	            intent2.putExtra(BaseInterface.EXTRA_KANOJO_ITEM_MODE, temp_mode);
                 if (this.mRequestCode > 0) {
                     startActivityForResult(intent2, this.mRequestCode);
                 } else {
@@ -389,19 +317,17 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
     private void onTabType(int selectType) {
         if (selectType == TYPE_STORE) {
             this.type = TYPE_STORE;
-            this.buttonTabItemsStore.bringToFront();
-            this.buttonTabItemsList.setEnabled(true);
-            this.buttonTabItemsList.setBackgroundResource(R.drawable.button_list_item_tab);
-            this.buttonTabItemsStore.setEnabled(false);
-            this.buttonTabItemsStore.setBackgroundResource(R.drawable.button_store_tab_select);
+            this.buttonTabItemsList.setSelected(false);
+            this.buttonTabItemsStore.setSelected(true);
+	        this.buttonTabItemsStore.bringToFront();
+	        this.buttonTabItemsStore.getParent().requestLayout();
             executeLoadItemsTask();
         } else if (selectType == TYPE_ITEM_LIST) {
             this.type = TYPE_ITEM_LIST;
-            this.buttonTabItemsList.bringToFront();
-            this.buttonTabItemsList.setEnabled(false);
-            this.buttonTabItemsList.setBackgroundResource(R.drawable.button_list_item_tab_select);
-            this.buttonTabItemsStore.setEnabled(true);
-            this.buttonTabItemsStore.setBackgroundResource(R.drawable.button_store_tab);
+	        this.buttonTabItemsList.setSelected(true);
+	        this.buttonTabItemsStore.setSelected(false);
+	        this.buttonTabItemsList.bringToFront();
+	        this.buttonTabItemsList.getParent().requestLayout();
             executeLoadItemsTask();
         }
     }
@@ -434,59 +360,72 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
 
     private void executeLoadItemsTask() {
         if (this.mLoadItemsTask == null || this.mLoadItemsTask.getStatus() == AsyncTask.Status.FINISHED) {
-            this.mLoadItemsTask = (LoadItemsTask) new LoadItemsTask().execute(new Integer[0]);
+            this.mLoadItemsTask = (LoadItemsTask) new LoadItemsTask(this).execute();
         }
     }
 
-    class LoadItemsTask extends AsyncTask<Integer, Void, Response<?>> {
+    static class LoadItemsTask extends AsyncTask<Integer, Void, Response<?>> {
+	    private final WeakReference<KanojoItemsActivity> activityRef;
         private Exception mReason = null;
 
-        LoadItemsTask() {
+        LoadItemsTask(KanojoItemsActivity activity) {
+			super();
+			activityRef = new WeakReference<>(activity);
         }
 
 		@Override
         public void onPreExecute() {
-            showProgressDialog();
-            mLoadingFinshed = false;
+			KanojoItemsActivity activity = activityRef.get();
+			if (activity == null || activity.isFinishing()) {
+				return;
+			}
+
+			activity.showProgressDialog();
+            activity.mLoadingFinshed = false;
         }
 
 		@Override
         public Response<?> doInBackground(Integer... params) {
-            try {
-                BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) getApplication()).getBarcodeKanojo();
-                switch (mode) {
+			KanojoItemsActivity activity = activityRef.get();
+			if (activity == null || activity.isFinishing()) {
+				return null;
+			}
+
+			try {
+                BarcodeKanojo barcodeKanojo = ((BarcodeKanojoApp) activity.getApplication()).getBarcodeKanojo();
+                switch (activity.mode) {
 					case MODE_DATE:
-                        if (mKanojo != null) {
-                            return barcodeKanojo.date_menu(mKanojo.getId(), type);
+                        if (activity.mKanojo != null) {
+                            return barcodeKanojo.date_menu(activity.mKanojo.getId(), activity.type);
                         }
                         return null;
                     case MODE_GIFT:
-                        if (mKanojo != null) {
-                            return barcodeKanojo.gift_menu(mKanojo.getId(), type);
+                        if (activity.mKanojo != null) {
+                            return barcodeKanojo.gift_menu(activity.mKanojo.getId(), activity.type);
                         }
                         return null;
 					case MODE_TICKET:
-                        if (mKanojoItem != null) {
+                        if (activity.mKanojoItem != null) {
                             return barcodeKanojo.store_items(KanojoItem.TICKET_ITEM_CLASS, 0);
                         }
                         return null;
 					case MODE_EXTEND_DATE:
 					case MODE_EXTEND_GIFT:
-                        if (mKanojoItem == null) {
+                        if (activity.mKanojoItem == null) {
                             return null;
                         }
-                        if (mKanojoItem.hasItem()) {
-                            return barcodeKanojo.has_items(mKanojoItem.getItem_class(), mKanojoItem.getItem_category_id());
+                        if (activity.mKanojoItem.hasItem()) {
+                            return barcodeKanojo.has_items(activity.mKanojoItem.getItem_class(), activity.mKanojoItem.getItem_category_id());
                         }
-                        return barcodeKanojo.store_items(mKanojoItem.getItem_class(), mKanojoItem.getItem_category_id());
+                        return barcodeKanojo.store_items(activity.mKanojoItem.getItem_class(), activity.mKanojoItem.getItem_category_id());
 					case MODE_PERMANENT_ITEM_GIFT:
-                        if (KanojoItemsActivity.this.mKanojo != null) {
-                            return barcodeKanojo.permanent_item_gift_menu(mKanojoItem.getItem_class(), mKanojoItem.getItem_category_id());
+                        if (activity.mKanojo != null) {
+                            return barcodeKanojo.permanent_item_gift_menu(activity.mKanojoItem.getItem_class(), activity.mKanojoItem.getItem_category_id());
                         }
                         return null;
 					case MODE_PERMANENT_SUB_ITEM_GIFT:
-                        if (KanojoItemsActivity.this.mKanojo != null) {
-                            return barcodeKanojo.permanent_sub_item_gift_menu(mKanojoItem.getItem_class(), mKanojoItem.getItem_category_id());
+                        if (activity.mKanojo != null) {
+                            return barcodeKanojo.permanent_sub_item_gift_menu(activity.mKanojoItem.getItem_class(), activity.mKanojoItem.getItem_category_id());
                         }
                         return null;
                     default:
@@ -500,41 +439,41 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
 
 		@Override
         public void onPostExecute(Response<?> responseStore) {
-            try {
+			KanojoItemsActivity activity = activityRef.get();
+			if (activity == null || activity.isFinishing()) {
+				return;
+			}
+
+			try {
 				if (responseStore == null) {
                     throw new BarcodeKanojoException("response is null! \n" + this.mReason);
                 }
-				if (KanojoItemsActivity.this.getCodeAndShowAlert(responseStore, this.mReason) == Response.CODE_SUCCESS) {
-					if (KanojoItemsActivity.this.mode != MODE_TICKET) {
-						KanojoItemsActivity.this.updateListItem(responseStore.getKanojoItemCategoryModelList());
+				if (activity.getCodeAndShowAlert(responseStore, this.mReason) == Response.CODE_SUCCESS) {
+					if (activity.mode != MODE_TICKET) {
+						activity.updateListItem(responseStore.getKanojoItemCategoryModelList());
 					} else {
-						KanojoItemsActivity.this.mCurrentCategory = responseStore.getKanojoItemCategoryModelList();
-						KanojoItemsActivity.this.getListProduct(KanojoItemsActivity.this.mCurrentCategory);
-						KanojoItemsActivity.this.requestGetProductPrice();
+						activity.mCurrentCategory = responseStore.getKanojoItemCategoryModelList();
+						activity.getListProduct(activity.mCurrentCategory);
 					}
 				}
-            } catch (BarcodeKanojoException e) {
-                KanojoItemsActivity.this.showToast(KanojoItemsActivity.this.getString(R.string.error_internet));
-            } catch (Exception e2) {
-                KanojoItemsActivity.this.showToast(KanojoItemsActivity.this.getString(R.string.error_internet));
+            } catch (Exception e) {
+				e.printStackTrace();
+				activity.showToast(e.getMessage());
             } finally {
-                KanojoItemsActivity.this.mLoadingFinshed = true;
-                KanojoItemsActivity.this.dismissProgressDialog();
+                activity.mLoadingFinshed = true;
+                activity.dismissProgressDialog();
             }
         }
 
         public void onCancelled() {
-            KanojoItemsActivity.this.mLoadingFinshed = false;
-            KanojoItemsActivity.this.dismissProgressDialog();
-        }
-    }
+	        KanojoItemsActivity activity = activityRef.get();
+	        if (activity == null || activity.isFinishing()) {
+		        return;
+	        }
 
-    public void requestGetProductPrice() {
-        if (this.mPurchaseAPI == null) {
-            this.mPurchaseAPI = ((BarcodeKanojoApp) getApplication()).getMPurchaseApi();
+	        activity.mLoadingFinshed = false;
+            activity.dismissProgressDialog();
         }
-        this.mPurchaseAPI.setListener(this.mListener);
-        this.mPurchaseAPI.setUpAndgetPrice(this.lstProductId);
     }
 
     public List<String> getListProduct(ModelList<KanojoItemCategory> list) {
@@ -550,15 +489,19 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
     }
 
     protected void showCustomNoticeDialog(String message) {
-        AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.app_name).setIcon(R.drawable.icon_72).setMessage(message).setPositiveButton(R.string.common_dialog_ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                KanojoItemsActivity.this.startActivityForResult(new Intent("android.settings.SYNC_SETTINGS"), BaseInterface.REQUEST_SYNC_SETTING);
-                dialog.dismiss();
-            }
-        }).setNegativeButton(R.string.common_dialog_cancel, (dialog1, which) -> {
-			dialog1.dismiss();
-			KanojoItemsActivity.this.close();
-		}).create();
+        AlertDialog dialog = new AlertDialog.Builder(this)
+		        .setTitle(R.string.app_name)
+		        .setIcon(R.drawable.icon_72)
+		        .setMessage(message)
+		        .setPositiveButton(R.string.common_dialog_ok, (dialog12, which) -> {
+                    KanojoItemsActivity.this.startActivityForResult(new Intent("android.settings.SYNC_SETTINGS"), BaseInterface.REQUEST_SYNC_SETTING);
+                    dialog12.dismiss();
+                })
+		        .setNegativeButton(R.string.common_dialog_cancel, (dialog1, which) -> {
+					dialog1.dismiss();
+					KanojoItemsActivity.this.close();
+				})
+		        .create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
@@ -566,18 +509,12 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
     private void executeConsumeTicketTask(TicketHolder list) {
         if (isLoading(list)) {
             Log.d(TAG, "task " + list.key + " is running ");
-        } else if (list.what == TicketHolder.CONSUME_PURCHASED_TASK) {
-            consumeTicket(list.key);
         } else {
             this.mConsumeTask = new ConsumeTask();
             this.mConsumeTask.setList(list);
             showProgressDialog();
             this.mConsumeTask.execute();
         }
-    }
-
-    public void consumeTicket(String productId) {
-        this.mPurchaseAPI.consumeItem(this.mInventory.getPurchase(productId));
     }
 
     private boolean isLoading(TicketHolder status) {
@@ -613,7 +550,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
 
     private Queue<TicketHolder> getQueue() {
         if (this.mTaskQueue == null) {
-            this.mTaskQueue = new LinkedList();
+            this.mTaskQueue = new LinkedList<>();
         }
         return this.mTaskQueue;
     }
@@ -710,7 +647,7 @@ public class KanojoItemsActivity extends BaseActivity implements View.OnClickLis
 				case TicketHolder.VERIFY_PURCHASED_TASK:
                     return barcodeKanojo.android_verify_purchased(list.store_item_id, list.google_transaction_id, list.orderId);
 				case TicketHolder.CONSUME_PURCHASED_TASK:
-                    KanojoItemsActivity.this.consumeTicket(list.key);
+                    //KanojoItemsActivity.this.consumeTicket(list.key);
                     return null;
                 default:
                     return null;
