@@ -62,6 +62,7 @@
 	<string name="sign_up_name">Name</string>
     <string name="sign_up_photo">Icon</string>
     <string name="sign_up_btn">Sign Up</string>
+	<string name="connect">Connect</string>
     <string name="log_in">Log In</string>
     <string name="log_in_btn">Log In</string>
     <string name="tab_dashboard">Dashboard</string>
