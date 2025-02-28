@@ -23,6 +23,16 @@ class NameBytesPair(name: String, val value: ByteArray?): NameValuePair(name) {
 		return valueString.toString().toByteArray(Charsets.UTF_8)
 	}
 
+	override fun valueAsString(): String {
+		val valueString = StringBuilder()
+		if (value != null) {
+			for (b in value) {
+				valueString.append(String.format("%02X", b))
+			}
+		}
+		return valueString.toString()
+	}
+
 	override fun emptyValue(): Boolean {
 		return (value == null || value.isEmpty())
 	}

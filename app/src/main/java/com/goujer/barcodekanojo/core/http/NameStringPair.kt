@@ -12,7 +12,11 @@ open class NameStringPair(name: String, internal val value: String?): NameValueP
 		return value!!.toByteArray(Charsets.UTF_8)
 	}
 
+	override fun valueAsString(): String {
+		return value?: ""
+	}
+
 	override fun emptyValue(): Boolean {
-		return (value == null || value == "" || value == "null")
+		return (value == null || value == "")
 	}
 }

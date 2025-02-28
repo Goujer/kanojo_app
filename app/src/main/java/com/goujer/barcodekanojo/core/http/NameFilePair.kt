@@ -37,6 +37,14 @@ class NameFilePair(name: String, file: File?): NameValuePair(name) {
 		return value
 	}
 
+	override fun valueAsString(): String {
+		val valueString = StringBuilder()
+		for (b in value) {
+			valueString.append(String.format("%02X", b))
+		}
+		return valueString.toString()
+	}
+
 	override fun emptyValue(): Boolean {
 		return value.isEmpty()
 	}
