@@ -90,10 +90,12 @@ dependencies {
 	//implementation 'com.google.zxing:android-core:3.2.1'
 
 	//Google Play Android Security Provider Update (Lets TLS 1.2 work on some older devices) (Both are needed, this is very bare-bones)
-	implementation 'com.google.android.gms:play-services-base:18.4.0' //Last Version to support API 14
+	//implementation 'com.google.android.gms:play-services-base:18.4.0' //Last Version to support API 14
 	implementation 'com.google.android.gms:play-services-basement:18.3.0' //Last Version to support API 14
+	//implementation 'com.google.android.gms:play-services-base:18.5.0' //API 21
+	//implementation 'com.google.android.gms:play-services-basement:18.5.0'   //API 21
 
-	//Security Provider Straight up
+	//Security Provider Straight up (For OKHTTP)
 	implementation 'org.conscrypt:conscrypt-android:2.5.2'
 
 	//OKHttp (How we connect to the server)

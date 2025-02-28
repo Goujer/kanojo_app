@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.CompoundButton
 import android.widget.EditText
+import com.goujer.barcodekanojo.BarcodeKanojoApp
 import com.goujer.barcodekanojo.core.http.HttpApi
 import com.goujer.barcodekanojo.R
 import com.goujer.barcodekanojo.preferences.ApplicationSetting
@@ -77,9 +78,11 @@ class ServerConfigurationActivity : Activity(), View.OnClickListener {
 	}
 
 	private fun saveData() {
-		HttpApi.get(switchHttp.isChecked, txtURL.value, Integer.parseInt(txtPort.value))
+		//HttpApi.get(switchHttp.isChecked, txtURL.value, Integer.parseInt(txtPort.value))
 		ApplicationSetting(this).commitServerHttps(switchHttp.isChecked)
 		ApplicationSetting(this).commitServerURL(txtURL.value)
 		ApplicationSetting(this).commitServerPort(Integer.parseInt(txtPort.value))
+		(application as BarcodeKanojoApp).initServerConnection()
+		(application as BarcodeKanojoApp).imageCache.evictAll()
 	}
 }

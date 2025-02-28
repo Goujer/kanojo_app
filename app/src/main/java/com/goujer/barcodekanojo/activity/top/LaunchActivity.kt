@@ -1,13 +1,9 @@
 package com.goujer.barcodekanojo.activity.top
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.security.ProviderInstaller
 
 import com.goujer.barcodekanojo.activity.base.BaseActivity
@@ -30,13 +26,15 @@ import java.net.SocketException
 import java.net.UnknownHostException
 import kotlin.random.Random
 
-class LaunchActivity : BaseActivity() {
+class LaunchActivity : BaseActivity(), ProviderInstaller.ProviderInstallListener {
 	private lateinit var settings: ApplicationSetting
 
 	private lateinit var binding: ActivityBootBinding
 
-	private var scope = CoroutineScope(Dispatchers.IO) + CoroutineName(TAG)
+	private var scope = CoroutineScope(Dispatchers.IO) + CoroutineName(this.javaClass.name)
 	private var loginJob: Job? = null
+
+	private var providerPatchAttempted: Boolean = false
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -46,6 +44,15 @@ class LaunchActivity : BaseActivity() {
 		if (Random.nextInt(0, 101) == 100) {
 			binding.root.setBackgroundResource(R.drawable.top_bg_blue)
 		}
+
+		binding.progressbar.visibility = View.VISIBLE
+		binding.launchConnect.visibility = View.INVISIBLE
+		binding.topLogIn.visibility = View.INVISIBLE
+		binding.topSignUp.visibility = View.INVISIBLE
+		binding.topConfigServer.visibility = View.VISIBLE
+
+		// Attempt to update connection security (helps older devices with ssl and tls)
+		ProviderInstaller.installIfNeededAsync(this, this)
 	}
 
 	override fun onStart() {
@@ -102,26 +109,21 @@ class LaunchActivity : BaseActivity() {
 
 			startActivity(Intent(this, ServerConfigurationActivity::class.java))
 		}
-
-		//Set visibilities
-		binding.progressbar.visibility = View.INVISIBLE
-
-		if (settings.getServerURL() == "") {
-			binding.launchConnect.visibility = View.GONE
-			binding.topLogIn.visibility = View.GONE
-			binding.topSignUp.visibility = View.GONE
-		}
 	}
 
 	override fun onResume() {
 		super.onResume()
+
+		if (providerPatchAttempted) {
+			setButtonVisibilities()
+		}
+
+		// Display Server URL
 		binding.topServerName.text = settings.getServerURL()
-		updateAndroidSecurityProvider(this)
 	}
 
 	override fun onStop() {
 		super.onStop()
-		Log.d(TAG, "Stop")
 		if (loginJob != null && !loginJob!!.isCompleted) {
 			loginJob!!.cancel()
 		}
@@ -137,13 +139,33 @@ class LaunchActivity : BaseActivity() {
 
 	override fun onDestroy() {
 		super.onDestroy()
-		Log.d(TAG, "Destroy")
 		scope.cancel()
 	}
 
 	@Deprecated("Deprecated in Java")
 	override fun onBackPressed() {
 
+	}
+
+	private fun setButtonVisibilities() {
+		//Set visibilities
+		binding.progressbar.visibility = View.INVISIBLE
+
+		// Connect Button
+		if (settings.getEmail() == "" || settings.getServerURL() == "") {
+			binding.launchConnect.visibility = View.GONE
+		} else {
+			binding.launchConnect.visibility = View.VISIBLE
+		}
+
+		// Login and Signup Buttons
+		if (settings.getServerURL() == "") {
+			binding.topLogIn.visibility = View.GONE
+			binding.topSignUp.visibility = View.GONE
+		} else {
+			binding.topLogIn.visibility = View.VISIBLE
+			binding.topSignUp.visibility = View.VISIBLE
+		}
 	}
 
 	private fun verifyUser(): Boolean {
@@ -156,7 +178,7 @@ class LaunchActivity : BaseActivity() {
 					showNoticeDialog(getString(R.string.error_user_not_found))
 				}
 			} else {
-				Log.d(TAG, "Unknown error has occurred during verify")
+				Log.d(this.javaClass.name, "Unknown error has occurred during verify")
 				runOnUiThread {
 					showNoticeDialog(e.localizedMessage)
 				}
@@ -173,7 +195,7 @@ class LaunchActivity : BaseActivity() {
 		return if (response.code == Response.CODE_SUCCESS) {
 			true
 		} else {
-			Log.d(TAG, "Unknown response code: " + response.code + "\n" + response.message)
+			Log.d(this.javaClass.name, "Unknown response code: " + response.code + "\n" + response.message)
 			false
 		}
 	}
@@ -186,19 +208,14 @@ class LaunchActivity : BaseActivity() {
 		return barcodeKanojo.verify(barcodeKanojoApp.settings.getUUID(), "", null)
 	}
 
-	private fun updateAndroidSecurityProvider(callingActivity: Activity) { //Attempt to update connection security (helps older devices with ssl and tls)
-		try {
-			ProviderInstaller.installIfNeeded(this)
-		} catch (e: GooglePlayServicesRepairableException) {
-			// Thrown when Google Play Services is not installed, up-to-date, or enabled
-			// Show dialog to allow users to install, update, or otherwise enable Google Play services.
-			GooglePlayServicesUtil.getErrorDialog(e.connectionStatusCode, callingActivity, 0)?.show()
-		} catch (e: GooglePlayServicesNotAvailableException) {
-			Log.e("SecurityException", "Google Play Services not available.")
-		}
+	override fun onProviderInstalled() {
+		providerPatchAttempted = true
+		setButtonVisibilities()
 	}
 
-	companion object {
-		private const val TAG = "Launch Activity"
+	override fun onProviderInstallFailed(errorCode: Int, recoveryIntent: Intent?) {
+		providerPatchAttempted = true
+		Log.e(this.localClassName, "Could not update Provider")
+		setButtonVisibilities()
 	}
 }

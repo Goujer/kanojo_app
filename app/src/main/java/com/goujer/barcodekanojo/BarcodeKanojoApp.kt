@@ -34,8 +34,7 @@ class BarcodeKanojoApp : Application() {
 		//	ProviderInstaller.installIfNeeded(this) //Attempt to update connection security (helps older devices with newer ssl and tls)
 		//} catch (_: Exception) {}
 
-		barcodeKanojo = BarcodeKanojo(this)
-		barcodeKanojo.user = User()
+		initServerConnection()
 		mUserGenderList = resources.getStringArray(R.array.user_account_gender_list)
 		imageCache = DynamicImageCache((Runtime.getRuntime().maxMemory() / 1024L).toInt() / 6, baseContext)
 	}
@@ -71,6 +70,11 @@ class BarcodeKanojoApp : Application() {
 
 	val user: User?
 		get() = barcodeKanojo.user
+
+	fun initServerConnection() {
+		barcodeKanojo = BarcodeKanojo(this)
+		barcodeKanojo.user = User()
+	}
 
 	fun logged_out() {
 		sendBroadcast(Intent(INTENT_ACTION_LOGGED_OUT))
@@ -133,7 +137,5 @@ class BarcodeKanojoApp : Application() {
 	companion object {
 		const val INTENT_ACTION_FULL_STORAGE = "jp.co.cybird.barcodekanojoForGAM.intent.action.FULL_STORAGE"
 		const val INTENT_ACTION_LOGGED_OUT = "jp.co.cybird.barcodekanojoForGAM.intent.action.LOGGED_OUT"
-		const val PACKAGE_NAME = "jp.co.cybird.barcodekanojoForGAM"
-		private const val TAG = "BarcodeKanojoApp"
 	}
 }
