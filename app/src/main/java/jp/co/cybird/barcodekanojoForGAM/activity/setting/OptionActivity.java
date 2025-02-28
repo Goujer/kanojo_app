@@ -31,9 +31,6 @@ import com.goujer.barcodekanojo.core.model.User;
 import jp.co.cybird.barcodekanojoForGAM.view.EditItemView;
 
 public class OptionActivity extends BaseActivity implements View.OnClickListener {
-
-    private static final String TAG = "OptionActivity";
-    private View server_btn;
     private EditItemView account_btn;
     private EditItemView bck_btn;
     private EditItemView kddi_btn;
@@ -59,8 +56,6 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_option);
-        this.server_btn = findViewById(R.id.kanojo_option_server_config);
-        this.server_btn.setOnClickListener(this);
         this.account_btn = findViewById(R.id.kanojo_option_account_modify);
         this.account_btn.setOnClickListener(this);
         this.privacy_btn = findViewById(R.id.kanojo_option_privacy);
@@ -89,7 +84,6 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
     }
 
     public void unBindEvent() {
-		server_btn.setOnClickListener(null);
         this.account_btn.setOnClickListener(null);
         this.privacy_btn.setOnClickListener(null);
         this.terms_btn.setOnClickListener(null);
@@ -101,7 +95,6 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
     }
 
     public void bindEvent() {
-		server_btn.setOnClickListener(this);
         this.account_btn.setOnClickListener(this);
         this.privacy_btn.setOnClickListener(this);
         this.terms_btn.setOnClickListener(this);
@@ -115,9 +108,7 @@ public class OptionActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         unBindEvent();
 		int id = v.getId();
-		if (id == R.id.kanojo_option_server_config) {
-			startServerConfig();
-		} else if (id == R.id.kanojo_option_account_modify) {
+		if (id == R.id.kanojo_option_account_modify) {
 			startAccountModify();
 		} else if (id == R.id.kanojo_option_privacy) {
 			startWebViewActivity(Defs.URL_LEGAL_PRIVACY);
