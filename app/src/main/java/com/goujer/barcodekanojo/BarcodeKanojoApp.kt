@@ -4,18 +4,18 @@ import android.app.Application
 import android.content.Intent
 import android.location.Location
 import android.location.LocationManager
-import android.util.Log
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.security.ProviderInstaller
+import com.goujer.barcodekanojo.core.BarcodeKanojo
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache
 import com.goujer.barcodekanojo.core.model.User
 import com.goujer.barcodekanojo.preferences.ApplicationSetting
-import jp.co.cybird.barcodekanojoForGAM.Defs
-import jp.co.cybird.barcodekanojoForGAM.billing.util.PurchaseApi
-import com.goujer.barcodekanojo.core.BarcodeKanojo
+
 import jp.co.cybird.barcodekanojoForGAM.core.location.BestLocationListener
+import org.conscrypt.Conscrypt
+import java.security.Security
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+
 
 class BarcodeKanojoApp : Application() {
 	lateinit var barcodeKanojo: BarcodeKanojo
@@ -23,18 +23,19 @@ class BarcodeKanojoApp : Application() {
 	lateinit var imageCache: DynamicImageCache
 		private set
 	private val mBestLocationListener = BestLocationListener()
-	lateinit var mPurchaseApi: PurchaseApi
-		private set
+
 	private lateinit var mUserGenderList: Array<String>
 
 	override fun onCreate() {
 		super.onCreate()
-		try {
-			ProviderInstaller.installIfNeeded(this) //Attempt to update connection security (helps older devices with ssl and tls)
-		} catch (_: Exception) {}
+
+		//Security Setup
+		//try {
+		//	ProviderInstaller.installIfNeeded(this) //Attempt to update connection security (helps older devices with newer ssl and tls)
+		//} catch (_: Exception) {}
+
 		barcodeKanojo = BarcodeKanojo(this)
 		barcodeKanojo.user = User()
-		mPurchaseApi = PurchaseApi(applicationContext)
 		mUserGenderList = resources.getStringArray(R.array.user_account_gender_list)
 		imageCache = DynamicImageCache((Runtime.getRuntime().maxMemory() / 1024L).toInt() / 6, baseContext)
 	}
