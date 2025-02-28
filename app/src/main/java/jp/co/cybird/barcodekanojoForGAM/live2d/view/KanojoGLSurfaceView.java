@@ -1,22 +1,22 @@
 package jp.co.cybird.barcodekanojoForGAM.live2d.view;
 
 import android.content.Context;
-import android.os.Build;
+import android.graphics.Canvas;
+import android.opengl.GLSurfaceView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
+import jp.co.cybird.barcodekanojoForGAM.activity.util.KanojoScreenShot;
 import jp.co.cybird.barcodekanojoForGAM.live2d.KanojoLive2D;
 import jp.co.cybird.barcodekanojoForGAM.live2d.motion.KanojoAnimation;
-import jp.co.cybird.barcodekanojoForGAM.view.KanojoGLSurfaceView;
+
 import jp.live2d.type.LDPointF;
 
-public class AndroidEAGLView extends KanojoGLSurfaceView {
-    private GestureDetector gestureDetector;
+public class KanojoGLSurfaceView extends GLSurfaceView {
+    private final GestureDetector gestureDetector;
     KanojoLive2D kanojoLive2D;
     private float lastD = -1.0f;
     private float last_p1x;
@@ -28,12 +28,12 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
     private boolean multitouch = false;
     AndroidES1Renderer renderer;
 
-	public AndroidEAGLView(KanojoLive2D kanojoLive2D2, Context context) {
+	public KanojoGLSurfaceView(KanojoLive2D kanojoLive2D2, Context context) {
         super(context);
         setFocusable(true);
         this.kanojoLive2D = kanojoLive2D2;
-        this.renderer = new AndroidES1Renderer(kanojoLive2D2, this);
-        setRenderer(this);
+		renderer = new AndroidES1Renderer(kanojoLive2D2, this);
+        setRenderer(renderer);
 		GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
 			public boolean onDoubleTap(@NonNull MotionEvent event) {
 				return tapEvent(2) | super.onDoubleTap(event);
@@ -53,9 +53,9 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
 			}
 
 			private boolean tapEvent(int tapCount) {
-				float logicalX = AndroidEAGLView.this.renderer.viewToLogicalX(AndroidEAGLView.this.lastx);
-				float logicalY = AndroidEAGLView.this.renderer.viewToLogicalY(AndroidEAGLView.this.lasty);
-				KanojoAnimation kanim = AndroidEAGLView.this.getKanojoAnimation();
+				float logicalX = KanojoGLSurfaceView.this.renderer.viewToLogicalX(KanojoGLSurfaceView.this.lastx);
+				float logicalY = KanojoGLSurfaceView.this.renderer.viewToLogicalY(KanojoGLSurfaceView.this.lasty);
+				KanojoAnimation kanim = KanojoGLSurfaceView.this.getKanojoAnimation();
 				if (kanim == null) {
 					return false;
 				}
@@ -70,19 +70,7 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
         return this.renderer;
     }
 
-    public void onDrawFrame(GL10 gl) {
-        this.renderer.onDrawFrame(gl);
-        super.onDrawFrame(gl);
-    }
-
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-        this.renderer.onSurfaceChanged(gl, width, height);
-    }
-
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        this.renderer.onSurfaceCreated(gl, config);
-    }
-
+    @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         super.surfaceDestroyed(holder);
     }
@@ -93,9 +81,9 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
     public void stopAnimation() {
     }
 
-    public AndroidES1Renderer getRenderer() {
-        return this.renderer;
-    }
+//    public AndroidES1Renderer getRenderer() {
+//        return this.renderer;
+//    }
 
 	@Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -217,6 +205,11 @@ public class AndroidEAGLView extends KanojoGLSurfaceView {
             kanim.touchesEnded();
         }
     }
+
+	@Override
+	protected void dispatchDraw(Canvas canvas) {
+		KanojoScreenShot.GLSurface.dispatchDraw(canvas, KanojoGLSurfaceView.super::dispatchDraw);
+	}
 
     KanojoAnimation getKanojoAnimation() {
         if (this.kanojoLive2D == null) {

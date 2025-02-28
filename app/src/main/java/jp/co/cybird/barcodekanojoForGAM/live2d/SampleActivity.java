@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import java.util.Timer;
 import java.util.TimerTask;
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity;
-import jp.co.cybird.barcodekanojoForGAM.live2d.view.AndroidEAGLView;
+import jp.co.cybird.barcodekanojoForGAM.live2d.view.KanojoGLSurfaceView;
 
 public class SampleActivity extends BaseActivity {
     KanojoLive2D mKanojoLive2D;
@@ -77,7 +77,7 @@ public class SampleActivity extends BaseActivity {
     void mainSample() {
         final KanojoLive2D kanojoLive2D = getLive2D();
         if (kanojoLive2D != null) {
-            AndroidEAGLView view = kanojoLive2D.createView(this, new Rect(0, 0, 320, 320));
+            KanojoGLSurfaceView view = kanojoLive2D.createView(this, new Rect(0, 0, 320, 320));
             LinearLayout p1 = new LinearLayout(this);
             p1.setOrientation(LinearLayout.VERTICAL);
             LinearLayout center = new LinearLayout(this);

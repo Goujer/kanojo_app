@@ -13,7 +13,7 @@ import jp.co.cybird.barcodekanojoForGAM.live2d.model.KanojoModel;
 import jp.co.cybird.barcodekanojoForGAM.live2d.model.KanojoPartsItem;
 import jp.co.cybird.barcodekanojoForGAM.live2d.motion.KanojoAnimation;
 import jp.co.cybird.barcodekanojoForGAM.live2d.util.AccelHelper;
-import jp.co.cybird.barcodekanojoForGAM.live2d.view.AndroidEAGLView;
+import jp.co.cybird.barcodekanojoForGAM.live2d.view.KanojoGLSurfaceView;
 import jp.co.cybird.barcodekanojoForGAM.live2d.view.AndroidES1Renderer;
 import jp.live2d.Live2D;
 import jp.live2d.util.UtDebug;
@@ -33,7 +33,7 @@ public class KanojoLive2D implements KanojoResource {
     private int curUserActionNo = -1;
     private boolean dirtyFlag = true;
     private KanojoFileManager fileManager;
-    private AndroidEAGLView glView = null;
+    private KanojoGLSurfaceView glView = null;
     private boolean inRoom = true;
     private KanojoModel kanojoModel = null;
     private KanojoRoomActivity kanojoRoomActivity;
@@ -61,9 +61,9 @@ public class KanojoLive2D implements KanojoResource {
         }
     }
 
-    public AndroidEAGLView createView(Context a, Rect rect) {
+    public KanojoGLSurfaceView createView(Context a, Rect rect) {
         if (this.glView == null) {
-            this.glView = new AndroidEAGLView(this, a);
+            this.glView = new KanojoGLSurfaceView(this, a);
         }
         if (this.accelHelper == null) {
             this.accelHelper = new AccelHelper(a);

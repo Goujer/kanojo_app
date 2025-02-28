@@ -61,7 +61,7 @@ import jp.co.cybird.barcodekanojoForGAM.core.util.Live2dUtil;
 import jp.co.cybird.barcodekanojoForGAM.gree.core.GreeDefs;
 import jp.co.cybird.barcodekanojoForGAM.live2d.KanojoLive2D;
 import jp.co.cybird.barcodekanojoForGAM.live2d.KanojoSetting;
-import jp.co.cybird.barcodekanojoForGAM.live2d.view.AndroidEAGLView;
+import jp.co.cybird.barcodekanojoForGAM.live2d.view.KanojoGLSurfaceView;
 import jp.co.cybird.barcodekanojoForGAM.view.DialogTextView;
 
 @SuppressLint({"SetJavaScriptEnabled", "NewApi"})
@@ -494,7 +494,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     private void startLive2D() {
         KanojoLive2D kanojoLive2D = getLive2D();
         if (kanojoLive2D != null) {
-            AndroidEAGLView view = kanojoLive2D.createView(getApplicationContext(), new Rect(0, 0, 320, 320));
+            KanojoGLSurfaceView view = kanojoLive2D.createView(getApplicationContext(), new Rect(0, 0, 320, 320));
             this.mKanojoLayout.removeAllViews();
             this.mKanojoLayout.addView(view, new LinearLayout.LayoutParams(-1, -2, 1.0f));
 			setBackground(kanojoLive2D);
