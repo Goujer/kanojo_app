@@ -50,32 +50,11 @@ class LaunchActivity : BaseActivity() {
 
 	override fun onStart() {
 		super.onStart()
-		//Set Button Listeners
-		binding.topLogIn.setOnClickListener {
-			val logInIntent = Intent().setClass(this, LoginActivity::class.java)
-			logInIntent.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
-			startActivityForResult(logInIntent, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
-		}
-		binding.topSignUp.setOnClickListener {
-			val signUp = Intent().setClass(this, UserModifyActivity::class.java)
-			signUp.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
-			startActivity(signUp)
-		}
-		binding.topConfigServer.setOnClickListener {
-			startActivity(Intent(this, ServerConfigurationActivity::class.java))
-		}
 
-		//Set visibilities
-		if (settings.getServerURL() == "") {
-			binding.progressbar.visibility = View.GONE
-			binding.topLogIn.visibility = View.INVISIBLE
-			binding.topSignUp.visibility = View.INVISIBLE
-			binding.topConfigServer.visibility = View.VISIBLE
-		} else {
+		//Set Button Listeners
+		binding.launchConnect.setOnClickListener {
 			binding.progressbar.visibility = View.VISIBLE
-			binding.topLogIn.visibility = View.INVISIBLE
-			binding.topSignUp.visibility = View.INVISIBLE
-			binding.topConfigServer.visibility = View.INVISIBLE
+
 			//Attempt log in / verify server
 			loginJob = scope.launch {
 				try {
@@ -88,7 +67,8 @@ class LaunchActivity : BaseActivity() {
 						}
 					} else {
 						withContext(Dispatchers.Main) {
-							binding.progressbar.visibility = View.GONE
+							binding.progressbar.visibility = View.INVISIBLE
+							binding.launchConnect.visibility = View.VISIBLE
 							binding.topLogIn.visibility = View.VISIBLE
 							binding.topSignUp.visibility = View.VISIBLE
 							binding.topConfigServer.visibility = View.VISIBLE
@@ -102,6 +82,34 @@ class LaunchActivity : BaseActivity() {
 					}
 				}
 			}
+		}
+		binding.topLogIn.setOnClickListener {
+			loginJob?.cancel()
+
+			val logInIntent = Intent().setClass(this, LoginActivity::class.java)
+			logInIntent.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
+			startActivityForResult(logInIntent, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
+		}
+		binding.topSignUp.setOnClickListener {
+			loginJob?.cancel()
+
+			val signUp = Intent().setClass(this, UserModifyActivity::class.java)
+			signUp.putExtra(BaseInterface.EXTRA_REQUEST_CODE, BaseInterface.REQUEST_SOCIAL_CONFIG_FIRST)
+			startActivity(signUp)
+		}
+		binding.topConfigServer.setOnClickListener {
+			loginJob?.cancel()
+
+			startActivity(Intent(this, ServerConfigurationActivity::class.java))
+		}
+
+		//Set visibilities
+		binding.progressbar.visibility = View.INVISIBLE
+
+		if (settings.getServerURL() == "") {
+			binding.launchConnect.visibility = View.GONE
+			binding.topLogIn.visibility = View.GONE
+			binding.topSignUp.visibility = View.GONE
 		}
 	}
 
@@ -119,14 +127,12 @@ class LaunchActivity : BaseActivity() {
 		}
 
 		//Set Button Listeners
+		binding.launchConnect.setOnClickListener(null)
 		binding.topLogIn.setOnClickListener(null)
 		binding.topSignUp.setOnClickListener(null)
 		binding.topConfigServer.setOnClickListener(null)
 
 		binding.progressbar.visibility = View.VISIBLE
-		binding.topLogIn.visibility = View.INVISIBLE
-		binding.topSignUp.visibility = View.INVISIBLE
-		binding.topConfigServer.visibility = View.INVISIBLE
 	}
 
 	override fun onDestroy() {
