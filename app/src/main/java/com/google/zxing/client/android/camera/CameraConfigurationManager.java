@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2010 ZXing authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.google.zxing.client.android.camera;
 
 import android.content.Context;
@@ -23,13 +39,18 @@ final class CameraConfigurationManager {
     private final Context context;
     private Point screenResolution;
 
-    CameraConfigurationManager(Context context2) {
-        this.context = context2;
-    }
+	CameraConfigurationManager(Context context) {
+		this.context = context;
+	}
 
+	/**
+	 * Reads, one time, values from the camera that are needed by the app.
+	 */
     void initFromCameraParameters(Camera camera) {
         Camera.Parameters parameters = camera.getParameters();
-        Display display = ((WindowManager) this.context.getSystemService("window")).getDefaultDisplay();
+	    WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+	    Display display = manager.getDefaultDisplay();
+
         int width = display.getWidth();
         int height = display.getHeight();
         if (width < height) {

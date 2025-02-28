@@ -95,9 +95,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	private View resultView;
 	private Result lastResult;
 	private boolean hasSurface;
-	private boolean copyToClipboard;
 	private IntentSource source;
-	private String sourceUrl;
 	private ScanFromWebPageManager scanFromWebPageManager;
 	private Collection<BarcodeFormat> decodeFormats;
 	private Map<DecodeHintType,?> decodeHints;
@@ -525,15 +523,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	                }
 	            }
 				sendReplyMessage(R.id.return_scan_result, intent, resultDurationMS);
-				break;
-
-			case PRODUCT_SEARCH_LINK:
-				// Reformulate the URL which triggered us into a query, so that the request goes to the same
-				// TLD as the scan URL.
-				int end = sourceUrl.lastIndexOf("/scan");
-				String productReplyURL = sourceUrl.substring(0, end) + "?q=" +
-					resultHandler.getDisplayContents() + "&source=zxing";
-				sendReplyMessage(R.id.launch_product_query, productReplyURL, resultDurationMS);
 				break;
 
 			case ZXING_LINK:

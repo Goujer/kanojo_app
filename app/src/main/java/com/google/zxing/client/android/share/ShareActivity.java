@@ -24,14 +24,16 @@ public final class ShareActivity extends Activity {
     private static final int PICK_BOOKMARK = 0;
     private static final int PICK_CONTACT = 1;
     private static final String TAG = ShareActivity.class.getSimpleName();
-    private final View.OnClickListener appListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            Intent intent = new Intent("android.intent.action.PICK");
-            intent.addFlags(524288);
-            intent.setClassName(ShareActivity.this, AppPickerActivity.class.getName());
-            ShareActivity.this.startActivityForResult(intent, 2);
-        }
-    };
+
+	private final View.OnClickListener appListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent(Intent.ACTION_PICK);
+			intent.addFlags(Intents.FLAG_NEW_DOC);
+			intent.setClassName(ShareActivity.this, AppPickerActivity.class.getName());
+			startActivityForResult(intent, PICK_APP);
+		}
+	};
     private final View.OnClickListener bookmarkListener = new View.OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent("android.intent.action.PICK");

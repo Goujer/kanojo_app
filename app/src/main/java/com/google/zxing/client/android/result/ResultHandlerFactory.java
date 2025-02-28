@@ -1,99 +1,64 @@
+/*
+ * Copyright (C) 2008 ZXing authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.google.zxing.client.android.result;
 
 import com.google.zxing.Result;
 import com.google.zxing.client.android.CaptureActivity;
 import com.google.zxing.client.result.ParsedResult;
-import com.google.zxing.client.result.ParsedResultType;
 import com.google.zxing.client.result.ResultParser;
 
+/**
+ * Manufactures Android-specific handlers based on the barcode content's type.
+ *
+ * @author dswitkin@google.com (Daniel Switkin)
+ */
 public final class ResultHandlerFactory {
-    private static /* synthetic */ int[] $SWITCH_TABLE$com$google$zxing$client$result$ParsedResultType;
+	private ResultHandlerFactory() {
+	}
 
-    static /* synthetic */ int[] $SWITCH_TABLE$com$google$zxing$client$result$ParsedResultType() {
-        int[] iArr = $SWITCH_TABLE$com$google$zxing$client$result$ParsedResultType;
-        if (iArr == null) {
-            iArr = new int[ParsedResultType.values().length];
-            try {
-                iArr[ParsedResultType.ADDRESSBOOK.ordinal()] = 1;
-            } catch (NoSuchFieldError e) {
-            }
-            try {
-                iArr[ParsedResultType.CALENDAR.ordinal()] = 9;
-            } catch (NoSuchFieldError e2) {
-            }
-            try {
-                iArr[ParsedResultType.EMAIL_ADDRESS.ordinal()] = 2;
-            } catch (NoSuchFieldError e3) {
-            }
-            try {
-                iArr[ParsedResultType.GEO.ordinal()] = 6;
-            } catch (NoSuchFieldError e4) {
-            }
-            try {
-                iArr[ParsedResultType.ISBN.ordinal()] = 11;
-            } catch (NoSuchFieldError e5) {
-            }
-            try {
-                iArr[ParsedResultType.PRODUCT.ordinal()] = 3;
-            } catch (NoSuchFieldError e6) {
-            }
-            try {
-                iArr[ParsedResultType.SMS.ordinal()] = 8;
-            } catch (NoSuchFieldError e7) {
-            }
-            try {
-                iArr[ParsedResultType.TEL.ordinal()] = 7;
-            } catch (NoSuchFieldError e8) {
-            }
-            try {
-                iArr[ParsedResultType.TEXT.ordinal()] = 5;
-            } catch (NoSuchFieldError e9) {
-            }
-            try {
-                iArr[ParsedResultType.URI.ordinal()] = 4;
-            } catch (NoSuchFieldError e10) {
-            }
-            try {
-                iArr[ParsedResultType.WIFI.ordinal()] = 10;
-            } catch (NoSuchFieldError e11) {
-            }
-            $SWITCH_TABLE$com$google$zxing$client$result$ParsedResultType = iArr;
-        }
-        return iArr;
-    }
+	public static ResultHandler makeResultHandler(CaptureActivity activity, Result rawResult) {
+		ParsedResult result = parseResult(rawResult);
+		switch (result.getType()) {
+			case ADDRESSBOOK:
+				return new AddressBookResultHandler(activity, result);
+			case EMAIL_ADDRESS:
+				return new EmailAddressResultHandler(activity, result);
+			case PRODUCT:
+				return new ProductResultHandler(activity, result, rawResult);
+			case URI:
+				return new URIResultHandler(activity, result);
+			case WIFI:
+				return null;
+			case GEO:
+				return new GeoResultHandler(activity, result);
+			case TEL:
+				return new TelResultHandler(activity, result);
+			case SMS:
+				return new SMSResultHandler(activity, result);
+			case CALENDAR:
+				return new CalendarResultHandler(activity, result);
+			case ISBN:
+				return new ISBNResultHandler(activity, result, rawResult);
+			default:
+				return new TextResultHandler(activity, result, rawResult);
+		}
+	}
 
-    private ResultHandlerFactory() {
-    }
-
-    public static ResultHandler makeResultHandler(CaptureActivity activity, Result rawResult) {
-        ParsedResult result = parseResult(rawResult);
-        switch ($SWITCH_TABLE$com$google$zxing$client$result$ParsedResultType()[result.getType().ordinal()]) {
-            case 1:
-                return new AddressBookResultHandler(activity, result);
-            case 2:
-                return new EmailAddressResultHandler(activity, result);
-            case 3:
-                return new ProductResultHandler(activity, result, rawResult);
-            case 4:
-                return new URIResultHandler(activity, result);
-            case 6:
-                return new GeoResultHandler(activity, result);
-            case 7:
-                return new TelResultHandler(activity, result);
-            case 8:
-                return new SMSResultHandler(activity, result);
-            case 9:
-                return new CalendarResultHandler(activity, result);
-            case 10:
-                return new WifiResultHandler(activity, result);
-            case 11:
-                return new ISBNResultHandler(activity, result, rawResult);
-            default:
-                return new TextResultHandler(activity, result, rawResult);
-        }
-    }
-
-    private static ParsedResult parseResult(Result rawResult) {
-        return ResultParser.parseResult(rawResult);
-    }
+	private static ParsedResult parseResult(Result rawResult) {
+		return ResultParser.parseResult(rawResult);
+	}
 }

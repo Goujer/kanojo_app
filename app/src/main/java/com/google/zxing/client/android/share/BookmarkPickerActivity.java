@@ -23,8 +23,6 @@ import java.util.List;
  */
 public final class BookmarkPickerActivity extends ListActivity {
 
-    private static final String TAG = BookmarkPickerActivity.class.getSimpleName();
-
     private static final String[] BOOKMARK_PROJECTION = {
             "title", // Browser.BookmarkColumns.TITLE
             "url", // Browser.BookmarkColumns.URL
@@ -44,7 +42,7 @@ public final class BookmarkPickerActivity extends ListActivity {
             Cursor cursor = getContentResolver().query(BOOKMARKS_URI, BOOKMARK_PROJECTION,
                     BOOKMARK_SELECTION, null, null);
             if (cursor == null) {
-                Log.w(TAG, "No cursor returned for bookmark query");
+                Log.w(BookmarkPickerActivity.class.getName(), "No cursor returned for bookmark query");
                 finish();
                 return;
             }
