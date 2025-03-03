@@ -89,7 +89,7 @@ public class KanojosActivity extends BaseKanojosActivity implements View.OnClick
         setContentView(R.layout.activity_kanojos);
         this.r = getResources();
 
-        //Toolbar stuff
+        // Toolbar stuff
         if (Build.VERSION.SDK_INT >= 21) {
 			setActionBar((Toolbar) findViewById(R.id.toolbar_primary));
 			getActionBar().setDisplayShowTitleEnabled(false);

@@ -136,7 +136,7 @@ public class SeparatedListHeaderAdapter extends BaseAdapter implements Observabl
     }
 
     public boolean isEnabled(int position) {
-        return (getItemViewType(position) == 0 || getItemViewType(position) == -1) ? false : true;
+        return getItemViewType(position) != 0 && getItemViewType(position) != -1;
     }
 
     public boolean isEmpty() {

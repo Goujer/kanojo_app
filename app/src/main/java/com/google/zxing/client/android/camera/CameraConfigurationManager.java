@@ -163,7 +163,7 @@ final class CameraConfigurationManager {
                 return 0;
             }
         });
-        if (Log.isLoggable(TAG, 4)) {
+        if (Log.isLoggable(TAG, Log.INFO)) {
             StringBuilder previewSizesString = new StringBuilder();
             for (Camera.Size supportedPreviewSize : arrayList) {
                 previewSizesString.append(supportedPreviewSize.width).append('x').append(supportedPreviewSize.height).append(' ');

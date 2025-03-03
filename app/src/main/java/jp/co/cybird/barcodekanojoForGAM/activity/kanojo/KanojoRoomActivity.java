@@ -67,6 +67,8 @@ import jp.co.cybird.barcodekanojoForGAM.view.DialogTextView;
 @SuppressLint({"SetJavaScriptEnabled", "NewApi"})
 public class KanojoRoomActivity extends BaseActivity implements View.OnClickListener, Observer {
 
+	private LinearLayout mStatusLayout;
+	private LinearLayout statusBarLayout;
     private Button btnClose;
     private Button btnDate;
     private ImageButton btnInfo;
@@ -78,6 +80,7 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     private ImageView imageView01;
     private ImageView imageView02;
     private ImageView imageView03;
+
     private RelativeLayout layoutBGActionLoveGauge;
     private RelativeLayout layoutTagLoveBar;
     private RelativeLayout mFirstBoot;
@@ -90,8 +93,6 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
     private ProgressBar mLoveBar;
     private LoveIncrement mLoveIncrement;
     private MessageModel mMessage;
-    private LinearLayout mStatusLayout;
-    private LinearLayout statusBarLayout;
 
 	private KanojoDialogTask mKanojoDialogTask;
 	private KanojoRoomTask mKanojoRoomTask;
@@ -162,7 +163,6 @@ public class KanojoRoomActivity extends BaseActivity implements View.OnClickList
         this.btnStatusArrow = findViewById(R.id.kanojo_room_arrow);
 
         this.mKanojoLayout = findViewById(R.id.kanojo_room_live2d);
-
 
 	    this.layoutTagLoveBar = findViewById(R.id.kanojo_tag_love_gauge);
 
