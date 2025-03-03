@@ -2,7 +2,7 @@ package com.goujer.barcodekanojo.core
 
 import android.location.Location
 import android.os.Build
-//import com.google.android.gms.security.ProviderInstaller
+
 import com.goujer.barcodekanojo.core.http.*
 import com.goujer.utils.getPartOfDay
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
@@ -25,6 +25,8 @@ import java.util.Locale
 class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort: Int, mClientVersion: String?, mClientLanguage: String?) {
 	var mHttpApi: HttpApi = HttpApi.get(useHttps, mApiBaseUrl, mApiBasePort, mClientVersion, mClientLanguage)
 		private set
+
+
 
 	//@Throws(BarcodeKanojoException::class, IOException::class)
 	//fun iphone_signup(name: String?, password: String?, email: String?, birth_month: Int, birth_day: Int, sex: String?, description: String?, profile_image_data: File?, udid: String?): Response<BarcodeKanojoModel?>? {
@@ -165,9 +167,10 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 
 	//Verify if Kanojo exists or not.
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun query(barcode: String): Response<BarcodeKanojoModel?> {
+	fun query(barcode: String, format: String): Response<BarcodeKanojoModel?> {
 		val connection = mHttpApi.createHttpGet(URL_API_BARCODE_QUERY,
-				NameStringPair("barcode", barcode))
+				NameStringPair("barcode", barcode),
+				NameStringPair("format", format))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("barcode", BarcodeParser()), ModelParser("product", ProductParser()), ModelParser("scan_history", ScanHistoryParser()), MessageParser(MessageModel.NOTIFY_AMENDMENT_INFORMATION, MessageModel.DO_GENERATE_KANOJO, MessageModel.DO_ADD_FRIEND, MessageModel.INFORM_GIRLFRIEND, MessageModel.INFORM_FRIEND)))
 	}
 
