@@ -2,16 +2,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-	compileSdk 34
+	compileSdk 35
 
 	defaultConfig {
 		applicationId 'com.goujer.barcodekanojo'
 		//noinspection ExpiredTargetSdkVersion
-		targetSdkVersion 28
+		targetSdkVersion 29
 		minSdkVersion 14
 		//VersionCode Scheme AABBBBBB	A=minSDK, B=Version of App (BB.BB.BB)
-		versionCode 14000500
-		versionName "0.5.0"
+		versionCode 14000501
+		versionName "0.5.1"
 	}
 
 	signingConfigs {
@@ -68,7 +68,9 @@ android {
 
 dependencies {
 	//AndroidX Core
-	implementation "androidx.core:core-ktx:1.12.0"
+	//implementation "androidx.core:core-ktx:1.15.0"    //SDK 21
+	//implementation "androidx.core:core-ktx:1.13.1"    //SDK 19
+	implementation "androidx.core:core-ktx:1.12.0"      //SDK 14
 
 	//SwipeRefreshLayout
 	implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
@@ -106,5 +108,5 @@ dependencies {
 
 	//Kotlin
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3"
+	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
 }
