@@ -29,16 +29,15 @@ class BarcodeKanojoApp : Application() {
 	override fun onCreate() {
 		super.onCreate()
 
-		//Security Setup
-		//try {
-		//	ProviderInstaller.installIfNeeded(this) //Attempt to update connection security (helps older devices with newer ssl and tls)
-		//} catch (_: Exception) {}
+		//Security Setup (Should allow newer TLS stuff)
+		Security.insertProviderAt(Conscrypt.newProvider(), 1)
 
 		initServerConnection()
 		mUserGenderList = resources.getStringArray(R.array.user_account_gender_list)
 		imageCache = DynamicImageCache((Runtime.getRuntime().maxMemory() / 1024L).toInt() / 6, baseContext)
 	}
 
+	@Deprecated("Deprecated in Java")
 	override fun onLowMemory() {
 		super.onLowMemory()
 		imageCache.evictAll()

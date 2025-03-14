@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.conscrypt.Conscrypt
 import java.io.DataOutputStream
+import java.io.IOException
 import java.net.CookieHandler
 import java.net.CookieManager
 import java.net.HttpURLConnection
@@ -43,9 +44,9 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 	init {
 		CookieHandler.setDefault(CookieManager())
 
-		val sslContext = SSLContext.getInstance("TLSv1.2")
-		sslContext.init(null, null, null)
-		val engine = sslContext.createSSLEngine()
+//		val sslContext = SSLContext.getInstance("TLSv1.2")
+//		sslContext.init(null, null, null)
+//		val engine = sslContext.createSSLEngine()
 
 //		val clientBuilder = OkHttpClient.Builder()
 //				.readTimeout(10, TimeUnit.SECONDS)
@@ -244,7 +245,10 @@ class HttpApi private constructor(useHttps: Boolean, apiBaseUrl: String, apiBase
 			connection.outputStream.write(parameters.toString().toByteArray(charset("UTF-8")))
 		} catch (e: SSLHandshakeException) {
 			e.printStackTrace()
-			throw BarcodeKanojoException("Error with connection")    //TODO Ensure this gets delivered right anc consider making this a proper string.
+			throw BarcodeKanojoException(e.message)    //TODO Ensure this gets delivered right anc consider making this a proper string.
+		} catch (e: IOException) {
+			e.printStackTrace()
+			throw BarcodeKanojoException(e.message)
 		}
 
 		return connection

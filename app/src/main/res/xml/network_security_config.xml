@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-	<base-config cleartextTrafficPermitted="true"/>
+	<!-- Allow cleartext because how the hell can we expect some random dude to go through a bunch of junk for https to play a silly barcode scanning game -->
+	<base-config cleartextTrafficPermitted="true">
+		<trust-anchors>
+			<certificates src="@raw/isrg_root_x2" />
+			<certificates src="@raw/isrg_root_x1" />
+			<certificates src="system"/>
+		</trust-anchors>
+	</base-config>
+	<!-- Don't connect to my server with http please -->
+	<domain-config cleartextTrafficPermitted="false">
+		<domain includeSubdomains="true">kanojo.goujer.com</domain>
+	</domain-config>
+	<!-- These we def want to allow cleartext on (Wildcards don't work) -->
+	<domain-config cleartextTrafficPermitted="true">
+		<domain includeSubdomains="true">localhost</domain>
+		<domain includeSubdomains="true">0.0.0.0</domain>
+		<domain includeSubdomains="true">127.0.0.1</domain>
+		<domain includeSubdomains="true">192.168.50.13</domain>
+		<domain includeSubdomains="true">192.168.50.18</domain>
+	</domain-config>
 </network-security-config>
