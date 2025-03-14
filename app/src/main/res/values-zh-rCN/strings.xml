@@ -104,8 +104,7 @@
     <string name="setting_support">支持</string>
     <string name="setting_support_mail">查询</string>
     <string name="setting_support_business">商务咨询</string>
-    <string name="setting_support_kddi">KDDI相关服务说明连接</string>
-    <string name="edit_account_title">修改账号信息</string>
+	<string name="edit_account_title">修改账号信息</string>
     <string name="edit_account_name">游戏内昵称</string>
     <string name="edit_account_photo">游戏内图标</string>
     <string name="edit_account_dialog_progress">Updating...</string>
@@ -135,8 +134,7 @@
     <string name="error_external_storage">不能使用SD卡</string>
     <string name="error_cache_directory">手机容量不足</string>
     <string name="error_out_of_memory">手机内存不足,请重新启动</string>
-    <string name="error_gree_account">GREE的账号无效,按右上角按钮返回首页后重新启动应用</string>
-    <string name="notice_input">请输出相关个人信息</string>
+	<string name="notice_input">请输出相关个人信息</string>
     <string name="notice_terms">请确认隐私政策和使用条款后进行注册</string>
     <string name="error_login">Email或者密码输入有误</string>
     <string name="error_no_name">请输出用户名</string>
@@ -154,10 +152,7 @@
     <string name="error_network">不能连上网络</string>
     <string name="group_field_default_text">Sample Text</string>
     <string name="social_setting_singup">Sign Up</string>
-    <string name="social_setting_facebook">使用Facebook账号登陆</string>
-    <string name="social_setting_twister">使用Twitter账号登陆</string>
-    <string name="social_setting_sukiyaID">使用食其家账号登陆</string>
-    <string name="social_setting_note1">使用上述账号登陆后，自动设置为信息共享</string>
+	<string name="social_setting_note1">使用上述账号登陆后，自动设置为信息共享</string>
     <string name="social_setting_skip_txt">新注册</string>
     <string name="social_setting_legal_txt">网站声明</string>
     <string name="social_setting_privacy_policy_txt">隐私政策</string>

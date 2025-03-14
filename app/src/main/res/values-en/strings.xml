@@ -105,8 +105,7 @@
     <string name="setting_support">Support</string>
     <string name="setting_support_mail">General</string>
     <string name="setting_support_business">Business Inquiry</string>
-    <string name="setting_support_kddi">KDDI</string>
-    <string name="edit_account_title">Edit Account Information</string>
+	<string name="edit_account_title">Edit Account Information</string>
     <string name="edit_account_name">Name</string>
     <string name="edit_account_photo">Icon</string>
     <string name="edit_account_dialog_progress">Updating...</string>
@@ -136,8 +135,7 @@
     <string name="error_external_storage">Can not use SD Card</string>
     <string name="error_cache_directory">Memory capacity is lacking</string>
     <string name="error_out_of_memory">Memory capacity of the terminal is insufficient. Please reboot</string>
-    <string name="error_gree_account">GREE</string>
-    <string name="notice_input">Do not enter personally identifiable information.</string>
+	<string name="notice_input">Do not enter personally identifiable information.</string>
     <string name="notice_terms">Please register on your acceptance of Terms of Service and Privacy Policy.</string>
     <string name="error_login">There is an error in the password or Email.</string>
     <string name="error_no_name">Please enter your user name.</string>
@@ -155,10 +153,7 @@
     <string name="error_network">Can not connect to the network.</string>
     <string name="group_field_default_text">Sample Text</string>
     <string name="social_setting_singup">Sign Up</string>
-    <string name="social_setting_facebook">Login with Facebook</string>
-    <string name="social_setting_twister">Login with Twitter</string>
-    <string name="social_setting_sukiyaID">Login with SUKIYA ID</string>
-    <string name="social_setting_note1">If you register with the above network, your account will automatically be linked.</string>
+	<string name="social_setting_note1">If you register with the above network, your account will automatically be linked.</string>
     <string name="social_setting_skip_txt">For those have neither, tap here</string>
     <string name="social_setting_legal_txt">Site Policy</string>
     <string name="social_setting_privacy_policy_txt">Privacy Policy</string>
@@ -221,5 +216,6 @@
 	<string name="stat_sexual">Sexual</string>
 	<string name="stat_flirtable">Flirtable</string>
 	<string name="error_unknown_host_exception">Error: Host name could not be resolved. Please check internet connection.</string>
-	<string name="common_logout">Log Out</string>
+	<string name="buy_goujer_a_coffee">Buy Goujer a coffee</string>
+	<string name="goujer_on_bluesky">Goujer on Bluesky</string>
 </resources>

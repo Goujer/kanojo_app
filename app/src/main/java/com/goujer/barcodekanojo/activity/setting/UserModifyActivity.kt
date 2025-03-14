@@ -550,6 +550,5 @@ class UserModifyActivity : BaseEditActivity(), View.OnClickListener {
 	}
 
 	companion object {
-		private const val TAG = "UserModifyActivity"
 	}
 }

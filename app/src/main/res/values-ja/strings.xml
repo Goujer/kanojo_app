@@ -131,8 +131,7 @@
     <string name="setting_support">サポート</string>
     <string name="setting_support_mail">お問い合わせ</string>
     <string name="setting_support_business">ビジネスに関するお問い合わせ</string>
-    <string name="setting_support_kddi">KDDIのサービス説明用ページリンク</string>
-    <string name="edit_account_title">アカウント情報の編集</string>
+	<string name="edit_account_title">アカウント情報の編集</string>
     <string name="edit_account_name">ゲーム内ネーム</string>
     <string name="edit_account_photo">ゲーム内アイコン</string>
     <string name="edit_account_dialog_progress">Updating...</string>
@@ -162,8 +161,7 @@
     <string name="error_external_storage">SD Cardが使用できません。</string>
     <string name="error_cache_directory">端末内部容量が不足しています。</string>
     <string name="error_out_of_memory">端末のメモリ容量が不足しています。再起動してください。</string>
-    <string name="error_gree_account">GREEアカウントが有効でないため、右上のボタンからホームへ戻ってアプリを再開して下さい。</string>
-    <string name="notice_input">個人の特定に繋がる情報は入力しないでください。</string>
+	<string name="notice_input">個人の特定に繋がる情報は入力しないでください。</string>
     <string name="notice_terms">利用規約とプライバシーポリシーにご同意の上ご登録ください。</string>
     <string name="error_login">Emailかパスワードの入力に誤りがあります。</string>
     <string name="error_no_name">ユーザーネームを入力してください。</string>
@@ -181,10 +179,7 @@
     <string name="error_network">ネットワーク接続できません。</string>
     <string name="group_field_default_text">Sample Text</string>
     <string name="social_setting_singup">Sign Up</string>
-    <string name="social_setting_facebook">Facebookを使って登録</string>
-    <string name="social_setting_twister">Twitterを使って登録</string>
-    <string name="social_setting_sukiyaID">すきやIDを使って登録</string>
-    <string name="social_setting_note1">上記ネットワークアカウントで登録すると自動的に共有設定されます。</string>
+	<string name="social_setting_note1">上記ネットワークアカウントで登録すると自動的に共有設定されます。</string>
     <string name="social_setting_skip_txt">いずれもお持ちでないかたはこちら</string>
     <string name="social_setting_legal_txt">サイトポリシー</string>
     <string name="social_setting_privacy_policy_txt">プライバシーポリシー</string>
