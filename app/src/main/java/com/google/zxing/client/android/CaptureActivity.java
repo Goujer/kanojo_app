@@ -22,36 +22,31 @@ import com.google.zxing.Result;
 import com.google.zxing.ResultMetadataType;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.camera.CameraManager;
-import com.google.zxing.client.android.history.HistoryActivity;
 import com.google.zxing.client.android.history.HistoryItem;
 import com.google.zxing.client.android.history.HistoryManager;
 import com.google.zxing.client.android.result.ResultButtonListener;
 import com.google.zxing.client.android.result.ResultHandler;
 import com.google.zxing.client.android.result.ResultHandlerFactory;
-import com.google.zxing.client.android.share.ShareActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.util.TypedValue;
+
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.Surface;
+
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -249,33 +244,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 		return super.onKeyDown(keyCode, event);
 	}
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.capture, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.addFlags(Intents.FLAG_NEW_DOC);
-		int itemId = item.getItemId();
-		if (itemId == R.id.menu_share) {
-			intent.setClassName(this, ShareActivity.class.getName());
-			startActivity(intent);
-		} else if (itemId == R.id.menu_history) {
-			intent.setClassName(this, HistoryActivity.class.getName());
-			startActivityForResult(intent, HISTORY_REQUEST_CODE);
-		} else if (itemId == R.id.menu_settings) {
-			intent.setClassName(this, PreferencesActivity.class.getName());
-			startActivity(intent);
-		} else if (itemId == R.id.menu_help) {
-			intent.setClassName(this, HelpActivity.class.getName());
-			startActivity(intent);
-		} else {
-			return super.onOptionsItemSelected(item);
-		}
-		return true;
-	}
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		if (resultCode == RESULT_OK && requestCode == HISTORY_REQUEST_CODE && historyManager != null) {
@@ -413,7 +381,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         this.resultView.setVisibility(View.VISIBLE);
         ImageView barcodeImageView = findViewById(R.id.barcode_image_view);
         if (barcode == null) {
-            barcodeImageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.launcher_icon));
+            barcodeImageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_72));
         } else {
             barcodeImageView.setImageBitmap(barcode);
         }

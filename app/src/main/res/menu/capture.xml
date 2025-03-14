@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:loginView="http://schemas.android.com/apk/res-auto" xmlns:EditItemView="http://schemas.android.com/apk/res-auto">
-    <item android:icon="@android:drawable/ic_menu_share" android:id="@+id/menu_share" android:orderInCategory="1" android:title="@string/menu_share"/>
-    <item android:icon="@android:drawable/ic_menu_recent_history" android:id="@+id/menu_history" android:orderInCategory="2" android:title="@string/menu_history"/>
-    <item android:icon="@android:drawable/ic_menu_preferences" android:id="@+id/menu_settings" android:orderInCategory="3" android:title="@string/menu_settings"/>
-    <item android:icon="@android:drawable/ic_menu_help" android:id="@+id/menu_help" android:orderInCategory="4" android:title="@string/menu_help"/>
-</menu>

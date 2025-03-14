@@ -41,7 +41,6 @@
             <Button android:visibility="gone" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
             <Button android:visibility="gone" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
             <Button android:visibility="gone" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
-            <Button android:id="@+id/shopper_button" android:visibility="gone" android:layout_width="0dp" android:layout_height="wrap_content" android:text="@string/button_google_shopper" android:drawableLeft="@drawable/shopper_icon" android:layout_weight="1"/>
         </LinearLayout>
     </LinearLayout>
     <TextView android:textColor="@color/status_text" android:layout_gravity="bottom|center_vertical|center_horizontal|center" android:id="@+id/status_view" android:background="@color/transparent" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/msg_default_status"/>

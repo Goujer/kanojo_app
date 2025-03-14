@@ -69,7 +69,6 @@ public abstract class ResultHandler {
         this.activity = activity2;
         this.rawResult = rawResult2;
         this.customProductSearch = parseCustomSearchURL();
-        activity2.findViewById(R.id.shopper_button).setVisibility(View.GONE);
     }
 
     public final ParsedResult getResult() {
@@ -86,12 +85,6 @@ public abstract class ResultHandler {
 
     public boolean areContentsSecure() {
         return false;
-    }
-
-    final void showGoogleShopperButton(View.OnClickListener listener) {
-        View shopperButton = this.activity.findViewById(R.id.shopper_button);
-        shopperButton.setVisibility(View.VISIBLE);
-        shopperButton.setOnClickListener(listener);
     }
 
     public CharSequence getDisplayContents() {
@@ -300,24 +293,6 @@ public abstract class ResultHandler {
         Intent intent = new Intent("android.intent.action.WEB_SEARCH");
         intent.putExtra("query", query);
         launchIntent(intent);
-    }
-
-    final void openGoogleShopper(String query) {
-        Intent intent = new Intent("android.intent.action.SEARCH");
-        intent.setClassName(GOOGLE_SHOPPER_PACKAGE, GOOGLE_SHOPPER_ACTIVITY);
-        intent.putExtra("query", query);
-        Collection<?> availableApps = this.activity.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        if (availableApps == null || availableApps.isEmpty()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this.activity);
-            builder.setTitle(R.string.msg_google_shopper_missing);
-            builder.setMessage(R.string.msg_install_google_shopper);
-            builder.setIcon(R.drawable.shopper_icon);
-            builder.setPositiveButton(R.string.button_ok, this.shopperMarketListener);
-            builder.setNegativeButton(R.string.button_cancel, (DialogInterface.OnClickListener) null);
-            builder.show();
-            return;
-        }
-        this.activity.startActivity(intent);
     }
 
     final void rawLaunchIntent(Intent intent) {

@@ -13,11 +13,6 @@ public final class ProductResultHandler extends ResultHandler {
 
     public ProductResultHandler(Activity activity, ParsedResult result, Result rawResult) {
         super(activity, result, rawResult);
-        showGoogleShopperButton(new View.OnClickListener() {
-            public void onClick(View view) {
-                ProductResultHandler.this.openGoogleShopper(((ProductParsedResult) ProductResultHandler.this.getResult()).getNormalizedProductID());
-            }
-        });
     }
 
     public int getButtonCount() {
