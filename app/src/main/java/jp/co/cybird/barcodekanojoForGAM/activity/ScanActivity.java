@@ -193,41 +193,18 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         if (requestCode == BaseInterface.REQUEST_SCAN && resultCode == -1) {
             String contents = data.getStringExtra(Intents.Scan.RESULT);
             String format = data.getStringExtra(Intents.Scan.RESULT_FORMAT);
+			String extension_contents = data.getStringExtra(Intents.Scan.RESULT_UPC_EAN_EXTENSION);
 			if (format != null && contents != null) {
 				switch (format) {   //This is all going to need a massive re-write eventually, check out: https://www.barcodefaq.com/1d/upc-ean/
-					case "UPC_A":
-					case "EAN_13":
-						executeScanQueryTask(contents, format);
-						break;
 					case "UPC_E":
-						switch (contents.charAt(6)) {
-							case '0':
-							case '1':
-							case '2': {
-								contents = contents.substring(0, 3) + contents.charAt(6) + "0000" + contents.substring(3, 6) + contents.charAt(7);
-								break;
-							}
-							case '3': {
-								contents = contents.substring(0, 4) + "00000" + contents.substring(4, 6) + contents.charAt(7);
-								break;
-							}
-							case '4': {
-								contents = contents.substring(0, 5) + "00000" + contents.charAt(5) + contents.charAt(7);
-								break;
-							}
-							case '5':
-							case '6':
-							case '7':
-							case '8':
-							case '9': {
-								contents = contents.substring(0, 6) + "0000" + contents.charAt(6) + contents.charAt(7);
-								break;
-							}
-						}
+					case "UPC_A":
+					case "EAN_8":
 						executeScanQueryTask(contents, format);
 						break;
-					case "EAN_8":
-						contents = "00000" + contents;
+					case "EAN_13":
+						if (extension_contents != null) {
+							contents += extension_contents;
+						}
 						executeScanQueryTask(contents, format);
 						break;
 					case "CODE_128":
@@ -240,7 +217,55 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
 					default:
 						showNoticeDialog(getResources().getString(R.string.error_barcode_format) + " Found: " + format, dialog -> startCaptureActivity());
 				}
+
+				//switch (format) {   //This is all going to need a massive re-write eventually, check out: https://www.barcodefaq.com/1d/upc-ean/
+				//	case "UPC_A":
+				//	case "EAN_13":
+				//		executeScanQueryTask(contents, format);
+				//		break;
+				//	case "UPC_E":
+				//		switch (contents.charAt(6)) {
+				//			case '0':
+				//			case '1':
+				//			case '2': {
+				//				contents = contents.substring(0, 3) + contents.charAt(6) + "0000" + contents.substring(3, 6) + contents.charAt(7);
+				//				break;
+				//			}
+				//			case '3': {
+				//				contents = contents.substring(0, 4) + "00000" + contents.substring(4, 6) + contents.charAt(7);
+				//				break;
+				//			}
+				//			case '4': {
+				//				contents = contents.substring(0, 5) + "00000" + contents.charAt(5) + contents.charAt(7);
+				//				break;
+				//			}
+				//			case '5':
+				//			case '6':
+				//			case '7':
+				//			case '8':
+				//			case '9': {
+				//				contents = contents.substring(0, 6) + "0000" + contents.charAt(6) + contents.charAt(7);
+				//				break;
+				//			}
+				//		}
+				//		executeScanQueryTask(contents, format);
+				//		break;
+				//	case "EAN_8":
+				//		contents = "00000" + contents;
+				//		executeScanQueryTask(contents, format);
+				//		break;
+				//	case "CODE_128":
+				//		if (contents.length() == 10) {
+				//			executeScanQueryTask(contents, format);
+				//			break;
+				//		} else {
+				//			showNoticeDialog("Code-128 Barcodes must be 10 characters long.", dialog -> startCaptureActivity());
+				//		}
+				//	default:
+				//		showNoticeDialog(getResources().getString(R.string.error_barcode_format) + " Found: " + format, dialog -> startCaptureActivity());
+				//}
 			}
+
         } else if (requestCode == BaseInterface.REQUEST_SCAN_KANOJO_GENERATE) {
 			if (resultCode == BaseInterface.RESULT_GENERATE_KANOJO) {
 				setResult(BaseInterface.RESULT_GENERATE_KANOJO);
