@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Intent
 import android.location.Location
 import android.location.LocationManager
+import androidx.multidex.MultiDexApplication
 import com.google.android.gms.security.ProviderInstaller
 import com.goujer.barcodekanojo.core.BarcodeKanojo
 import com.goujer.barcodekanojo.core.cache.DynamicImageCache
@@ -17,7 +18,7 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 
 
-class BarcodeKanojoApp : Application() {
+class BarcodeKanojoApp : MultiDexApplication() {
 	lateinit var barcodeKanojo: BarcodeKanojo
 		private set
 	lateinit var imageCache: DynamicImageCache
