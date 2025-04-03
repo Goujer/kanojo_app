@@ -59,6 +59,7 @@
     <dimen name="group_field_image_height">24dp</dimen>
     <dimen name="group_field_margin">5dp</dimen>
     <dimen name="group_field_padding">5dp</dimen>
+	<dimen name="row_credits_icon_height">60dp</dimen>
     <dimen name="row_setting_margin">8dp</dimen>
     <dimen name="row_setting_title_height">30dp</dimen>
     <dimen name="row_setting_icon_height">30dp</dimen>

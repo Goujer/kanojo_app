@@ -8,7 +8,14 @@
     <include layout="@layout/toolbar_primary"/>
     <jp.co.cybird.barcodekanojoForGAM.view.CustomToolBarView android:layout_width="match_parent" android:layout_height="wrap_content"/>
     <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
-        <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/edit_bg" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="match_parent">
+        <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:background="@color/edit_bg"
+	        android:gravity="center_horizontal"
+	        android:orientation="vertical"
+	        android:paddingLeft="10dp"
+	        android:paddingRight="10dp">
             <TextView
 				android:id="@+id/user_account_mode_text"
 				style="@style/txt_notice_input"
@@ -21,8 +28,14 @@
 				android:id="@+id/kanojo_option_account_modify"
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/row_kanojo_edit_txt_height"
-				android:background="@drawable/row_kanojo_edit_bg_name"
+				android:background="@drawable/row_kanojo_edit_bg_top"
 				EditItemView:key="@string/setting_account_change" />
+	        <jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+		        android:id="@+id/kanojo_option_app_preferences"
+		        android:layout_width="match_parent"
+		        android:layout_height="@dimen/row_kanojo_edit_txt_height"
+		        android:background="@drawable/row_kanojo_edit_bg_bottom"
+		        EditItemView:key="@string/setting_app_preferences" />
             <TextView
 				style="@style/txt_notice_input"
 				android:layout_width="match_parent"
@@ -30,16 +43,25 @@
 				android:layout_marginTop="28dp"
 				android:gravity="start"
 				android:text="@string/setting_legal" />
-            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_privacy" android:background="@drawable/row_kanojo_edit_bg_top" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/setting_legal_privacy"/>
-            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_terms" android:background="@drawable/row_kanojo_edit_bg_bottom" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" EditItemView:key="@string/setting_legal_terms"/>
+            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+	            android:id="@+id/kanojo_option_privacy"
+	            android:layout_width="match_parent"
+	            android:layout_height="@dimen/row_kanojo_edit_txt_height"
+	            android:background="@drawable/row_kanojo_edit_bg_name"
+	            EditItemView:key="@string/setting_legal_privacy" />
             <TextView
 				style="@style/txt_notice_input"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="28dp"
+				android:layout_marginTop="@dimen/row_kanojo_edit_separator_height"
 				android:gravity="start"
 				android:text="@string/setting_about" />
-            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_rules" android:background="@drawable/row_kanojo_edit_bg_top" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/setting_about_rules"/>
+            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+	            android:id="@+id/kanojo_option_rules"
+	            android:layout_width="match_parent"
+	            android:layout_height="@dimen/row_kanojo_edit_txt_height"
+	            android:background="@drawable/row_kanojo_edit_bg_top"
+	            EditItemView:key="@string/setting_about_rules" />
 			<jp.co.cybird.barcodekanojoForGAM.view.EditItemView
 				android:id="@+id/kanojo_option_barcodekanojo"
 				android:background="@drawable/row_kanojo_edit_bg_middle"
@@ -59,14 +81,21 @@
 				android:layout_marginTop="28dp"
 				android:gravity="start"
 				android:text="@string/setting_support" />
-            <jp.co.cybird.barcodekanojoForGAM.view.EditItemView android:id="@+id/kanojo_option_mail" android:background="@drawable/row_kanojo_edit_bg_name" android:layout_width="match_parent" android:layout_height="@dimen/row_kanojo_edit_txt_height" android:layout_marginTop="@dimen/row_kanojo_edit_separator_height" android:layout_marginBottom="@dimen/row_kanojo_edit_separator_height" EditItemView:key="@string/setting_support_mail"/>
             <jp.co.cybird.barcodekanojoForGAM.view.EditItemView
-				android:id="@+id/kanojo_option_kddi"
-				android:layout_width="match_parent"
-				android:layout_height="@dimen/row_kanojo_edit_txt_height"
-				android:background="@drawable/row_kanojo_edit_bg_bottom"
-				android:visibility="gone"
-				EditItemView:key="@string/setting_support_kddi"/>
+	            android:id="@+id/kanojo_option_support_bluesky"
+	            EditItemView:iconDrawable="@drawable/icon_bluesky"
+	            android:layout_width="match_parent"
+	            android:layout_height="@dimen/row_kanojo_edit_txt_height"
+	            android:background="@drawable/row_kanojo_edit_bg_top"
+	            EditItemView:key="@string/goujer_on_bluesky" />
+	        <jp.co.cybird.barcodekanojoForGAM.view.EditItemView
+		        android:id="@+id/kanojo_option_support_kofi"
+		        android:layout_width="match_parent"
+		        android:layout_height="@dimen/row_kanojo_edit_txt_height"
+		        android:layout_marginBottom="@dimen/row_kanojo_edit_separator_height"
+		        android:background="@drawable/row_kanojo_edit_bg_bottom"
+		        EditItemView:iconDrawable="@drawable/icon_kofi"
+		        EditItemView:key="@string/buy_goujer_a_coffee" />
 			<TextView
 				style="@style/txt_notice_input"
 				android:layout_width="match_parent"

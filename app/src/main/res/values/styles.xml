@@ -221,6 +221,7 @@
     <style name="txt_notice_input">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/default_txt_color</item>
+	    <item name="android:layout_marginBottom">5dp</item>
     </style>
     <style name="social_setting_title">
         <item name="android:textSize">14sp</item>

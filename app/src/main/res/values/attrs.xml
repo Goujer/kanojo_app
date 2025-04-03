@@ -16,6 +16,13 @@
         <attr name="ttextColor" format="color" />
     </declare-styleable>
 
+	<declare-styleable name="CreditView">
+		<attr name="creditIcon" format="integer"/>
+		<attr name="creditName" format="string"/>
+		<attr name="creditPosition" format="string"/>
+		<attr name="creditDescription" format="string"/>
+	</declare-styleable>
+
     <declare-styleable name="KanojoInfoGallery">
         <attr name="android_galleryItemBackground" format="integer" />
     </declare-styleable>

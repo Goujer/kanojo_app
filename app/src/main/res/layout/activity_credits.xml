@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:CreditsView="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+	<RelativeLayout android:background="@drawable/common_title_bg" android:layout_width="match_parent" android:layout_height="@dimen/common_title_height">
+		<ImageView android:layout_width="wrap_content" android:layout_height="@dimen/common_title_logo_height" android:src="@drawable/common_logo" android:scaleType="fitCenter" android:adjustViewBounds="true" android:layout_centerInParent="true" />
+		<Button android:id="@+id/credits_back" android:text="@string/common_edit_close" android:layout_alignParentStart="true" style="@style/btn_navi"
+			android:layout_alignParentLeft="true" />
+	</RelativeLayout>
+	<ScrollView
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/default_bg"
+		tools:context=".activity.setting.CreditsActivity">
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+			<TextView
+				style="@style/txt_section.title"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:text="BarcodeKANOJO Remastered"
+				android:background="@drawable/common_sectionheaderbg"/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_goujer"
+				CreditsView:creditName="Goujer"
+				CreditsView:creditPosition="Director / Programmer"
+				CreditsView:creditDescription="Loves OS-tans, monster girls, movies."/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_luvlitchi"
+				CreditsView:creditName="Luvlitchi"
+				CreditsView:creditPosition="Head of QA / Hypeman"
+				CreditsView:creditDescription="Loves tea, weed, pink, hamsters."/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_dan"
+				CreditsView:creditName="AutumnAagamidae"
+				CreditsView:creditPosition="Programmer"
+				CreditsView:creditDescription="Loves FFXIV, music, VTubers, sports."/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_andrey_derevyagin"
+				CreditsView:creditName="Andrey Derevyagin"
+				CreditsView:creditPosition="Server Designer / Programmer"/>
+
+			<TextView
+				style="@style/txt_section.title"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:text="3rd Party Libraries "
+				android:background="@drawable/common_sectionheaderbg"/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_live2d"
+				CreditsView:creditName="Live2D"
+				CreditsView:creditPosition="by Cybernoids"
+				CreditsView:creditDescription="Software that directly animates your original drawings. Immerse your audience with characters that leap off the screen."/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_osmdroid"
+				CreditsView:creditName="OSMDroid"
+				CreditsView:creditDescription="OpenStreetMap-Tools for Android"/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_philjay"
+				CreditsView:creditName="MPAndroidChart"
+				CreditsView:creditPosition="by PhilJay"
+				CreditsView:creditDescription="A powerful 🚀 Android chart view / graph view library, supporting line- bar- pie- radar- bubble- and candlestick charts as well as scaling, panning and animations."/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_zxing"
+				CreditsView:creditName="ZXing"
+				CreditsView:creditDescription="ZXing (''Zebra Crossing'') barcode scanning library for Java, Android"/>
+
+			<TextView
+				style="@style/txt_section.title"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:text="BarcodeKANOJO Original"
+				android:background="@drawable/common_sectionheaderbg_blue"/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_nobuyuki_ochiai"
+				CreditsView:creditName="Nobuyuki Ochiai"
+				CreditsView:creditPosition="Server Designer / Programmer"
+				CreditsView:creditDescription="Loves beer, sake, walking. CYBIRD Co. Ltd."/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_kimihiro_iwasaki"
+				CreditsView:creditName="Kimihiro Iwasaki"
+				CreditsView:creditPosition="Producer"
+				CreditsView:creditDescription="Loves whisky, beer, sake, fishing, traveling, movie. CYBIRD Co. Ltd."/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_ryos"
+				CreditsView:creditName="Ryos"
+				CreditsView:creditPosition="System planner / Director"
+				CreditsView:creditDescription="Loves salsa dance, fishing, kendo. CYBIRD Co. Ltd."/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_taro"
+				CreditsView:creditName="Taro"
+				CreditsView:creditPosition="Director"
+				CreditsView:creditDescription="CYBIRD Co,. Ltd."/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_msa_uccky"
+				CreditsView:creditName="msa.uccky"
+				CreditsView:creditPosition="WEB application programmer"
+				CreditsView:creditDescription="Loves beer, sake, fishing. CYBIRD Co,. Ltd."/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_luoxi"
+				CreditsView:creditName="LuoXi"
+				CreditsView:creditPosition="Programmer"
+				CreditsView:creditDescription="CYBIRD Co,. Ltd."/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_tetsuya_nakajo"
+				CreditsView:creditName="Tetsuya Nakajo"
+				CreditsView:creditPosition="Programmer"
+				CreditsView:creditDescription="Developed Live 2D Engine. The president of CYBERNOIDS Inc."/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_sadayuki"
+				CreditsView:creditName="Sadayuki"
+				CreditsView:creditPosition="Illustrator"
+				CreditsView:creditDescription="CYBERNOIDS Inc."/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_yoshinori_kuroyanagi"
+				CreditsView:creditName="Yoshinori Kuroyanagi"
+				CreditsView:creditPosition="Technical Director / App programmer"
+				CreditsView:creditDescription="The resident of Kurotekko Inc."/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_kenichiro_aizawa"
+				CreditsView:creditName="Kenichiro Aizawa"
+				CreditsView:creditPosition="Ask him"/>
+			<com.goujer.barcodekanojo.view.CreditView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				CreditsView:creditIcon="@drawable/credits_masayuki_dato"
+				CreditsView:creditName="Masayuki Sato MKSD"
+				CreditsView:creditPosition="Designer / Creative Director"
+				CreditsView:creditDescription="The representative of the Maniackers Design."/>
+		</LinearLayout>
+	</ScrollView>
+</LinearLayout>

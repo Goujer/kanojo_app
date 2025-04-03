@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
-    <ImageView android:layout_gravity="center_vertical" android:id="@+id/edit_item_icon" android:background="@drawable/icon_fb" android:visibility="gone" android:layout_width="@dimen/row_setting_icon_height" android:layout_height="@dimen/row_setting_icon_height" android:layout_marginLeft="@dimen/row_setting_icon_margin" android:scaleType="fitCenter" android:adjustViewBounds="true"
+    <ImageView android:layout_gravity="center_vertical" android:id="@+id/edit_item_icon" android:background="@drawable/icon_72" android:visibility="gone" android:layout_width="@dimen/row_setting_icon_height" android:layout_height="@dimen/row_setting_icon_height" android:layout_marginLeft="@dimen/row_setting_icon_margin" android:scaleType="fitCenter" android:adjustViewBounds="true"
 		android:layout_marginStart="@dimen/row_setting_icon_margin"/>
     <TextView
 		android:id="@+id/edit_item_key"

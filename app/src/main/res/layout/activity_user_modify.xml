@@ -15,7 +15,7 @@
 				style="@style/btn_navi"
 				android:layout_alignParentEnd="true"
 				android:layout_alignParentRight="true"
-				android:text="@string/common_logout" />
+				android:text="@string/setting_log_out" />
         </RelativeLayout>
         <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
             <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/edit_bg" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="wrap_content">

@@ -30,11 +30,15 @@ public class Defs {
     public static final String URL_GENERAL_JA = "https://my.cybird.ne.jp/sp-inq/BCK004";
     public static final String URL_GENERAL_ZH = "https://my.cybird.ne.jp/sp-inq/BCK005";
     public static final String URL_KDDI_SERVICE = "https://connect.auone.jp/net/id/kessai_service.html";
-    public static final String URL_LEGAL_PRIVACY = "/resource/legal_privacy.html";
+    public static final String URL_LEGAL_PRIVACY = "www.goujer.com/privacy_policy.html";
     public static final String URL_LEGAL_TERMS = "/resource/legal_terms.html";
     public static final String URL_PAYMENT_DEBUG = "https://api.test.barcodekanojo.com/au/transaction";
     public static final String URL_PAYMENT_RELEASE = "https://api.barcodekanojo.com/au/transaction";
     public static final String URL_SUPPORT = "http://www.barcodekanojo.com/contact";
+
+	public static final String URL_GOUJER_BLUESKY = "https://bsky.app/profile/goujer.bsky.social";
+	public static final String URL_GOUJER_KOFI = "https://ko-fi.com/goujer";
+
     private static final String USER_AGENT_DEBUG = "BarcodeKanojo/2.4.2 CFNetwork/485.12.7 Darwin/10.4.0";
     private static final String USER_AGENT_PREFIX = "BarcodeKanojo/2.4.2 ";
 
