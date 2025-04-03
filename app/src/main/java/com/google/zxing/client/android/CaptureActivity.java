@@ -45,6 +45,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import android.util.TypedValue;
 import android.view.KeyEvent;
 
 import android.view.SurfaceHolder;
@@ -154,7 +155,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
 		resetStatusView();
-
 
 		this.beepManager.updatePrefs();
 		this.ambientLightManager.start(this.cameraManager);
@@ -379,49 +379,58 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         this.statusView.setVisibility(View.GONE);
         this.viewfinderView.setVisibility(View.GONE);
         this.resultView.setVisibility(View.VISIBLE);
+
         ImageView barcodeImageView = findViewById(R.id.barcode_image_view);
         if (barcode == null) {
             barcodeImageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.icon_72));
         } else {
             barcodeImageView.setImageBitmap(barcode);
         }
-        ((TextView) findViewById(R.id.format_text_view)).setText(rawResult.getBarcodeFormat().toString());
-        ((TextView) findViewById(R.id.type_text_view)).setText(resultHandler.getType().toString());
+
+	    TextView formatTextView = (TextView) findViewById(R.id.format_text_view);
+	    formatTextView.setText(rawResult.getBarcodeFormat().toString());
+
+	    TextView typeTextView = (TextView) findViewById(R.id.type_text_view);
+	    typeTextView.setText(resultHandler.getType().toString());
 
 		DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 		TextView timeTextView = (TextView) findViewById(R.id.time_text_view);
 		timeTextView.setText(formatter.format(rawResult.getTimestamp()));
 
-        TextView metaTextView = findViewById(R.id.meta_text_view);
-        View metaTextViewLabel = findViewById(R.id.meta_text_view_label);
-        metaTextView.setVisibility(View.GONE);
-        metaTextViewLabel.setVisibility(View.GONE);
-        Map<ResultMetadataType, Object> metadata = rawResult.getResultMetadata();
-        if (metadata != null) {
-            StringBuilder sb = new StringBuilder(20);
-            for (Map.Entry<ResultMetadataType, Object> entry : metadata.entrySet()) {
-                if (DISPLAYABLE_METADATA_TYPES.contains(entry.getKey())) {
-                    sb.append(entry.getValue()).append(10);
-                }
-            }
-            if (sb.length() > 0) {
-                sb.setLength(sb.length() - 1);
-                metaTextView.setText(sb);
-                metaTextView.setVisibility(View.VISIBLE);
-                metaTextViewLabel.setVisibility(View.VISIBLE);
-            }
-        }
-        TextView contentsTextView = findViewById(R.id.contents_text_view);
-        CharSequence displayContents = resultHandler.getDisplayContents();
-        contentsTextView.setText(displayContents);
-        contentsTextView.setTextSize(2, (float) Math.max(22, 32 - (displayContents.length() / 4)));
+	    TextView metaTextView = (TextView) findViewById(R.id.meta_text_view);
+	    View metaTextViewLabel = findViewById(R.id.meta_text_view_label);
+	    metaTextView.setVisibility(View.GONE);
+	    metaTextViewLabel.setVisibility(View.GONE);
+	    Map<ResultMetadataType,Object> metadata = rawResult.getResultMetadata();
+	    if (metadata != null) {
+		    StringBuilder metadataText = new StringBuilder(20);
+		    for (Map.Entry<ResultMetadataType,Object> entry : metadata.entrySet()) {
+			    if (DISPLAYABLE_METADATA_TYPES.contains(entry.getKey())) {
+				    metadataText.append(entry.getValue()).append('\n');
+			    }
+		    }
+		    if (metadataText.length() > 0) {
+			    metadataText.setLength(metadataText.length() - 1);
+			    metaTextView.setText(metadataText);
+			    metaTextView.setVisibility(View.VISIBLE);
+			    metaTextViewLabel.setVisibility(View.VISIBLE);
+		    }
+	    }
+
+	    CharSequence displayContents = resultHandler.getDisplayContents();
+	    TextView contentsTextView = (TextView) findViewById(R.id.contents_text_view);
+	    contentsTextView.setText(displayContents);
+	    int scaledSize = Math.max(22, 32 - displayContents.length() / 4);
+	    contentsTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, scaledSize);
+
         TextView supplementTextView = findViewById(R.id.contents_supplement_text_view);
         supplementTextView.setText("");
         supplementTextView.setOnClickListener(null);
+
         int buttonCount = resultHandler.getButtonCount();
         ViewGroup buttonView = findViewById(R.id.result_button_view);
         buttonView.requestFocus();
-        for (int x = 0; x < 4; x++) {
+        for (int x = 0; x < ResultHandler.MAX_BUTTON_COUNT; x++) {
             TextView button = (TextView) buttonView.getChildAt(x);
             if (x < buttonCount) {
                 button.setVisibility(View.VISIBLE);

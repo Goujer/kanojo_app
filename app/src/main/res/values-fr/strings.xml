@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Barcode KANOJO</string>
+	<string name="preferences_disable_exposure_title">Pas d\'exposition</string>
+	<string name="preferences_disable_metering_title">Pas de mesure</string>
+	<string name="preferences_disable_barcode_scene_mode_title">Pas de mode scène de code-barres</string>
+</resources>

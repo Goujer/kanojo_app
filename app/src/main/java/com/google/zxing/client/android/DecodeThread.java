@@ -32,6 +32,7 @@ import java.util.concurrent.CountDownLatch;
  * This thread does all the heavy lifting of decoding the images.
  *
  * @author dswitkin@google.com (Daniel Switkin)
+ * Goblin says this file no longer needs updates!
  */
 final class DecodeThread extends Thread {
 

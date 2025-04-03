@@ -157,8 +157,7 @@
     <string name="social_setting_legal_txt">网站声明</string>
     <string name="social_setting_privacy_policy_txt">隐私政策</string>
     <string name="social_setting_terms_of_use_txt">使用条款</string>
-    <string name="social_sukiya_connect_title">绑定食其家账号</string>
-    <string name="social_sukiya_id">网站声明</string>
+	<string name="social_sukiya_id">网站声明</string>
     <string name="social_sukiya_email">电子邮件地址</string>
     <string name="social_sukiya_password">密码</string>
     <string name="social_sukiya_confirm_password">密码</string>
@@ -195,8 +194,9 @@
     <string name="preferences_device_bug_workarounds_title">Device Bug Workarounds</string>
     <string name="preferences_disable_continuous_focus_title">No continuous focus</string>
     <string name="preferences_disable_continuous_focus_summary">Use only standard focus mode</string>
-    <string name="preferences_try_bsplus">Try Barcode Scanner+</string>
-    <string name="preferences_try_bsplus_summary">Enhanced with new features and interface</string>
 	<string name="sign_up">Sign Up</string>
 	<string name="save">保存</string>
+	<string name="preferences_disable_exposure_title">不曝光</string>
+	<string name="preferences_disable_metering_title">不使用距离测量</string>
+	<string name="preferences_disable_barcode_scene_mode_title">不进行条形码场景匹配</string>
 </resources>

@@ -10,8 +10,7 @@
     <string name="LIB_GCM_PREF_KEY_WILLVIBRATE">lib_gcm_willVibrate</string>
     <string name="LIB_GCM_PREF_KEY_WILLVIBRATE_SUMMARY">通知時にバイブレーションでお知らせする</string>
     <string name="LIB_GCM_PREF_KEY_WILLVIBRATE_TITLE">バイブレーション</string>
-    <string name="LIB_GCM_GOOGLE_ACCOUNT_MISSING_INFO">有効なGoogleアカウントを設定してください</string>
-    <string name="LIB_GCM_PREF_CATEGORY3_TITLE">開発</string>
+	<string name="LIB_GCM_PREF_CATEGORY3_TITLE">開発</string>
     <string name="LIB_GCM_PREF_KEY_IS_TESTING">lib_gcm_is_testing</string>
     <string name="LIB_GCM_PREF_KEY_IS_TESTING_SUMMARY_TURE">test=1</string>
     <string name="LIB_GCM_PREF_KEY_IS_TESTING_SUMMARY_FALSE">test=0</string>
@@ -184,8 +183,7 @@
     <string name="social_setting_legal_txt">サイトポリシー</string>
     <string name="social_setting_privacy_policy_txt">プライバシーポリシー</string>
     <string name="social_setting_terms_of_use_txt">利用規約</string>
-    <string name="social_sukiya_connect_title">Connect to Sukiya ID</string>
-    <string name="social_sukiya_id">サイトポリシー</string>
+	<string name="social_sukiya_id">サイトポリシー</string>
     <string name="social_sukiya_email">メールアドレス</string>
     <string name="social_sukiya_password">パスワード</string>
     <string name="social_sukiya_confirm_password">パスワード</string>
@@ -222,9 +220,10 @@
     <string name="preferences_device_bug_workarounds_title">Device Bug Workarounds</string>
     <string name="preferences_disable_continuous_focus_title">No continuous focus</string>
     <string name="preferences_disable_continuous_focus_summary">Use only standard focus mode</string>
-    <string name="preferences_try_bsplus">Try Barcode Scanner+</string>
-    <string name="preferences_try_bsplus_summary">Enhanced with new features and interface</string>
 	<string name="button_next">次</string>
 	<string name="sign_up">Sign Up</string>
 	<string name="save">保存</string>
+	<string name="preferences_disable_exposure_title">露出しない</string>
+	<string name="preferences_disable_metering_title">測光しない</string>
+	<string name="preferences_disable_barcode_scene_mode_title">ﾊﾞｰｺｰﾄﾞｼｰﾝ自動認識をOFF</string>
 </resources>
