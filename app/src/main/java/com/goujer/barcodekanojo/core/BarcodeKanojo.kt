@@ -118,8 +118,8 @@ class BarcodeKanojo(context: Context) {
 
 	//This checks if a kanojo exists or not.
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun query(barcode: String, format: String): Response<BarcodeKanojoModel?> {
-		return mBCKApi.query(barcode, format)
+	fun query(barcode: String, format: String, extension: String = ""): Response<BarcodeKanojoModel?> {
+		return mBCKApi.query(barcode, format, extension)
 	}
 
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)

@@ -167,10 +167,11 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 
 	//Verify if Kanojo exists or not.
 	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
-	fun query(barcode: String, format: String): Response<BarcodeKanojoModel?> {
+	fun query(barcode: String, format: String, extension: String): Response<BarcodeKanojoModel?> {
 		val connection = mHttpApi.createHttpGet(URL_API_BARCODE_QUERY,
 				NameStringPair("barcode", barcode),
-				NameStringPair("format", format))
+				NameStringPair("format", format),
+				NameStringPair("extension", extension))
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelParser("owner_user", UserParser()), ModelParser("kanojo", KanojoParser()), ModelParser("barcode", BarcodeParser()), ModelParser("product", ProductParser()), ModelParser("scan_history", ScanHistoryParser()), MessageParser(MessageModel.NOTIFY_AMENDMENT_INFORMATION, MessageModel.DO_GENERATE_KANOJO, MessageModel.DO_ADD_FRIEND, MessageModel.INFORM_GIRLFRIEND, MessageModel.INFORM_FRIEND)))
 	}
 

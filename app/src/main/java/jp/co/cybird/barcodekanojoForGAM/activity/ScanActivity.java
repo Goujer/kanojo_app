@@ -195,30 +195,28 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
             String format = data.getStringExtra(Intents.Scan.RESULT_FORMAT);
 			String extension_contents = data.getStringExtra(Intents.Scan.RESULT_UPC_EAN_EXTENSION);
 			if (format != null && contents != null) {
-				switch (format) {   //This is all going to need a massive re-write eventually, check out: https://www.barcodefaq.com/1d/upc-ean/
+				switch (format) {
 					case "UPC_E":
 					case "UPC_A":
 					case "EAN_8":
-						executeScanQueryTask(contents, format);
-						break;
 					case "EAN_13":
 						if (extension_contents != null) {
-							contents += extension_contents;
+							executeScanQueryTask(contents, format, extension_contents);
 						}
-						executeScanQueryTask(contents, format);
+						executeScanQueryTask(contents, format, "");
 						break;
 					case "CODE_128":
-						if (contents.length() == 10) {
-							executeScanQueryTask(contents, format);
+						if (contents.length() == 10 || contents.length() == 12 || contents.length() == 13) {
+							executeScanQueryTask(contents, format, "");
 							break;
 						} else {
-							showNoticeDialog("Code-128 Barcodes must be 10 characters long.", dialog -> startCaptureActivity());
+							showNoticeDialog("Code-128 Barcodes must be 10, 12 or 13 characters long.", dialog -> startCaptureActivity());
 						}
 					default:
 						showNoticeDialog(getResources().getString(R.string.error_barcode_format) + " Found: " + format, dialog -> startCaptureActivity());
 				}
 
-				//switch (format) {   //This is all going to need a massive re-write eventually, check out: https://www.barcodefaq.com/1d/upc-ean/
+				//switch (format) {   //Old barcode switch statement, attempts to convert everything into full GTINs
 				//	case "UPC_A":
 				//	case "EAN_13":
 				//		executeScanQueryTask(contents, format);
@@ -419,10 +417,10 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
         startActivityForResult(intent, BaseInterface.REQUEST_SCAN);
     }
 
-    private void executeScanQueryTask(String barcode, String format) {
-        if (barcode != null && !barcode.equals("")) {
+    private void executeScanQueryTask(String barcode, String format, String extension) {
+        if (barcode != null && !barcode.isEmpty()) {
             if (this.mScanQueryTask == null || this.mScanQueryTask.getStatus() == AsyncTask.Status.FINISHED || this.mScanQueryTask.cancel(true) || this.mScanQueryTask.isCancelled()) {
-                this.mScanQueryTask = (ScanQueryTask) new ScanQueryTask(this).execute(barcode, format);
+                this.mScanQueryTask = (ScanQueryTask) new ScanQueryTask(this).execute(barcode, format, extension);
             }
         }
     }
@@ -458,7 +456,7 @@ public class ScanActivity extends BaseActivity implements View.OnClickListener {
                 return null;
             }
             try {
-	            return ((BarcodeKanojoApp) activity.getApplication()).getBarcodeKanojo().query(params[0], params[1]);  //Check if Kanojo exists with this Barcode.
+	            return ((BarcodeKanojoApp) activity.getApplication()).getBarcodeKanojo().query(params[0], params[1], params[2]);  //Check if Kanojo exists with this Barcode.
             } catch (Exception e) {
                 this.mReason = e;
                 return null;
