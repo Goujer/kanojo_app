@@ -7,8 +7,14 @@
             <ImageView android:id="@+id/row_kanojo_info_activities_img" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/common_noimage" android:scaleType="fitXY" android:adjustViewBounds="true"/>
             <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/row_activities_img_cover" android:scaleType="fitXY" android:adjustViewBounds="true"/>
         </FrameLayout>
-        <TextView android:id="@+id/row_kanojo_info_activities_txt" android:layout_marginLeft="4dp" android:maxLines="3" android:layout_weight="1" style="@style/txt_activites"
-			android:layout_width="0dp"
-			android:layout_marginStart="4dp"/>
+        <TextView
+	        android:id="@+id/row_kanojo_info_activities_txt"
+	        style="@style/txt_activites"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_marginStart="4dp"
+	        android:layout_marginLeft="4dp"
+	        android:layout_weight="1"
+	        android:maxLines="3" />
     </LinearLayout>
 </FrameLayout>

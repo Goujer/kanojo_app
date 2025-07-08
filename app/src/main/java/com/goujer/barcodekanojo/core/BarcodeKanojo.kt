@@ -181,6 +181,11 @@ class BarcodeKanojo(context: Context) {
 		return mBCKApi.scanned_timeline(barcode, since_id, index, limit)
 	}
 
+	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
+	fun kanojo_timeline(kanojo_id: Int, index: Int, limit: Int): Response<BarcodeKanojoModel?> {
+		return mBCKApi.kanojo_timeline(kanojo_id, index, limit)
+	}
+
 	/**
 	 *
 	 * @param kanojo_id    id of the kanojo being dated.

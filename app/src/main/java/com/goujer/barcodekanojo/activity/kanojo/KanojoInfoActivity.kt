@@ -6,29 +6,39 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
-import com.goujer.barcodekanojo.adapter.KanojoInfoAdapter
-import com.goujer.barcodekanojo.core.cache.DynamicImageCache
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.Gallery
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ListView
+import android.widget.TextView
 import com.goujer.barcodekanojo.BarcodeKanojoApp
-import jp.co.cybird.barcodekanojoForGAM.Defs
 import com.goujer.barcodekanojo.R
+import com.goujer.barcodekanojo.adapter.KanojoInfoAdapter
+import com.goujer.barcodekanojo.adapter.KanojoInfoImgAdapter
+import com.goujer.barcodekanojo.core.cache.DynamicImageCache
+import com.goujer.barcodekanojo.core.model.Kanojo
+import jp.co.cybird.barcodekanojoForGAM.Defs
 import jp.co.cybird.barcodekanojoForGAM.activity.base.BaseActivity
 import jp.co.cybird.barcodekanojoForGAM.activity.kanojo.KanojoEditActivity
-import com.goujer.barcodekanojo.adapter.KanojoInfoImgAdapter
-import com.goujer.barcodekanojo.core.model.Kanojo
 import jp.co.cybird.barcodekanojoForGAM.core.exception.BarcodeKanojoException
-import jp.co.cybird.barcodekanojoForGAM.core.model.*
+import jp.co.cybird.barcodekanojoForGAM.core.model.ActivityModel
+import jp.co.cybird.barcodekanojoForGAM.core.model.MessageModel
+import jp.co.cybird.barcodekanojoForGAM.core.model.ModelList
+import jp.co.cybird.barcodekanojoForGAM.core.model.Product
+import jp.co.cybird.barcodekanojoForGAM.core.model.Response
 import jp.co.cybird.barcodekanojoForGAM.core.util.HttpUtil
 import jp.co.cybird.barcodekanojoForGAM.view.MoreBtnView
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import java.io.IOException
+import java.lang.ref.WeakReference
 
 class KanojoInfoActivity : BaseActivity(), View.OnClickListener, MoreBtnView.OnMoreClickListener {
-	private val MORE_ACTIVITIES = 11
 	private var btnClose: Button? = null
 	private var btnEdit: Button? = null
 	private var mActivities: ModelList<ActivityModel>? = null
@@ -39,7 +49,7 @@ class KanojoInfoActivity : BaseActivity(), View.OnClickListener, MoreBtnView.OnM
 	private var mImgAdapter: KanojoInfoImgAdapter? = null
 	private var mKanojo: Kanojo? = null
 	private var mKanojoInfoTask: KanojoInfoTask? = null
-	private var mLimit = 6
+	private var mLimit = DEFAULT_LIMIT
 	private var mListView: ListView? = null
 	private var mMessage: String? = null
 	private var mProduct: Product? = null
@@ -57,14 +67,18 @@ class KanojoInfoActivity : BaseActivity(), View.OnClickListener, MoreBtnView.OnM
 		mDic = (application as BarcodeKanojoApp).imageCache
 		btnClose = findViewById(R.id.kanojo_info_close)
 		btnClose?.setOnClickListener(this)
+
 		btnEdit = findViewById(R.id.kanojo_info_edit)
 		btnEdit?.setOnClickListener(this)
+
+		//List View
 		mListView = findViewById(R.id.kanojo_info_list)
 		mFooter = MoreBtnView(this)
-		mFooter!!.setOnMoreClickListener(11, this)
+		mFooter!!.setOnMoreClickListener(MORE_ACTIVITIES, this)
 		mAdapter = KanojoInfoAdapter(this, mDic)
 		mListView?.addFooterView(mFooter)
 		mListView?.adapter = mAdapter
+
 		mActivities = ModelList()
 		val bundle = intent.extras
 		mKanojo = bundle!![EXTRA_KANOJO] as Kanojo?
@@ -103,6 +117,7 @@ class KanojoInfoActivity : BaseActivity(), View.OnClickListener, MoreBtnView.OnM
 			mKanojoInfoTask!!.cancel(true)
 			mKanojoInfoTask = null
 		}
+
 		if (isFinishing) {
 			mAdapter!!.removeObserver()
 			if (mImgAdapter != null) {
@@ -159,7 +174,7 @@ class KanojoInfoActivity : BaseActivity(), View.OnClickListener, MoreBtnView.OnM
 	}
 
 	override fun onMoreClick(id: Int) {
-		if (id == 11) {
+		if (id == MORE_ACTIVITIES) {
 			executeKanojoInfoTask()
 		}
 	}
@@ -235,23 +250,34 @@ class KanojoInfoActivity : BaseActivity(), View.OnClickListener, MoreBtnView.OnM
 	private fun executeKanojoInfoTask() {
 		if (!readAllFlg) {
 			if (mKanojoInfoTask == null || mKanojoInfoTask!!.status == AsyncTask.Status.FINISHED) {
-				mLimit = 6
-				mKanojoInfoTask = KanojoInfoTask().execute(*arrayOfNulls<Void>(0)) as KanojoInfoTask
+				mLimit = DEFAULT_LIMIT
+				mKanojoInfoTask = KanojoInfoTask(this).execute(*arrayOfNulls<Void>(0)) as KanojoInfoTask
 			}
 		}
 	}
 
-	internal inner class KanojoInfoTask : AsyncTask<Void?, Void?, Response<*>?>() {
+	class KanojoInfoTask(activity: KanojoInfoActivity) : AsyncTask<Void?, Void?, Response<*>?>() {
+		private val activityRef: WeakReference<KanojoInfoActivity> = WeakReference(activity)
 		private var mReason: Exception? = null
 		@Deprecated("Deprecated in Java")
 		public override fun onPreExecute() {
-			mFooter!!.setLoading(true)
+			val activity = activityRef.get();
+			if (activity == null || activity.isFinishing) {
+				return
+			}
+
+			activity.mFooter!!.setLoading(true)
 		}
 
 		@Deprecated("Deprecated in Java")
 		override fun doInBackground(vararg params: Void?): Response<*>? {
+			val activity = activityRef.get();
+			if (activity == null || activity.isFinishing) {
+				return null
+			}
+
 			return try {
-				process()
+				return (activity.application as BarcodeKanojoApp).barcodeKanojo.kanojo_timeline(activity.mKanojo!!.id, activity.mActivityCount, activity.mLimit)
 			} catch (e: Exception) {
 				mReason = e
 				null
@@ -260,44 +286,49 @@ class KanojoInfoActivity : BaseActivity(), View.OnClickListener, MoreBtnView.OnM
 
 		@Deprecated("Deprecated in Java")
 		public override fun onPostExecute(response: Response<*>?) {
+			val activity = activityRef.get();
+			if (activity == null || activity.isFinishing) {
+				return
+			}
+
 			try {
-				when (this@KanojoInfoActivity.getCodeAndShowAlert(response, mReason)) {
-					200 -> {
+				when (activity.getCodeAndShowAlert(response, mReason)) {
+					Response.CODE_SUCCESS -> {
 						val temp = response!!.activityModelList
 						if (temp != null) {
 							val size = temp.size
 							if (size != 0) {
-								if (size < mLimit) {
-									readAllFlg = true
+								if (size < activity.mLimit) {
+									activity.readAllFlg = true
 								}
-								val kanojoInfoActivity = this@KanojoInfoActivity
-								kanojoInfoActivity.mActivityCount = kanojoInfoActivity.mActivityCount + size
-								mActivities!!.addAll(temp)
-								addImgToGallery(temp)
+
+								activity.mActivityCount += size
+								activity.mActivities!!.addAll(temp)
+								activity.addImgToGallery(temp)
 							} else {
-								readAllFlg = true
+								activity.readAllFlg = true
 							}
 						} else {
-							readAllFlg = true
+							activity.readAllFlg = true
 						}
-						updateListItem()
+						activity.updateListItem()
 					}
 				}
 			} catch (e: BarcodeKanojoException) {
 				if (Defs.DEBUG) e.printStackTrace()
 			} finally {
-				mFooter!!.setLoading(false)
+				activity.mFooter!!.setLoading(false)
 			}
 		}
 
 		@Deprecated("Deprecated in Java")
 		override fun onCancelled() {
-			mFooter!!.setLoading(false)
-		}
+			val activity = activityRef.get();
+			if (activity == null || activity.isFinishing) {
+				return
+			}
 
-		@Throws(BarcodeKanojoException::class, IllegalStateException::class, IOException::class)
-		fun process(): Response<*> {
-			return (this@KanojoInfoActivity.application as BarcodeKanojoApp).barcodeKanojo.scanned_timeline(mProduct!!.barcode, 0, this@KanojoInfoActivity.mActivityCount, mLimit)
+			activity.mFooter!!.setLoading(false)
 		}
 	}
 
@@ -330,6 +361,6 @@ class KanojoInfoActivity : BaseActivity(), View.OnClickListener, MoreBtnView.OnM
 	//}
 	companion object {
 		private const val DEFAULT_LIMIT = 6
-		private const val TAG = "KanojoInfoActivity"
+		private const val MORE_ACTIVITIES = 11
 	}
 }

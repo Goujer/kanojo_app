@@ -4,7 +4,21 @@ import com.goujer.barcodekanojo.core.model.Kanojo;
 import com.goujer.barcodekanojo.core.model.User;
 
 public class ActivityModel implements BarcodeKanojoModel {
-    public static final String TAG = "ActivityModel";
+	private static final int ACTIVITY_SCAN = 1;
+	private static final int ACTIVITY_GENERATED = 2;
+	private static final int ACTIVITY_ME_ADD_FRIEND = 5;
+	private static final int ACTIVITY_APPROACH_KANOJO = 7;
+	private static final int ACTIVITY_ME_STOLE_KANOJO = 8;
+	private static final int ACTIVITY_MY_KANOJO_STOLEN = 9;
+	private static final int ACTIVITY_MY_KANOJO_ADDED_TO_FRIENDS = 10;
+	private static final int ACTIVITY_BECOME_NEW_LEVEL = 11;
+	private static final int ACTIVITY_MARRIED = 15;
+	private static final int ACTIVITY_JOINED = 101;
+	private static final int ACTIVITY_BREAKUP = 102;
+	private static final int ACTIVITY_ADD_AS_ENEMY = 103;
+
+
+	public static final String TAG = "ActivityModel";
     private String activity;
     private int activity_type;
     private int created_timestamp;
@@ -32,19 +46,19 @@ public class ActivityModel implements BarcodeKanojoModel {
 
     public String getLeftImgUrl() {
         switch (getActivity_type()) {
-            case 2:
+            case ACTIVITY_GENERATED:
                 return this.kanojo.getProfile_image_icon_url();
-            case 5:
+            case ACTIVITY_ME_ADD_FRIEND:
                 return this.user.getProfile_image_url();
-            case 7:
+            case ACTIVITY_APPROACH_KANOJO:
                 return this.other_user.getProfile_image_url();
-            case 8:
+            case ACTIVITY_ME_STOLE_KANOJO:
                 return this.user.getProfile_image_url();
-            case 9:
+            case ACTIVITY_MY_KANOJO_STOLEN:
                 return this.kanojo.getProfile_image_icon_url();
-            case 10:
+            case ACTIVITY_MY_KANOJO_ADDED_TO_FRIENDS:
                 return this.other_user.getProfile_image_url();
-            case 11:
+            case ACTIVITY_BECOME_NEW_LEVEL:
                 return this.user.getProfile_image_url();
             default:
                 return null;
@@ -54,15 +68,15 @@ public class ActivityModel implements BarcodeKanojoModel {
     public String getRightImgUrl() {
     	try {
 			switch (getActivity_type()) {
-				case 2:
+				case ACTIVITY_GENERATED:
 					return this.product.getProduct_image_url();
-				case 5:
-				case 7:
-				case 8:
+				case ACTIVITY_ME_ADD_FRIEND:
+				case ACTIVITY_APPROACH_KANOJO:
+				case ACTIVITY_ME_STOLE_KANOJO:
 					return this.kanojo.getProfile_image_icon_url();
-				case 9:
+				case ACTIVITY_MY_KANOJO_STOLEN:
 					return this.other_user.getProfile_image_url();
-				case 10:
+				case ACTIVITY_MY_KANOJO_ADDED_TO_FRIENDS:
 					return this.kanojo.getProfile_image_icon_url();
 				default:
 					return null;

@@ -42,7 +42,7 @@ public class ActivityParser extends AbstractJSONParser<ActivityModel> {
             }
             return res;
         } catch (JSONException e) {
-        	if (Defs.DEBUG) e.printStackTrace();
+        	if (Defs.DEBUG) { e.printStackTrace();}
             throw new BarcodeKanojoParseException(e.toString());
         }
     }

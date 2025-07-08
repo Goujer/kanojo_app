@@ -344,6 +344,16 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("activities", ActivityParser())))
 	}
 
+	@Throws(IllegalStateException::class, BarcodeKanojoException::class, IOException::class)
+	fun kanojo_timeline(kanojo_id: Int, index: Int, limit: Int): Response<BarcodeKanojoModel?> {
+		val connection: HttpURLConnection = mHttpApi.createHttpGet(	URL_API_ACTIVITY_KANOJO_TIMELINE,
+				NameStringPair("kanojo_id", kanojo_id.toString()),
+				NameStringPair("index", index.toString()),
+				NameStringPair("limit", limit.toString()))
+		return mHttpApi.executeHttpRequest(connection, ResponseParser(AlertParser(), ModelListParser("activities", ActivityParser())))
+	}
+
+
 	//fun item_detail(store_item_id: Int): String {
 	//	return URL_API_PAYMENT_ITEM_DETAIL + "?" + NameValuePair("store_item_id", store_item_id.toString())
 	//}
@@ -460,6 +470,7 @@ class BarcodeKanojoHttpApi(useHttps: Boolean, mApiBaseUrl: String, mApiBasePort:
 		private const val URL_API_TWITTER_DISCONNECT = "/api/account/disconnect_twitter.json"
 
 		private const val URL_API_ACTIVITY_SCANNED_TIMELINE = "/api/activity/scanned_timeline.json"
+		private const val URL_API_ACTIVITY_KANOJO_TIMELINE = "/api/activity/kanojo_timeline.json"
 		private const val URL_API_ACTIVITY_USER_TIMELINE = "/activity/user_timeline.json"
 
 		private const val URL_API_BARCODE_DECREASE_GENERATING = "/api/barcode/decrease_generating.json"

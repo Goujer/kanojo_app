@@ -60,7 +60,15 @@
             </LinearLayout>
         </LinearLayout>
         <ImageView android:layout_width="@dimen/kanojo_info_ya_width" android:layout_height="@dimen/kanojo_info_ya_height" android:layout_marginLeft="@dimen/kanojo_info_ya_padding_left" android:src="@drawable/product_info_ya"/>
-        <FrameLayout android:id="@+id/kanojo_info_layout_gallery" android:layout_width="match_parent" android:layout_height="@dimen/kanojo_info_gallery_height"/>
+        <FrameLayout
+	        android:id="@+id/kanojo_info_layout_gallery"
+	        android:layout_width="match_parent"
+	        android:layout_height="@dimen/kanojo_info_gallery_height" />
     </LinearLayout>
-    <ListView android:id="@+id/kanojo_info_list" android:background="@color/default_bg" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"/>
+    <ListView
+	    android:id="@+id/kanojo_info_list"
+	    android:layout_width="match_parent"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:background="@color/default_bg" />
 </LinearLayout>
